@@ -1,0 +1,8 @@
+export(mlogit,mlogit.data)
+S3method(print,mlogit)
+S3method(summary,mlogit)
+S3method(print,summary.mlogit)
+S3method(logLik,mlogit)
+S3method(vcov,mlogit)
+
+
