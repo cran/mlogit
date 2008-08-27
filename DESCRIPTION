@@ -1,12 +1,12 @@
 Package: mlogit
-Version: 0.1-0
-Date: 2008-05-15
+Version: 0.1-1
+Date: 2008-08-27
 Title: multinomial logit model
 Author: Yves Croissant <yves.croissant@let.ish-lyon.cnrs.fr>
 Maintainer: Yves Croissant <yves.croissant@let.ish-lyon.cnrs.fr>
-Depends: R (>= 1.8.0), maxLik
+Depends: R (>= 1.8.0), maxLik, sandwich
 Suggests: Ecdat, lmtest, car
-Description: Estimation of the multinomial logit model with choice specific variables
+Description: Estimation of the multinomial logit model with alternative and/or individual specific variables
 License: GPL (>=2)
 URL: http://www.r-project.org
-Packaged: Thu May 15 13:18:24 2008; yves
+Packaged: Wed Aug 27 14:35:36 2008; yves

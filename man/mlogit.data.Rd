@@ -2,11 +2,12 @@
 \alias{mlogit.data}
 \title{data.frame for logit model}
 \description{
-  shape a data.frame in a suitable form for the use of the \code{mlogit} function.
+  shape a \code{data.frame} in a suitable form for the use of the \code{mlogit} function.
 }
 \usage{
-mlogit.data(x, choice, cvar = NULL, shape = "vert",
-            alt = NULL, chid = NULL, opposite = NULL, ...)
+mlogit.data(x, choice, shape = c("wide","long"), varying = NULL,
+            sep=".",alt.var = NULL, id.var = NULL,
+            alt.levels = NULL, opposite = NULL, ...)
 }
 
 \arguments{
@@ -15,90 +16,93 @@ mlogit.data(x, choice, cvar = NULL, shape = "vert",
 
   \item{choice}{the variable indicating the choice made,}
   
-  \item{cvar}{a named vector indicating in which columns start a
-    choice-specific variable if data are stored ``vertically'',}
+  \item{shape}{the shape of the \code{data.frame}: whether \code{long} if each
+    row is an alternative or \code{wide} if each row is an observation,}
 
-  \item{shape}{if equal to \code{hor.var} or \code{hor.alt}, there is
-    one row for each choice and each column contains a variable for an
-    alternative (the columns are ordered by variable in the first case
-    and by alternative in the second case). If \code{vert}, there is one
-    row for each alternative,}
+  \item{varying}{the indexes of the variables that are alternative
+    specific,}
+  
+  \item{sep}{the seperator of the variable name and the alternative name
+  (only relevant for a \code{wide} \code{data.frame}),}
+  
+  \item{alt.var}{the name of the variable that contains the alternative
+    index (for a \code{long} \code{data.frame} only) or the name under which the
+    alternative index will be stored (the default name is \code{alt}),}
+  
+  \item{id.var}{the name of the variable that contains the choice index
+    or the name under which the choice index will be stored,}
 
-  \item{alt}{if shape is equal to \code{hor.var} or \code{hor.alt},
-    it may be \code{NULL}. In this case, the levels of the choice
-    variables are assumed to be in the same order as the subsequent
-    columns representing the choice-specific variables. Otherwise, they
-    can be indicated in the proper order. If shape is \code{vert}, it
-    can be whether the name of the variable containing the alternative
-    index, or a vector containing the names of the alternative in the
-    proper order,}
-  \item{chid}{the choice index, only relevant if \code{shape='vert'},}
+  \item{alt.levels}{the name of the alternatives: if null, for
+  a \code{wide} data.frame, they are guessed from the variable names and
+  the choice variable (both should be the same), for a \code{long}
+  \code{data.frame}, they are guessed from the \code{alt.var} argument,}
+
   \item{opposite}{returns the opposite of the specified variables,}
-  \item{...}{further arguments.}
+
+  \item{...}{further arguments passed to \code{reshape}.}
 }
 
 \value{
   
-  A \code{data.frame} with a line for every alternative.
+  A \code{data.frame} in \code{long} format, \emph{i.e.} one line for
+  each alternative.  The first two columns contain the choice index and
+  the alternative index. The choice variable is a boolean which
+  indicates the choice made. This function use \code{reshape} if the
+  \code{data.frame} is in \code{wide} format.
   
-}
-\details{
-
-  The first column is a variable that identifies the choice, whether
-  auto-generated and called \code{chid} or provided with the \code{chid}
-  argument. The second column identifies the alternatives. It is
-  provided with the \code{alt} argument or is auto-generated. In this
-  later case, its name is \code{alt}.
 }
 
 \examples{
 
-# ModeChoice is a vertical shaped data.frame 
+# ModeChoice is a long data.frame 
 
 data("ModeChoice",package="Ecdat")
-ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="vert",
-                 alt=c("air","train","bus","car"))
+ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="long",
+                 alt.levels=c("air","train","bus","car"))
 
 # Same but with an alt variable called altm
 
 data("ModeChoice",package="Ecdat")
 ModeChoice$altm <- rep(c("air","train","bus","car"),210)
 ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="vert",
-                 alt="altm")
+                 alt.var="altm")
 
 # Same but with an chid variable called ind 
 
 data("ModeChoice",package="Ecdat")
 ModeChoice$ind <- rep(1:210,each=4)
-ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="vert",
-                 chid="ind",alt=c("air","train","bus","car"))
+ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="long",
+                 id.var="ind",alt.levels=c("air","train","bus","car"))
 
 # Same but with two own provided variables
 
 data("ModeChoice",package="Ecdat")
 ModeChoice$ind <- rep(1:210,each=4)
 ModeChoice$altm <- rep(c("air","train","bus","car"),210)
-ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="vert",
-                 chid="ind",alt="altm")
+ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="long",
+                 id.var="ind",alt.var="altm")
 
 
-# Train is an horizontal shaped data.frame with columns ordered by
-# alternatives, 'choiceid' is the choice index
+# Train is a wide data.frame with columns 'choiceid' is the choice
+#  index, the alternatives are named "ch1" and "ch2", the opposite
+# of the variables is returned
 
 data("Train",package="Ecdat")
-Train <- mlogit.data(Train,choice="choice",shape="hor.alt",
-                 cvar=c(price=4,time=5,change=6,comfort=7),
-                 opposite=c("price","time","change","comfort"),chid="choiceid")
+Train <- mlogit.data(Train,choice="choice",shape="wide",
+                     varying=4:11,alt.levels=c("ch1","ch2"),
+                     opposite=c("price","time","change","comfort"), sep="")
 
-# Car is an horizontal data.frame with columns ordered by variables
+# Car is a wide data.frame, indexes names are provided
 
 data("Car",package="Ecdat")
-Car <- mlogit.data(Car,cvar=c(type=5,fuel=11,price=17,range=23,acc=29,speed=35,
-                 pollution=41,size=47,space=53,cost=59,station=65),
-                 shape="hor.var",choice="choice")
+Carl <-
+mlogit.data(Car,varying=5:70,shape="wide",sep="",choice="choice",
+            id.var="Mr",alt.var="Car",alt.levels=1:6)
 
   }
 
 \author{Yves Croissant}
+
+\seealso{\cite{\code{reshape}}}
 
 \keyword{attribute}

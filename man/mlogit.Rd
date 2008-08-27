@@ -1,6 +1,16 @@
 \name{mlogit}
 \alias{mlogit}
 \alias{print.mlogit}
+
+\alias{fitted.mlogit}
+\alias{residuals.mlogit}
+\alias{df.residual.mlogit}
+\alias{terms.mlogit}
+\alias{estfun.mlogit}
+\alias{bread.mlogit}
+\alias{model.matrix.mlogit}
+\alias{update.mlogit}
+
 \alias{summary.mlogit}
 \alias{print.summary.mlogit}
 \alias{vcov.mlogit}
@@ -8,10 +18,11 @@
 \title{Multinomial logit model}
 \description{
   Estimation by maximum likelihood of the multinomial logit model, with
-  choice-specific and/or individual specific variables.
+  alternative-specific and/or individual specific variables.
 }
 \usage{
-mlogit(formula, data, weights = NULL, ...)
+mlogit(formula, data, subset, weights, na.action,
+       alt.subset = NULL, reflevel = NULL, ...)
 \method{print}{mlogit}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), ...)
 \method{summary}{mlogit}(object, ...)
@@ -21,40 +32,75 @@ mlogit(formula, data, weights = NULL, ...)
     width = getOption("width"), ...)
 \method{logLik}{mlogit}(object, ...)
 \method{vcov}{mlogit}(object, ...)
+\method{residuals}{mlogit}(object, outcome = TRUE, ...)
+\method{fitted}{mlogit}(object, outcome = TRUE, ...)
+\method{df.residual}{mlogit}(object, ...)
+\method{terms}{mlogit}(x, ...)
+\method{estfun}{mlogit}(x, ...)
+\method{bread}{mlogit}(x, ...)
+\method{model.matrix}{mlogit}(object, ...)
+\method{update}{mlogit}(object, new, ...)
 }
 
 \arguments{
   \item{x, object}{an object of class \code{mlogit}}
   \item{formula}{a symbolic description of the model to be estimated,}
+  \item{new}{an updated formula for the \code{update} method,}
   \item{data}{the data,}
+  \item{subset}{an optional vector specifying a subset of observations,}
   \item{weights}{an optional vector of weights,}
+  \item{na.action}{a function which indicates what should happen when
+  the data contains '\code{NA}'s,}
+  \item{alt.subset}{a vector of character strings containing the subset of
+  alternative on which the model should be estimated,}
+  \item{reflevel}{the base alternative (the one for which the
+    coefficients of individual-specific variables are normalized to 0),}
   \item{digits}{the number of digits,}
   \item{width}{the width of the printing,}
+  \item{outcome}{a boolean which indicates, for the \code{fitted} and the
+  \code{residuals} methods whether a matrix (for each choice, one value
+  for each alternative) or a vector (for each choice, only a value for
+  the alternative chosen) should be returned,}
   \item{...}{further arguments.}
 }
 
 \value{
-An object of class \code{"mlogit"}, a list with elements
-\code{coefficients}, \code{logLik}, \code{hessian},
-\code{gradient}, \code{call}, \code{est.stat},
-\code{residuals} and \code{fitted.values}.
+  An object of class \code{"mlogit"}, a list with elements:
+
+  \item{coefficients}{the named vector of coefficients,}
+  \item{logLik}{the value of the log-likelihood,}
+  \item{hessian}{the hessian of the log-likelihood at convergence,}
+  \item{gradient}{the gradient of the log-likelihood at convergence,}
+  \item{call}{the matched call,}
+  
+  \item{est.stat}{some information about the estimation (time used,
+    optimisation method),}
+  
+  \item{freq}{the frequency of choice,}
+  \item{residuals}{the residuals,}
+  \item{fitted.values}{the fitted values,}
+  \item{formula}{the formula (a \code{logitform} object),}
+  \item{expanded.formula}{the formula (a \code{formula} object),}
+  \item{model}{the model frame used,}
+  \item{index}{the index of the choice and of the alternatives.}
+
 }
 \details{
   
   Let \code{J} being the number of alternatives.  The formula may
-  include choice-specific and individual specific variables. For the
+  include alternative-specific and individual specific variables. For the
   latter, \code{J-1} coefficients are estimated for each
-  variable. Choice and individual specific variables are separated by a
-  \code{|}. For example, if \code{x1} and \code{x2} are choice specific
+  variable. Alternative and individual specific variables are separated by a
+  \code{|}. For example, if \code{x1} and \code{x2} are alternative specific
   and \code{z1} and \code{z2} are individual specific, the formula
   \code{y~x1+x2|z1+z2} describe a model with one coefficient for
   \code{x1} and \code{x2} and \code{J-1} coefficients for \code{z1} and
   \code{z2}. \code{J-1} intercepts are also estimated. A model without
   intercepts is defined by the formula : \code{y~x1+x2-1|z1+z2}. To
-  obtain alternative specific coefficients for the choice-specific
+  obtain alternative specific coefficients for the alternative-specific
   variable \code{x2}, use : \code{y~x1+x2+x2:alt|z1+z2} (replace
   \code{alt} by the relevant variable name if the alternative index is
-  provided. Models with only choice-specific or individual-specific
+  provided). Models with only alternative-specific or individual-specific
   variables are respectively estimated by \code{y~x1+x2} and
   \code{y~1|z1+z2}.
 
@@ -64,33 +110,38 @@ An object of class \code{"mlogit"}, a list with elements
 }
 
 \examples{
-# Heating data, from the Ecdat package
-data("Heating",package="Ecdat")
 
-# Heating is a "horizontal" data.frame with three choice-specific
-# variables (ic: investment cost, oc: operating cost) and some
-# individual-specific variables (income, region, rooms)
-Heatingh <- mlogit.data(Heating,cvar=c(ic=3,oc=8,pb=17),
-                       shape="hor.var",choice="depvar")
+## Cameron and Trivedi's Microeconometrics p.493
+## There are two alternative specific variables : pr (price) and ca (catch)
+## and four fishing mode : beach, pier, boat, charter
 
-# a model with two choice-specific variables
-summary(mlogit(depvar~ic+oc,data=Heatingh))
+data("Fishing",package="Ecdat")
+colnames(Fishing)[4:11] <- c("pr.beach","pr.pier","pr.boat","pr.charter",
+                             "ca.beach","ca.pier","ca.boat","ca.charter")
+Fish <- mlogit.data(Fishing,varying=c(4:11),shape="wide",choice="mode")
 
-# same wihtout intercept
-summary(mlogit(depvar~ic+oc-1,data=Heatingh))
+## a pure "conditional" model without intercepts
 
-# a model with choice-specific and individual-specific variables
-summary(mlogit(depvar~ic+oc|income+rooms,data=Heatingh))
+summary(mlogit(mode~pr+ca-1,data=Fish))
 
-# a model with choice-specific coefficients for a choice-specific variable
-summary(mlogit(depvar~ic+oc+oc:alt,data=Heatingh))
+## a pure "multinomial model
 
-# a model with only individual-specific variables
-summary(mlogit(depvar~1|income+rooms,data=Heatingh))
+summary(mlogit(mode~1|income,data=Fish))
 
-# the same model estimated with multinom from the nnet package
+## which can also be estimated using multinom (package nnet)
+
 library(nnet)
-summary(multinom(depvar~income+rooms,data=Heating))
+summary(multinom(mode~income,data=Fishing))
+
+## a "mixed" model
+
+m <- mlogit(mode~pr+ca|income,data=Fish)
+summary(m)
+
+## robust inference with the sandwich package
+
+library(lmtest)
+coeftest(m,vcov=sandwich)
 
 }
 
@@ -104,14 +155,14 @@ summary(multinom(depvar~income+rooms,data=Heating))
 
 \references{
   
-  McFadden, D. (1973) Conditional logit analysis of qualitative choice
-  behavior, in P. Zarembka ed., \emph{Frontiers in Econometrics},
+  McFadden, D. (1973) Conditional Logit Analysis of Qualitative Choice
+  Behavior, in P. Zarembka ed., \emph{Frontiers in Econometrics},
   New-York: Academic Press.
   
   McFadden, D. (1974) ``The Measurement of Urban Travel Demand'',
   \emph{Journal of Public Economics}, 3, pp. 303-328.
   
-  Train, K. (2004) \emph{Discrete Choice Modelling, whith Simulations},
+  Train, K. (2004) \emph{Discrete Choice Modelling, with Simulations},
   Cambridge University Press.
 }
 \keyword{regression}
