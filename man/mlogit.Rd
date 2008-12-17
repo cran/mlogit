@@ -6,8 +6,6 @@
 \alias{residuals.mlogit}
 \alias{df.residual.mlogit}
 \alias{terms.mlogit}
-\alias{estfun.mlogit}
-\alias{bread.mlogit}
 \alias{model.matrix.mlogit}
 \alias{update.mlogit}
 
@@ -36,8 +34,6 @@ mlogit(formula, data, subset, weights, na.action,
 \method{fitted}{mlogit}(object, outcome = TRUE, ...)
 \method{df.residual}{mlogit}(object, ...)
 \method{terms}{mlogit}(x, ...)
-\method{estfun}{mlogit}(x, ...)
-\method{bread}{mlogit}(x, ...)
 \method{model.matrix}{mlogit}(object, ...)
 \method{update}{mlogit}(object, new, ...)
 }
@@ -115,16 +111,14 @@ mlogit(formula, data, subset, weights, na.action,
 ## There are two alternative specific variables : pr (price) and ca (catch)
 ## and four fishing mode : beach, pier, boat, charter
 
-data("Fishing",package="Ecdat")
-colnames(Fishing)[4:11] <- c("pr.beach","pr.pier","pr.boat","pr.charter",
-                             "ca.beach","ca.pier","ca.boat","ca.charter")
+data("Fishing",package="mlogit")
 Fish <- mlogit.data(Fishing,varying=c(4:11),shape="wide",choice="mode")
 
 ## a pure "conditional" model without intercepts
 
 summary(mlogit(mode~pr+ca-1,data=Fish))
 
-## a pure "multinomial model
+## a pure "multinomial model"
 
 summary(mlogit(mode~1|income,data=Fish))
 
@@ -137,11 +131,6 @@ summary(multinom(mode~income,data=Fishing))
 
 m <- mlogit(mode~pr+ca|income,data=Fish)
 summary(m)
-
-## robust inference with the sandwich package
-
-library(lmtest)
-coeftest(m,vcov=sandwich)
 
 }
 

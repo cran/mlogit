@@ -5,8 +5,6 @@
 ##    * residuals             |
 ##    * df.residual           |
 ##    * terms                 |
-##    * estfun                |
-##    * bread                 |
 ##    * model.matrix          |
 ##    * update                |
 ##    * print                 |
@@ -22,13 +20,15 @@ fitted.mlogit <- function(object, outcome = TRUE, ...){
   }
   else{
     J <- length(levels(object$index[[2]]))
-    y <- matrix(model.response(object$model),ncol=J,byrow=T)
+#    y <- matrix(model.response(object$model),ncol=J,byrow=T)
+    y <- matrix(model.response.mlogit(object),ncol=J,byrow=T)
     result <- apply(y*object$fitted.values,1,sum)
   }
   result
 }
 
 residuals.mlogit <- function(object, outcome = TRUE, ...){
+  cat("ca roule\n")
   if (!outcome){
     result <- object$residuals
   }
@@ -50,16 +50,13 @@ terms.mlogit <- function(x, ...){
   terms(x$expanded.formula)
 }
 
-estfun.mlogit <- function(x, ...){
-  x$gradient
-}
-
-bread.mlogit <- function(x, ...){
-  vcov(x)*length(resid(x))
-}
-
 model.matrix.mlogit <- function(object, ...){
   model.matrix(object$formula,object$model)
+}
+
+model.response.mlogit <- function(object, ...){
+  y.name <- paste(deparse(object$formula[[2]]))
+  object$model[[y.name]]
 }
 
 update.mlogit <- function (object, new, ...){
@@ -94,7 +91,6 @@ print.mlogit <- function (x, digits = max(3, getOption("digits") - 2), width = g
 }
 
 vcov.mlogit <- function(object,...){
-  cat("dans vcov.mlogit\n")
   solve(-object$hessian)
 }
 

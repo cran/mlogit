@@ -3,7 +3,7 @@ Changes since version 0-1.0
 	* robust inference is provided with meat and estfunc methods
 	defined for mlogit models.
 
-	* alt.subset argument is added to mlogit so that the model may be
+	* subset argument is added to mlogit so that the model may be
 	estimated on a subset of alternatives.
 
 	* reflevel argument is added to mlogit which defines the base
@@ -17,10 +17,4 @@ Changes since version 0-1.0
 	* logitform class is provided to describe a logit model: update,
 	model.matrix and model.frame methods are available.
 
-	* the estimation is now possible on "unbalanced" data, ie when the
-	choice set is not the same for every individual
-
-	* much improved interface for the mlogit function: model.frame and
-	model.matrix methods have been added for logitform objects
-	
 	

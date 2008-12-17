@@ -60,23 +60,23 @@ hmftest(x, ...)
 
 ## from Greene's Econometric Analysis p. 731
 
-data("ModeChoice",package="Ecdat")
-ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="long",
-                          alt.levels=c("air","train","bus","car"))
+data("TravelMode",package="AER")
+TravelMode <- mlogit.data(TravelMode,choice="choice",shape="long",
+                          alt.var="mode",id.var="individual")
 
 ## Create a variable of income only for the air mode
 
-ModeChoice$avinc <- (ModeChoice$alt=='air')*ModeChoice$hinc
+TravelMode$avinc <- with(TravelMode,(mode=='air')*income)
 
 ## Estimate the model on all alternatives, with car as the base level
 ## like in Greene's book.
 
-x <- mlogit(mode~ttme+gc+avinc,ModeChoice,reflevel="car")
+x <- mlogit(choice~wait+gcost+avinc,TravelMode,reflevel="car")
 
 ## Estimate the same model for ground modes only (the variable avinc
 ## must be dropped because it is 0 for every observation
 
-g <- mlogit(mode~ttme+gc,ModeChoice,reflevel="car",
+g <- mlogit(choice~wait+gcost,TravelMode,reflevel="car",
             alt.subset=c("car","bus","train"))
 
 ## Compute the test

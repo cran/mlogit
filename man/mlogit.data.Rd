@@ -5,16 +5,19 @@
   shape a \code{data.frame} in a suitable form for the use of the \code{mlogit} function.
 }
 \usage{
-mlogit.data(x, choice, shape = c("wide","long"), varying = NULL,
+mlogit.data(data, choice, shape = c("wide","long"), varying = NULL,
             sep=".",alt.var = NULL, id.var = NULL,
             alt.levels = NULL, opposite = NULL, ...)
 }
 
 \arguments{
 
-  \item{x}{a \code{data.frame},}
+  \item{data}{a \code{data.frame},}
 
-  \item{choice}{the variable indicating the choice made,}
+  \item{choice}{the variable indicating the choice made: it can be
+  either a logical vector, a numerical vector with 0 where the
+  alternative is not chosen, a factor with level 'yes' when the
+  alternative is chosen}
   
   \item{shape}{the shape of the \code{data.frame}: whether \code{long} if each
     row is an alternative or \code{wide} if each row is an observation,}
@@ -56,31 +59,24 @@ mlogit.data(x, choice, shape = c("wide","long"), varying = NULL,
 
 # ModeChoice is a long data.frame 
 
-data("ModeChoice",package="Ecdat")
-ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="long",
+data("TravelMode",package="AER")
+TM <- mlogit.data(TravelMode,choice="choice",shape="long",
                  alt.levels=c("air","train","bus","car"))
 
-# Same but with an alt variable called altm
+# Same but the alt variable called mode is provided
 
-data("ModeChoice",package="Ecdat")
-ModeChoice$altm <- rep(c("air","train","bus","car"),210)
-ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="vert",
-                 alt.var="altm")
+TM <- mlogit.data(TravelMode,choice="choice",shape="long",
+                  alt.var="mode")
 
-# Same but with an chid variable called ind 
+# Same but the chid variable called individual is provided
 
-data("ModeChoice",package="Ecdat")
-ModeChoice$ind <- rep(1:210,each=4)
-ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="long",
-                 id.var="ind",alt.levels=c("air","train","bus","car"))
+TM <- mlogit.data(TravelMode,choice="choice",shape="long",
+                 id.var="individual",alt.levels=c("air","train","bus","car"))
 
 # Same but with two own provided variables
 
-data("ModeChoice",package="Ecdat")
-ModeChoice$ind <- rep(1:210,each=4)
-ModeChoice$altm <- rep(c("air","train","bus","car"),210)
-ModeChoice <- mlogit.data(ModeChoice,choice="mode",shape="long",
-                 id.var="ind",alt.var="altm")
+TM <- mlogit.data(TravelMode,choice="choice",shape="long",
+                 id.var="individual",alt.var="mode")
 
 
 # Train is a wide data.frame with columns 'choiceid' is the choice
@@ -95,7 +91,7 @@ Train <- mlogit.data(Train,choice="choice",shape="wide",
 # Car is a wide data.frame, indexes names are provided
 
 data("Car",package="Ecdat")
-Carl <-
+Car <-
 mlogit.data(Car,varying=5:70,shape="wide",sep="",choice="choice",
             id.var="Mr",alt.var="Car",alt.levels=1:6)
 

@@ -36,16 +36,17 @@ hmftest.mlogit <- function(x, z, ...){
 
 
 mfR2 <- function(x){
-  ll <- logLik(x)
-  data.name <- x$call$data
-  choice.name <- as.character(x$call$formula[[2]])
-  data <- eval(data.name,envir=parent.frame())
-  alt <- data[[2]]
-  choice <- data[[choice.name]]
-  eff <- table(alt[choice])
-  n <- sum(eff)
-  llo <- sum(eff*log(eff/n))
-  1-ll/llo
+##   ll <- logLik(x)
+##   data.name <- x$call$data
+##   choice.name <- as.character(x$call$formula[[2]])
+##   data <- eval(data.name,envir=parent.frame())
+##   alt <- data[[2]]
+##   choice <- data[[choice.name]]
+##   eff <- table(alt[choice])
+##   n <- sum(eff)
+##   llo <- sum(eff*log(eff/n))
+##   1-ll/llo
+  1-x$logLik/x$logLik0
 }
 
 lratio <- function(object){

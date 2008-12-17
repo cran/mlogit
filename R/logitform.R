@@ -103,14 +103,13 @@ model.matrix.logitform <- function(object, data, ...){
 }
 
 model.frame.logitform <- function(formula, data, ...){
-  mc <- match.call()
   indexes <- data[,c(1:2)]
   formula <- expand.formula(formula, data)
   class(formula) <- "formula"
   mf <- model.frame(formula,data, ...)
   terms.mf <- attr(mf,"terms")
   selected.rows <- intersect(rownames(mf),rownames(indexes))
-  mf <- cbind(indexes[selected.rows,],mf[selected.rows,])
+  mf <- cbind(indexes[selected.rows,],mf[selected.rows,,drop = FALSE])
   attr(mf,"terms") <- terms.mf
   mf
 }
