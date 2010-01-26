@@ -1,116 +1,108 @@
-##-------------------------------
-## methods for logitform objects |
-##-------------------------------
-##    * terms.logitform          |
-##    * update.logitform         |
-##    * is.logitform             |
-##    * logitform.formula        |
-##    * logitform.list           |
-##    * model.matrix.logitform   |
-##    * model.frame.logitform    |
-##-------------------------------
-
-terms.logitform <- function(x,...){
-  rhs <- x[[3]]
-  saveformula <- x
-  if (length(rhs==1)){
-    alt.spec <- paste(deparse(rhs))
-    ind.spec <- NULL
-  }
-  if(length(rhs)>1 && rhs[[1]]=="|"){
-    ind.spec <- deparse(rhs[[3]])
-    alt.spec <- paste(deparse(rhs[[2]]))
-  }
-    y <- as.character(x[[2]])
-  x <- list(y=y,ind.spec=ind.spec,alt.spec=alt.spec)
-  x
+has.intercept <- function(object, ...) {
+  UseMethod("has.intercept")
 }
 
-update.logitform <- function(object, new,...){
-  old <- object
-  if (!is.logitform(old)) old <- logitform(old)
-  if (!is.logitform(new)) new <- logitform(new)
-  to <- terms(old)
-  tn <- terms(new)
-  if (tn$y!=".") to$y=tn$y
-  if (tn$alt.spec!="."){
-    old.alt.spec <- formula(paste("~",to$alt.spec))
-    new.alt.spec <- formula(paste("~",tn$alt.spec))
-    alt.spec <- update(old.alt.spec,new.alt.spec)
-    to$alt.spec <- paste(deparse(alt.spec[[2]]))
-  }
-  if (!is.null(tn$ind.spec) && tn$ind.spec!="."){
-    new.ind.spec <- formula(paste("~",tn$ind.spec))
-    if (is.null(to$ind.spec)){
-      ind.spec <- new.ind.spec
-    }
-    else{
-      old.ind.spec <- formula(paste("~",to$ind.spec))
-      ind.spec <- update(old.ind.spec,new.ind.spec)
-    }
-    to$ind.spec <- paste(deparse(ind.spec[[2]]))
-    if (to$ind.spec=="1") to$ind.spec <- NULL
-  }
-#  if (to$alt.spec=="1") to$alt.spec <- "0"
-  logitform(to)
-  
+has.intercept.default <- function(object, ...) {
+  has.intercept(formula(object), ...)
 }
 
-is.logitform <- function(object){
-  ifelse(class(object)[1]=="logitform",TRUE,FALSE)
+has.intercept.formula <- function(object, ...) {
+  attr(terms(object), "intercept") == 1L
 }
+
+has.intercept.Formula <- function(object, rhs = NULL, ...) {
+  ## NOTE: return a logical vector of the necessary length
+  ## (which might be > 1)
+  if(is.null(rhs)) rhs <- 1:length(attr(object, "rhs"))
+  sapply(rhs, function(x) has.intercept(formula(object, lhs = 0, rhs = x)))
+}
+
+
+
+## pFormula:
+## methods : formula, model.frame, model.matrix, pmodel.response
 
 logitform <- function(object){
   UseMethod("logitform")
 }
 
+is.logitform <- function(object)
+  inherits(object, "logitform")
+
 logitform.formula <- function(object){
-  class(object) <- c("logitform","formula")
+  if (!inherits(object, "Formula")) object <- Formula(object)
+  class(object) <- c("logitform", "Formula", "formula")
   object
 }
 
-logitform.list <- function(object){
-  if (is.null(object$y)) y <- "" else y <- object$y
-  if (is.null(object$alt.spec)) alt.spec <- 0 else alt.spec <- object$alt.spec
-  if (is.null(object$ind.spec)){
-    x <- paste(y,"~",alt.spec)
+expand.logitform <- function(x, data){
+  ind.spec <- NULL
+  rhs <- x[[3]]
+  saveformula <- x
+  if(length(rhs)>1 && rhs[[1]]=="|"){
+    ind.spec <- paste("alt",":(",deparse(rhs[[3]]),")",sep="")
+    alt.spec <- paste(deparse(rhs[[2]]))
+    y <- as.character(x[[2]])
+    alt.spec <- paste(alt.spec,"+",ind.spec)
+    x <- as.formula(paste(y," ~ ",alt.spec,sep=""))
   }
   else{
-    ind.spec <- object$ind.spec
-    x <- paste(y,"~",alt.spec,"|",ind.spec)
+    class(x) <- "formula"
   }
-  x <- formula(x)
-  logitform(x)
+  x
+}
+
+logitform <- function(object) {
+  stopifnot(inherits(object, "formula"))
+  object <- Formula(object)
+  class(object) <- c("logitform", class(object))
+  object
+}
+
+as.Formula.logitform <- function(x, ...){
+  class(x) <- class(x)[-1]
+  x
+}
+
+model.frame.logitform <- function(formula, data, ..., lhs = NULL, rhs = NULL){
+  if (is.null(rhs)) rhs <- 1:(length(formula)[2])
+  if (is.null(lhs)) lhs <- ifelse(length(formula)[1]>0, 1, 0)
+  index <- attr(data, "index")
+  mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
+  index <- index[rownames(mf),]
+  index <- data.frame(lapply(index, function(x) x[drop = TRUE]), row.names = rownames(index))
+  structure(mf,
+            index = index,
+            class = c("mlogit.data", class(mf)))
 }
 
 model.matrix.logitform <- function(object, data, ...){
-  alt.name <- names(data)[2]
-  formula <- expand.formula(object, data)
-  if (attr(terms(formula),"intercept")==1){
-    upform <- as.formula(paste(".~",alt.name,"+.+1"))
-    formula <- update(formula,upform)
+  K <- length(data)
+  omitlines <- attr(na.omit(data), "na.action")
+  index <- attr(data, "index")
+  alt <- index[["alt"]]
+  chid <- index[["chid"]]
+  has.int <- has.intercept(object)
+  formula <- expand.logitform(object)
+  if (has.int){
+    upform <- as.formula(paste(".~", "alt", "+.+1"))
+    formula <- update(formula, upform)
   }
   else{
-    formula <- update(formula,.~.+1)
+    formula <- update(formula, .~.+1)
   }
-  mf <- model.frame(formula,data)
-  X <- model.matrix(formula,data)[,-1,drop=F]
-  lev1 <- levels(data[[alt.name]])[1]
-  motif <- paste(alt.name,lev1,":",sep="")
-  varkeep <- regexpr(motif,colnames(X))<0
+  data$alt <- alt
+  X <- model.matrix(formula, data)[, -1, drop = F]
+  lev1 <- levels(alt)[1]
+  motif <- paste("alt", lev1, ":", sep = "")
+  varkeep <- regexpr(motif, colnames(X))<0
   X <- X[,varkeep]
+  X[omitlines, ] <- NA
   X
 }
 
-model.frame.logitform <- function(formula, data, ...){
-  indexes <- data[,c(1:2)]
-  formula <- expand.formula(formula, data)
-  class(formula) <- "formula"
-  mf <- model.frame(formula,data, ...)
-  terms.mf <- attr(mf,"terms")
-  selected.rows <- intersect(rownames(mf),rownames(indexes))
-  mf <- cbind(indexes[selected.rows,],mf[selected.rows,,drop = FALSE])
-  attr(mf,"terms") <- terms.mf
-  mf
+has.intercept.logitform <- function(object, ...){
+  attr(object, "class") <- "Formula"
+  has.int <- has.intercept(object)
+  ifelse(length(has.int) > 1, has.int[2], has.int[1])
 }
-  

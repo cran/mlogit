@@ -1,14 +1,13 @@
 \name{mlogit}
 \alias{mlogit}
 \alias{print.mlogit}
-
+\alias{suml}
 \alias{fitted.mlogit}
 \alias{residuals.mlogit}
 \alias{df.residual.mlogit}
 \alias{terms.mlogit}
 \alias{model.matrix.mlogit}
 \alias{update.mlogit}
-
 \alias{summary.mlogit}
 \alias{print.summary.mlogit}
 \alias{vcov.mlogit}
@@ -19,8 +18,11 @@
   alternative-specific and/or individual specific variables.
 }
 \usage{
-mlogit(formula, data, subset, weights, na.action,
-       alt.subset = NULL, reflevel = NULL, ...)
+mlogit(formula, data, subset, weights, na.action, start = NULL,
+       alt.subset = NULL, reflevel = NULL, 
+       nests = NULL, heterosc = FALSE, rpar = NULL,
+       R = 40, correlation = FALSE, halton = NULL,
+       random.nb = NULL, estimate = TRUE, ...)
 \method{print}{mlogit}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), ...)
 \method{summary}{mlogit}(object, ...)
@@ -42,22 +44,53 @@ mlogit(formula, data, subset, weights, na.action,
   \item{x, object}{an object of class \code{mlogit}}
   \item{formula}{a symbolic description of the model to be estimated,}
   \item{new}{an updated formula for the \code{update} method,}
-  \item{data}{the data,}
+  
+  \item{data}{the data: an \code{mlogit.data} object or an ordinary
+  \code{data.frame},}
+
   \item{subset}{an optional vector specifying a subset of observations,}
   \item{weights}{an optional vector of weights,}
   \item{na.action}{a function which indicates what should happen when
-  the data contains '\code{NA}'s,}
+    the data contains '\code{NA}'s,}
+  \item{start}{a vector of starting values,}
   \item{alt.subset}{a vector of character strings containing the subset of
   alternative on which the model should be estimated,}
   \item{reflevel}{the base alternative (the one for which the
     coefficients of individual-specific variables are normalized to 0),}
+  \item{estimate}{a boolean indicating whether the model should be
+    estimated or not: if not, the \code{model.frame} is returned,}
+  \item{nests}{a named list of characters vectors, each names being a
+  nest, the corresponding vector being the set of alternatives that
+  belong to this nest,}
+  \item{heterosc}{a boolean, if \code{TRUE}, the heteroscedastic logit
+  model is esitmated,}
+  \item{rpar}{a named vector whose names are the random parameters and
+  values the distribution : \code{'n'} for normal, \code{'l'} for
+  log-normal, \code{'t'} for truncated normal, \code{'u' } for uniform,}
+  \item{R}{the number of function evaluation for the gaussian quadrature
+  method used if \code{heterosc=TRUE}, the number of draws of
+  pseudo-random numbers if \code{rpar} is not \code{NULL},}
+  \item{correlation}{only relevant if \code{rpar} is not \code{NULL}, if
+  true, the correlation between random parameters is taken into
+  account,}
+  \item{halton}{only relevant if \code{rpar} is not \code{NULL}, if not
+  \code{NULL}, halton sequence is used instead of pseudo-random
+  numbers. If \code{halton=NA}, some default values are used for the
+  prime of the sequence (actually, the primes are used in order) and for
+  the number of elements droped. Otherwise, \code{halton} should be a
+  list with elements \code{prime} (the primes used) and \code{drop} (the
+  number of elements droped).}
+  \item{random.nb}{only relevant if \code{rpar} is not \code{NULL}, a
+  user-supplied matrix of random,}
   \item{digits}{the number of digits,}
   \item{width}{the width of the printing,}
   \item{outcome}{a boolean which indicates, for the \code{fitted} and the
   \code{residuals} methods whether a matrix (for each choice, one value
   for each alternative) or a vector (for each choice, only a value for
   the alternative chosen) should be returned,}
-  \item{...}{further arguments.}
+  \item{...}{further arguments passed to \code{mlogit.data} or
+  \code{mlogit.optim}.}
+  
 }
 
 \value{
@@ -68,10 +101,8 @@ mlogit(formula, data, subset, weights, na.action,
   \item{hessian}{the hessian of the log-likelihood at convergence,}
   \item{gradient}{the gradient of the log-likelihood at convergence,}
   \item{call}{the matched call,}
-  
   \item{est.stat}{some information about the estimation (time used,
     optimisation method),}
-  
   \item{freq}{the frequency of choice,}
   \item{residuals}{the residuals,}
   \item{fitted.values}{the fitted values,}
@@ -79,29 +110,58 @@ mlogit(formula, data, subset, weights, na.action,
   \item{expanded.formula}{the formula (a \code{formula} object),}
   \item{model}{the model frame used,}
   \item{index}{the index of the choice and of the alternatives.}
-
 }
 \details{
   
   Let \code{J} being the number of alternatives.  The formula may
-  include alternative-specific and individual specific variables. For the
-  latter, \code{J-1} coefficients are estimated for each
-  variable. Alternative and individual specific variables are separated by a
-  \code{|}. For example, if \code{x1} and \code{x2} are alternative specific
-  and \code{z1} and \code{z2} are individual specific, the formula
-  \code{y~x1+x2|z1+z2} describe a model with one coefficient for
+  include alternative-specific and individual specific variables. For
+  the latter, \code{J-1} coefficients are estimated for each
+  variable. Alternative and individual specific variables are separated
+  by a \code{|}. For example, if \code{x1} and \code{x2} are alternative
+  specific and \code{z1} and \code{z2} are individual specific, the
+  formula \code{y~x1+x2|z1+z2} describe a model with one coefficient for
   \code{x1} and \code{x2} and \code{J-1} coefficients for \code{z1} and
-  \code{z2}. \code{J-1} intercepts are also estimated. A model without
-  intercepts is defined by the formula : \code{y~x1+x2-1|z1+z2}. To
-  obtain alternative specific coefficients for the alternative-specific
-  variable \code{x2}, use : \code{y~x1+x2+x2:alt|z1+z2} (replace
-  \code{alt} by the relevant variable name if the alternative index is
-  provided). Models with only alternative-specific or individual-specific
-  variables are respectively estimated by \code{y~x1+x2} and
-  \code{y~1|z1+z2}.
+  \code{z2}. \code{J-1} intercepts are also estimated. Models with only
+  alternative-specific or individual-specific variables are respectively
+  estimated by \code{y~x1+x2} and \code{y~0|z1+z2}. In multinomial logit
+  models, the intercept are alternative specific. By default, intercepts
+  are included, to obtain a model without intercepts, use \code{-1} or
+  \code{+0} on the second part of the equation:
+  \code{y~x1+x2|z1+z2-1}. For models with only alternative specific,
+  this can be done on the unique part, i.e. \code{y~x1+x2-1} is similar
+  to \code{y~x1+x2|0}.
 
-  The model is estimated with the \code{maxLik} package and the
-  Newton-Raphson method, using analytic gradient and hessian.
+  The \code{data} argument may be an ordinary \code{data.frame}. In this
+  case, some supplementary arguments should be provided and are passed
+  to \code{mlogit.data}. Note that it is not necessary to indicate the
+  choice argument as it is deduced from the formula.
+
+  The model is estimated using the \code{mlogit.optim} function. 
+
+  The basic multinomial logit model and three important extentions of
+  this model may be estimated.
+
+  If \code{heterosc=TRUE}, the heteroscedastic logit model is
+  estimated. \code{J-1} extra coefficients are estimated that represent
+  the scale parameter for \code{J-1} alternatives, the scale parameter
+  for the reference alternative being normalized to 1. The probabilities
+  doesn't have a closed form, they are estimated using a gaussian
+  quadrature method.
+
+  If \code{nests} is not \code{NULL}, the nested logit model is
+  estimated.
+
+  If \code{rpar} is not \code{NULL}, the random parameter model is
+  estimated. The probabilities are approximated using simulations with
+  \code{R} draws and halton sequences are used if \code{halton} is not
+  \code{NULL}. Pseudo-random numbers are drawns from a standard normal
+  and the relevant transformations are performed to obtain numbers
+  drawns from a normal, log-normal, censored-normal or uniform
+  distribution. If \code{correlation=TRUE}, the correlation between the
+  random parameters are taken into account by estimating the components
+  of the cholesky decomposition of the covariance matrix. With G random
+  parameters, without correlation G standard deviations are estimated,
+  with correlation G * (G + 1) /2 coefficients are estimated.
   
 }
 
@@ -111,33 +171,87 @@ mlogit(formula, data, subset, weights, na.action,
 ## There are two alternative specific variables : pr (price) and ca (catch)
 ## and four fishing mode : beach, pier, boat, charter
 
-data("Fishing",package="mlogit")
-Fish <- mlogit.data(Fishing,varying=c(4:11),shape="wide",choice="mode")
+data("Fishing", package = "mlogit")
+Fish <- mlogit.data(Fishing, varying = c(4:11), shape = "wide", choice = "mode")
 
 ## a pure "conditional" model without intercepts
 
-summary(mlogit(mode~pr+ca-1,data=Fish))
+summary(mlogit(mode ~ pr + ca - 1, data = Fish))
 
 ## a pure "multinomial model"
 
-summary(mlogit(mode~1|income,data=Fish))
+summary(mlogit(mode ~ 0 | income, data = Fish))
 
 ## which can also be estimated using multinom (package nnet)
 
 library(nnet)
-summary(multinom(mode~income,data=Fishing))
+summary(multinom(mode ~ income, data = Fishing))
 
 ## a "mixed" model
 
-m <- mlogit(mode~pr+ca|income,data=Fish)
+m <- mlogit(mode ~ pr + ca | income, data = Fish)
 summary(m)
+
+## same model with charter as the reference level
+
+m <- mlogit(mode ~ pr + ca | income, data = Fish, reflevel = "charter")
+
+## same model with a subset of alternatives : charter, pier, beach
+
+m <- mlogit(mode ~ pr + ca | income, data = Fish,
+            alt.subset = c("charter", "pier", "beach"))
+
+% ## model on 'unbalanced data i.e. for some observations, some
+% ## alternatives are missing
+
+% # a data.frame in wide format with two missing prices
+% Fishing2 <- Fishing
+% Fishing2[1, "pr.pier"] <- Fishing2[3, "pr.beach"] <- NA
+% mlogit(mode~pr+ca|income, Fishing2, shape="wide", choice="mode", varying = 4:11)
+
+% # a data.frame in long format with three missing lines
+% data("TravelMode", package = "AER")
+% Tr2 <- TravelMode[-c(2, 7, 9),]
+% mlogit(choice~wait+gcost|income+size, Tr2, shape = "long",
+%        id.var = "individual", alt.var="mode", choice = "choice")
+
+## An heteroscedastic logit model
+
+data("TravelMode", package = "AER")
+hl <- mlogit(choice ~ wait + travel + vcost, TravelMode,
+             shape = "long", id.var = "individual", alt.var = "mode",
+             method = "bfgs", heterosc = TRUE, tol = 10)
+
+
+## A nested logit model
+
+TravelMode$avincome <- with(TravelMode, income * (mode == "air"))
+TravelMode$time <- with(TravelMode, travel + wait)/60
+TravelMode$timeair <- with(TravelMode, time * I(mode == "air"))
+TravelMode$income <- with(TravelMode, income / 10)
+#Heiss p.231
+nl <- mlogit(choice ~ time + timeair | income, TravelMode, shape = "long",
+             alt.var = "mode", print.level = 0, method = "bfgs",
+             nests = list(public = c("train", "bus"), other = c("air","car")),
+             tol = 1)
+
+## a mixed logit model
+
+rpl <- mlogit(mode ~ pr + ca | income, Fishing, varying = 4:11, shape = 'wide',
+              rpar = c(pr = 'n', ca = 'n'), correlation = TRUE, halton = NA,
+              R = 10, tol = 10, print.level = 0)
+summary(rpl)
+
 
 }
 
 \seealso{
-  \cite{\code{mlogit.data}} to shape the data. \code{multinom}
-  from package \code{nnet} performs the estimation of the multinomial
-  logit model with individual specific variables
+  
+  \cite{\code{mlogit.data}} to shape the data. \code{multinom} from
+  package \code{nnet} performs the estimation of the multinomial logit
+  model with individual specific variables. \cite{\code{mlogit.optim}}
+  for details about the optimization function.
+  
 }
 
 \author{Yves Croissant}

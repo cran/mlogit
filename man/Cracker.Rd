@@ -16,7 +16,7 @@
 \format{A dataframe containing :
   \describe{
     \item{id}{individuals identifiers}
-    \item{choice}{one of sunshine, kleebler, nabisco, private}
+    \item{choice}{one of sunshine, keebler, nabisco, private}
     \item{disp.z}{is there a display for brand z ?}
     \item{feat.z}{is there a newspaper feature advertisement for brand z ?}
     \item{price.z}{price of brand z}

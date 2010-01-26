@@ -1,9 +1,10 @@
-export(mlogit,mlogit.data,hmftest,logitform,is.logitform)
-S3method(logitform,formula)
-S3method(logitform,list)
-S3method(model.matrix,logitform)
-S3method(model.frame,logitform)
-S3method(update,logitform)
+export(mlogit, mlogit.data, hmftest, #logitform, is.logitform,
+       mlogit.optim)
+
+#mlogit methods
+#S3method(logitform,formula)
+#S3method(model.matrix,logitform)
+#S3method(model.frame,logitform)
 S3method(update,mlogit)
 S3method(print,mlogit)
 S3method(summary,mlogit)
@@ -15,4 +16,5 @@ S3method(hmftest,formula)
 S3method(residuals,mlogit)
 S3method(fitted,mlogit)
 S3method(df.residual,mlogit)
-S3method(terms,mlogit)
+S3method(print, rpar)
+S3method(summary, rpar)

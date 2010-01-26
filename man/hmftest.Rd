@@ -71,7 +71,8 @@ TravelMode$avinc <- with(TravelMode,(mode=='air')*income)
 ## Estimate the model on all alternatives, with car as the base level
 ## like in Greene's book.
 
-x <- mlogit(choice~wait+gcost+avinc,TravelMode,reflevel="car")
+#x <- mlogit(choice~wait+gcost+avinc,TravelMode,reflevel="car")
+x <- mlogit(choice~wait+gcost+avinc,TravelMode)
 
 ## Estimate the same model for ground modes only (the variable avinc
 ## must be dropped because it is 0 for every observation

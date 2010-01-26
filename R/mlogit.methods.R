@@ -6,6 +6,7 @@
 ##    * df.residual           |
 ##    * terms                 |
 ##    * model.matrix          |
+##    * model.response        |
 ##    * update                |
 ##    * print                 |
 ##    * vcov                  |
@@ -19,8 +20,8 @@ fitted.mlogit <- function(object, outcome = TRUE, ...){
     result <- object$fitted.values
   }
   else{
-    J <- length(levels(object$index[[2]]))
-#    y <- matrix(model.response(object$model),ncol=J,byrow=T)
+    index <- attr(object$model, "index")
+    J <- length(levels(index[[2]]))
     y <- matrix(model.response.mlogit(object),ncol=J,byrow=T)
     result <- apply(y*object$fitted.values,1,sum)
   }
@@ -28,13 +29,12 @@ fitted.mlogit <- function(object, outcome = TRUE, ...){
 }
 
 residuals.mlogit <- function(object, outcome = TRUE, ...){
-  cat("ca roule\n")
   if (!outcome){
     result <- object$residuals
   }
   else{
-    J <- length(levels(object$index[[2]]))
-    y <- matrix(object$model[[3]],ncol=J,byrow=T)
+    J <- ncol(object$residuals)
+    y <- matrix(model.response(object$model),ncol=J,byrow=T)
     result <- apply(y*object$residuals,1,sum)
   }
   result
@@ -47,7 +47,7 @@ df.residual.mlogit <- function(object, ...){
 }
 
 terms.mlogit <- function(x, ...){
-  terms(x$expanded.formula)
+  terms(x$formula)
 }
 
 model.matrix.mlogit <- function(object, ...){
@@ -55,6 +55,7 @@ model.matrix.mlogit <- function(object, ...){
 }
 
 model.response.mlogit <- function(object, ...){
+  cat("ca roule\n")
   y.name <- paste(deparse(object$formula[[2]]))
   object$model[[y.name]]
 }
@@ -106,10 +107,15 @@ summary.mlogit <- function (object,...){
   CoefTable <- cbind(b,std.err,z,p)
   colnames(CoefTable) <- c("Estimate","Std. Error","t-value","Pr(>|t|)")
   object$CoefTable <- CoefTable
-  if (attr(terms(object$expanded.formula),"intercept")==1){
+  if (has.intercept(object$formula)){
     object$lratio <- lratio(object)
     object$mfR2 <- mfR2(object)
   }
+  if (!is.null(object$rpar)){
+    rpar <- object$rpar
+    object$summary.rpar <- t(sapply(rpar,summary))
+  }
+
   class(object) <- c("summary.mlogit","mlogit")
   return(object)
 }
@@ -132,13 +138,18 @@ print.summary.mlogit <- function(x,digits= max(3, getOption("digits") - 2),width
   cat("\n")
   cat(paste("Log-Likelihood: ",signif(x$logLik,digits),"\n",sep=""))
 
-  if (attr(terms(x$expanded.formula),"intercept")==1){
+  if (has.intercept(x$formula)){
   
     cat("McFadden R^2: ",signif(x$mfR2,digits),"\n")
   
     cat("Likelihood ratio test : ",names(x$lratio$statistic),
         " = ",signif(x$lratio$statistic,digits),
         " (p.value=",format.pval(x$lratio$p.value,digits=digits),")\n",sep="")
+  }
+
+  if (!is.null(x$summary.rpar)){
+    cat("\nrandom coefficients\n")
+    print(x$summary.rpar)
   }
   invisible(x)
 }

@@ -18,3 +18,12 @@ Changes since version 0-1.0
 	model.matrix and model.frame methods are available.
 
 	
+Changes since version 0.1-2
+
+	* major change, most of the package has been rewriten
+
+	* it is now possible to estimate heteroscedastic, nested and mixed
+	effects logit model
+
+	* the package doesn't depend any more on maxLik but a specific
+	optimization function is provided for efficiency reason

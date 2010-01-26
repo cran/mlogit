@@ -46,7 +46,8 @@ mfR2 <- function(x){
 ##   n <- sum(eff)
 ##   llo <- sum(eff*log(eff/n))
 ##   1-ll/llo
-  1-x$logLik/x$logLik0
+  logLik0 <- attr(x$logLik, 'null')
+  1-x$logLik/logLik0
 }
 
 lratio <- function(object){
