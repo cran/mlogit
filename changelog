@@ -27,3 +27,12 @@ Changes since version 0.1-2
 
 	* the package doesn't depend any more on maxLik but a specific
 	optimization function is provided for efficiency reason
+
+Changes since version 0.1-3
+
+	* mlogit didn't work when the dependent variable was an ordered
+	factor in a "wide-shaped" data.frame.
+
+	* the reflevel argument didn't work any more in version 0.1-4.
+
+	

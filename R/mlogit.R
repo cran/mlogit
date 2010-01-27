@@ -61,15 +61,20 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   if (use.mlogit.data) mf$data <- data
 #  mf <- eval(mf, parent.frame())
   mf <- eval(mf, sys.frame(which = nframe))
+  
+  # change the reference level of the response if required
+  if (!is.null(reflevel)){
+    attr(mf, "index")[["alt"]] <-
+      relevel(attr(mf, "index")[["alt"]], reflevel)
+  }
+
   index <- attr(mf, "index")
+  
   alt <- index[["alt"]]
   chid <- index[["chid"]]
   id <- index[["id"]]
   if (!is.null(id)) id <- split(index[["id"]], alt)[[1]]
-  # change the reference level of the response if required
-  if (!is.null(reflevel)){
-    alt <- relevel(alt, reflevel)
-  }
+
   # compute the relevent subset if required
   if (!is.null(alt.subset)){
     # we keep only choices that belong to the subset

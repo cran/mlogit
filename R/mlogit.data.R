@@ -60,7 +60,9 @@ mlogit.data <- function(data, choice, shape = c("wide","long"), varying = NULL,
   }
   
   if (shape == "wide"){
-    data[[choice]] <- as.factor(data[[choice]])
+    class(data[[choice]]) <- "factor"
+#    data[[choice]] <- as.factor(data[[choice]])
+# this doesn't work for ordered factors which remains ordered    
     if (is.null(alt.var)) alt <- "alt" else alt <- alt.var
     if (is.null(chid.var)) chid <- "chid" else chid <- chid.var
     if (!is.null(varying)){
