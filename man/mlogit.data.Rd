@@ -99,7 +99,7 @@ TM <- mlogit.data(TravelMode, choice = "choice", shape = "long",
 #  index, the alternatives are named "ch1" and "ch2", the opposite of
 #  the variables is returned
 
-data("Train", package = "Ecdat")
+data("Train", package = "mlogit")
 Train <- mlogit.data(Train, choice = "choice", shape = "wide",
                      varying = 4:11, alt.levels = c("ch1", "ch2"), sep = "",
                      opposite = c("price", "time", "change", "comfort"))

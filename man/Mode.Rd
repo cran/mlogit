@@ -1,7 +1,7 @@
 \name{Mode}
 \docType{data}
 \alias{Mode}
-\title{Mode Choice }
+\title{Mode Choice}
 \description{
   a cross-section
 

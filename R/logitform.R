@@ -68,6 +68,17 @@ model.frame.logitform <- function(formula, data, ..., lhs = NULL, rhs = NULL){
   if (is.null(rhs)) rhs <- 1:(length(formula)[2])
   if (is.null(lhs)) lhs <- ifelse(length(formula)[1]>0, 1, 0)
   index <- attr(data, "index")
+##   weights <- match.call()$weights
+##   print(weights)
+##   if (!is.null(weights)){
+##     print(class(formula))
+##     formula <- as.Formula(formula(formula), paste("~", weights))
+##     print(formula)
+##   }
+##   else{
+##     formula <- as.Formula(formula)
+##   }
+##   mf <- model.frame(formula, as.data.frame(data))
   mf <- model.frame(as.Formula(formula), as.data.frame(data), ..., rhs = rhs)
   index <- index[rownames(mf),]
   index <- data.frame(lapply(index, function(x) x[drop = TRUE]), row.names = rownames(index))

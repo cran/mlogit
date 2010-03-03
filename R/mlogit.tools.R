@@ -128,9 +128,19 @@ mlogit.optim <- function(f, start,
   chi2 <- 1E+10
   i <- 0
   # eval a first time the function, the gradient and the hessian
+
+###################################
+##  Test the gradient
+##   nd <- f
+##   nd[["f"]] <- nd[[1]]
+##   nd[[1]] <- as.name("numderiv")
+##   x <- eval(nd, parent.frame())
+##   print(x)
+###################################
+
   x <- eval(f, parent.frame())
   if (print.level > 0)
-    cat(paste("Valeur initiale de la fonction :", as.numeric(x), "\n"))
+    cat(paste("Initial value of the function :", as.numeric(x), "\n"))
   g <- attr(x, "gradient")
   if (method == 'nr')   H <- attr(x, "hessian")
   if (method == 'bhhh') H <- crossprod(attr(x, "gradi"))

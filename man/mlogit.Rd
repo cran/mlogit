@@ -20,9 +20,10 @@
 \usage{
 mlogit(formula, data, subset, weights, na.action, start = NULL,
        alt.subset = NULL, reflevel = NULL, 
-       nests = NULL, heterosc = FALSE, rpar = NULL,
+       nests = NULL, un.nest.el = FALSE, unscaled = FALSE,
+       heterosc = FALSE, rpar = NULL,
        R = 40, correlation = FALSE, halton = NULL,
-       random.nb = NULL, estimate = TRUE, ...)
+       random.nb = NULL, panel = FALSE, estimate = TRUE, ...)
 \method{print}{mlogit}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), ...)
 \method{summary}{mlogit}(object, ...)
@@ -62,6 +63,10 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   \item{nests}{a named list of characters vectors, each names being a
   nest, the corresponding vector being the set of alternatives that
   belong to this nest,}
+  \item{un.nest.el}{a boolean, if \code{TRUE}, the hypothesis of unique
+    elasticity is imposed for nested logit models,}
+  \item{unscaled}{a boolean, if \code{TRUE}, the unscaled version of the
+  nested logit model is estimated,}
   \item{heterosc}{a boolean, if \code{TRUE}, the heteroscedastic logit
   model is esitmated,}
   \item{rpar}{a named vector whose names are the random parameters and
@@ -81,7 +86,12 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   list with elements \code{prime} (the primes used) and \code{drop} (the
   number of elements droped).}
   \item{random.nb}{only relevant if \code{rpar} is not \code{NULL}, a
-  user-supplied matrix of random,}
+    user-supplied matrix of random,}
+  
+  \item{panel}{only relevant if \code{rpar} is not \code{NULL} and if
+  the data are repeated observations of the same unit ; if \code{TRUE},
+  the mixed-logit model is estimated using panel techniques,}
+
   \item{digits}{the number of digits,}
   \item{width}{the width of the printing,}
   \item{outcome}{a boolean which indicates, for the \code{fitted} and the
@@ -241,7 +251,11 @@ rpl <- mlogit(mode ~ pr + ca | income, Fishing, varying = 4:11, shape = 'wide',
               rpar = c(pr = 'n', ca = 'n'), correlation = TRUE, halton = NA,
               R = 10, tol = 10, print.level = 0)
 summary(rpl)
-
+rpar(rpl)
+cor.mlogit(rpl)
+cov.mlogit(rpl)
+rpar(rpl, "ca")
+summary(rpar(rpl, "ca"))
 
 }
 

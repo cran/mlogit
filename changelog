@@ -33,6 +33,25 @@ Changes since version 0.1-3
 	* mlogit didn't work when the dependent variable was an ordered
 	factor in a "wide-shaped" data.frame.
 
-	* the reflevel argument didn't work any more in version 0.1-4.
+	* the reflevel argument didn't work any more in version 0.1-3.
 
+Changes since version 0.1-4
+
+	* if the choice variable is not an ordered factor, use as.factor()
+	instead of class() <- "factor"
+
+	* cov.mlogit, cor.mlogit, rpar , med, rg, stdev, mean functions
+	are added to extract and analyse random coefficients.
 	
+	* a panel argument is added to mlogit so that mixed models with
+	repeated observation can be estimated using panel methods or not
+
+	* a problem with the weights argument is fixed
+
+	* the estimation of nested logit models with a unique elasticity
+	is now possible using un.nest.el = TRUE
+
+	* the estimation of nested logit models can now be done with or
+	without normalization depending on the value of the argument
+	unscaled
+

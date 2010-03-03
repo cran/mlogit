@@ -1,7 +1,6 @@
 lnl.mlogits <- function(param, X, y, weights = NULL, gradient = FALSE,
                         hessian = FALSE, opposite = TRUE, sumlnl = TRUE,
                         direction = 0, initial.value = NULL){
-
   opposite <- ifelse(opposite, -1, +1)
   if (is.null(weights)) weights <- 1
   balanced <- TRUE
@@ -47,8 +46,13 @@ lnl.mlogits <- function(param, X, y, weights = NULL, gradient = FALSE,
 }
 
 lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = FALSE,
-                       opposite = TRUE, sumlnl = TRUE, nests,
-                       direction = rep(0, length(param)), initial.value = NULL){
+                       opposite = TRUE, sumlnl = TRUE, nests, un.nest.el = FALSE,
+                       unscaled = FALSE, direction = rep(0, length(param)),
+                       initial.value = NULL){
+  if (un.nest.el){
+    lambda <- param[length(param)]
+    param <- c(param, rep(lambda, length(nests)-1))
+  }
   opposite <- ifelse(opposite, -1, +1)
   if (is.null(weights)) weights <- 1
   K <- ncol(X[[1]])
@@ -58,13 +62,15 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
   names(nestv) <- unlist(nests)
   nestv <- nestv[names(X)]
   Y <- as.matrix(as.data.frame(y))
-
   step <- 1
   beta <- param[1:K] + direction[1:K]
   lambda <- param[-c(1:K)] + direction[-c(1:K)]
   names(lambda) <- names(nests)
   V <- sapply(X, function(x) as.numeric(crossprod(t(x),beta)))
   A <- exp(t(t(V)/lambda[nestv]))
+  #************************
+  if (unscaled) A <- exp(V)
+  #************************
   N <- c()
   ynest <- c()
   for (i in 1:J){
@@ -85,6 +91,9 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
       names(lambda) <- names(nests)
       V <- sapply(X, function(x) as.numeric(crossprod(t(x),beta)))
       A <- exp(t(t(V)/lambda[nestv]))
+      #************************
+      if (unscaled) A <- exp(V)
+      #************************
       N <- c()
       ynest <- c()
       for (i in 1:J){
@@ -107,10 +116,12 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
     Vl <- as.list(data.frame(V))
     Nl <- as.list(data.frame(N))
     Gbeta <- mapply(function(x, y)  x/y  , X, lambdal, SIMPLIFY = FALSE)
+    #************************
+    if (unscaled) Gbeta <- X
+    #************************
     Glamb <- mapply(function(x, y) -x/y^2, Vl, lambdal, SIMPLIFY = FALSE)
     Abeta <- mapply("*", Gbeta, Al, SIMPLIFY = FALSE)
     Alamb <- mapply("*", Glamb, Al, SIMPLIFY = FALSE)
-    
     Nbeta <- list()
     Nlamb <- list()
     ynest <- list()
@@ -121,24 +132,36 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
       Nlamb[[i]] <- suml(Alamb[anest])
       ynest[[i]] <- suml(y[anest])
     }
-    names(Nbeta) <- names(Nlamb) <- names(ynest) <- names(nests)
+    names(Nbeta) <- names(ynest) <- names(Nlamb) <- names(nests)
     Dbeta <- suml(mapply(function(x, y, z) x*y^(x-1)*z,
                          lambdanestl, Nl, Nbeta,
                          SIMPLIFY = FALSE))
-    Dlamb <- mapply(function(x, y, z) y^x*(log(y)+x/y*z),
-                    lambdanestl, Nl, Nlamb,
-                    SIMPLIFY = TRUE)
+    # **************
+    if (!unscaled){
+      Dlamb <- mapply(function(x, y, z) y^x*(log(y)+x/y*z),
+                      lambdanestl, Nl, Nlamb,
+                      SIMPLIFY = TRUE)
+      Nlamb <- mapply(function(x, y, z) log(y)+(x-1)/y*z,
+                      lambdanestl, Nl, Nlamb,
+                      SIMPLIFY = FALSE)
+    # **************
+    }
+    else{
+      Dlamb <- mapply(function(x, y) y^x*(log(y)),
+                      lambdanestl, Nl,
+                      SIMPLIFY = TRUE)
+      Nlamb <- mapply(function(x, y) log(y),
+                      lambdanestl, Nl,
+                      SIMPLIFY = FALSE)
+      
+    }      
     Nbeta <- mapply(function(x, y, z) (x-1)/y*z,
                  lambdanestl, Nl, Nbeta,
-                 SIMPLIFY = FALSE)
-    Nlamb <- mapply(function(x, y, z) log(y)+(x-1)/y*z,
-                 lambdanestl, Nl, Nlamb,
                  SIMPLIFY = FALSE)
     Gbetai <- suml(mapply("*", Gbeta, y, SIMPLIFY = FALSE))
     Nbetai <- suml(mapply("*", Nbeta, ynest, SIMPLIFY = FALSE))
     Nlambi <- mapply("*", Nlamb, ynest, SIMPLIFY = TRUE) 
     Glambi <- mapply("*", Glamb, y, SIMPLIFY = TRUE)   
-
     Glambi2 <- c()
     for (i in 1:J){
       anestname <- names(nests)[i]
@@ -146,7 +169,8 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
       Glambi2 <- cbind(Glambi2, apply(Glambi[, anest, drop = FALSE], 1, sum))
       colnames(Glambi2)[ncol(Glambi2)] <- anestname
     }
-    gradlambi <- Glambi2+Nlambi-Dlamb/Denom
+    gradlambi <- Glambi2 * (!unscaled)+Nlambi-Dlamb/Denom
+    if (un.nest.el) gradlambi <- apply(gradlambi, 1, sum)
     gradbetai <- Gbetai + Nbetai - Dbeta/Denom
     gradi <- opposite * weights * cbind(gradbetai, gradlambi)
     attr(lnl, "gradi") <- gradi
@@ -254,8 +278,9 @@ lnl.rlogit <- function(param, y, Xa, Xc,
   K <- Kc + Ka
   R <- nrow(random.nb)
   siga <- param[-c(1:K)] + direction[-c(1:K)]
-  names(mua) <- names(siga) <- colnames(Xa[[1]])
-
+  # seems redondant for uncorrelated models and false for correlated ones
+  if (!correlation)
+    names(mua) <- names(siga) <- colnames(Xa[[1]])
   b <- make.beta(mua, siga, rpar, random.nb, correlation)
   betaa <- b$betaa
   A <- lapply(Xc, function(x) as.vector(crossprod(t(as.matrix(x)), betac)))
@@ -272,7 +297,6 @@ lnl.rlogit <- function(param, y, Xa, Xc,
   pm <- apply(Pch, 1, mean)
   if (!is.null(id)) lnl <- opposite * sum(weights[!duplicated(id)]*log(pm))
   else lnl <- opposite * sum(weights*log(pm))
-
   if (!is.null(initial.value)){
     while(lnl > initial.value){
       step <- step / 2
