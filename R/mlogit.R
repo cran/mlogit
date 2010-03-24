@@ -8,11 +8,17 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   start.time <- proc.time()
   callT <- match.call(expand.dots = TRUE)
   callF <- match.call(expand.dots = FALSE)
-  formula <- callF$formula <- logitform(formula)
+  formula <- callF$formula <- mFormula(formula)
   nframe <- length(sys.calls())
 
   heterosc.logit <- heterosc
   nested.logit <- !is.null(nests)
+  if (!is.null(nests) && length(nests) == 1 && nests == "pcl"){
+    nested.logit <- FALSE
+    pair.comb.logit <- TRUE
+  }
+  else pair.comb.logit <- FALSE
+  
   mixed.logit <- !is.null(rpar)
   multinom.logit <- !heterosc & is.null(nests) & is.null(rpar)
 
@@ -31,11 +37,10 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   #  check whether arguments for mlogit.data are present: if so run
   #  mlogit.data
   ################################################################
- 
   mldata <- callT
   response.name <- paste(deparse(attr(formula, "lhs")[[1]]))
   m <- match(c("data", "choice", "shape", "varying", "sep",
-               "alt.var", "id.var", "alt.levels",
+               "alt.var", "chid.var", "alt.levels",
                "opposite", "drop.index", "id"),
              names(mldata), 0L)
   use.mlogit.data <- sum(m[-1]) > 0
@@ -60,8 +65,11 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   mf$formula <- formula
   mf[[1L]] <- as.name("model.frame")
   if (use.mlogit.data) mf$data <- data
+  # if the user called the data.frame "mldata", this conflicts with
+  # the call. The following line seems to fix the bug
+  mf$data <- data
   mf <- eval(mf, sys.frame(which = nframe))
-  
+
   # change the reference level of the response if required
   if (!is.null(reflevel)){
     attr(mf, "index")[["alt"]] <-
@@ -70,15 +78,14 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   index <- attr(mf, "index")
   alt <- index[["alt"]]
   chid <- index[["chid"]]
+
   if (panel){
     if (!mixed.logit) stop("panel is only relevant for mixed logit models")
     id <- index[["id"]]
     if (is.null(id)) stop("no individual index")
     id <- split(index[["id"]], alt)[[1]]
   }
-  else{
-    id <- NULL
-  }
+  else id <- NULL
   # compute the relevent subset if required
   if (!is.null(alt.subset)){
     # we keep only choices that belong to the subset
@@ -141,6 +148,8 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   }
   else weights <- NULL
   freq <- table(alt[y])
+  otime <- proc.time()
+
   X <- split(as.data.frame(X), alt)
   X <- lapply(X, as.matrix)
   y <- split(y, alt)
@@ -185,6 +194,15 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
       if (is.null(start)) sup.coef <- rep(1, J)
       names.sup.coef <- paste("lambda", names(nests), sep = ".")
     }
+  }
+  if (pair.comb.logit){
+    unalt <- levels(alt)
+    J <- length(unalt)
+    names.sup.coef <- NULL
+    for (i in 1:(J-1)){
+      names.sup.coef <- c(names.sup.coef, paste('lambda', unalt[i], unalt[(i+1):J], sep = ":"))
+    }
+    sup.coef <- rep(1, length(names.sup.coef))-rnorm(length(names.sup.coef))/10
   }
   if (heterosc.logit){
     unalt <- levels(alt)
@@ -255,19 +273,32 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     opt[c('Xa', 'Xc', 'y', 'Varc', 'Vara', 'random.nb', 'id', 'rpar', 'correlation')] <-
     list(as.name('Xa'), as.name('Xc'), as.name('y'), as.name('Varc'), as.name('Vara'),
          as.name('random.nb'), as.name('id'), as.name('rpar'), as.name('correlation'))
-    # this part to check the analytical derivates
-    if (FALSE){
-      thef <- opt; thef$f <- NULL; names(thef)[2] <- "param"; thef[[1]] <- as.name("lnl.rlogit")
-      thef$gradient <- TRUE; la <- eval(thef, sys.frame(which=nframe));
-      print(attr(la, "gradient"))
-      ng <- opt; ng[[1]] <- as.name("num.gradient"); ng[["f"]] <- "lnl.rlogit"
-      names(ng)[2] <- "param"; print(eval(ng, sys.frame(which=nframe)))
-    }
   }
   if (heterosc.logit){
     opt$f <- as.name('lnl.hlogit')
     rn <- gauss.quad(R, kind = "laguerre")
     opt[c('rn', 'choice')] <- list(as.name('rn'), as.name('choice'))
+    
+    if (FALSE){
+      thef <- opt;
+      m <- match(c('start','X', 'y', 'opposite','rn', 'choice'), 
+                 names(thef), 0L)
+      thef <- thef[c(1L, m)]
+      thef$gradient <- TRUE
+      thef[[1]] <- as.name('lnl.hlogit')
+      names(thef)[[2]] <- 'param'
+      print(thef)
+      otime <- proc.time()
+      la <- eval(thef, sys.frame(which=nframe));
+      print(proc.time()-otime)
+      stop()
+      print(attr(la, 'gradient'))
+      ng <- thef; ng[[1]] <- as.name("num.gradient"); ng[["f"]] <- "lnl.hlogit"
+      names(ng)[2] <- "param";
+      ng$gradient <- FALSE
+      print(ng)
+      print(eval(ng, sys.frame(which=nframe)));stop()
+    }
   }
   if (nested.logit){
     opt$f <- as.name('lnl.nlogit')
@@ -275,10 +306,34 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     opt$un.nest.el <- as.name('un.nest.el')
     opt$unscaled <- as.name('unscaled')
   }
+  if (pair.comb.logit){
+    opt$nests <- NULL
+    opt$f <- as.name('lnl.pclogit')
 
+    if (FALSE){
+      thef <- opt;
+      m <- match(c('start','X', 'y', 'opposite'), 
+                 names(thef), 0L)
+      thef <- thef[c(1L, m)]
+      thef$gradient <- FALSE
+      thef[[1]] <- as.name('lnl.pclogit')
+      names(thef)[[2]] <- 'param'
+      print(thef)
+      la <- eval(thef, sys.frame(which=nframe));
+#      print(attr(la, 'gradient'))
+      ng <- thef; ng[[1]] <- as.name("num.gradient"); ng[["f"]] <- "lnl.pclogit"
+      names(ng)[2] <- "param";
+      ng$gradient <- FALSE
+      print(ng)
+      print(eval(ng, sys.frame(which=nframe)));stop()
+    }
+
+
+    
+  }
   if (!is.null(weights)) opt$weights <- as.name('weights')
   opt$opposite <- TRUE
-
+  
   x <- eval(opt, sys.frame(which = nframe))
 
   # 6 ###########################################################

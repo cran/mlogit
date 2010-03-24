@@ -1,11 +1,11 @@
-export(mlogit, mlogit.data, hmftest, #logitform, is.logitform,
+export(mlogit, mlogit.data, hmftest, mFormula, is.mFormula,
        mlogit.optim, cov.mlogit, cor.mlogit, rpar,
        med, rg, stdev, qrpar, prpar, drpar)
 
 #mlogit methods
-#S3method(logitform,formula)
-#S3method(model.matrix,logitform)
-#S3method(model.frame,logitform)
+S3method(mFormula,formula)
+S3method(model.matrix,mFormula)
+S3method(model.frame,mFormula)
 S3method(update,mlogit)
 S3method(print,mlogit)
 S3method(summary,mlogit)

@@ -55,3 +55,16 @@ Changes since version 0.1-4
 	without normalization depending on the value of the argument
 	unscaled
 
+Changes since version 0.1-5
+
+	* a third part of the formula is added : it concerns alternative
+	specific variables with alternative specific coefficients
+
+	* improved presentation for the Fishing dataset.
+
+	* a bug (forgotten drop = FALSE) corrected in
+	model.matrix.mFormula
+
+	* Electricity and ModeMontreal datasets are added
+	
+	

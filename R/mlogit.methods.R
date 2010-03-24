@@ -55,7 +55,6 @@ model.matrix.mlogit <- function(object, ...){
 }
 
 model.response.mlogit <- function(object, ...){
-  cat("ca roule\n")
   y.name <- paste(deparse(object$formula[[2]]))
   object$model[[y.name]]
 }

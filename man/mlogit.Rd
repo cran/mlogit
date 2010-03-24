@@ -45,10 +45,8 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   \item{x, object}{an object of class \code{mlogit}}
   \item{formula}{a symbolic description of the model to be estimated,}
   \item{new}{an updated formula for the \code{update} method,}
-  
   \item{data}{the data: an \code{mlogit.data} object or an ordinary
   \code{data.frame},}
-
   \item{subset}{an optional vector specifying a subset of observations,}
   \item{weights}{an optional vector of weights,}
   \item{na.action}{a function which indicates what should happen when
@@ -116,37 +114,21 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   \item{freq}{the frequency of choice,}
   \item{residuals}{the residuals,}
   \item{fitted.values}{the fitted values,}
-  \item{formula}{the formula (a \code{logitform} object),}
+  \item{formula}{the formula (a \code{mFormula} object),}
   \item{expanded.formula}{the formula (a \code{formula} object),}
   \item{model}{the model frame used,}
   \item{index}{the index of the choice and of the alternatives.}
 }
 \details{
   
-  Let \code{J} being the number of alternatives.  The formula may
-  include alternative-specific and individual specific variables. For
-  the latter, \code{J-1} coefficients are estimated for each
-  variable. Alternative and individual specific variables are separated
-  by a \code{|}. For example, if \code{x1} and \code{x2} are alternative
-  specific and \code{z1} and \code{z2} are individual specific, the
-  formula \code{y~x1+x2|z1+z2} describe a model with one coefficient for
-  \code{x1} and \code{x2} and \code{J-1} coefficients for \code{z1} and
-  \code{z2}. \code{J-1} intercepts are also estimated. Models with only
-  alternative-specific or individual-specific variables are respectively
-  estimated by \code{y~x1+x2} and \code{y~0|z1+z2}. In multinomial logit
-  models, the intercept are alternative specific. By default, intercepts
-  are included, to obtain a model without intercepts, use \code{-1} or
-  \code{+0} on the second part of the equation:
-  \code{y~x1+x2|z1+z2-1}. For models with only alternative specific,
-  this can be done on the unique part, i.e. \code{y~x1+x2-1} is similar
-  to \code{y~x1+x2|0}.
+  For how to use the formula argument, see \code{\link{mFormula}}.
 
   The \code{data} argument may be an ordinary \code{data.frame}. In this
   case, some supplementary arguments should be provided and are passed
-  to \code{mlogit.data}. Note that it is not necessary to indicate the
+  to \code{\link{mlogit.data}}. Note that it is not necessary to indicate the
   choice argument as it is deduced from the formula.
 
-  The model is estimated using the \code{mlogit.optim} function. 
+  The model is estimated using the \code{\link{mlogit.optim}} function. 
 
   The basic multinomial logit model and three important extentions of
   this model may be estimated.
@@ -155,12 +137,12 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   estimated. \code{J-1} extra coefficients are estimated that represent
   the scale parameter for \code{J-1} alternatives, the scale parameter
   for the reference alternative being normalized to 1. The probabilities
-  doesn't have a closed form, they are estimated using a gaussian
+  don't have a closed form, they are estimated using a gaussian
   quadrature method.
 
   If \code{nests} is not \code{NULL}, the nested logit model is
   estimated.
-
+  
   If \code{rpar} is not \code{NULL}, the random parameter model is
   estimated. The probabilities are approximated using simulations with
   \code{R} draws and halton sequences are used if \code{halton} is not
@@ -177,16 +159,17 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
 
 \examples{
 
-## Cameron and Trivedi's Microeconometrics p.493
-## There are two alternative specific variables : pr (price) and ca (catch)
-## and four fishing mode : beach, pier, boat, charter
+## Cameron and Trivedi's Microeconometrics p.493 There are two
+## alternative specific variables : price and catch one individual
+## specific variable (income) and four fishing mode : beach, pier, boat,
+## charter
 
 data("Fishing", package = "mlogit")
-Fish <- mlogit.data(Fishing, varying = c(4:11), shape = "wide", choice = "mode")
+Fish <- mlogit.data(Fishing, varying = c(2:9), shape = "wide", choice = "mode")
 
-## a pure "conditional" model without intercepts
+## a pure "conditional" model
 
-summary(mlogit(mode ~ pr + ca - 1, data = Fish))
+summary(mlogit(mode ~ price + catch, data = Fish))
 
 ## a pure "multinomial model"
 
@@ -199,31 +182,31 @@ summary(multinom(mode ~ income, data = Fishing))
 
 ## a "mixed" model
 
-m <- mlogit(mode ~ pr + ca | income, data = Fish)
+m <- mlogit(mode ~ price+ catch | income, data = Fish)
 summary(m)
 
 ## same model with charter as the reference level
 
-m <- mlogit(mode ~ pr + ca | income, data = Fish, reflevel = "charter")
+m <- mlogit(mode ~ price+ catch | income, data = Fish, reflevel = "charter")
 
 ## same model with a subset of alternatives : charter, pier, beach
 
-m <- mlogit(mode ~ pr + ca | income, data = Fish,
+m <- mlogit(mode ~ price+ catch | income, data = Fish,
             alt.subset = c("charter", "pier", "beach"))
 
-% ## model on 'unbalanced data i.e. for some observations, some
-% ## alternatives are missing
+## model on 'unbalanced data i.e. for some observations, some
+## alternatives are missing
 
-% # a data.frame in wide format with two missing prices
-% Fishing2 <- Fishing
-% Fishing2[1, "pr.pier"] <- Fishing2[3, "pr.beach"] <- NA
-% mlogit(mode~pr+ca|income, Fishing2, shape="wide", choice="mode", varying = 4:11)
+# a data.frame in wide format with two missing prices
+Fishing2 <- Fishing
+Fishing2[1, "price.pier"] <- Fishing2[3, "price.beach"] <- NA
+mlogit(mode~price+catch|income, Fishing2, shape="wide", choice="mode", varying = 2:9)
 
-% # a data.frame in long format with three missing lines
-% data("TravelMode", package = "AER")
-% Tr2 <- TravelMode[-c(2, 7, 9),]
-% mlogit(choice~wait+gcost|income+size, Tr2, shape = "long",
-%        id.var = "individual", alt.var="mode", choice = "choice")
+# a data.frame in long format with three missing lines
+data("TravelMode", package = "AER")
+Tr2 <- TravelMode[-c(2, 7, 9),]
+mlogit(choice~wait+gcost|income+size, Tr2, shape = "long",
+       chid.var = "individual", alt.var="mode", choice = "choice")
 
 ## An heteroscedastic logit model
 
@@ -231,7 +214,6 @@ data("TravelMode", package = "AER")
 hl <- mlogit(choice ~ wait + travel + vcost, TravelMode,
              shape = "long", id.var = "individual", alt.var = "mode",
              method = "bfgs", heterosc = TRUE, tol = 10)
-
 
 ## A nested logit model
 
@@ -247,23 +229,23 @@ nl <- mlogit(choice ~ time + timeair | income, TravelMode, shape = "long",
 
 ## a mixed logit model
 
-rpl <- mlogit(mode ~ pr + ca | income, Fishing, varying = 4:11, shape = 'wide',
-              rpar = c(pr = 'n', ca = 'n'), correlation = TRUE, halton = NA,
+rpl <- mlogit(mode ~ price+ catch | income, Fishing, varying = 2:9, shape = 'wide',
+              rpar = c(price= 'n', catch = 'n'), correlation = TRUE, halton = NA,
               R = 10, tol = 10, print.level = 0)
 summary(rpl)
 rpar(rpl)
 cor.mlogit(rpl)
 cov.mlogit(rpl)
-rpar(rpl, "ca")
-summary(rpar(rpl, "ca"))
+rpar(rpl, "catch")
+summary(rpar(rpl, "catch"))
 
 }
 
 \seealso{
   
-  \cite{\code{mlogit.data}} to shape the data. \code{multinom} from
+  \code{\link{mlogit.data}} to shape the data. \code{\link{multinom}} from
   package \code{nnet} performs the estimation of the multinomial logit
-  model with individual specific variables. \cite{\code{mlogit.optim}}
+  model with individual specific variables. \code{\link{mlogit.optim}}
   for details about the optimization function.
   
 }

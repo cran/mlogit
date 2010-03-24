@@ -22,49 +22,32 @@ has.intercept.Formula <- function(object, rhs = NULL, ...) {
 ## pFormula:
 ## methods : formula, model.frame, model.matrix, pmodel.response
 
-logitform <- function(object){
-  UseMethod("logitform")
+mFormula <- function(object){
+  UseMethod("mFormula")
 }
 
-is.logitform <- function(object)
-  inherits(object, "logitform")
+is.mFormula <- function(object)
+  inherits(object, "mFormula")
 
-logitform.formula <- function(object){
+mFormula.formula <- function(object){
   if (!inherits(object, "Formula")) object <- Formula(object)
-  class(object) <- c("logitform", "Formula", "formula")
+  class(object) <- c("mFormula", "Formula", "formula")
   object
 }
 
-expand.logitform <- function(x, data){
-  ind.spec <- NULL
-  rhs <- x[[3]]
-  saveformula <- x
-  if(length(rhs)>1 && rhs[[1]]=="|"){
-    ind.spec <- paste("alt",":(",deparse(rhs[[3]]),")",sep="")
-    alt.spec <- paste(deparse(rhs[[2]]))
-    y <- as.character(x[[2]])
-    alt.spec <- paste(alt.spec,"+",ind.spec)
-    x <- as.formula(paste(y," ~ ",alt.spec,sep=""))
-  }
-  else{
-    class(x) <- "formula"
-  }
-  x
-}
-
-logitform <- function(object) {
+mFormula <- function(object) {
   stopifnot(inherits(object, "formula"))
   object <- Formula(object)
-  class(object) <- c("logitform", class(object))
+  class(object) <- c("mFormula", class(object))
   object
 }
 
-as.Formula.logitform <- function(x, ...){
+as.Formula.mFormula <- function(x, ...){
   class(x) <- class(x)[-1]
   x
 }
 
-model.frame.logitform <- function(formula, data, ..., lhs = NULL, rhs = NULL){
+model.frame.mFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
   if (is.null(rhs)) rhs <- 1:(length(formula)[2])
   if (is.null(lhs)) lhs <- ifelse(length(formula)[1]>0, 1, 0)
   index <- attr(data, "index")
@@ -87,33 +70,75 @@ model.frame.logitform <- function(formula, data, ..., lhs = NULL, rhs = NULL){
             class = c("mlogit.data", class(mf)))
 }
 
-model.matrix.logitform <- function(object, data, ...){
+has.intercept.mFormula <- function(object, ...){
+  attr(object, "class") <- "Formula"
+  has.int <- has.intercept(object)
+  ifelse(length(has.int) > 1, has.int[2], has.int[1])
+}
+
+model.matrix.mFormula <- function(object, data, ...){
   K <- length(data)
   omitlines <- attr(na.omit(data), "na.action")
   index <- attr(data, "index")
   alt <- index[["alt"]]
   chid <- index[["chid"]]
-  has.int <- has.intercept(object)
-  formula <- expand.logitform(object)
-  if (has.int){
-    upform <- as.formula(paste(".~", "alt", "+.+1"))
-    formula <- update(formula, upform)
-  }
-  else{
-    formula <- update(formula, .~.+1)
-  }
   data$alt <- alt
+  resp.name <- as.character(attr(object, "lhs")[[1]])
+  # keep track of the existence of an intercept
+  has.int <- has.intercept(object)
+  if (has.int) intercept.char <- "alt" else intercept.char <- NULL
+  
+  ## for ind.spec : remove any 0 or 1 or -1 in the formula and get the
+  ## list of the variables
+  if (length(object)[2] > 1){
+    ind.spec <- formula(object, rhs = 2, lhs = 0)
+    if (!has.int) ind.spec <- update(ind.spec, ~ . + 1)
+    ind.spec <- update(ind.spec, ~ .)
+    ind.spec.char <- as.character(ind.spec)[2]
+    if (ind.spec.char == "1") ind.spec.char <- ind.spec.var <- NULL
+    else{
+      ind.spec.var <- attr(terms(ind.spec), "term.labels")
+      ind.spec.char <- paste("(", ind.spec.char, "):alt", sep="")
+    }
+  }
+  else ind.spec <- ind.spec.char <- ind.spec.var <- NULL
+
+  # alternative specific variables
+  alt.spec <- formula(object, rhs = 1, lhs = 0)
+  alt.spec <- update(update(alt.spec, ~ . + 1), ~ .)
+  alt.spec.char <- as.character(alt.spec)[2]
+  if (alt.spec.char == "1") als.spec <- alt.spec.char <- NULL
+
+  # specific coefficient for alternative specific variables
+  if (length(object)[2] == 3){
+    coef.spec <- formula(object, rhs = 3, lhs = 0)
+    coef.spec <- update(update(coef.spec, ~ . + 1), ~ .)
+    coef.spec.char <- as.character(coef.spec)[2]
+    if (!is.null(coef.spec.char)) coef.spec.char <- paste("(", coef.spec.char, "):alt", sep="")
+  }
+  else coef.spec <- coef.spec.char <- NULL
+
+  form.char <- paste(c(intercept.char, alt.spec.char,
+                       ind.spec.char, coef.spec.char),
+                     collapse = "+")
+  formula <- as.formula(paste(resp.name, " ~ ", form.char))
   X <- model.matrix(formula, data)[, -1, drop = F]
   lev1 <- levels(alt)[1]
-  motif <- paste("alt", lev1, ":", sep = "")
-  varkeep <- regexpr(motif, colnames(X))<0
-  X <- X[,varkeep]
+  lev1 <- paste("alt", lev1, sep = "")
+  toremove <- unlist(lapply(as.list(ind.spec.var), function(x) paste(lev1, x, sep = ":")))
+  revtoremove <- unlist(lapply(as.list(ind.spec.var), function(x) paste(x, lev1, sep = ":")))
+  toremove <- colnames(X) %in% c(toremove, revtoremove)
+  X <- X[, !toremove, drop = FALSE]
   X[omitlines, ] <- NA
   X
 }
 
-has.intercept.logitform <- function(object, ...){
-  attr(object, "class") <- "Formula"
-  has.int <- has.intercept(object)
-  ifelse(length(has.int) > 1, has.int[2], has.int[1])
+scoretest <- function(object, ....){
+  UseMethod("scoretest")
 }
+
+
+## mm <- mlogit(mode~pr+ca|income, Fish)
+## update(mm, heterosc = TRUE, iterlim = 0, method = 'bfgs')
+
+  

@@ -2,9 +2,8 @@ lnl.mlogits <- function(param, X, y, weights = NULL, gradient = FALSE,
                         hessian = FALSE, opposite = TRUE, sumlnl = TRUE,
                         direction = 0, initial.value = NULL){
   opposite <- ifelse(opposite, -1, +1)
+  balanced <- FALSE
   if (is.null(weights)) weights <- 1
-  balanced <- TRUE
-  
   # compute the probabilities and the likelihood for step = 1
   step <- 1
   eXb <- lapply(X, function(x) exp(crossprod(t(x), param + direction)))
@@ -32,12 +31,9 @@ lnl.mlogits <- function(param, X, y, weights = NULL, gradient = FALSE,
     attr(lnl, "gradient") <- if (is.matrix(gradi)) apply(gradi,2,sum) else sum(gradi)
   }
   if (hessian){
-    if (balanced)
-      XmPX <- lapply(X, function(x) x - PX)
-    else
-      XmPX <- lapply(X, function(x){g <- x - PX; g[is.na(g)] <- 0; g})
+    XmPX <- lapply(X, function(x){g <- x - PX; g[is.na(g)] <- 0; g})
     hessian <-   - suml( mapply(function(x, y) crossprod(x*y, y),
-                               P, XmPX, SIMPLIFY = FALSE))
+                                P, XmPX, SIMPLIFY = FALSE))
     attr(lnl, "hessian") <- opposite * hessian
   }
   attr(lnl, "probabilities") <- P
@@ -66,7 +62,7 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
   beta <- param[1:K] + direction[1:K]
   lambda <- param[-c(1:K)] + direction[-c(1:K)]
   names(lambda) <- names(nests)
-  V <- sapply(X, function(x) as.numeric(crossprod(t(x),beta)))
+  V <- sapply(X, function(x) as.numeric(crossprod(t(x), beta)))
   A <- exp(t(t(V)/lambda[nestv]))
   #************************
   if (unscaled) A <- exp(V)
@@ -88,6 +84,7 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
       step <- step / 2
       beta <- param[1:K] + step * direction[1:K]
       lambda <- param[-c(1:K)] + step * direction[-c(1:K)]
+      lambda <- pmax(lambda, 0.1) # ensures that nests elasticities are non-negatives
       names(lambda) <- names(nests)
       V <- sapply(X, function(x) as.numeric(crossprod(t(x),beta)))
       A <- exp(t(t(V)/lambda[nestv]))
@@ -195,18 +192,18 @@ lnl.hlogit <- function(param, X, y, weights = NULL, gradient = FALSE,
 
   step <- 1
   beta <- param[1:K] + direction[1:K]
-  theta <- c(1,param[-c(1:K)]) + c(0, direction[-c(1:K)])
-  V <- lapply(X,function(x) as.numeric(crossprod(t(x),beta)))
-  Vi <- suml(mapply("*",V,y,SIMPLIFY=FALSE))
-  DVi <- sapply(V,function(x) Vi-x)
+  theta <- c(1, param[-c(1:K)]) + c(0, direction[-c(1:K)])
+  V <- lapply(X, function(x) as.numeric(crossprod(t(x), beta)))
+  Vi <- Reduce("+", (mapply("*", V, y, SIMPLIFY = FALSE)))
+  DVi <- sapply(V, function(x) Vi - x)
   names(theta) <- levels(choice)
   thetai <- theta[choice]
-  DVi[DVi==0] <- NA
-  DVi <- lapply(u,function(x) t(-t(DVi-thetai*log(x))/theta) )
-  alpha <- lapply(DVi,exp)
-  A <- lapply(alpha,function(x) apply(x,1,function(x){sum(x,na.rm=TRUE)}))
-  G <- lapply(A,function(x) exp(-x))
-  P <- suml(mapply("*",w,G,SIMPLIFY=FALSE))
+  DVi[DVi == 0] <- NA
+  DVi <- lapply(u, function(x) t(- t(DVi - thetai * log(x)) / theta) )
+  alpha <- lapply(DVi, exp)
+  A <- lapply(alpha, function(x) apply(x, 1, function(x){sum(x, na.rm = TRUE)}))
+  G <- lapply(A, function(x) exp(- x))
+  P <- Reduce("+", (mapply("*", w, G, SIMPLIFY = FALSE)))
   lnl <- sum (opposite * weights * log(P))
   if (!is.null(initial.value)){
     while(lnl > initial.value){
@@ -214,46 +211,50 @@ lnl.hlogit <- function(param, X, y, weights = NULL, gradient = FALSE,
       beta <- param[1:K] + step * direction[1:K]
       theta <- c(1,param[-c(1:K)]) + step * c(0, direction[-c(1:K)])
       V <- lapply(X,function(x) as.numeric(crossprod(t(x),beta)))
-      Vi <- suml(mapply("*",V,y,SIMPLIFY=FALSE))
+      Vi <- Reduce("+", (mapply("*",V,y,SIMPLIFY=FALSE)))
       DVi <- sapply(V,function(x) Vi-x)
       names(theta) <- levels(choice)
       thetai <- theta[choice]
       DVi[DVi==0] <- NA
       DVi <- lapply(u,function(x) t(-t(DVi-thetai*log(x))/theta) )
-      alpha <- lapply(DVi,exp)
-      A <- lapply(alpha,function(x) apply(x,1,function(x){sum(x,na.rm=TRUE)}))
-      G <- lapply(A,function(x) exp(-x))
-      P <- suml(mapply("*",w,G,SIMPLIFY=FALSE))
+      alpha <- lapply(DVi, exp)
+      A <- lapply(alpha, function(x) apply(x, 1, function(x) sum(x ,na.rm = TRUE)))
+      G <- lapply(A, function(x) exp(- x))
+      P <- Reduce("+", mapply("*", w, G, SIMPLIFY = FALSE))
       lnl <- sum (opposite * weights * log(P))
     }
   }
   if (gradient){
-    Xi <- suml(mapply("*",X,y,SIMPLIFY=FALSE))
-    DX <- lapply(X,function(x) Xi-x)
-    DX <- array(unlist(DX),dim=c(n,K,J))
-    DX <- aperm(DX,c(1,3,2))
+    Xi <- suml(mapply("*", X, y, SIMPLIFY = FALSE))
+    DX <- lapply(X, function(x) Xi - x)
+    DX <- array(unlist(DX), dim = c(n, K, J))
+    DX <- aperm(DX, c(1,3,2))
     alphaDtheta <- lapply(alpha, function(x) t( t(x)/theta))
-    alphaDthetaR <- lapply(alphaDtheta,function(x) array(rep(x,K),dim=c(n,J,K)))
-    Dbeta <- lapply(alphaDthetaR,function(x) -x*DX)
-    Dbeta <- lapply(Dbeta,function(x) apply(x,c(1,3),function(x) sum(x,na.rm=TRUE)))
+    alphaDthetaR <- lapply(alphaDtheta, function(x) array(rep(x, K),dim = c(n, J, K)))
+    Dbeta <- lapply(alphaDthetaR, function(x) - x * DX)
+    # ligne suivante tres intensive
+    Dbeta <- lapply(Dbeta, function(x) apply(x, c(1, 3),function(x) sum(x, na.rm = TRUE)))
     ym <- matrix(unlist(y),ncol=J)
-    alphaDthetaTDVi <- mapply(function(x,y) -log(x)*y,alpha,alphaDtheta,SIMPLIFY=FALSE)
-    alphaDthetaTDVi <- lapply(alphaDthetaTDVi,function(x){x[is.na(x)]=0;x})
-    SalphaDtheta <- lapply(alphaDtheta,function(x)
-                           matrix(rep(apply(x,1,function(x) sum(x,na.rm=TRUE)),J),ncol=J))
-    SalphaDthetalnu <- mapply(function(x,y) x*log(y),SalphaDtheta,u,SIMPLIFY=FALSE)
+    alphaDthetaTDVi <- mapply(function(x,y) - log(x) * y, alpha, alphaDtheta, SIMPLIFY = FALSE)
+    alphaDthetaTDVi <- lapply(alphaDthetaTDVi, function(x){ x[is.na(x)] = 0; x})
+    SalphaDtheta <- lapply(alphaDtheta, function(x)
+                           matrix(rep(
+                                      apply(x, 1, function(x) sum(x, na.rm = TRUE)),
+                                      J),
+                                  ncol = J))
+    SalphaDthetalnu <- mapply(function(x, y) x * log(y), SalphaDtheta, u, SIMPLIFY = FALSE)
     Dtheta <- mapply("+",
-                     lapply(alphaDthetaTDVi,function(x) x*(!ym)),
-                     lapply(SalphaDthetalnu,function(x) x*ym),
-                     SIMPLIFY=FALSE)
-    Dtheta <- lapply(Dtheta,function(x) x[,-1])
-    DD <- mapply(cbind,Dbeta,Dtheta,SIMPLIFY=FALSE)
+                     lapply(alphaDthetaTDVi, function(x) x * (! ym)),
+                     lapply(SalphaDthetalnu, function(x) x * ym),
+                     SIMPLIFY = FALSE)
+    Dtheta <- lapply(Dtheta, function(x) x[,-1])
+    DD <- mapply(cbind, Dbeta, Dtheta, SIMPLIFY = FALSE)
 #    DD <- lapply(DD,function(x){colnames(x) <- names(param);x})
-    DD <- suml(mapply(function(x,y,z) x*y*z,G,DD,w,SIMPLIFY=FALSE))
+    DD <- suml(mapply(function(x, y, z) x * y * z, G, DD, w, SIMPLIFY = FALSE))
     colnames(DD) <- names(param)
-    gradi <- - opposite * (DD/P)
+    gradi <- - opposite * (DD / P)
     attr(lnl, "gradi") <- gradi
-    attr(lnl, "gradient") <- if (is.matrix(gradi)) apply(gradi,2,sum) else sum(gradi)
+    attr(lnl, "gradient") <- if (is.matrix(gradi)) apply(gradi, 2, sum) else sum(gradi)
   }
   attr(lnl, "probabilities") <- P
   attr(lnl, "step") <- step
@@ -372,4 +373,44 @@ lnl.rlogit <- function(param, y, Xa, Xc,
   lnl
 }
     
+## lnl.mlogitarray <- function(param, X, y, weights = NULL, gradient = FALSE,
+##                             hessian = FALSE, opposite = TRUE, sumlnl = TRUE,
+##                             direction = 0, initial.value = NULL){
+##   opposite <- ifelse(opposite, -1, +1)
+##   balanced <- FALSE
+##   if (is.null(weights)) weights <- 1
+##   # compute the probabilities and the likelihood for step = 1
+##   step <- 1
+##   P <- t(apply(X, c(1, 2), function(x) exp(crossprod(x, param))))
+##   P <- P / apply(P, 1, sum)
+##   Pch <- apply(P * y, 1, sum)
+##   lnl <- sum(opposite * weights * log(Pch))
   
+##   if (!is.null(initial.value)){
+##     while(lnl > initial.value){
+##       step <- step / 2
+##       P <- t(apply(X, c(1, 2), function(x) exp(crossprod(x, param))))
+##       P <- P / apply(P, 1, sum)
+##       Pch <- apply(P * y, 1, sum)
+##       lnl <- sum(opposite * weights * log(Pch))
+##     }
+##   }
+##   print(dim(P));print(dim(X));
+##   PX <- apply(X, c(3), function(x) apply(x * t(P), 2, sum))
+##   if (gradient | hessian)   PX <- apply(X, c(3), function(x) apply(x * t(P), 2, sum))
+##   if (gradient){
+##     Xch <- apply(X, c(3), function(x) apply(x * t(y), 2, sum))
+##     gradi <-  opposite * weights * (Xch - PX)
+##     attr(lnl, "gradi") <- gradi
+##     attr(lnl, "gradient") <- if (is.matrix(gradi)) apply(gradi,2,sum) else sum(gradi)
+##   }
+##   if (hessian){
+##     XmPX <- lapply(X, function(x){g <- x - PX; g[is.na(g)] <- 0; g})
+##     hessian <-   - suml( mapply(function(x, y) crossprod(x*y, y),
+##                                 P, XmPX, SIMPLIFY = FALSE))
+##     attr(lnl, "hessian") <- opposite * hessian
+##   }
+##   attr(lnl, "probabilities") <- P
+##   attr(lnl, "step") <- step
+##   lnl
+## }
