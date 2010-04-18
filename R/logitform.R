@@ -97,7 +97,10 @@ model.matrix.mFormula <- function(object, data, ...){
     ind.spec.char <- as.character(ind.spec)[2]
     if (ind.spec.char == "1") ind.spec.char <- ind.spec.var <- NULL
     else{
-      ind.spec.var <- attr(terms(ind.spec), "term.labels")
+#      ind.spec.var <- attr(terms(ind.spec), "term.labels") the
+      # following lines extract the effects and not the variable
+      # names, useful for factors
+      ind.spec.var <- colnames(model.matrix(update(ind.spec, ~.+1), data))[-1]
       ind.spec.char <- paste("(", ind.spec.char, "):alt", sep="")
     }
   }

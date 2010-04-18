@@ -69,7 +69,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   # the call. The following line seems to fix the bug
   mf$data <- data
   mf <- eval(mf, sys.frame(which = nframe))
-
+  
   # change the reference level of the response if required
   if (!is.null(reflevel)){
     attr(mf, "index")[["alt"]] <-
@@ -120,14 +120,14 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   }
   #suppress individuals for which no choice is made
   if (FALSE){
-  delete.id <- tapply(model.response(mf), chid, sum, na.rm = TRUE)
-  delete.id <- names(delete.id[delete.id == 0])
-  mf <- mf[!(chid %in% delete.id), ]
-  index <- index[rownames(mf),]
-  index[[1]] <- index[[1]][, drop=TRUE]
-  index[[2]] <- alt <- index[[2]][, drop=TRUE]
-  attr(mf, "index") <- index
-}
+    delete.id <- tapply(model.response(mf), chid, sum, na.rm = TRUE)
+    delete.id <- names(delete.id[delete.id == 0])
+    mf <- mf[!(chid %in% delete.id), ]
+    index <- index[rownames(mf),]
+    index[[1]] <- index[[1]][, drop=TRUE]
+    index[[2]] <- alt <- index[[2]][, drop=TRUE]
+    attr(mf, "index") <- index
+  }
   # if estimate is FALSE, return the data.frame
   if (!estimate) return(mf)
 
@@ -200,9 +200,9 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     J <- length(unalt)
     names.sup.coef <- NULL
     for (i in 1:(J-1)){
-      names.sup.coef <- c(names.sup.coef, paste('lambda', unalt[i], unalt[(i+1):J], sep = ":"))
+      names.sup.coef <- c(names.sup.coef, paste('lambda', unalt[i], unalt[(i+1):J], sep = "_"))
     }
-    sup.coef <- rep(1, length(names.sup.coef))-rnorm(length(names.sup.coef))/10
+    sup.coef <- rep(1, length(names.sup.coef))
   }
   if (heterosc.logit){
     unalt <- levels(alt)
@@ -240,6 +240,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
       callst$heterosc <- FALSE
       callst$rpar <- NULL
       callst$panel <- FALSE
+      callst$constPar <- NULL
       start <- coef(eval(callst, sys.frame(which=nframe)))
       if (mixed.logit){
         ln <- names(rpar[rpar == "ln"])
@@ -278,27 +279,6 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     opt$f <- as.name('lnl.hlogit')
     rn <- gauss.quad(R, kind = "laguerre")
     opt[c('rn', 'choice')] <- list(as.name('rn'), as.name('choice'))
-    
-    if (FALSE){
-      thef <- opt;
-      m <- match(c('start','X', 'y', 'opposite','rn', 'choice'), 
-                 names(thef), 0L)
-      thef <- thef[c(1L, m)]
-      thef$gradient <- TRUE
-      thef[[1]] <- as.name('lnl.hlogit')
-      names(thef)[[2]] <- 'param'
-      print(thef)
-      otime <- proc.time()
-      la <- eval(thef, sys.frame(which=nframe));
-      print(proc.time()-otime)
-      stop()
-      print(attr(la, 'gradient'))
-      ng <- thef; ng[[1]] <- as.name("num.gradient"); ng[["f"]] <- "lnl.hlogit"
-      names(ng)[2] <- "param";
-      ng$gradient <- FALSE
-      print(ng)
-      print(eval(ng, sys.frame(which=nframe)));stop()
-    }
   }
   if (nested.logit){
     opt$f <- as.name('lnl.nlogit')
@@ -307,33 +287,18 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     opt$unscaled <- as.name('unscaled')
   }
   if (pair.comb.logit){
-    opt$nests <- NULL
-    opt$f <- as.name('lnl.pclogit')
-
-    if (FALSE){
-      thef <- opt;
-      m <- match(c('start','X', 'y', 'opposite'), 
-                 names(thef), 0L)
-      thef <- thef[c(1L, m)]
-      thef$gradient <- FALSE
-      thef[[1]] <- as.name('lnl.pclogit')
-      names(thef)[[2]] <- 'param'
-      print(thef)
-      la <- eval(thef, sys.frame(which=nframe));
-#      print(attr(la, 'gradient'))
-      ng <- thef; ng[[1]] <- as.name("num.gradient"); ng[["f"]] <- "lnl.pclogit"
-      names(ng)[2] <- "param";
-      ng$gradient <- FALSE
-      print(ng)
-      print(eval(ng, sys.frame(which=nframe)));stop()
-    }
-
-
-    
+    opt$f <- as.name('lnl.nlogit')
+    alt.lev <- levels(alt)
+    J <- length(alt.lev)
+    alt1 <- rep(alt.lev, c((J-1):0))
+    alt2 <- alt.lev[unlist(lapply(2:J, function(x) x:J))]
+    names.nests <- paste(alt1, alt2, sep = "")
+    lnests <- mapply(function(x,y) c(x,y), alt1, alt2, SIMPLIFY = FALSE)
+    names(lnests) <- names.nests
+    opt$nests <- lnests
   }
   if (!is.null(weights)) opt$weights <- as.name('weights')
   opt$opposite <- TRUE
-  
   x <- eval(opt, sys.frame(which = nframe))
 
   # 6 ###########################################################
@@ -354,6 +319,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
 ##   }
 ##   colnames(fitted.values) <- alt.lev
 
+
   if (!heterosc) resid <- as.matrix(data.frame(y)) - fit
   else resid <- NULL
   # if no hessian is returned, use the BHHH approximation
@@ -364,10 +330,12 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
 
   if (mixed.logit)   rpar <- make.rpar(rpar, correlation, x$coefficients, NULL)
   else rpar <- NULL
-  
+
+  thecoef <- x$coefficients
+  attr(thecoef, "fixed") <- attr(x$optimum, "fixed")
   structure(
             list(
-                 coefficients  = x$coefficients,
+                 coefficients  = thecoef,
                  logLik        = logLik,
                  gradient      = - attr(x$optimum, 'gradient'),
                  gradi         = - attr(x$optimum, 'gradi'),

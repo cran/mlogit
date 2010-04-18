@@ -1,6 +1,7 @@
 lnl.mlogits <- function(param, X, y, weights = NULL, gradient = FALSE,
                         hessian = FALSE, opposite = TRUE, sumlnl = TRUE,
                         direction = 0, initial.value = NULL){
+  
   opposite <- ifelse(opposite, -1, +1)
   balanced <- FALSE
   if (is.null(weights)) weights <- 1
@@ -414,3 +415,4 @@ lnl.rlogit <- function(param, y, Xa, Xc,
 ##   attr(lnl, "step") <- step
 ##   lnl
 ## }
+

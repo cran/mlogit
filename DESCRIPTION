@@ -1,6 +1,6 @@
 Package: mlogit
-Version: 0.1-6
-Date: 2010-03-24
+Version: 0.1-7
+Date: 2010-04-18
 Title: multinomial logit model
 Author: Yves Croissant <yves.croissant@univ-reunion.fr>
 Maintainer: Yves Croissant <yves.croissant@univ-reunion.fr>
@@ -9,8 +9,6 @@ Suggests: lmtest, car
 Description: Estimation of the multinomial logit model
 License: GPL (>= 2)
 URL: http://www.r-project.org
+Packaged: 2010-04-18 15:03:20 UTC; yves
 Repository: CRAN
-Repository/R-Forge/Project: mlogit
-Repository/R-Forge/Revision: 13
-Date/Publication: 2010-04-16 09:51:29
-Packaged: 2010-04-14 20:59:08 UTC; rforge
+Date/Publication: 2010-04-18 17:37:45

@@ -68,3 +68,7 @@ Changes since version 0.1-5
 	* Electricity and ModeMontreal datasets are added
 	
 	
+Changes since version 0.1-6
+
+	* a bug in mFormula (effects vs variable) is fixed
+	

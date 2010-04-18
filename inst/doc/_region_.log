@@ -1,0 +1,50 @@
+This is pdfTeXk, Version 3.141592-1.40.3 (Web2C 7.5.6) (format=latex 2010.1.27)  25 MAR 2010 11:02
+entering extended mode
+ %&-line parsing enabled.
+**\nonstopmode\nofiles\PassOptionsToPackage{active,tightpage,auctex}{preview}\A
+tBeginDocument{\ifx\ifPreview\undefined\RequirePackage[displaymath,floats,graph
+ics,textmath,sections,footnotes]{preview}[2004/11/05]\fi} \input _region_.tex
+(./_region_.tex  !name(mlogitman.rnw.tex)  !name(mlogitman.rnw) !offset(594) 
+
+! LaTeX Error: Missing \begin{document}.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.4 $
+     $
+You're in trouble here.  Try typing  <return>  to proceed.
+If that doesn't work, type  X <return>  to quit.
+
+
+Overfull \hbox (20.0pt too wide) in paragraph at lines 4--4
+[] 
+ []
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <7> on input line 4.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <5> on input line 4.
+
+Overfull \hbox (236.78925pt too wide) detected at line 9
+\OML/cmm/m/it/10 P[] \OT1/cmr/m/n/10 = [][] [] []  \OML/cmm/m/it/10 frac\OT1/cm
+r/m/n/10 1[]\OML/cmm/m/it/10 e[]e[]d^^O[]
+ []
+
+ !name(mlogitman.rnw.tex) !offset(-11) )
+! Emergency stop.
+<*> ...review}[2004/11/05]\fi} \input _region_.tex
+                                                  
+*** (job aborted, no legal \end found)
+
+ 
+Here is how much of TeX's memory you used:
+ 10 strings out of 95087
+ 204 string characters out of 1183278
+ 45034 words of memory out of 1500000
+ 3282 multiletter control sequences out of 10000+50000
+ 3640 words of font info for 14 fonts, out of 1200000 for 2000
+ 28 hyphenation exceptions out of 8191
+ 17i,4n,12p,322b,58s stack positions out of 5000i,500n,6000p,200000b,5000s
+No pages of output.

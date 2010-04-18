@@ -78,7 +78,8 @@ update.mlogit <- function (object, new, ...){
   eval(call, parent.frame())
 }
 
-print.mlogit <- function (x, digits = max(3, getOption("digits") - 2), width = getOption("width"), ...){
+print.mlogit <- function (x, digits = max(3, getOption("digits") - 2),
+                          width = getOption("width"), ...){
   cat("\nCall:\n", deparse(x$call), "\n\n", sep = "")
   if (length(coef(x))) {
     cat("Coefficients:\n")
@@ -91,7 +92,8 @@ print.mlogit <- function (x, digits = max(3, getOption("digits") - 2), width = g
 }
 
 vcov.mlogit <- function(object,...){
-  solve(-object$hessian)
+  fixed <- attr(object$coefficients, "fixed")
+  solve(-object$hessian[!fixed, !fixed])
 }
 
 logLik.mlogit <- function(object,...){
@@ -99,7 +101,8 @@ logLik.mlogit <- function(object,...){
 }
 
 summary.mlogit <- function (object,...){
-  b <- coef(object)
+  fixed <- attr(object$coefficients, "fixed")
+  b <- coef(object)[!fixed]
   std.err <- sqrt(diag(vcov(object)))
   z <- b/std.err
   p <- 2*(1-pnorm(abs(z)))
@@ -119,33 +122,25 @@ summary.mlogit <- function (object,...){
   return(object)
 }
 
-print.summary.mlogit <- function(x,digits= max(3, getOption("digits") - 2),width=getOption("width"),...){
-
+print.summary.mlogit <- function(x, digits = max(3, getOption("digits") - 2),
+                                 width = getOption("width"), ...){
   cat("\nCall:\n")
   print(x$call)
-
   cat("\n")
-  
   cat("Frequencies of alternatives:")
   print(prop.table(x$freq),digits=digits)
-  
   cat("\n")
   print(x$est.stat)
-  
   cat("\nCoefficients :\n")
   printCoefmat(x$CoefTable,digits=digits)
   cat("\n")
   cat(paste("Log-Likelihood: ",signif(x$logLik,digits),"\n",sep=""))
-
   if (has.intercept(x$formula)){
-  
     cat("McFadden R^2: ",signif(x$mfR2,digits),"\n")
-  
     cat("Likelihood ratio test : ",names(x$lratio$statistic),
         " = ",signif(x$lratio$statistic,digits),
         " (p.value=",format.pval(x$lratio$p.value,digits=digits),")\n",sep="")
   }
-
   if (!is.null(x$summary.rpar)){
     cat("\nrandom coefficients\n")
     print(x$summary.rpar)
