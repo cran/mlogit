@@ -83,7 +83,7 @@ drpar(x, ...)
   \code{\link{mlogit}} for the estimation of random parameters logit models
   and \code{\link{rpar}} for the description of \code{rpar} objects.
 }
-\examples{
-}
+%\examples{
+%}
 \author{Yves Croissant}
 \keyword{regression}

@@ -9,12 +9,13 @@
   \code{rpar} object from a \code{mlogit} object.
 }
 \usage{
-rpar(x, par = NULL, ...)
+rpar(x, par = NULL, norm = NULL, ...)
 }
 \arguments{
   \item{x}{a \code{mlogit} object,}
   \item{par}{the name or the index of the parameters to be extracted ;
     if \code{NULL}, all the parameters are selected,}
+  \item{norm}{the coefficient used for normalization if any,}
   \item{...}{further arguments.}
 }
 \value{

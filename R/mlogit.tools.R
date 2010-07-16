@@ -60,7 +60,13 @@ print.est.stat <- function(x, ...){
   cat(paste(i,"iterations,",tstr,"\n"))
   if (!is.null(halton)) cat("Halton's sequences used\n")
   cat(paste("g'(-H)^-1g =", sprintf("%5.3G", eps),"\n"))
-  cat(paste(x$message, "\n"))
+  msg <- switch(x$code,
+                "1" = "gradient close to zero",
+                "2" = "successive fonction values within tolerance limits",
+                "3" = "last step couldn't find higher value",
+                "4" = "iteration limit exceeded"
+                )
+  cat(paste(msg, "\n"))
 }
 
 suml <- function(x){
@@ -102,7 +108,7 @@ numderiv <- function(f, param, ...){
   nc
 }
 
-mlogit.optim <- function(f, start,
+mlogit.optim <- function(logLik, start,
                          method = c('bfgs', 'nr', 'bhhh'),
                          iterlim = 2000,
                          tol = 1E-06,
@@ -128,112 +134,6 @@ mlogit.optim <- function(f, start,
   chi2 <- 1E+10
   i <- 0
   # eval a first time the function, the gradient and the hessian
-
-###################################
-##  Test the gradient
-##   nd <- f
-##   nd[["f"]] <- nd[[1]]
-##   nd[[1]] <- as.name("numderiv")
-##   x <- eval(nd, parent.frame())
-##   print(x)
-###################################
-
-  x <- eval(f, parent.frame())
-  if (print.level > 0)
-    cat(paste("Initial value of the function :", as.numeric(x), "\n"))
-  g <- attr(x, "gradient")
-  if (method == 'nr')   H <- attr(x, "hessian")
-  if (method == 'bhhh') H <- crossprod(attr(x, "gradi"))
-  if (method == 'bfgs') Hm1 <- solve(crossprod(attr(x, "gradi")))
-  d <- rep(0, K)
-  while(abs(chi2) > tol && i < iterlim){
-    if (method == "bfgs") d[!fixed] <- - as.vector(Hm1[!fixed, !fixed] %*% g[!fixed])
-    else d[!fixed] <- - as.vector(solve(H[!fixed, !fixed], g[!fixed]))
-    i <- i + 1
-    oldx <- x
-    oldg <- g
-    f$param <- param
-    f$direction <- d
-    f$initial.value <- x
-    x <- eval(f, parent.frame())
-    g <- attr(x, "gradient")
-    step <- attr(x, "step")
-    param <- param + step * d
-    if (method == 'nr')   H <- attr(x, "hessian")
-    if (method == 'bhhh') H <-  crossprod(attr(x, "gradi"))
-    if (method == 'bfgs'){
-      incr <- step * d
-      y <- g - oldg
-      Hm1 <- Hm1 +
-        outer( incr, incr) *
-          (sum(y * incr) + as.vector( t(y) %*% Hm1 %*% y)) / sum(incr * y)^2 -
-            (Hm1 %*% outer(y, incr) + outer(incr, y) %*% Hm1)/ sum(incr * y)
-    }
-    chi2 <- -  crossprod(d[!fixed], oldg[!fixed])
-    if (print.level > 0){
-      chaine <- paste("iteration ",i,", step = ",step,
-                      ", lnL = ",round(x,8),", chi2 = ",
-                      round(chi2,8),"\n",sep="")
-    cat(chaine)
-    }
-    if (print.level > 1){
-      resdet <- rbind(param = param, gradient = g)
-      print(round(resdet,3))
-      cat("--------------------------------------------\n")
-    }
-  }
-  if (i >= iterlim) message = "maximum number of iterations reached"
-  else message = "optimum reached"
-  if (method == 'bfgs') H <- solve(Hm1)
-  rownames(H) <- colnames(H) <-
-    names(attr(x, 'gradient')) <- colnames(attr(x, 'gradi')) <- names(param)
-  est.stat = structure(list(elaps.time = NULL, nb.iter = i, eps = chi2,
-    method = method, message = message), class = 'est.stat')
-  result <- list(optimum = x,
-                 coefficients = param,
-                 est.stat = est.stat
-                 )
-  result
-}
-
-
-
-mlogit.optim <- function(f, start,
-                         method = c('bfgs', 'nr', 'bhhh'),
-                         iterlim = 2000,
-                         tol = 1E-06,
-                         print.level = 1,
-                         constPar = NULL,
-                         ...){
-  # construct a call for the function
-  param <- start
-  method <- match.arg(method)
-  callT <- match.call(expand.dots = TRUE)
-  f <- callT
-  optimoptions <- c('iterlim', 'tol', 'method', 'print.level', 'constPar')
-  m <- match(optimoptions, names(callT), 0L)
-  if (sum(m)) f <- f[-m]
-  f[[1]] <- as.name(f[[2]])
-  K <- length(param)
-  fixed <- rep(FALSE, K)
-  if (!is.null(constPar)) fixed[constPar] <- TRUE
-  f$gradient <- TRUE
-  if (method == 'nr') f$hessian <- TRUE else f$hessian <- FALSE
-  f[[2]] <- NULL
-  names(f)[2] <- 'param'
-  chi2 <- 1E+10
-  i <- 0
-  # eval a first time the function, the gradient and the hessian
-
-###################################
-##  Test the gradient
-##   nd <- f
-##   nd[["f"]] <- nd[[1]]
-##   nd[[1]] <- as.name("numderiv")
-##   x <- eval(nd, parent.frame())
-##   print(x)
-###################################
-
   x <- eval(f, parent.frame())
   if (print.level > 0)
     cat(paste("Initial value of the function :", as.numeric(x), "\n"))
@@ -288,6 +188,146 @@ mlogit.optim <- function(f, start,
   attr(x, "fixed") <- fixed
   est.stat = structure(list(elaps.time = NULL, nb.iter = i, eps = chi2,
     method = method, message = message), class = 'est.stat')
+  result <- list(optimum = x,
+                 coefficients = param,
+                 est.stat = est.stat
+                 )
+  result
+}
+
+###################################
+##  Test the gradient
+##   nd <- f
+##   nd[["f"]] <- nd[[1]]
+##   nd[[1]] <- as.name("numderiv")
+##   x <- eval(nd, parent.frame())
+##   print(x)
+###################################
+
+
+mlogit.optim <- function(logLik, start,
+                         method = c('bfgs', 'nr', 'bhhh'),
+                         iterlim = 2000,
+                         tol = 1E-06,
+                         ftol = 1E-08,
+                         steptol = 1E-10,
+                         print.level = 1,
+                         constPar = NULL,
+                         ...){
+  method <- match.arg(method)
+  param <- start 
+  callT <- match.call(expand.dots = TRUE)
+  optimoptions <- c('iterlim', 'tol', 'method', 'print.level', 'constPar', 'ftol', 'steptol')
+  chi2 <- 1E+10
+  i <- 0
+  K <- length(param)
+  d <- rep(0, K)
+ 
+  # construct a vector of fixed parameters
+  fixed <- rep(FALSE, K)
+  if (!is.null(constPar)) fixed[constPar] <- TRUE
+  
+  # construct a call for the function
+  f <- callT
+  m <- match(optimoptions, names(callT), 0L)
+  if (sum(m)) f <- f[-m]
+  f[[1]] <- as.name(f[[2]])
+  f$gradient <- TRUE
+  f$steptol <- steptol
+  if (method == 'nr') f$hessian <- TRUE else f$hessian <- FALSE
+  f[[2]] <- NULL
+  names(f)[2] <- 'param'
+
+  # eval a first time the function, the gradient and the hessian
+  x <- eval(f, parent.frame())
+  if (print.level > 0)
+    cat(paste("Initial value of the function :", as.numeric(x), "\n"))
+  g <- attr(x, "gradient")
+  if (method == 'nr')   H <- attr(x, "hessian")[!fixed, !fixed]
+  if (method == 'bhhh') H <- crossprod(attr(x, "gradi")[, !fixed])
+  if (method == 'bfgs') Hm1 <- solve(crossprod(attr(x, "gradi")[, !fixed]))
+#  if (method == 'bfgs') Hm1 <- diag(length(start[!fixed]))
+
+  repeat{
+    # save the previous values of the function and of the gradient
+    oldx <- x
+    oldg <- g
+
+    # Compute the direction, ie d = H^-1 g
+    if (method == "bfgs") d[!fixed] <- - as.vector(Hm1 %*% g[!fixed])
+    else d[!fixed] <- - as.vector(solve(H, g[!fixed]))
+    i <- i + 1
+    
+    if (i > iterlim){
+      # exit if the iteration limit is reached
+      code <- 4
+      break
+    }
+
+    # indicate in the call the previous parameters vector, the
+    # direction and the value of the function
+    f$param <- param
+    f$direction <- d
+    f$initial.value <- oldx
+
+    # eval the function and compute the gradient and the hessian
+    x <- eval(f, parent.frame())
+    if (is.null(x)){
+      # x is null if steptol is reached
+      code = 3
+      break
+    }
+    if (abs(x - oldx) < ftol){
+      code = 2
+      break
+    }
+    g <- attr(x, "gradient")
+    step <- attr(x, "step")
+    param[!fixed] <- param[!fixed] + step * d[!fixed]
+    if (method == 'nr')   H <- attr(x, "hessian")[!fixed, !fixed]
+    if (method == 'bhhh') H <-  crossprod(attr(x, "gradi")[, !fixed])
+    if (method == 'bfgs'){
+      incr <- step * d
+      y <- g - oldg
+      Hm1 <- Hm1 +
+        outer( incr[!fixed], incr[!fixed]) *
+          (sum(y[!fixed] * incr[!fixed]) +
+           as.vector( t(y[!fixed]) %*% Hm1 %*% y[!fixed])) /
+             sum(incr[!fixed] * y[!fixed])^2 -
+               (Hm1 %*% outer(y[!fixed], incr[!fixed])
+                + outer(incr[!fixed], y[!fixed]) %*% Hm1)/
+                  sum(incr[!fixed] * y[!fixed])
+    }
+
+    # compute the quadratic form of the gradient
+    chi2 <- -  crossprod(d[!fixed], oldg[!fixed])
+    
+    # print some informations about the iteration
+    if (print.level > 0){
+      chaine <- paste("iteration ",i,", step = ",step,
+                      ", lnL = ",round(x,8),", chi2 = ",
+                      round(chi2,8),"\n",sep="")
+    cat(chaine)
+    }
+    if (print.level > 1){
+      resdet <- rbind(param = param, gradient = g)
+      print(round(resdet,3))
+      cat("--------------------------------------------\n")
+    }
+
+    if (abs(chi2) < tol){
+      # exit if the quadratic form of the gradient is small enough
+      code = 1
+      break
+    }
+
+  }
+  if (code == 3) x <- oldx
+
+  names(attr(x, 'gradient')) <- colnames(attr(x, 'gradi')) <- names(param)
+  attr(x, "fixed") <- fixed
+  est.stat = structure(list(elaps.time = NULL, nb.iter = i, eps = chi2,
+    method = method, code = code), class = 'est.stat')
   result <- list(optimum = x,
                  coefficients = param,
                  est.stat = est.stat

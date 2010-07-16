@@ -99,7 +99,7 @@ make.random.nb <- function(R, Ka, halton){
 # Create the matrix of random numbers
   if (!is.null(halton)){
     length.halton <- rep(R,Ka)
-    prime <- c(2,3,5,7,11,13,17,19,23)
+    prime <- c(2,3,5,7,11,13,17,19,23,29,31)
     drop.halton <- rep(100,Ka)
     if (!is.na(halton) && !is.null(halton$prime)){
       if (length(halton$prime) != Ka){
@@ -237,10 +237,18 @@ plot.mlogit <- function(x, par = NULL, norm = NULL, type = c("density", "probabi
 }
 
 #rpar extract one or several random parameters from an mlogit object
-rpar <- function(x, par = NULL, ...){
+rpar <- function(x, par = NULL, norm = NULL, ...){
   if (is.null(par)) par <- names(x$rpar)
-  if (length(par) == 1) x$rpar[[par]]
-  else x$rpar[par]
+  if (length(par) == 1){
+    result <- x$rpar[[par]]
+    if (!is.null(norm)) result$norm <- abs(coef(x)[norm])
+  }    
+  else{
+    result <- x$rpar[par]
+    if (!is.null(norm))
+      lapply(result, function(x){x$norm <- abs(coef(x)[norm]); x})
+  }
+  result
 }
 
 print.rpar <- function(x, digits = max(3, getOption("digits") - 2),
@@ -275,13 +283,14 @@ print.rpar <- function(x, digits = max(3, getOption("digits") - 2),
 }
 
 summary.rpar <- function(object, ...){
-  rg <- rg.rpar(object)
-  Q1 <- qrpar(object)(0.25)
-  M <-  qrpar(object)(0.5)
-  Q3 <- qrpar(object)(0.75)
-  m <- mean(object)
-  c('Min.' = rg[1], '1st Qu.' = Q1, 'Median' = M,
-    'Mean' = m, '3rd Qu.' = Q3, 'Max.' = rg[2])
+  norm <- object$norm
+  rg <- rg.rpar(object, norm)
+  Q1 <- qrpar(object, norm)(0.25)
+  M <-  qrpar(object, norm)(0.5)
+  Q3 <- qrpar(object, norm)(0.75)
+  m <- mean(object, norm)
+  c('Min.' = as.numeric(rg[1]), '1st Qu.' = as.numeric(Q1), 'Median' = as.numeric(M),
+    'Mean' = as.numeric(m), '3rd Qu.' = as.numeric(Q3), 'Max.' = as.numeric(rg[2]))
 }
 
 # [cor, cov].rpar extract the covariance or the correlation matrix of

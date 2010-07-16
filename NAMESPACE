@@ -1,8 +1,12 @@
 export(mlogit, mlogit.data, hmftest, mFormula, is.mFormula,
-       mlogit.optim, cov.mlogit, cor.mlogit, rpar,
+       mlogit.optim, cov.mlogit, cor.mlogit, rpar, #scoretest,
        med, rg, stdev, qrpar, prpar, drpar)
-
+#importFrom(lmtest, lrtest)
+#importFrom(lmtest, waldtest)
 #mlogit methods
+#S3method(scoretest, mlogit)
+#S3method(waldtest, mlogit)
+#S3method(lrtest, mlogit)
 S3method(mFormula,formula)
 S3method(model.matrix,mFormula)
 S3method(model.frame,mFormula)

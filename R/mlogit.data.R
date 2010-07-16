@@ -1,6 +1,9 @@
 mlogit.data <- function(data, choice, shape = c("wide","long"), varying = NULL,
                         sep = ".", alt.var = NULL, chid.var = NULL, 
-                        alt.levels = NULL, id = NULL, opposite = NULL, drop.index = FALSE, ...){
+                        alt.levels = NULL, id.var = NULL, opposite = NULL,
+                        drop.index = FALSE, ...){
+  # chid.name, alt.name : the name of the index variables
+  # chid, alt : the index variables
   if (shape == "long"){
     if (is.null(chid.var)){
       chid.name <- "chid"
@@ -38,58 +41,42 @@ mlogit.data <- function(data, choice, shape = c("wide","long"), varying = NULL,
       alt <- data[[alt.name]]
     }
     n <- nrow(data)/J
-    if (!chid.is.variable) choiceid <- rep(1:n, each = J) else choiceid <- data[[chid.name]]
-
+    if (!chid.is.variable) chid <- rep(1:n, each = J) else chid <- data[[chid.name]]
     if (!is.logical(data[[choice.name]])){
       if (is.factor(choice) && 'yes' %in% levels(choice))
         data[[choice.name]] <- data[[choice.name]] == 'yes'
       if (is.numeric(choice)) data[[choice.name]] <- data[[choice.name]] != 0
     }
-    if (alt.is.variable){
-      i <- which(names(data) == alt.name)
-      if (drop.index) data <- data[-i]     
-    }
-    if (chid.is.variable){
-      i <- which(names(data) == chid.name)
-      if (drop.index) data <- data[-i]
-    }
     # remplacer id par chid à gauche
-    chid <- as.factor(choiceid)
+
+    chid <- as.factor(chid)
     alt <- as.factor(alt)
-    row.names(data) <- paste(choiceid, alt, sep = ".")
+    row.names(data) <- paste(chid, alt, sep = ".")
   }
   
   if (shape == "wide"){
     if (is.ordered(data[[choice]])) class(data[[choice]]) <- "factor"
     else data[[choice]] <- as.factor(data[[choice]])
-# this doesn't work for ordered factors which remains ordered
-    if (is.null(alt.var)) alt <- "alt" else alt <- alt.var
-    if (is.null(chid.var)) chid <- "chid" else chid <- chid.var
+    # this doesn't work for ordered factors which remains ordered
+    if (is.null(alt.var)) alt.name <- "alt" else alt.name <- alt.var
+    if (is.null(chid.var)) chid.name <- "chid" else chid.name <- chid.var
     if (!is.null(varying)){
       data <- reshape(data, varying = varying, direction = "long", sep = sep,
-                      timevar = alt, idvar = chid,  ...)
+                      timevar = alt.name, idvar = chid.name,  ...)
     }
     else{
       id.names <- as.numeric(rownames(data))
       nb.id <- length(id.names)
-      data[[chid]] <- id.names
+      data[[chid.name]] <- id.names
       lev.ch <- levels(data[[choice]])
-      data <- data.frame(lapply(data,rep,length(lev.ch)))
-      data[[alt]] <- rep(lev.ch, each = nb.id)
-      row.names(data) <- paste(data[[chid]], data[[alt]], sep = ".")
+      data <- data.frame(lapply(data, rep, length(lev.ch)))
+      data[[alt.name]] <- rep(lev.ch, each = nb.id)
+      row.names(data) <- paste(data[[chid.name]], data[[alt.name]], sep = ".")
     }
-    data <- data[order(data[[chid]], data[[alt]]), ]
-    chidpos <- which(names(data) == chid)
-    altpos <- which(names(data) == alt)
+    data <- data[order(data[[chid.name]], data[[alt.name]]), ]
     # remplacer id par chid à gauche
-    chid <- as.factor(data[[chid]])
-    alt <- as.factor(data[[alt]])
-    if (!is.null(id)){
-      idpos <- which(names(data) == id)
-      id <- as.factor(data[[id]])
-      data <- data[, -c(chidpos, altpos, idpos)]
-    }
-    else  data <- data[, -c(chidpos, altpos)]
+    chid <- as.factor(data[[chid.name]])
+    alt <- as.factor(data[[alt.name]])
     if (!is.null(alt.levels)){
       levels(data[[choice]]) <- alt.levels
       levels(alt) <- alt.levels
@@ -97,14 +84,24 @@ mlogit.data <- function(data, choice, shape = c("wide","long"), varying = NULL,
     }
     data[[choice]] <- data[[choice]] == alt
   }
-
+  chidpos <- which(names(data) == chid.name)
+  altpos <- which(names(data) == alt.name)
+  if (!is.null(id.var)){
+    idpos <- which(names(data) == id.var)
+    id.var <- as.factor(data[[id.var]])
+  }
+  if (drop.index){
+    if (!is.null(id.var)) data <- data[, -c(chidpos, altpos, idpos)]
+    else data <- data[, -c(chidpos, altpos)] 
+  }
+  
   if (!is.null(opposite)){
     for (i in opposite){
       data[[i]] <- -data[[i]]
     }
   }
   index <- data.frame(chid = chid, alt = alt)
-  if (!is.null(id)) index <- cbind(index, id = id)
+  if (!is.null(id.var)) index <- cbind(index, id = id.var)
   rownames(index) <- rownames(data)
   attr(data, "index") <- index
   attr(data, "class") <- c("mlogit.data", "data.frame")

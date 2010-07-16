@@ -25,6 +25,9 @@
     \item{noalt}{the number of alternatives available.}
   }
 }
+
+
+
 \references{
 
   Bhat, Chandra R. (1995) \dQuote{A heteroscedastic extreme value model
@@ -37,8 +40,6 @@
   
   Wen, Chieh-Hua and Franck S. Koppelman (2001) \dQuote{The generalized
     nested logit model}, \emph{Transportation Research Part B}, 627-641.
-  
-
   
 }
 

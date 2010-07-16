@@ -65,10 +65,37 @@ Changes since version 0.1-5
 	* a bug (forgotten drop = FALSE) corrected in
 	model.matrix.mFormula
 
-	* Electricity and ModeMontreal datasets are added
+	* Electricity and ModeCanada datasets are added
 	
 	
 Changes since version 0.1-6
 
 	* a bug in mFormula (effects vs variable) is fixed
+	
+Changes since version 0.1-7
+
+	* mFormula modified so that models can be updated
+
+	* likelihood has been rewriten for the heteroscedastic logit
+	model, the computation is now much faster
+
+	* nested logit models with overlapping nests are now supported;
+	nests = "pcl" enables the estimation of the pair combinatorial
+	logit model
+
+	* the norm argument is added to rpar
+
+	* the logLik argument is now of class logLik
+
+	* mlogit.data is modified so that an id argument can be used with
+	data in long shape
+
+	* the argument of mlogit.data used to define longitudinal data is
+	now called id.var
+
+	* mlogit.lnls is corrected so that the estimation of multinomial
+	models can handle unbalanced data (pb with Reduce)
+ 
+	* the three tests are temporary removed
+	
 	

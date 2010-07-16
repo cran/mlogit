@@ -7,7 +7,7 @@
 \usage{
 mlogit.data(data, choice, shape = c("wide","long"), varying = NULL,
             sep=".",alt.var = NULL, chid.var = NULL, alt.levels = NULL,
-            id = NULL, opposite = NULL, drop.index = FALSE, ...)
+            id.var = NULL, opposite = NULL, drop.index = FALSE, ...)
 }
 
 \arguments{
@@ -40,8 +40,8 @@ mlogit.data(data, choice, shape = c("wide","long"), varying = NULL,
   the choice variable (both should be the same), for a \code{long}
   \code{data.frame}, they are guessed from the \code{alt.var} argument,}
 
-  \item{id}{the name of the variable that contains the individual index
-  if any,}
+  \item{id.var}{the name of the variable that contains the individual
+  index if any,}
 
   \item{opposite}{returns the opposite of the specified variables,}
   

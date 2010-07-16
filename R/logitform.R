@@ -17,8 +17,6 @@ has.intercept.Formula <- function(object, rhs = NULL, ...) {
   sapply(rhs, function(x) has.intercept(formula(object, lhs = 0, rhs = x)))
 }
 
-
-
 ## pFormula:
 ## methods : formula, model.frame, model.matrix, pmodel.response
 
@@ -35,10 +33,11 @@ mFormula.formula <- function(object){
   object
 }
 
-mFormula <- function(object) {
+mFormula <- function(object){
   stopifnot(inherits(object, "formula"))
-  object <- Formula(object)
-  class(object) <- c("mFormula", class(object))
+  if (!inherits(object, "Formula")) object <- Formula(object)
+  if (!inherits(object, "mFormula"))
+    class(object) <- c("mFormula", class(object))
   object
 }
 
@@ -135,13 +134,3 @@ model.matrix.mFormula <- function(object, data, ...){
   X[omitlines, ] <- NA
   X
 }
-
-scoretest <- function(object, ....){
-  UseMethod("scoretest")
-}
-
-
-## mm <- mlogit(mode~pr+ca|income, Fish)
-## update(mm, heterosc = TRUE, iterlim = 0, method = 'bfgs')
-
-  

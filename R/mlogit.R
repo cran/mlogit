@@ -20,7 +20,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   else pair.comb.logit <- FALSE
   
   mixed.logit <- !is.null(rpar)
-  multinom.logit <- !heterosc & is.null(nests) & is.null(rpar)
+  multinom.logit <- !heterosc & is.null(nests) & is.null(rpar) 
 
   if (heterosc.logit + nested.logit + mixed.logit > 1)
     stop("only one of heterosc, rpar and nests can be used")
@@ -78,6 +78,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   index <- attr(mf, "index")
   alt <- index[["alt"]]
   chid <- index[["chid"]]
+  alt.lev <- levels(alt)
 
   if (panel){
     if (!mixed.logit) stop("panel is only relevant for mixed logit models")
@@ -187,38 +188,45 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   if (nested.logit){
     J <- length(nests)
     if (un.nest.el){
-      if (is.null(start)) sup.coef <- c(lambda = 1)
-      names.sup.coef <- 'lambda'
+      if (is.null(start) || length(start) == K) sup.coef <- c(iv = 1)
+      names.sup.coef <- 'iv'
     }
     else{
-      if (is.null(start)) sup.coef <- rep(1, J)
-      names.sup.coef <- paste("lambda", names(nests), sep = ".")
+      if (is.null(start) || length(start) == K) sup.coef <- rep(1, J)
+      names.sup.coef <- paste("iv", names(nests), sep = ".")
     }
   }
   if (pair.comb.logit){
     unalt <- levels(alt)
     J <- length(unalt)
-    names.sup.coef <- NULL
-    for (i in 1:(J-1)){
-      names.sup.coef <- c(names.sup.coef, paste('lambda', unalt[i], unalt[(i+1):J], sep = "_"))
+    if (un.nest.el){
+      if (is.null(start)) sup.coef <- c(iv = 1)
+      names.sup.coef <- 'iv'
     }
-    sup.coef <- rep(1, length(names.sup.coef))
+    else{
+      names.sup.coef <- NULL
+      for (i in 1:(J-1)){
+        names.sup.coef <- c(names.sup.coef, paste('iv', unalt[i], unalt[(i+1):J], sep = "_"))
+      }
+      sup.coef <- rep(1, length(names.sup.coef))
+    }
   }
+  
   if (heterosc.logit){
     unalt <- levels(alt)
     J <- length(unalt)
-    if (is.null(start)) sup.coef <- rep(1, J-1)
-    names.sup.coef <- paste("theta", unalt[-1], sep = ".")
+    if (is.null(start) || length(start) == K) sup.coef <- rep(1, J-1)
+    names.sup.coef <- paste("sp", unalt[-1], sep = ".")
   }
   if (mixed.logit){
     nmean <- length(c(Varc, Vara))
     nvar <- length(Vara)
     if (!correlation){
-      if (is.null(start)) sup.coef <- rep(.1, nvar)
+      if (is.null(start) || length(start) == K) sup.coef <- rep(.1, nvar)
       names.sup.coef <- paste("sd", colnames(Xa[[1]]), sep = ".")
     }
     else{
-      if (is.null(start)) sup.coef <- rep(.1, 0.5 * nvar * (nvar + 1))
+      if (is.null(start) || length(start) == K) sup.coef <- rep(.1, 0.5 * nvar * (nvar + 1))
       names.sup.coef <- c()
       Ka <- length(rpar)
       for (i in 1:Ka){
@@ -227,8 +235,15 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
       }
     }
   }
-  # if no starting values are provided, provide a 0 vector and, if the
-  # model is not the multinomial logit, estimate the model
+  
+## if no starting values are provided, provide a 0 vector and, if the
+## model is not the multinomial logit, estimate the model
+##   start can be :
+##   1. NULL, in this case estimate the multinomial logit model,
+##   2. a vector of lengthK ; then add starting values for the
+##   supplementary coefficients,
+##   3. a full set ; then just name the coefs.
+
   if (is.null(start)){
     callst <- callT
     start <- rep(0, K)
@@ -241,21 +256,26 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
       callst$rpar <- NULL
       callst$panel <- FALSE
       callst$constPar <- NULL
+      callst$iterlim <- NULL
       start <- coef(eval(callst, sys.frame(which=nframe)))
       if (mixed.logit){
         ln <- names(rpar[rpar == "ln"])
         start[ln] <- log(start[ln])
       }
+    }
+  }
+  if (length(start) == K){
+    names(start) <- colnames(X[[1]])
+    if (!multinom.logit){
       names(sup.coef) <- names.sup.coef
       start <- c(start, sup.coef)
     }
   }
   else{
-    # if starting values are provided, name them correctly
     if (!multinom.logit) names(start) <- c(colnames(X[[1]]), names.sup.coef)
     else names(start) <- colnames(X[[1]])
   }
-  
+
   # 5 ###################################################################
   # Estimate the model using mlogit.nlm and passing the correct arguments
   #######################################################################
@@ -263,31 +283,31 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   opt <- callT
   opt$start <- start
   m <- match(c("method", "print.level", "iterlim",
-               "start", "constPar","tol"),
+               "start", "constPar","tol", "ftol", "steptol"),
              names(opt), 0L)
   opt <- opt[c(1L, m)]
   opt[[1]] <- as.name('mlogit.optim')
-  opt$f <- as.name('lnl.mlogits')
+  opt$logLik <- as.name('lnl.mlogits')
   if (!mixed.logit) opt[c('X', 'y')] <- list(as.name('X'), as.name('y'))
   if (mixed.logit){
-    opt$f <- as.name('lnl.rlogit')
+    opt$logLik <- as.name('lnl.rlogit')
     opt[c('Xa', 'Xc', 'y', 'Varc', 'Vara', 'random.nb', 'id', 'rpar', 'correlation')] <-
     list(as.name('Xa'), as.name('Xc'), as.name('y'), as.name('Varc'), as.name('Vara'),
          as.name('random.nb'), as.name('id'), as.name('rpar'), as.name('correlation'))
   }
   if (heterosc.logit){
-    opt$f <- as.name('lnl.hlogit')
+    opt$logLik <- as.name('lnl.hlogit')
     rn <- gauss.quad(R, kind = "laguerre")
     opt[c('rn', 'choice')] <- list(as.name('rn'), as.name('choice'))
   }
   if (nested.logit){
-    opt$f <- as.name('lnl.nlogit')
+    opt$logLik <- as.name('lnl.nlogit')
     opt$nests <- as.name('nests')
     opt$un.nest.el <- as.name('un.nest.el')
     opt$unscaled <- as.name('unscaled')
   }
   if (pair.comb.logit){
-    opt$f <- as.name('lnl.nlogit')
+    opt$logLik <- as.name('lnl.nlogit')
     alt.lev <- levels(alt)
     J <- length(alt.lev)
     alt1 <- rep(alt.lev, c((J-1):0))
@@ -296,9 +316,12 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     lnests <- mapply(function(x,y) c(x,y), alt1, alt2, SIMPLIFY = FALSE)
     names(lnests) <- names.nests
     opt$nests <- lnests
+    opt$unscaled <- as.name('unscaled')
+    opt$un.nest.el <- as.name('un.nest.el')
   }
   if (!is.null(weights)) opt$weights <- as.name('weights')
   opt$opposite <- TRUE
+
   x <- eval(opt, sys.frame(which = nframe))
 
   # 6 ###########################################################
@@ -309,19 +332,29 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   logLik <- - as.numeric(x$optimum)
   attr(logLik,"df") <- length(x$coefficients)
   attr(logLik, 'null') <- sum(freq*log(freq/n))
+  class(logLik) <- "logLik"
   fit <- as.matrix(data.frame(attr(x$optimum, 'probabilities')))
-##   if (heterosc){
-##     fitted.values <- c()
-##     for (j in 1:J){
-##       they <- as.list(rep(0,J))
-##       they[[j]] <- 1
-##       fitted.values <- cbind(fitted.values, Prob(start, they))
-##   }
-##   colnames(fitted.values) <- alt.lev
-
-
-  if (!heterosc) resid <- as.matrix(data.frame(y)) - fit
+  
+  if (heterosc){
+    opt$gradient <- FALSE
+    opt$logLik <- opt$iterlim <- opt$method <- opt$print.level <- opt$tol <- NULL
+    opt[[1]] <- as.name('lnl.hlogit')
+    names(opt)[[2]] <- 'param'
+    fit <- c()
+    for (j in 1:J){
+      they <- vector(mode='list', length= J)
+      they <- lapply(they, function(x) rep(FALSE, n))
+      they[[j]] <- rep(TRUE, n)
+      opt$y <- they
+      fit <- cbind(fit,
+                   attr(eval(opt, sys.frame(which = nframe)), 'probabilities'))
+    }
+    colnames(fit) <- alt.lev
+  }
+  if (!nested.logit)  resid <- as.matrix(data.frame(y)) - fit
   else resid <- NULL
+
+    
   # if no hessian is returned, use the BHHH approximation
   if (is.null(attr(x$optimum, 'hessian')))
     hessian <- - crossprod(attr(x$optimum, 'gradi'))
@@ -351,5 +384,4 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
             class = 'mlogit'
             )
 }
-
 

@@ -6,16 +6,19 @@
   functions for multinomial logit models
 }
 \usage{
-mlogit.optim(f, start, method = c("bfgs", "nr", "bhhh"), iterlim = 2000,
-             tol = 1E-06, print.level = 1, constPar = NULL, ...)
+mlogit.optim(logLik, start, method = c("bfgs", "nr", "bhhh"), iterlim = 2000,
+             tol = 1E-06, ftol = 1e-08, steptol = 1e-10,
+             print.level = 1, constPar = NULL, ...)
 }
 \arguments{
-  \item{f}{the likelihood function to be maximized,}
+  \item{logLik}{the likelihood function to be maximized,}
   \item{start}{the initial value of the vector of coefficients,}
   \item{method}{the method used, one of \code{'nr'} for Newton-Ralphson,
   \code{'bhhh'} for Berndt-Hausman-Hall-Hall and \code{'bfgs'},}
   \item{iterlim}{the maximum number of iterations,}
-  \item{tol}{the value of the criteria for the stoping rule,}
+  \item{tol}{the value of the criteria for the gradient,}
+  \item{ftol}{the value of the criteria for the function,}
+  \item{steptol}{the value of the criteria for the step,}
   \item{print.level}{one of (0, 1, 2), the details of the printing
     messages. If \code{'print.level=0'}, no information about the
     optimization process is provided, if \code{'print.level=1'} the

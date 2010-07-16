@@ -62,7 +62,7 @@ hmftest(x, ...)
 
 data("TravelMode",package="AER")
 TravelMode <- mlogit.data(TravelMode,choice="choice",shape="long",
-                          alt.var="mode",id.var="individual")
+                          alt.var="mode",chid.var="individual")
 
 ## Create a variable of income only for the air mode
 
