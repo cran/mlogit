@@ -98,4 +98,12 @@ Changes since version 0.1-7
  
 	* the three tests are temporary removed
 	
+Changes since version 0.1-8
+
+	* all the models could normally be estimated on unbamanced data
+
+	* the three tests are added, i.e. a new scoretest function and
+	specific methods for waldtest and lrtest from the lmtest package
+
+	* the model.matrix method for mlogit objects is now exported
 	

@@ -160,3 +160,7 @@ print.pseries <- function(x, ...){
     attr(x, "class") <- NULL
   print(x, ...)
 }
+
+index.mlogit.data <- function(x, ...){
+  attr(x, "index")
+}

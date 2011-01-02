@@ -99,7 +99,7 @@ make.random.nb <- function(R, Ka, halton){
 # Create the matrix of random numbers
   if (!is.null(halton)){
     length.halton <- rep(R,Ka)
-    prime <- c(2,3,5,7,11,13,17,19,23,29,31)
+    prime <- c(2,3,5,7,11,13,17,19,23)
     drop.halton <- rep(100,Ka)
     if (!is.na(halton) && !is.null(halton$prime)){
       if (length(halton$prime) != Ka){

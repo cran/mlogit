@@ -82,6 +82,7 @@ suml <- function(x){
   else{
     s <- rep(0,length(x[[n]]))
     for (i in 1:n){
+      x[[i]][is.na(x[[i]])] <- 0
       s <- s+x[[i]]
     }
   }
@@ -112,7 +113,7 @@ mlogit.optim <- function(logLik, start,
                          method = c('bfgs', 'nr', 'bhhh'),
                          iterlim = 2000,
                          tol = 1E-06,
-                         print.level = 1,
+                         print.level = 0,
                          constPar = NULL,
                          ...){
   # construct a call for the function
@@ -211,7 +212,7 @@ mlogit.optim <- function(logLik, start,
                          tol = 1E-06,
                          ftol = 1E-08,
                          steptol = 1E-10,
-                         print.level = 1,
+                         print.level = 0,
                          constPar = NULL,
                          ...){
   method <- match.arg(method)
@@ -222,13 +223,16 @@ mlogit.optim <- function(logLik, start,
   i <- 0
   K <- length(param)
   d <- rep(0, K)
- 
+
   # construct a vector of fixed parameters
   fixed <- rep(FALSE, K)
+  names(fixed) <- names(start)
   if (!is.null(constPar)) fixed[constPar] <- TRUE
-  
+
   # construct a call for the function
   f <- callT
+  # if the model is updated based on a multinomial logit model, change the method to bfgs
+  # if (method == 'nr' && as.character(f[[1]]) != "lnl.mlogits") method <- 'bfgs'
   m <- match(optimoptions, names(callT), 0L)
   if (sum(m)) f <- f[-m]
   f[[1]] <- as.name(f[[2]])
@@ -237,7 +241,6 @@ mlogit.optim <- function(logLik, start,
   if (method == 'nr') f$hessian <- TRUE else f$hessian <- FALSE
   f[[2]] <- NULL
   names(f)[2] <- 'param'
-
   # eval a first time the function, the gradient and the hessian
   x <- eval(f, parent.frame())
   if (print.level > 0)
@@ -323,7 +326,6 @@ mlogit.optim <- function(logLik, start,
 
   }
   if (code == 3) x <- oldx
-
   names(attr(x, 'gradient')) <- colnames(attr(x, 'gradi')) <- names(param)
   attr(x, "fixed") <- fixed
   est.stat = structure(list(elaps.time = NULL, nb.iter = i, eps = chi2,

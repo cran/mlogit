@@ -1,0 +1,67 @@
+\name{scoretest}
+\alias{scoretest}
+\alias{scoretest.mlogit}
+\alias{scoretest.default}
+\alias{waldtest.mlogit}
+\alias{lrtest.mlogit}
+\title{The three tests for mlogit models}
+\description{
+  Three tests for mlogit models: specific methods for the Wald test and
+  the likelihood ration test and a new function for the score test
+}
+\usage{
+scoretest(object, ...)
+\method{scoretest}{mlogit}(object, ...)
+\method{waldtest}{mlogit}(object, ...)
+\method{lrtest}{mlogit}(object, ...)
+}
+\arguments{
+  
+  \item{object}{an object of class \code{mlogit} or a formula,}
+  \item{...}{two kinds of arguments can be used. If \code{"mlogit"}
+  arguments are introduced, initial model is updated using these
+  arguments. If \code{"formula"} or other \code{"mlogit"} models are
+  introduced, the standard behavior of \code{"waldtest"} and
+  \code{"lrtest"} is followed.}
+  
+}
+\value{
+  an object of class \code{"htest"}.
+}
+\details{
+  
+  The \code{"scoretest"} function and \code{"mlogit"} method for
+  \code{"waldtest"} and \code{"lrtest"} from the \code{"lmtest"} package
+  provides the infrastructure to compute the three tests of hypothesis
+  for \code{"mlogit"} objects.
+
+  The first argument must be a \code{"mlogit"} object. If the second one
+  is a fitted model or a formula, the behaviour of the three functions
+  is the one of the default methods of \code{"waldtest"} and
+  \code{"lrtest"}: the two models provided should be nested and the
+  hypothesis tested is that the constrained model is the `right' model.
+
+  If no second model is provided and if the model provided is the
+  constrained model, some specific arguments of \code{"mlogit"} should
+  be provided to descibe how the initial model should be updated. If the
+  first model is the unconstrained model, it is tested versus the
+  `natural' constrained model; for example, if the model is a
+  heteroscedastic logit model, the constrained one is the multinomial
+  logit model. 
+  
+}
+
+\examples{
+library("mlogit")
+data("TravelMode", package = "AER")
+ml <- mlogit(choice ~ wait + travel + vcost, TravelMode,
+             shape = "long", chid.var = "individual", alt.var = "mode")
+hl <- mlogit(choice ~ wait + travel + vcost, TravelMode,
+             shape = "long", chid.var = "individual", alt.var = "mode",
+             method = "bfgs", heterosc = TRUE)
+lrtest(ml, hl)
+waldtest(hl)
+scoretest(ml, heterosc = TRUE)
+}
+\author{Yves Croissant}
+\keyword{htest}

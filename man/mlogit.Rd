@@ -66,7 +66,7 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   \item{unscaled}{a boolean, if \code{TRUE}, the unscaled version of the
   nested logit model is estimated,}
   \item{heterosc}{a boolean, if \code{TRUE}, the heteroscedastic logit
-    model is esitmated,}
+    model is estimated,}
   \item{rpar}{a named vector whose names are the random parameters and
   values the distribution : \code{'n'} for normal, \code{'l'} for
   log-normal, \code{'t'} for truncated normal, \code{'u' } for uniform,}
@@ -177,7 +177,7 @@ summary(mlogit(mode ~ 0 | income, data = Fish))
 
 ## which can also be estimated using multinom (package nnet)
 
-library(nnet)
+library("nnet")
 summary(multinom(mode ~ income, data = Fishing))
 
 ## a "mixed" model
@@ -194,7 +194,7 @@ m <- mlogit(mode ~ price+ catch | income, data = Fish, reflevel = "charter")
 m <- mlogit(mode ~ price+ catch | income, data = Fish,
             alt.subset = c("charter", "pier", "beach"))
 
-## model on 'unbalanced data i.e. for some observations, some
+## model on unbalanced data i.e. for some observations, some
 ## alternatives are missing
 
 # a data.frame in wide format with two missing prices
@@ -212,7 +212,7 @@ mlogit(choice~wait+gcost|income+size, Tr2, shape = "long",
 
 data("TravelMode", package = "AER")
 hl <- mlogit(choice ~ wait + travel + vcost, TravelMode,
-             shape = "long", id.var = "individual", alt.var = "mode",
+             shape = "long", chid.var = "individual", alt.var = "mode",
              method = "bfgs", heterosc = TRUE, tol = 10)
 
 ## A nested logit model
@@ -221,16 +221,26 @@ TravelMode$avincome <- with(TravelMode, income * (mode == "air"))
 TravelMode$time <- with(TravelMode, travel + wait)/60
 TravelMode$timeair <- with(TravelMode, time * I(mode == "air"))
 TravelMode$income <- with(TravelMode, income / 10)
+
 #Heiss p.231
 nl <- mlogit(choice ~ time + timeair | income, TravelMode, shape = "long",
              alt.var = "mode", print.level = 0, method = "bfgs",
              nests = list(public = c("train", "bus"), other = c("air","car")),
              tol = 1)
 
-## a mixed logit model
+# Hensher and Greene (2002), table 1 p.8-9 model 5
+TravelMode$incomeother <- with(TravelMode, ifelse(mode \%in\% c('air', 'car'), income, 0))
+nl <- mlogit(choice~gcost+wait+incomeother, TravelMode,
+             shape='long', alt.var='mode',
+             nests=list(plublic=c('train', 'bus'), other=c('car','air')))
 
-rpl <- mlogit(mode ~ price+ catch | income, Fishing, varying = 2:9, shape = 'wide',
-              rpar = c(price= 'n', catch = 'n'), correlation = TRUE, halton = NA,
+# same with a comon nest elasticity (model 1)
+nl2 <- update(nl, un.nest.el = TRUE)
+
+## a mixed logit model
+rpl <- mlogit(mode ~ price+ catch | income, Fishing, varying = 2:9,
+              shape = 'wide', rpar = c(price= 'n', catch = 'n'),
+              correlation = TRUE, halton = NA,
               R = 10, tol = 10, print.level = 0)
 summary(rpl)
 rpar(rpl)

@@ -13,6 +13,7 @@
 ##    * logLik                |
 ##    * summary               |
 ##    * print.summary         |
+##    * index                 |
 ##----------------------------
 
 fitted.mlogit <- function(object, outcome = TRUE, ...){
@@ -146,4 +147,8 @@ print.summary.mlogit <- function(x, digits = max(3, getOption("digits") - 2),
     print(x$summary.rpar)
   }
   invisible(x)
+}
+
+index.mlogit <- function(x, ...){
+  index(model.frame(x))
 }

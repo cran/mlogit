@@ -18,15 +18,15 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     pair.comb.logit <- TRUE
   }
   else pair.comb.logit <- FALSE
-  
+  if (nested.logit) attr(nests, "unique") <- ifelse(un.nest.el, TRUE, FALSE)
   mixed.logit <- !is.null(rpar)
   multinom.logit <- !heterosc & is.null(nests) & is.null(rpar) 
 
   if (heterosc.logit + nested.logit + mixed.logit > 1)
     stop("only one of heterosc, rpar and nests can be used")
 
-  if (!multinom.logit && !is.null(callT$method) && callT$method == 'nr')
-    stop("nr method only implemented for the simple multinomial logit mode")
+##   if (!multinom.logit && !is.null(callT$method) && callT$method == 'nr')
+##     stop("nr method only implemented for the simple multinomial logit mode")
 
   if (multinom.logit){
     if (is.null(callT$method)) callT$method <- 'nr'
@@ -137,7 +137,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   ###############################################################
 
   y <- model.response(mf)
-  choice <- alt[y]
+  choice <- na.omit(alt[y])
   X <- model.matrix(formula, mf)
   K <- ncol(X)
   n <- nrow(X)
@@ -209,9 +209,11 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
         names.sup.coef <- c(names.sup.coef, paste('iv', unalt[i], unalt[(i+1):J], sep = "_"))
       }
       sup.coef <- rep(1, length(names.sup.coef))
+      # in case we have to suppress one nest
+      ## sup.coef <- sup.coef[-1]
+      ## names.sup.coef <- names.sup.coef[-1]
     }
   }
-  
   if (heterosc.logit){
     unalt <- levels(alt)
     J <- length(unalt)
@@ -257,6 +259,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
       callst$panel <- FALSE
       callst$constPar <- NULL
       callst$iterlim <- NULL
+      callst$print.level = 0
       start <- coef(eval(callst, sys.frame(which=nframe)))
       if (mixed.logit){
         ln <- names(rpar[rpar == "ln"])
@@ -315,6 +318,8 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     names.nests <- paste(alt1, alt2, sep = "")
     lnests <- mapply(function(x,y) c(x,y), alt1, alt2, SIMPLIFY = FALSE)
     names(lnests) <- names.nests
+    # in case we have to suppress one nest
+    # lnests <- lnests[-1]
     opt$nests <- lnests
     opt$unscaled <- as.name('unscaled')
     opt$un.nest.el <- as.name('un.nest.el')
@@ -329,15 +334,21 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
   ###############################################################
 
   n <- sum(freq)
-  logLik <- - as.numeric(x$optimum)
-  attr(logLik,"df") <- length(x$coefficients)
-  attr(logLik, 'null') <- sum(freq*log(freq/n))
-  class(logLik) <- "logLik"
+  logLik <- structure( - as.numeric(x$optimum),
+                      df = length(x$coefficients),
+                      null = sum(freq * log(freq / n)),
+                      class = "logLik"
+                      )
+  ## logLik <- - as.numeric(x$optimum)
+  ## attr(logLik,"df") <- length(x$coefficients)
+  ## attr(logLik, 'null') <- sum(freq*log(freq/n))
+  ## class(logLik) <- "logLik"
   fit <- as.matrix(data.frame(attr(x$optimum, 'probabilities')))
   
   if (heterosc){
     opt$gradient <- FALSE
-    opt$logLik <- opt$iterlim <- opt$method <- opt$print.level <- opt$tol <- NULL
+    opt$logLik <- opt$iterlim <- opt$method <- opt$print.level <- opt$tol <- opt$constPar <- NULL
+#    opt['logLik', 'iterlim', 'method', 'print.level', 'tol', 'constPar'] <- NULL
     opt[[1]] <- as.name('lnl.hlogit')
     names(opt)[[2]] <- 'param'
     fit <- c()
@@ -351,9 +362,9 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     }
     colnames(fit) <- alt.lev
   }
-  if (!nested.logit)  resid <- as.matrix(data.frame(y)) - fit
-  else resid <- NULL
-
+  ## if (!nested.logit)  resid <- as.matrix(data.frame(y)) - fit
+  ## else resid <- NULL
+  resid <- as.matrix(data.frame(y)) - fit
     
   # if no hessian is returned, use the BHHH approximation
   if (is.null(attr(x$optimum, 'hessian')))
@@ -366,22 +377,24 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
 
   thecoef <- x$coefficients
   attr(thecoef, "fixed") <- attr(x$optimum, "fixed")
-  structure(
-            list(
-                 coefficients  = thecoef,
-                 logLik        = logLik,
-                 gradient      = - attr(x$optimum, 'gradient'),
-                 gradi         = - attr(x$optimum, 'gradi'),
-                 hessian       = hessian,
-                 est.stat      = x$est.stat,
-                 fitted.values = fit,
-                 residuals     = resid,
-                 rpar          = rpar,
-                 model         = mf,
-                 freq          = freq,
-                 formula       = formula,
-                 call          = callT),
-            class = 'mlogit'
-            )
+  result <- structure(
+                      list(
+                           coefficients  = thecoef,
+                           logLik        = logLik,
+                           gradient      = - attr(x$optimum, 'gradient'),
+                           gradi         = - attr(x$optimum, 'gradi'),
+                           hessian       = hessian,
+                           est.stat      = x$est.stat,
+                           fitted.values = fit,
+                           residuals     = resid,
+                           model         = mf,
+                           freq          = freq,
+                           formula       = formula,
+                           call          = callT),
+                      class = 'mlogit'
+                      )
+  if (mixed.logit) result$rpar <- rpar
+  if (nested.logit) result$nests <- nests
+  result
 }
 

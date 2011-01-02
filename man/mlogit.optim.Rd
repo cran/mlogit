@@ -8,7 +8,7 @@
 \usage{
 mlogit.optim(logLik, start, method = c("bfgs", "nr", "bhhh"), iterlim = 2000,
              tol = 1E-06, ftol = 1e-08, steptol = 1e-10,
-             print.level = 1, constPar = NULL, ...)
+             print.level = 0, constPar = NULL, ...)
 }
 \arguments{
   \item{logLik}{the likelihood function to be maximized,}

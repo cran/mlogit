@@ -43,4 +43,34 @@
   
 }
 
+\examples{
+data("ModeCanada", package = "mlogit")
+bususers <- with(ModeCanada, case[choice == 1 & alt == "bus"])
+ModeCanada <- subset(ModeCanada, !case \%in\% bususers)
+ModeCanada <- subset(ModeCanada, nchoice == 4)
+ModeCanada <- subset(ModeCanada, alt != "bus")
+ModeCanada$alt <- ModeCanada$alt[drop = TRUE]
+KoppWen00 <- mlogit.data(ModeCanada, shape='long', chid.var = 'case',
+                         alt.var = 'alt', choice='choice',
+                         drop.index=TRUE)
+pcl <- mlogit(choice~freq+cost+ivt+ovt, KoppWen00, reflevel='car',
+              nests='pcl', constPar=c('iv_train_air'))
+
+% use the subset of users who have the four alternatives available and who
+% don't take the bus
+
+% bususers <- with(ModeCanada, case[choice == 1 & alt == "bus"])
+% ModeCanada <- subset(ModeCanada, !case %in% bususers)
+% ModeCanada <- subset(ModeCanada, nchoice == 4)
+% ModeCanada <- subset(ModeCanada, alt != "bus")
+% ModeCanada$alt <- ModeCanada$alt[drop = TRUE]
+% KoppWen00 <- mlogit.data(ModeCanada, shape='long', chid.var = 'case',
+%                          alt.var = 'alt', choice='choice',
+%                          drop.index=TRUE)
+% mlogit(choice~freq+cost+ivt+ovt, KoppWen00, reflevel='car')
+% z <- mlogit(choice~freq+cost+ivt+ovt, KoppWen00, reflevel='car', nests="pcl")
+
+}
+
+
 \keyword{datasets}

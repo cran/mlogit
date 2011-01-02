@@ -9,8 +9,6 @@ lnl.mlogits <- function(param, X, y, weights = NULL, gradient = FALSE,
     step <- step / 2
     if (step < steptol) break
     eXb <- lapply(X, function(x) exp(crossprod(t(x), param + step * direction)))
-#    seXb <- Reduce("+", eXb)
-    # Reduce doesn't manage correctly the NAs, so we switch back to suml
     seXb <- suml(eXb)
     P <- lapply(eXb, function(x){v <- x/seXb; v[is.na(v)] <- 0; as.vector(v)})
     Pch <- Reduce("+", mapply("*", P, y, SIMPLIFY = FALSE))
@@ -153,7 +151,7 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
   J <- length(nests)
   X <- lapply(nests, function(x) X[x])
   Y <- lapply(nests, function(x) y[x])
-  Yn <- lapply(Y, function(x) Reduce("+", x))
+  Yn <- lapply(Y, suml)
   step <- 2
   repeat{
     step <- step / 2
@@ -170,38 +168,39 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
       W <- mapply(function(v, l) lapply(v, function(x) x / l), V, lambda, SIMPLIFY = FALSE)
     else W <- V
     A <- lapply(W, function(x) lapply(x, exp))
-    N <- lapply(A, function(x) Reduce("+", x))
+    N <- lapply(A, suml)
+
     Pjl <- mapply(function(a, n) lapply(a, function(x) x/n), A, N, SIMPLIFY = FALSE)
     Pl <- mapply(function(n, l) n^l, N, lambda, SIMPLIFY=FALSE)
-    D <- Reduce("+", Pl)
+    D <- suml(Pl)
     Pl <- lapply(Pl, function(x) x/D)
     P <- mapply(function(pjl, pl) lapply(pjl, function(x) x * pl), Pjl, Pl, SIMPLIFY = FALSE)
     L <- mapply(function(p, y) mapply("*", p, y, SIMPLIFY = FALSE), P, Y, SIMPLIFY = FALSE)
-    L <- Reduce("+", lapply(L, function(x) Reduce("+", x)))
+    L <- suml(lapply(L, suml))
     lnl <- sum(opposite * weights * log(L))
     if (is.null(initial.value) || lnl <= initial.value) break
   }
   if (gradient){
     ### For overlaping nests
     Pj <- unlist(P, recursive = FALSE)
-    Pj <- lapply(posalts, function(x) Reduce("+", Pj[x]))
+    Pj <- lapply(posalts, function(x) suml(Pj[x]))
     names(Pj) <- thealts
     proba <- Pj
     Pj <- lapply(nests, function(x) Pj[x])
-    Pond <- mapply(function(p, pj) mapply("/", p, pj, SIMPLIFY = FALSE), P, Pj, SIMPLIFY = FALSE)
-    ###
+                 Pond <- mapply(function(p, pj) mapply("/", p, pj, SIMPLIFY = FALSE), P, Pj, SIMPLIFY = FALSE)
     Xb <- mapply(function(x, pjl)
-                 Reduce("+",mapply("*", x, pjl, SIMPLIFY = FALSE)),
+                 suml(mapply("*", x, pjl, SIMPLIFY = FALSE)),
                  X, Pjl, SIMPLIFY = FALSE)
     Vb <- mapply(function(v, pjl)
-                 Reduce("+",mapply("*", v, pjl, SIMPLIFY = FALSE)),
+                 suml(mapply("*", v, pjl, SIMPLIFY = FALSE)),
                  V, Pjl, SIMPLIFY = FALSE)
+                 
     if (!unscaled)
-      Xbtot <- Reduce("+", mapply("*", Pl, Xb, SIMPLIFY = FALSE))
+      Xbtot <- suml(mapply("*", Pl, Xb, SIMPLIFY = FALSE))
     else
-      Xbtot <- Reduce("+", mapply(function(pl, xb, l) pl * xb * l,
-                                  Pl, Xb, lambda, SIMPLIFY = FALSE))
-
+      Xbtot <- suml(mapply(function(pl, xb, l) pl * xb * l,
+                           Pl, Xb, lambda, SIMPLIFY = FALSE))
+    
     if (!unscaled)
       Gb <- mapply(function(x, xb, l)
                    lapply(x, function(z) (z+(l-1)*xb)/l), X, Xb, lambda, SIMPLIFY = FALSE)
@@ -215,7 +214,7 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
     Gb <-  mapply(function(gb, pond)
                   mapply("*", gb, pond, SIMPLIFY = FALSE),
                   Gb, Pond, SIMPLIFY = FALSE)
-    Gb <- Reduce("+", lapply(Gb, function(x) Reduce("+", x))) - Xbtot
+    Gb <- suml(lapply(Gb, suml)) - Xbtot
 
     if (!unscaled){
       Gl1 <- mapply(function(v, n, vb, l)
@@ -226,9 +225,17 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
       Gl1 <- mapply(function(gl1, pond)
                     mapply("*", gl1, pond, SIMPLIFY = FALSE),
                     Gl1, Pond, SIMPLIFY = FALSE)
-      Gl1 <- lapply(Gl1, function(x) Reduce("+", x))
-      Gl2 <- mapply(function(vb, n, l, pl) - pl * (l^2 * log(n)- l * vb)/ l^2,
+      mylog <- function(x){
+        nullx <- abs(x) < 1E-20
+        x[nullx] <- 0
+        x[!nullx] <- log(x[!nullx])
+        x
+      }
+      Gl1 <- lapply(Gl1, suml)
+      Gl2 <- mapply(function(vb, n, l, pl) - pl * (l^2 * mylog(n)- l * vb)/ l^2,
                     Vb, N, lambda, Pl, SIMPLIFY = FALSE)
+      # log is replaced by mylog which replace log(0) by 0.
+
     }
     else{
       Gl1 <- mapply(function(n, y)
@@ -237,10 +244,10 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
       Gl1 <- mapply(function(gl1, pond)
                     mapply("*", gl1, pond, SIMPLIFY = FALSE),
                     Gl1, Pond, SIMPLIFY = FALSE)
-      Gl1 <- lapply(Gl1, function(x) Reduce("+", x))
+      Gl1 <- lapply(Gl1, suml)
       Gl2 <- mapply(function(n, pl) - pl * log(n),
                     N, Pl, SIMPLIFY = FALSE)
-    }      
+    }
     Gl <- mapply("+", Gl1, Gl2)
     if (un.nest.el) Gl <- apply(Gl, 1, sum)
     gradi <- opposite * weights * cbind(Gb, Gl)
@@ -248,19 +255,22 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE, hessian = 
     attr(lnl, "gradient") <- apply(gradi, 2, sum)
   }
   if (step < steptol) lnl <- NULL
+
   else{
-    attr(lnl, "probabilities") <- L
+    Pj <- unlist(P, recursive = FALSE)
+    Pj <- sapply(posalts, function(x) suml(Pj[x]))
+    colnames(Pj) <- thealts
+    attr(lnl, "probabilities") <- Pj
     attr(lnl, "step") <- step
   }
   lnl
-}
+} 
 
 lnl.hlogit <- function(param, X, y, weights = NULL, gradient = FALSE,
                        hessian = FALSE, opposite = TRUE, sumlnl = TRUE,
                        direction = rep(0, length(param)), initial.value = NULL, steptol = 1E-01,
                        rn, choice){
   otime <- proc.time()
-  
   opposite <- ifelse(opposite, -1, +1)
   if (is.null(weights)) weights <- 1
   balanced <- TRUE
@@ -277,39 +287,36 @@ lnl.hlogit <- function(param, X, y, weights = NULL, gradient = FALSE,
     beta <- param[1:K] + step * direction[1:K]
     theta <- c(1, param[-c(1:K)]) + step * c(0, direction[-c(1:K)])
     V <- lapply(X, function(x) as.numeric(crossprod(t(x), beta)))
-    Vi <- Reduce("+", (mapply("*", V, y, SIMPLIFY = FALSE)))
+    Vi <- suml(mapply("*", V, y, SIMPLIFY = FALSE))
     DVi <- lapply(V, function(x) Vi - x)
     names(theta) <- levels(choice)
     thetai <- theta[choice]
     alpha <- mapply(function(dvi, th)
                     exp( - (dvi - thetai %o% log(u)) / th),
                     DVi, theta, SIMPLIFY = FALSE)
-    A <- t( t(Reduce("+", alpha)))
+    A <- suml(alpha)
     G <- exp(- A)
     P <- apply(t(t(G) * w * exp(u)), 1, sum)
     lnl <- sum (opposite * weights * log(P))
     if (is.null(initial.value) || lnl <= initial.value) break
   }
   if (gradient){
-    Xi <- Reduce("+", mapply("*", X, y, SIMPLIFY = FALSE))
+    Xi <- suml(mapply("*", X, y, SIMPLIFY = FALSE))
     DX <- lapply(X, function(x) x - Xi)
     DXt <- mapply("/", DX, theta, SIMPLIFY = FALSE)
     Gb <- lapply(alpha, function(a) apply(t(t(a * G) * w * exp(u)), 1, sum))
     Gb <- mapply(function(a, dxt) a * dxt,
                  Gb, DXt, SIMPLIFY = FALSE)
-    Gb <- - Reduce("+", Gb)
-    
+    Gb <- - suml(Gb)
     Gtj <- mapply(function(a, th) a * log(a) / th,
                   alpha, theta, SIMPLIFY = FALSE)
-
     Gtl <- mapply(function(a, th) - t( t(a / th) * log(u)),
                   alpha, theta, SIMPLIFY = FALSE)
-    Gtl <- Reduce("+", Gtl)
+    Gtl <- suml(Gtl)
+    Gtj <- lapply(Gtj, function(x){x[is.na(x)] <- 0;x})
     Gt <- mapply(function(gtj, ay) gtj  + Gtl * ay,
                  Gtj, y, SIMPLIFY = FALSE)
-    
     Gt <- sapply(Gt, function(x) apply(t(t(x * G) * exp(u) * w ), 1, sum))
-
     gradi <- opposite * cbind(Gb, Gt[, -1]) / P
     attr(lnl, "gradi") <- gradi
     attr(lnl, "gradient") <- if (is.matrix(gradi)) apply(gradi, 2, sum) else sum(gradi)
