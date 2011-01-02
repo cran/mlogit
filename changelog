@@ -106,4 +106,8 @@ Changes since version 0.1-8
 	specific methods for waldtest and lrtest from the lmtest package
 
 	* the model.matrix method for mlogit objects is now exported
-	
+
+
+Changes since version 0.2-0
+
+	* all the rda files are now compressed

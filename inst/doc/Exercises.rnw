@@ -11,6 +11,7 @@
 
 \Plainauthor{Kenneth Train, Yves Croissant}
 
+
 \title{Kenneth Train's exercises using the \pkg{mlogit} package for \proglang{R}}
 
 \Plaintitle{Kenneth Train's exercises using the mlogit package for R}
