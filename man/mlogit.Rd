@@ -3,6 +3,7 @@
 \alias{print.mlogit}
 \alias{suml}
 \alias{fitted.mlogit}
+\alias{predict.mlogit}
 \alias{residuals.mlogit}
 \alias{df.residual.mlogit}
 \alias{terms.mlogit}
@@ -10,7 +11,6 @@
 \alias{update.mlogit}
 \alias{summary.mlogit}
 \alias{print.summary.mlogit}
-\alias{vcov.mlogit}
 \alias{logLik.mlogit}
 \title{Multinomial logit model}
 \description{
@@ -21,9 +21,10 @@
 mlogit(formula, data, subset, weights, na.action, start = NULL,
        alt.subset = NULL, reflevel = NULL, 
        nests = NULL, un.nest.el = FALSE, unscaled = FALSE,
-       heterosc = FALSE, rpar = NULL,
+       heterosc = FALSE, rpar = NULL, probit = FALSE,
        R = 40, correlation = FALSE, halton = NULL,
-       random.nb = NULL, panel = FALSE, estimate = TRUE, ...)
+       random.nb = NULL, panel = FALSE, estimate = TRUE,
+       seed = 10, ...)
 \method{print}{mlogit}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), ...)
 \method{summary}{mlogit}(object, ...)
@@ -32,9 +33,9 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
 \method{print}{mlogit}(x, digits = max(3, getOption("digits") - 2),
     width = getOption("width"), ...)
 \method{logLik}{mlogit}(object, ...)
-\method{vcov}{mlogit}(object, ...)
 \method{residuals}{mlogit}(object, outcome = TRUE, ...)
 \method{fitted}{mlogit}(object, outcome = TRUE, ...)
+\method{predict}{mlogit}(object, newdata, returnData = FALSE, ...)
 \method{df.residual}{mlogit}(object, ...)
 \method{terms}{mlogit}(x, ...)
 \method{model.matrix}{mlogit}(object, ...)
@@ -45,6 +46,8 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   \item{x, object}{an object of class \code{mlogit}}
   \item{formula}{a symbolic description of the model to be estimated,}
   \item{new}{an updated formula for the \code{update} method,}
+  \item{newdata}{a \code{data.frame} for the \code{predict} method,}
+  \item{returnData}{if \code{TRUE}, the data is returned as an attribute,}
   \item{data}{the data: an \code{mlogit.data} object or an ordinary
   \code{data.frame},}
   \item{subset}{an optional vector specifying a subset of observations,}
@@ -56,8 +59,6 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   alternative on which the model should be estimated,}
   \item{reflevel}{the base alternative (the one for which the
     coefficients of individual-specific variables are normalized to 0),}
-  \item{estimate}{a boolean indicating whether the model should be
-    estimated or not: if not, the \code{model.frame} is returned,}
   \item{nests}{a named list of characters vectors, each names being a
   nest, the corresponding vector being the set of alternatives that
   belong to this nest,}
@@ -70,6 +71,7 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   \item{rpar}{a named vector whose names are the random parameters and
   values the distribution : \code{'n'} for normal, \code{'l'} for
   log-normal, \code{'t'} for truncated normal, \code{'u' } for uniform,}
+  \item{probit}{if \code{TRUE}, a multinomial porbit model is estimated,}
   \item{R}{the number of function evaluation for the gaussian quadrature
   method used if \code{heterosc=TRUE}, the number of draws of
   pseudo-random numbers if \code{rpar} is not \code{NULL},}
@@ -85,11 +87,12 @@ mlogit(formula, data, subset, weights, na.action, start = NULL,
   number of elements droped).}
   \item{random.nb}{only relevant if \code{rpar} is not \code{NULL}, a
     user-supplied matrix of random,}
-  
   \item{panel}{only relevant if \code{rpar} is not \code{NULL} and if
   the data are repeated observations of the same unit ; if \code{TRUE},
   the mixed-logit model is estimated using panel techniques,}
-
+  \item{estimate}{a boolean indicating whether the model should be
+    estimated or not: if not, the \code{model.frame} is returned,}
+  \item{seed}{,}
   \item{digits}{the number of digits,}
   \item{width}{the width of the printing,}
   \item{outcome}{a boolean which indicates, for the \code{fitted} and the
@@ -222,22 +225,25 @@ TravelMode$time <- with(TravelMode, travel + wait)/60
 TravelMode$timeair <- with(TravelMode, time * I(mode == "air"))
 TravelMode$income <- with(TravelMode, income / 10)
 
-#Heiss p.231
-nl <- mlogit(choice ~ time + timeair | income, TravelMode, shape = "long",
-             alt.var = "mode", print.level = 0, method = "bfgs",
-             nests = list(public = c("train", "bus"), other = c("air","car")),
-             tol = 1)
-
 # Hensher and Greene (2002), table 1 p.8-9 model 5
 TravelMode$incomeother <- with(TravelMode, ifelse(mode \%in\% c('air', 'car'), income, 0))
 nl <- mlogit(choice~gcost+wait+incomeother, TravelMode,
              shape='long', alt.var='mode',
-             nests=list(plublic=c('train', 'bus'), other=c('car','air')))
+             nests=list(public=c('train', 'bus'), other=c('car','air')))
 
 # same with a comon nest elasticity (model 1)
 nl2 <- update(nl, un.nest.el = TRUE)
 
+## a probit model
+\dontrun{
+pr <- mlogit(choice ~ wait + travel + vcost, TravelMode,
+             shape = "long", chid.var = "individual", alt.var = "mode",
+             probit = TRUE)
+}
+
+
 ## a mixed logit model
+\dontrun{
 rpl <- mlogit(mode ~ price+ catch | income, Fishing, varying = 2:9,
               shape = 'wide', rpar = c(price= 'n', catch = 'n'),
               correlation = TRUE, halton = NA,
@@ -248,6 +254,13 @@ cor.mlogit(rpl)
 cov.mlogit(rpl)
 rpar(rpl, "catch")
 summary(rpar(rpl, "catch"))
+}
+
+# a ranked ordered model
+data("Game", package = "mlogit")
+g <- mlogit(ch~own|hours, Game, choice='ch', varying = 1:12,
+            ranked=TRUE, shape="wide", reflevel="PC")
+
 
 }
 

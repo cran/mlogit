@@ -1,16 +1,16 @@
 make.beta <- function(mua, siga, rpar, random.nb, correlation){
   nr <- names(rpar)
-  censored <- nr[rpar == "cn"]
-  lognormal <- nr[rpar == "ln"]
-  truncated <- nr[rpar == "tn"]
-  normal  <- nr[rpar == "n"]
-  uniform  <- nr[rpar == "u"]
-  triangular  <- nr[rpar == "t"]
+  censored <-    nr[rpar == "cn"]
+  lognormal <-   nr[rpar == "ln"]
+  truncated <-   nr[rpar == "tn"]
+  normal  <-     nr[rpar ==  "n"]
+  uniform  <-    nr[rpar ==  "u"]
+  triangular  <- nr[rpar ==  "t"]
 
   Ka <- ncol(random.nb)
   R <- nrow(random.nb)
   
-  betaa <- matrix(NA,R,Ka)
+  betaa <- matrix(NA, R, Ka)
   betaa.mu <- betaa.sigma <- betaa
 
   colnames(betaa) <- colnames(betaa.mu) <- colnames(betaa.sigma) <-
@@ -26,17 +26,20 @@ make.beta <- function(mua, siga, rpar, random.nb, correlation){
     betaa <- t(mua + t(sigeta))
     betaa.mu <- matrix(1, R, Ka)
     betaa.sigma <- random.nb[, rep(1:Ka, Ka:1)]
+
     for (i in 1:Ka){
       sigi <- i + cumsum(c(0, (Ka-1):1))[1:i]
       if (rpar[i] == "cn"){
-        betaa[, i] <- pmax(betaa[,i], 0)
-        betaa.mu[, i] <- (betaa[, i] > 0) * 1 + 0
-        betaa.sigma[, sigi] <- ( (betaa[, i] > 0) * 1 + 0)*betaa.sigma[,sigi]
+        betaa[, i] <- pmax(betaa[, i], 0)
+#        betaa.mu[, i] <- (betaa[, i] > 0) * 1 + 0
+#        betaa.sigma[, sigi] <- ( (betaa[, i] > 0) * 1 + 0) * betaa.sigma[, sigi]
+        betaa.mu[, i] <- as.numeric(betaa[, i] > 0)
+        betaa.sigma[, sigi] <- as.numeric(betaa[, i] > 0) * betaa.sigma[, sigi]
       }
-      if (rpar[i]=="ln"){
-        betaa[,i] <- exp(betaa[,i])
-        betaa.mu[,i] <- betaa[,i]
-        betaa.sigma[,sigi] <- betaa[,i]*betaa.sigma[,sigi]
+      if (rpar[i] == "ln"){
+        betaa[, i] <- exp(betaa[, i])
+        betaa.mu[, i] <- betaa[, i]
+        betaa.sigma[, sigi] <- betaa[, i] * betaa.sigma[, sigi]
       }
     }
   }
@@ -88,11 +91,11 @@ gnrpoints <- function(low, up, n = 100){
 halton <- function(prime = 3, length = 100, drop = 10){
   halt <- 0
   t <- 0
-  while(length(halt)<length+drop){
-    t <- t+1
-    halt <- c(halt,rep(halt,prime-1)+rep(seq(1,prime-1,1)/prime^t,each=length(halt)))
+  while(length(halt) < length + drop){
+    t <- t + 1
+    halt <- c(halt, rep(halt, prime - 1) + rep(seq(1, prime - 1, 1) / prime ^ t, each = length(halt)))
   }
-  halt[(drop+1):(length+drop)]
+  halt[(drop + 1):(length + drop)]
 }
 
 make.random.nb <- function(R, Ka, halton){

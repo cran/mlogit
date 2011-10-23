@@ -284,7 +284,7 @@ scoretest.default <- function(object, ...){
   alt.hyp <- "unconstrained model"
   stat <- - sum(newmodel$gradient * solve(newmodel$hessian, newmodel$gradient))
   names(stat) <- "chisq"
-  df <- length(coef(newmodel)) - length(coef(object))
+  df <- c(df = length(coef(newmodel)) - length(coef(object)))
   pval <- pchisq(stat, df = df, lower.tail = FALSE)
   result <- list(statistic = stat,
                  parameter = df,

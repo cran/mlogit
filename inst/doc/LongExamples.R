@@ -34,6 +34,20 @@ Train.mxlc <- mlogit(choice ~ price + time + change + comfort, Tr,
                correlation = TRUE, R = 100, halton = NA)
 Train.mxlu <- update(Train.mxlc, correlation = FALSE)
 
+
+data("Fishing", package = "mlogit")
+Fish <- mlogit.data(Fishing, shape="wide", varying=2:9, choice="mode")
+Fish.mprobit <- mlogit(mode~price | income | catch, Fish, probit = TRUE, alt.subset=c('beach', 'boat','pier'))
+
+data("Mode", package="mlogit")
+Mo <- mlogit.data(Mode, choice='choice', shape='wide', varying=c(2:9))
+p1 <- mlogit(choice~cost+time, Mo, seed = 20, R = 100, probit = TRUE)
+p2 <- mlogit(choice~cost+time, Mo, seed = 21, R = 100, probit = TRUE)
+
+
 save(Elec.mxl, Elec.mxl2, Elec.mxl3, Elec.mxl4, Elec.mxl5,
-     Train.ml, Train.mxlc, Train.mxlu, file='../../data/MixedExamples.rda')
+     Train.ml, Train.mxlc, Train.mxlu,
+     Fish.mprobit, p1, p2,
+     file='../../data/Examples.rda')
+
 

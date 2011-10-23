@@ -1,4 +1,4 @@
-data("MixedExamples", package = "mlogit")
+data("Examples", package = "mlogit")
 library("lmtest")
 library("mlogit")
 data("Train", package = "mlogit")

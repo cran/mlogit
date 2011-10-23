@@ -65,6 +65,7 @@ model.frame.mFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL){
   index <- index[rownames(mf),]
   index <- data.frame(lapply(index, function(x) x[drop = TRUE]), row.names = rownames(index))
   structure(mf,
+            choice = attr(data, "choice"),
             index = index,
             class = c("mlogit.data", class(mf)))
 }
@@ -119,7 +120,6 @@ model.matrix.mFormula <- function(object, data, ...){
     if (!is.null(coef.spec.char)) coef.spec.char <- paste("(", coef.spec.char, "):alt", sep="")
   }
   else coef.spec <- coef.spec.char <- NULL
-
   form.char <- paste(c(intercept.char, alt.spec.char,
                        ind.spec.char, coef.spec.char),
                      collapse = "+")
@@ -131,6 +131,15 @@ model.matrix.mFormula <- function(object, data, ...){
   revtoremove <- unlist(lapply(as.list(ind.spec.var), function(x) paste(x, lev1, sep = ":")))
   toremove <- colnames(X) %in% c(toremove, revtoremove)
   X <- X[, !toremove, drop = FALSE]
-  X[omitlines, ] <- NA
+  # I comment the following line which seems as best to be useless
+  # X[omitlines, ] <- NA
+
+  # the following lines suppress the mentions to 'alt' in the names of
+  # the effects and add a mention to '(intercept)'
+  namesX <- colnames(X)
+  for (i in 1:length(namesX)) namesX[i] <- sub('alt', '', namesX[i])
+  z <- match(levels(alt), namesX)
+  namesX[na.omit(z)] <- paste(levels(alt)[!is.na(z)], '(intercept)', sep=":")
+  colnames(X) <- namesX
   X
 }

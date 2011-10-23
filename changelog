@@ -100,7 +100,7 @@ Changes since version 0.1-7
 	
 Changes since version 0.1-8
 
-	* all the models could normally be estimated on unbamanced data
+	* all the models could normally be estimated on unbalanced data
 
 	* the three tests are added, i.e. a new scoretest function and
 	specific methods for waldtest and lrtest from the lmtest package
@@ -111,3 +111,40 @@ Changes since version 0.1-8
 Changes since version 0.2-0
 
 	* all the rda files are now compressed
+
+Changes since version 0.2-1
+
+	* ranked-order models can be now estimated ; a new argument called
+	'ranked' is introduced in mlogit.data which performs the relevant
+	transformation of the data.frame. The estimated model is then a
+	standard multinomial logit model
+
+	* multinomial probit model is now estimated by setting the new
+	probit arguments to TRUE
+
+	* for the mixed logit model, different draws are now used for each
+	observation
+
+	* a predict method is now available for mlogit objects
+
+	* a coef method is added which removes the fixed argument
+
+	* constPar can now be a named numeric vector. In this case,
+	default starting values are changed according to constPar
+
+	* the vcov method for mlogit objects is greatly enhanced.
+
+	* mlogit objects now have two elements which indicate the fitted
+	probabilities : fitted is the estimated probability for the
+	outcome and probabilities contains the fitted probabilities for
+	all the alternatives
+
+	* mentions to 'alt' in the names of the effects is canceled ;
+	moreover, the intercepts are now called altname:('intercept')
+
+	* a 'choice' attribute is added to mlogit.data objects
+
+	* an effects method is provided, which computes the marginal
+	effects of a covariate
+
+	

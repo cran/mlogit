@@ -54,7 +54,7 @@ KoppWen00 <- mlogit.data(ModeCanada, shape='long', chid.var = 'case',
                          alt.var = 'alt', choice='choice',
                          drop.index=TRUE)
 pcl <- mlogit(choice~freq+cost+ivt+ovt, KoppWen00, reflevel='car',
-              nests='pcl', constPar=c('iv_train_air'))
+              nests='pcl', constPar=c('iv.train.air'))
 
 % use the subset of users who have the four alternatives available and who
 % don't take the bus

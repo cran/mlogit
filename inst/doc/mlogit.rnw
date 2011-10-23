@@ -62,10 +62,12 @@ E-mail: \email{yves.croissant@univ-reunion.fr}
 
 The logit model is useful when one tries to explain discrete choices,
 \emph{i.e.} choices of one among several mutually exclusive
-alternatives\footnote{For an extensive presentations of the logit
-  model, see \citet{TRAI:03} and \citet{LOUI:HENS:SWAI:00}}.  There are
-many useful applications of discrete choice modelling in different
-fields of applied econometrics, using individual data, which may be :
+alternatives\footnote{For an extensive presentation of the logit
+  model, see \citet{TRAI:03} and \citet{LOUI:HENS:SWAI:00}. The
+  theoretical parts of this paper draw heavily on Kenneth Train's
+  book.}.  There are many useful applications of discrete choice
+modelling in different fields of applied econometrics, using
+individual data, which may be :
 
 \begin{itemize}
 \item \emph{revealed preferences data} which means that the data are observed
@@ -962,22 +964,21 @@ Under regularity conditions, the maximum likelihood estimator is
 consistent and has an asymptotic normal distribution. The variance of
 the estimator is :
 $$
-\mbox{V}(\hat{\theta})=\mbox{E}\left(\left(-\frac{\partial^2\ln L}{\partial \theta \partial \theta^\top}(\theta)\right)^{-1}\right)
+\mbox{V}(\hat{\theta})=\left(\mbox{E}\left(-\frac{\partial^2\ln L}{\partial \theta \partial \theta^\top}(\theta)\right)\right)^{-1}
 $$
 This expression can not be computed because it depends on the thrue
 values of the parameters. Three estimators have been proposed :
 \begin{itemize}
-\item $\hat{\mbox{V}}_1(\hat{\theta})=\mbox{E}
-  \left(\left(-\frac{\partial^2\ln L}{\partial \theta \partial
-        \theta^\top} (\hat{\theta})\right)^{-1}\right)$ : this
-  expression can be computed if the expected value is computable,
+\item $\hat{\mbox{V}}_1(\hat{\theta})=
+  \left(\mbox{E}\left(-\frac{\partial^2\ln L}{\partial \theta \partial \theta^\top}(\hat{\theta})\right)\right)^{-1}$
+  : this  expression can be computed if the expected value is computable,
 \item $\hat{\mbox{V}}_2(\hat{\theta})= \left(-\frac{\partial^2\ln
       L}{\partial \theta \partial \theta^\top}
     (\hat{\theta})\right)^{-1}$
 \item $\hat{\mbox{V}}_3(\hat{\theta})= \sum_{i=1}^n \left(\frac{\partial \ln
     l_i}{\partial \theta}(\hat{\theta})\right) \left(\frac{\partial \ln
     l_i}{\partial \theta}(\hat{\theta})\right)^\top$ : this expression is
-  called the BHHH expression and doesn't require the computation of
+  called the \textsc{bhhh} expression and doesn't require the computation of
   the hessian. 
 \end{itemize}
 
@@ -993,7 +994,7 @@ approximated. In this case, the following algorithm can be used :
 \begin{enumerate}
 \item Start with a value $x$ called $x_t$, 
 \item Approximate the function around $x_t$ using a second order
-  Taylor serie : $l(x)=f(x_t)+(x-x_t)g(x_t)+0.5 (x-x_t)^2h(x_t)$ where
+  Taylor series : $l(x)=f(x_t)+(x-x_t)g(x_t)+0.5 (x-x_t)^2h(x_t)$ where
   $g$ and $h$ are the first two derivatives of $f$,
 \item find the maximum of $l(x)$. The first order condition is :
 $\frac{\partial{l(x)}}{\partial{x}}=g(x_t)+
@@ -1030,18 +1031,18 @@ estimation. The first one can be called ``Newton-like'' methods. In
 this case, at each iteration, an estimation of the hessian is
 calculated, whether using the second derivatives of the function
 (Newton-Ralphson method) or using the outer product of the gradient
-(BHHH). This approach is very powerful if the function is
+(\textsc{bhhh}). This approach is very powerful if the function is
 well-behaved, but it may perform poorly otherwise and fail after a few
 iterations.
 
-The second one, called BFGS, updates at each iteration the estimation
-of the hessian. It is often more robust and may performs well in cases
-where the first one doesn't work.
+The second one, called \textsc{bfgs}, updates at each iteration the
+estimation of the hessian. It is often more robust and may performs
+well in cases where the first one doesn't work.
 
-Two optimization functions are included in core \proglang{R}:
-\Rf{nlm} which use the Newton-Ralphson method and \Rf{optim} which
-use BFGS (among other methods). Recently, the \pkg{maxLik} package
-\citep{MAXLIK:10} provides a unified approach. With a unique
+Two optimization functions are included in core \proglang{R}: \Rf{nlm}
+which use the Newton-Ralphson method and \Rf{optim} which use
+\textsc{bfgs} (among other methods). Recently, the \pkg{maxLik}
+package \citep{MAXLIK:10} provides a unified approach. With a unique
 interface, all the previously described methods are available.
 
 The behavior of \Rf{maxLik} can be controlled by the user using in the
@@ -1195,7 +1196,7 @@ $$
 with $f(z)=\exp\left(-e^{-z}\right)$ the density of the Gumbell
 distribution.
 
-We'll derive the expression for $E_1$, by symetry we'll guess the
+We'll derive the expression for $E_1$, by symmetry we'll guess the
 expression for $E_2$ and we'll then obtain the expected utility by
 summing $E_1$ and $E_2$.
 
@@ -1368,6 +1369,85 @@ Finally, two further arguments can be usefully used while using
 mlogit(mode~price | income | catch, Fish, reflevel='charter', 
        alt.subset=c('beach', 'pier', 'charter'))
 @ 
+
+
+\subsection{The rank-ordered logit model}
+
+Sometimes, in stated-preference surveys, the respondents are asked to
+give the full rank of their preference for all the alternative, and
+not only the prefered alternative. The relevant model for this kind of
+data is the rank-ordered logit model, which can be estimated as a
+standard multinomial logit model if the data is reshaped
+correctly\footnote{see for example \cite{BEGG:CARD:HAUS:81},
+  \cite{CHAP:STAE:82} and \cite{HAUS:RUUD:87}.}
+
+The ranking can be decomposed in a series of choices of the best
+alternative within a decreasing set of available alternatives. For
+example, with 4 alternatives, the probability that the ranking would
+be 3-1-4-2 can be writen as follow :
+
+\begin{itemize}
+\item alternative 3 is in the first position, the probability is then
+  $\frac{e^{\beta^{\top}x_3}}{e^{\beta^{\top}x_1}+e^{\beta^{\top}x_2}+e^{\beta^{\top}x_3}+e^{\beta^{\top}x_4}}$,
+\item alternative 1 is in second position, the relevant probability is
+  the logit probability that 1 is the chosen alternative in the set of
+  alternatives (1-2-4) :
+  $\frac{e^{\beta^{\top}x_1}}{e^{\beta^{\top}x_1}+e^{\beta^{\top}x_2}+e^{\beta^{\top}x_4}}$,
+\item alternative 4 is in third position, the relevant probability is
+  the logit probability that 4 is the chosen alternative in the set of
+  alternatives (2-4) :
+  $\frac{e^{\beta^{\top}x_4}}{e^{\beta^{\top}x_2}+e^{\beta^{\top}x_4}}$,
+\item the probability of the full ranking is then simply the product
+  of these 3 probabilities.
+\end{itemize}
+
+This model can therefore simply be fitted as a multinomial logit model
+; the ranking for one individual amoung J alternatives is writen as
+$J-1$ choices among $J, J-1, \ldots, 2$ alternatives.
+
+The estimation of the rank-ordered logit model is illustrated using
+the \Rd{Game} data set~\cite{FOK:PAAP:DIJK:10}. Respondents are
+asked to rank 6 gaming platforms. The covariates are a dummy \va{own}
+which indicates whether a specific platform is curently owned, the age
+of the respondent (\va{age}) and the number of hours spent on gaming
+per week (\va{hours}). The data set is available in wide (\Rd{game})
+and long (\Rd{game2}) format. In wide format, the consists on $J$
+columns which indicate the ranking of each alternative. 
+
+<<>>=
+data("Game", package = "mlogit")
+data("Game2", package = "mlogit")
+head(Game,2)
+head(Game2, 7)
+nrow(Game)
+nrow(Game2)
+@ 
+
+Note that \Rd{Game} contains 91 rows (there are 91 individuals) and
+that \Rd{Game2} contains 546 rows ($91$ individuals $times$ 6
+alternatives)
+
+To use \Rf{mlogit.data}, the \Ra{ranked}{mlogit.data} should \Rv{TRUE}
+:
+
+<<>>=
+G <- mlogit.data(Game2, shape="long", choice="ch", alt.var='platform', ranked=TRUE)
+G <- mlogit.data(Game, shape="wide", choice="ch", varying=1:12, ranked=TRUE)
+head(G)
+nrow(G)
+@ 
+
+Note that the choice variable is now a logical variable and that the
+number of row is now 1820 (91 individuals $\times (6+5+4+3+2)$
+alternatives). 
+
+Using \va{PC} as the reference level, we can then reproduce the
+results of the original reference :
+
+<<>>=
+summary(mlogit(ch~own|hours+age, G, reflevel="PC"))
+@ 
+
 
 \section{Relaxing the iid hypothesis}
 \addcontentsline{toc}{section}{Relaxing the iid hypothesis}
@@ -1563,11 +1643,11 @@ P_j = \frac{e^{V_j/\lambda_l}\left(\sum_{k \in B_l}
       \in B_m} e^{V_k/\lambda_m}\right)^{\lambda_m}}
 $$
 
-and that this model is comptatible with the random utility
+and that this model is compatible with the random utility
 maximisation hypothesis if all the nest elasticities are in the $0-1$
 interval.
 
-Let us now write the determistic part of the utility of the
+Let us now write the deterministic part of the utility of the
 alternative $j$ as the sum of two terms : the first one being specific
 to the alternative and the second one to the nest it belongs to :
 $$V_j=Z_j+W_l$$
@@ -1815,7 +1895,7 @@ summary(nl.HC)
 
 The two nest elasticities are about 0.3, which implies a correlation
 of 0.7, which is quite high.  The two nest elasticities are very close
-to each other, and it is possible to unforce the equality by updating
+to each other, and it is possible to enforce the equality by updating
 the model with the argument \Ra{un.nest.el}{mlogit} set to
 \code{TRUE}.
 
@@ -1884,24 +1964,24 @@ For point 3, let denote\footnote{cited from \cite{MCFAD:78}.} :
 
 $$Q_k = Q_{k-1} G_k - \frac{\partial Q_{k-1}}{\partial y_k}\;\mbox{and} \; Q_1=G_1$$
 
-$Q_k$ is a sum of signed terms that are products of cross derivates of
+$Q_k$ is a sum of signed terms that are products of cross derivatives of
 $G$ of various order. If each term of $Q_{k-1}$ are non-negative, so
-is $Q_{k-1}G_k$ (from iv, the first derivates are
+is $Q_{k-1}G_k$ (from iv, the first derivatives are
 non-negative. Moreover ``each term in $\frac{\partial
-  Q_{k-1}}{\partial y_k}$ is non positive, since one of the derivates
+  Q_{k-1}}{\partial y_k}$ is non positive, since one of the derivatives
 within each term has increased in order, changing from even to odd or
-vice versa, with a hypothesized change in sign (hypothesis iv). Hence
+vice-versa, with a hypothesized change in sign (hypothesis iv). Hence
 each term in $Q_k$ is non negative and, by induction, $Q_k$ is
 non-negative for $k=1, 2, \ldots J$.
 
-Suppose that the $k-1$-order cross-derivate of $F$ can be writen :
+Suppose that the $k-1$-order cross-derivative of $F$ can be written :
 
 $$
 \frac{\partial^{k-1} F}{\partial \epsilon_1\ldots \partial
   \epsilon_{k-1}} = e^{-\epsilon_1}\ldots e^{-\epsilon_k} Q_{k-1} F
 $$
 
-Then , the $k$-order derivate is :
+Then , the $k$-order derivative is :
 
 $$
 \frac{\partial^{k} F}{\partial \epsilon_1\ldots \partial
@@ -1909,7 +1989,7 @@ $$
 $$
 
 $Q_1=G_1$ is non-negative, so are $Q_2, Q_3, \ldots Q_k$ and therefore
-all the cross-derivates of any order are non-negatives. 
+all the cross-derivatives of any order are non-negatives. 
 
 
 To demonstrate the fourth point, we compute the marginal cumulative
@@ -2060,7 +2140,7 @@ P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
 $$
 
 We reproduce the example used by \citet{KOPP:WEN:00} on the same
-substet of the \Rd{ModeCanada} than the one used by
+subset of the \Rd{ModeCanada} than the one used by
 \citet{BHAT:95}. Three modes are considered and there are therefore
 three nests. The elasticity of the train-air nest is set to one. To
 estimate this model, one has to set the \Ra{nests}{mlogit} to
@@ -2071,7 +2151,7 @@ is performed by using the \Ra{constPar}{mlogit.optim} argument.
 
 <<>>=
 pcl <- mlogit(choice~freq+cost+ivt+ovt, Bhat, reflevel='car',
-              nests='pcl', constPar=c('iv_train_air'))
+              nests='pcl', constPar=c('iv.train.air'))
 summary(pcl)
 @ 
 
@@ -2164,19 +2244,19 @@ conditional probabilities for all the values of $\beta_i$.
 Suppose that $V_{il}=\alpha+\beta_i x_{il}$, \emph{i.e.} there is only
 one individual-specific coefficient and that the density of $\beta_i$
 is $f(\beta,\theta)$, $\theta$ being the vector of the parameters of
-the distribution of $\beta$. The unconditionl probability is then :
+the distribution of $\beta$. The unconditional probability is then :
 
 $$
 P_{il}= \mbox{E}(P_{il} \mid \beta_i) =
 \int_{\beta}(P_{il} \mid \beta)f(\beta,\theta)d\beta
 $$
 
-which is a one-dimentional integral that can be efficiently estimated
+which is a one-dimensional integral that can be efficiently estimated
 by quadrature methods.
 
 If $V_{il}=\beta_i^{\top} x_{il}$ where $\beta_i$ is a vector of
 length $K$ and $f(\beta,\theta)$ is the joint density of the $K$
-individual-specific coefficients, the unconditionnal probability is :
+individual-specific coefficients, the unconditional probability is :
 
 $$
 P_{il}= \mbox{E}(P_{il} \mid \beta_i) =
@@ -2184,8 +2264,8 @@ P_{il}= \mbox{E}(P_{il} \mid \beta_i) =
 \beta)f(\beta,\theta)d\beta_1d\beta_2\ldots d\beta_K
 $$
 
-This is a $K$-dimentional integral which cannot easily estimated by
-quatrature methods. In these kind of situations, the only practical
+This is a $K$-dimensional integral which cannot easily estimated by
+quadrature methods. In these kind of situations, the only practical
 method is to use simulations. More precisely, $R$ draws of the
 parameters are taken from the distribution of $\beta$, the probability
 is computed for every draw and the unconditional probability, which is
@@ -2243,7 +2323,7 @@ uniform distribution between 0 and 1. These numbers are then
 transformed using the quantile function of the required distribution. 
 
 For example, suppose one needs to drawn numbers from the Gumbell
-distribution. The cumumlative distribution of a Gumbell variable is
+distribution. The cumulative distribution of a Gumbell variable is
 $F(x)=e^{-e^{-x}}$. The quantile function is obtained by inverting
 this function :
 $$
@@ -2305,9 +2385,9 @@ unit square is much better with Halton draws.
 \addcontentsline{toc}{subsubsection}{Correlation}
 
 It is often relevant to introduce correlations between random
-parameters. This is done using Cholesky decomposition.  Let $\Omega$
+parameters. This is done using Choleski decomposition.  Let $\Omega$
 be the covariance matrix of two random parameters. As a covariance
-matrix is necessarely positive definite, it can be writen
+matrix is necessarily positive definite, it can be written
 $\Omega=C^{\top}C$, with $C$ an upper triangular matrix :
 $$
 C=
@@ -2334,7 +2414,7 @@ If $c_{12}=0$, $\Omega$ reduces to a diagonal matrix and the remaining
 two parameters $(c_{11},c_{22})$ are the standard deviations of the
 two random coefficients.  To obtain a couple of correlated
 coefficients, one has to post-multiply a matrix of uncorrelated
-coefficients by the Cholesky matrix.
+coefficients by the Choleski matrix.
 
 If $\mbox{V}(\eta_1,\eta_2)=I$, then the variance of $
 (\nu_1, \nu_2) = (\eta_1 \eta_2) C $ is $\Omega$
@@ -2349,7 +2429,7 @@ $$
   \end{array}
 \right)
 $$
-The Cholesky matrix is :
+The Choleski matrix is :
 $$
 C=
 \left(
@@ -2415,7 +2495,7 @@ Train.mxlu <- update(Train.mxlc, correlation = FALSE)
 @ 
 
 <<echo = FALSE>>=
-data("MixedExamples", package = "mlogit")
+data("Examples", package = "mlogit")
 @ 
 
 The summary method supplies the usual table of coefficients, and also
@@ -2444,6 +2524,356 @@ cov.mlogit(Train.mxlc)
 stdev(Train.mxlc)
 @ 
 
+\section{Multinomial Probit}
+\addcontentsline{toc}{section}{Probit}
+
+
+\subsection{The model}
+\addcontentsline{toc}{subsection}{The model}
+
+The multinomial probit is obtained with the same modeling that we used
+while presenting the random utility model. The utility of an
+alternative is still the sum of two components : $U_j = V_j +
+\epsilon_j$.
+
+but the joint distribution of the error terms is now a multivariate
+normal with mean 0 and with a matrix of covariance denoted
+$\Omega$\footnote{see \cite{HAUS:WISE:78} and \cite{DAGA:79}.}.
+
+Alternative $l$ is chosen if : 
+$$
+\left\{
+\begin{array}{rcl}
+U_1-U_l&=&(V_1-V_l)+(\epsilon_1-\epsilon_l)<0\\
+U_2-U_l&=&(V_2-V_l)+(\epsilon_2-\epsilon_l)<0\\
+ & \vdots &  \\
+U_J-U_l&=&(V_J-V_l)+(\epsilon_J-\epsilon_l)<0\\
+\end{array}
+\right.
+$$
+
+wich implies, denoting $V^l_j=V_j-V_l$ :
+
+$$
+\left\{
+\begin{array}{rclrcl}
+  \epsilon^l_1 &=& (\epsilon_1-\epsilon_l) &<& - V^l_1\\
+  \epsilon^l_2 &=& (\epsilon_2-\epsilon_l) &<& - V^l_2\\
+  &\vdots & & \vdots &  \\
+  \epsilon^l_J &=& (\epsilon_J-\epsilon_l) &<& - V^l_J\\
+\end{array}
+\right.
+$$
+
+The initial vector of errors $\epsilon$ are transformed using the
+following transformation :
+
+$$\epsilon^l = M^l \epsilon$$
+
+where the transformation matrix $M^l$ is a $(J-1) \times J$ matrix
+obtained by inserting in an identity matrix a $l^{\mbox{th}}$ column
+of $-1$. For example, if $J = 4$ and $l = 3$ :
+
+$$
+M^3 = 
+\left(
+\begin{array}{cccc}
+1 & 0 & -1 & 0 \\
+0 & 1 & -1 & 0 \\
+0 & 0 & -1 & 1 \\
+\end{array}
+\right)
+$$
+
+The covariance matrix of the error differences is obtained using the
+following matrix :
+
+$$
+\mbox{V}\left(\epsilon^l\right)=\mbox{V}\left(M^l\epsilon\right)
+=M^l\mbox{V}\left(\epsilon\right){M^l}^{\top}
+=M^l\Omega{M^l}^{\top}
+$$
+
+The probability of choosing $l$ is then :
+
+\begin{equation}
+P_l =\mbox{P}(\epsilon^l_1<-V_1^l \;\&\; \epsilon^l_2<-V_2^l \;\&\; \ldots \; \epsilon^l_J<-V_J^l)
+\end{equation}
+
+with the hypothesis of distribution, this writes :
+
+\begin{equation}
+P_l = \int_{-\infty}^{-V_1^l}\int_{-\infty}^{-V_2^l}\ldots\int_{-\infty}^{-V_J^l}\phi(\epsilon^l)
+d\epsilon^l_1 d\epsilon^l_2\ldots d^l_J
+\end{equation}
+
+with :
+
+\begin{equation}
+\phi\left(\epsilon^l\right)=\frac{1}{(2\pi)^{(J-1)/2}\mid\Omega^l\mid^{1/2}}
+e^{-\frac{1}{2}\epsilon^l{\Omega^l}^{-1}\epsilon^l}
+\end{equation}
+
+Two problems arise with this model :
+
+\begin{itemize}
+\item the first one is that the identified parameters are the elements
+  of $\Omega^l$ and not of $\Omega$. We must then carefully investigate
+  the meanings of these elements.
+\item the second one is that the probability is a $J-1$ integral,
+  which should be numerically computed. The relevant strategy in this
+  context is to use simulations.
+\end{itemize}
+
+
+\subsection{Identification}
+\addcontentsline{toc}{subsection}{Identification}
+
+The meaning-full parameters are those of the covariance matrix of the
+error $\Omega$. For example, with $J = 3$ :
+
+$$
+\Omega =
+\left(
+\begin{array}{ccc}
+\sigma_{11} & \sigma_{12} & \sigma_{13}  \\
+\sigma_{21} & \sigma_{22} & \sigma_{23} \\
+\sigma_{31} & \sigma_{32} & \sigma_{33} \\
+\end{array}
+\right)
+$$
+
+$$
+\Omega^1 = M^1 \Omega {M^1}^{\top}=
+\left(
+\begin{array}{cc}
+\sigma_{11}+\sigma_{22}-2\sigma_{12} & \sigma_{11} + \sigma_{23} - \sigma_{12} -\sigma_{13} \\
+\sigma_{11}+\sigma_{23}- \sigma_{12} - \sigma_{13} & \sigma_{11} + \sigma_{33} - 2 \sigma_{13} \\
+\end{array}
+\right)
+$$
+
+The overall scale of utility being unidentified, one has to impose the
+value of one of the variance, for example the first one is fixed to
+1. We then have :
+
+$$
+\Omega^1 = \left(
+\begin{array}{cc}
+  1 & \frac{\sigma_{11}+ \sigma_{23} - \sigma_{12} -\sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} \\
+  \frac{\sigma_{11}+\sigma_{23}- \sigma_{12} - \sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} & \frac{\sigma_{11} + \sigma_{33} - 2 \sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} \\
+\end{array}
+\right)
+$$
+
+Therefore, out the 6 structural parameters of the covariance matrix,
+only 3 can be identified. Moreover, it's almost impossible to
+interpret these parameters.
+
+More generally, with $J$ alternatives, the number of the parameters of
+the covariance matrix is $(J+1)\times J/2$ and the number of identified
+parameters is $J\times(J-1)/2-1$.
+
+\subsection{Simulations}
+\addcontentsline{toc}{subsection}{Simulations}
+
+Let $L^l$ be the Choleski decomposition of the covariance matrix of
+the error differences :
+
+$$
+\Omega^l=L^l {L^l}^{\top}
+$$
+
+This matrix is a lower triangular matrix of dimension $(J-1)$ :
+
+$$
+L^l=
+\left(
+\begin{array}{ccccc}
+l_{11} & 0 & 0 &\ldots & 0 \\
+l_{21} & l_{22} & 0 & \ldots & 0 \\
+l_{31} & l_{32} & l_{33} & \ldots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+l_{(J-1)1} & l_{(J-1)2} & l_{(J-1)3} & \ldots & l_{(J-1)(J-1)} \\
+\end{array}
+\right)
+$$
+
+Let $\eta$ be a vector of standard normal deviates :
+
+$$
+\eta \sim N(0, I)
+$$
+
+Therefore, we have :
+
+$$
+\mbox{V}\left(L^l\eta\right)=L^lV(\eta){L^l}^{\top}=L^lI{L^l}^{\top}=\Omega^l
+$$
+
+Therefore, if we draw a vector of standard normal deviates $\eta$ and
+apply to it this transformation, we get a realization of $\epsilon^l$.
+
+
+
+This joint probability can be written as a product of conditional and
+marginal probabilities :
+
+$$
+\begin{array}{rcl}
+  P_l &=& \mbox{P}(\epsilon^l_1<- V_1^l \;\&\; \epsilon^l_2<-V_2^l \;\&\; \ldots \;\&\; \epsilon^l_J<-V_J^l))\\
+  &=& \mbox{P}(\epsilon^l_1<- V_1^l))\\
+  &\times&\mbox{P}(\epsilon^l_2<-V_2^l \mid \epsilon^l_1<-V_1^l) \\
+  &\times&\mbox{P}(\epsilon^l_3<-V_3^l \mid \epsilon^l_1<-V_1^l \;\&\; \epsilon^l_2<-V_2^l) \\
+  & \vdots & \\
+  &\times&\mbox{P}(\epsilon^l_J<-V_J^l \mid \epsilon^l_1<-V_1^l \;\&\; \ldots \;\&\; \epsilon^l_{J-1}<-V_{J-1}^l)) \\
+\end{array}
+$$
+
+The vector of error differences deviates is :
+
+$$
+\left(
+\begin{array}{c}
+  \epsilon^l_1 \\ \epsilon^l_2 \\ \epsilon^l_3 \\ \vdots \\ \epsilon^l_J
+\end{array}
+\right)
+=
+\left(
+\begin{array}{ccccc}
+l_{11} & 0 & 0 &\ldots & 0 \\
+l_{21} & l_{22} & 0 & \ldots & 0 \\
+l_{31} & l_{32} & l_{33} & \ldots & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+l_{(J-1)1} & l_{(J-1)2} & l_{(J-1)3} & \ldots & l_{(J-1)(J-1)} \\
+\end{array}
+\right)
+\times
+\left(
+\begin{array}{c}
+\eta_1 \\ \eta_2 \\ \eta_3 \\ \vdots \\ \eta_J
+\end{array}
+\right)
+$$
+
+
+$$
+\left(
+\begin{array}{c}
+  \epsilon^l_1 \\ \epsilon^l_2 \\ \epsilon^l_3 \\ \vdots \\ \epsilon^l_J
+\end{array}
+\right)
+=
+\left(
+\begin{array}{l}
+l_{11}\eta_1 \\ 
+l_{21}\eta_1+l_{22}\eta_2 \\ 
+l_{31}\eta_1+l_{32}\eta_2 + l_{33}\eta_3\\ 
+\vdots \\ 
+l_{(J-1)1}\eta_1+l_{(J-1)2}\eta_2+\ldots+l_{(J-1)(J-1)}\eta_{J-1}
+\end{array}
+\right)
+$$
+
+Let's now investigate the marginal and conditional probabilities : 
+
+\begin{itemize}
+\item the first one is simply the marginal probability for a standard
+  normal deviates, therefore we have :
+  $\mbox{P}(\epsilon^l_1<-V_1^l) = \Phi\left(-\frac{V_1^l}{l_{11}}\right)$
+\item the second one is, for a given value of $\eta_1$ equal to
+  $\Phi\left(-\frac{V^l_2+l_{21}\eta_1}{l_{22}}\right)$. We then have to compute the
+  mean of this expression for any value of $\eta_1$ lower than
+  $-\frac{V^l_1}{l_{11}}$. We then have, denoting $\bar{\phi}_1$ the truncated
+  normal density :
+  $$\mbox{P}(\epsilon^l_2<-V_2^l)=\int_{-\infty}^{-\frac{V^l_1}{l_{11}}}\Phi\left(-\frac{V^l_2+l_{21}\eta_1}{l_{22}}\right)
+  \bar{\phi}_1(\eta_1)d\eta_1$$
+\item the third one is, for given values of $\eta_1$ and $\eta_2$
+  equal to :
+  $\Phi\left(-\frac{V^l_3+l_{31}\eta_1+l_{32}\eta_2}{l_{33}}\right)$. We
+  then have :
+  $$\mbox{P}(\epsilon^l_3<-V_3^l)=\int_{-\infty}^{-\frac{V^l_1}{l_{11}}}\int_{-\infty}^{-\frac{V^l_2+l_{21}\eta_1}{l_{22}}}
+  \Phi\left(-\frac{V^l_3+l_{31}\eta_1+l_{32}\eta_2}{l_{33}}\right)\bar{\phi}_1(\eta_1)\bar{\phi}_2(\eta_2)d\eta_1d\eta_2$$
+\item and so on. 
+\end{itemize}
+
+This probabilities can easily be simulated by drawing numbers from a
+truncated normal distribution.
+
+This so called \textsc{ghk} algorithm\footnote{see for example
+  \cite{GEWE:KEAN:RUNK:94}.} (for Geweke, Hajivassiliou and Keane who
+developed this algorithm) can be described as follow :
+
+\begin{enumerate}
+\item compute $\Phi\left(-\frac{V_1^l}{l_{11}}\right)$
+\item draw a number called $\eta_1^r$ from a standard normal
+  distribution upper-truncated at $-\frac{V_1^l}{l_{11}}$ and compute
+  $\Phi\left(-\frac{V^l_2+l_{21}\eta_1^r}{l_{22}}\right)$
+\item draw a number called $\eta_2^r$ from a standard normal
+  distribution upper-truncated at
+  $-\frac{V^l_2+l_{21}\eta_1^r}{l_{22}}$ and compute
+  $\Phi\left(-\frac{V^l_3+l_{31}\eta_1^r+l_{32}\eta_2^r}{l_{33}}\right)$
+\item $\ldots$ draw a number called $\eta_{J-1}^r$ from a standard
+  normal distribution upper-truncated at $-\frac{V^l_{J-1}+l_{(J-1)1}\eta_1^r+\ldots V^l_{J-1}+l_{(J-1)(J-2)}\eta_{J-2}^r}{l_{(J-1)(J-1)}}$
+\item multiply all these probabilities and get a realization of the
+  probability called $P^r_l$.
+\item repeat all these steps many times and average all these
+  probabilities ; this average is an estimation of the probability :
+  $\bar{P}_l = \sum_{r=1}^R P^r_l/R$.
+\end{enumerate}
+
+Several points should be noted concerning this algorithm :
+
+\begin{itemize}
+\item the utility differences should be computed respective to the
+  chosen alternative for each individual,
+\item the Choleski decomposition used should relies on the same
+  covariance matrix of the errors. One method to attained this goal is
+  to start from a given difference, \emph{e.g.} the difference
+  respective with the first alternative. The vector of error
+  difference is then $\epsilon^1$ and its covariance matrix is
+  $\Omega^1=L^1{L^1}^{\top}$. To apply a difference respective with an
+  other alternative $l$, we construct a matrix called $S^l$ which is
+  obtained by using a $J-2$ identity matrix, adding a first row of 0
+  and inserting a column of $-1$ at the $l-1^{\mbox{th}}$
+  position. For example, with 4 alternatives and $l=3$, we have :
+  $$S^3=
+  \left(
+    \begin{array}{ccc}
+      0 & -1 & 0 \\
+      1 & -1 & 0 \\
+      0 & -1 & 1 \\
+    \end{array}
+  \right)
+  $$
+  The elements of the choleski decomposition of the covariance matrix
+  is then obtained as follow :
+  $$
+  \Omega^l = S^l \Omega^1 {S^l}^{\top}=L^l {L^l}^{\top}
+  $$
+\item to compute draws from a normal distribution truncated at $a$,
+  the following trick is used : take a draw $\mu$ from a uniform
+  distribution (between 0 and 1) ; then $\eta = \Phi^{-1}\left(\mu
+    \Phi(a)\right)$ is a draw from a normal distribution truncated at
+  $a$
+\end{itemize}
+
+\subsection{Applications}
+\addcontentsline{toc}{subsection}{Applications}
+
+We use again the \Rd{Fishing} data frame, with only a subset of three
+alternatives used. The multinomial probit model is estimated using
+\Rf{mlogit} with the \Ra{probit}{mlogit} argument equal to \Rv{TRUE}
+
+<<echo = TRUE, eval = FALSE>>=
+data("Fishing", package = "mlogit")
+Fish <- mlogit.data(Fishing, shape="wide", varying=2:9, choice="mode")
+Fish.mprobit <- mlogit(mode~price | income | catch, Fish, probit = TRUE, alt.subset=c('beach', 'boat','pier'))
+@
+
+<<>>=
+summary(Fish.mprobit)
+@ 
 \section{Tests}
 \addcontentsline{toc}{section}{Tests}
 
@@ -2538,10 +2968,10 @@ with a fairly different syntax. We provide special methods of
 and we also provide a function for the lagrange multiplier (or score)
 test called \Rf{scoretest}.
 
-We'll see later that the score test is especially usefull for
+We'll see later that the score test is especially useful for
 \Rob{mlogit} objects when one is interested in extending the basic
 multinomial logit model. In this case, the unconstrained model is much
-more difficult to estimate than the constrainted model which is the
+more difficult to estimate than the constrained model which is the
 basic multinomial logit model. The score test, which is based on the
 constrained model is therefore very simple to compute.
 
@@ -2565,7 +2995,7 @@ model :
 ml.Fish.c <- update(ml.Fish, . ~ . | . - income | .)
 @
 
-The wald and likelihood ratio tests are then obtained by provinding
+The wald and likelihood ratio tests are then obtained by providing
 the two models as arguments :
 
 <<>>=
@@ -2719,7 +3149,7 @@ scoretest(Train.ml, rpar = c(time = "n", change = "n", comfort = "n"), R = 100,
           correlation = TRUE, halton = NA, panel = TRUE)
 @ 
 
-Finally, we presente the three tests of no correlation, the existence
+Finally, we present the three tests of no correlation, the existence
 of random parameters being maintained.
 
 <<>>=

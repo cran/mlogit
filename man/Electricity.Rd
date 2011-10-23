@@ -9,24 +9,30 @@
 
  \emph{observation} :  households
 
-   \emph{country} :  United States
+ \emph{country} :  United States
 
 }
 \usage{data(Electricity)}
 \format{A dataframe containing :
   \describe{
+    
     \item{choice}{the choice of the individual, one of 1, 2, 3, 4,}
+    
     \item{id}{the individual index,}
+    
     \item{pfi}{fixed price at a stated cents per kWh, with the price
       varying over suppliers and experiments, for scenario i=(1, 2, 3,
       4),}
+    
     \item{cli}{the length of contract that the supplier offered, in
 years (such as 1 year or 5 years.) During this contract period, the
 supplier guaranteed the prices and the buyer would have to pay a penalty
 if he/she switched to another supplier. The supplier could offer no
 contract in which case either side could stop the agreement at any
 time. This is recorded as a contract length of 0}
+
 \item{loci}{is the supplier a local company,}
+
 \item{wki}{is the supplier a well-known company}
     \item{todi}{a time-of-day rate under which the price is 11 cents per
   kWh from 8am to 8pm and 5 cents per kWh from 8pm to 8am. These TOD
@@ -39,6 +45,18 @@ time. This is recorded as a contract length of 0}
   distribution, which is supplied by the local regulated utility.}
   }
 }
+
+\source{
+
+  Hubert J, Train K (2001) \dQuote{On the similarity of classical and Bayesian
+  estimates of individual mean pathworths}, \emph{Marketing Letters}, 12,
+  259-269.
+  
+  Revelt D, Train K (2000) \dQuote{Customer-specific taste parameters and
+  mixed logit}, Working Paper no. E00-274, Department of Economics,
+  University of California, Berkeley.
+
+  }
 \references{
   Kenneth Train's home page :  \url{http://elsa.berkeley.edu/~train/}.
 }

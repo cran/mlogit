@@ -45,7 +45,6 @@ print.est.stat <- function(x, ...){
   i <- x$nb.iter[1]
   halton <- x$halton
   method <- x$method
-  eps <- as.numeric(x$eps)
   if (!is.null(x$type) && x$type != "simple"){
     R <- x$nb.draws
     cat(paste("Simulated maximum likelihood with", R, "draws\n"))
@@ -59,14 +58,17 @@ print.est.stat <- function(x, ...){
   tstr <- paste(h, "h:", m, "m:", s, "s", sep="")
   cat(paste(i,"iterations,",tstr,"\n"))
   if (!is.null(halton)) cat("Halton's sequences used\n")
-  cat(paste("g'(-H)^-1g =", sprintf("%5.3G", eps),"\n"))
-  msg <- switch(x$code,
-                "1" = "gradient close to zero",
-                "2" = "successive fonction values within tolerance limits",
-                "3" = "last step couldn't find higher value",
-                "4" = "iteration limit exceeded"
-                )
-  cat(paste(msg, "\n"))
+  if (!is.null(x$eps)) cat(paste("g'(-H)^-1g =", sprintf("%5.3G", as.numeric(x$eps)),"\n"))
+  if (is.numeric(x$code)){
+    msg <- switch(x$code,
+                  "1" = "gradient close to zero",
+                  "2" = "successive fonction values within tolerance limits",
+                  "3" = "last step couldn't find higher value",
+                  "4" = "iteration limit exceeded"
+                  )
+    cat(paste(msg, "\n"))
+  }
+  else cat(paste(x$code, "\n"))
 }
 
 suml <- function(x){
@@ -107,93 +109,6 @@ numderiv <- function(f, param, ...){
     nc <- c(nc, (lnls-lnli)/(2*eps))
   }
   nc
-}
-
-mlogit.optim <- function(logLik, start,
-                         method = c('bfgs', 'nr', 'bhhh'),
-                         iterlim = 2000,
-                         tol = 1E-06,
-                         print.level = 0,
-                         constPar = NULL,
-                         ...){
-  # construct a call for the function
-  param <- start
-  method <- match.arg(method)
-  callT <- match.call(expand.dots = TRUE)
-  f <- callT
-  optimoptions <- c('iterlim', 'tol', 'method', 'print.level', 'constPar')
-  m <- match(optimoptions, names(callT), 0L)
-  if (sum(m)) f <- f[-m]
-  f[[1]] <- as.name(f[[2]])
-  K <- length(param)
-  fixed <- rep(FALSE, K)
-  if (!is.null(constPar)) fixed[constPar] <- TRUE
-  f$gradient <- TRUE
-  if (method == 'nr') f$hessian <- TRUE else f$hessian <- FALSE
-  f[[2]] <- NULL
-  names(f)[2] <- 'param'
-  chi2 <- 1E+10
-  i <- 0
-  # eval a first time the function, the gradient and the hessian
-  x <- eval(f, parent.frame())
-  if (print.level > 0)
-    cat(paste("Initial value of the function :", as.numeric(x), "\n"))
-  g <- attr(x, "gradient")
-  if (method == 'nr')   H <- attr(x, "hessian")[!fixed, !fixed]
-  if (method == 'bhhh') H <- crossprod(attr(x, "gradi")[, !fixed])
-  if (method == 'bfgs') Hm1 <- solve(crossprod(attr(x, "gradi")[, !fixed]))
-  d <- rep(0, K)
-  while(abs(chi2) > tol && i < iterlim){
-    if (method == "bfgs") d[!fixed] <- - as.vector(Hm1 %*% g[!fixed])
-    else d[!fixed] <- - as.vector(solve(H, g[!fixed]))
-    i <- i + 1
-    oldx <- x
-    oldg <- g
-    f$param <- param
-    f$direction <- d
-    f$initial.value <- x
-    x <- eval(f, parent.frame())
-    g <- attr(x, "gradient")
-    step <- attr(x, "step")
-    param[!fixed] <- param[!fixed] + step * d[!fixed]
-    if (method == 'nr')   H <- attr(x, "hessian")[!fixed, !fixed]
-    if (method == 'bhhh') H <-  crossprod(attr(x, "gradi")[, !fixed])
-    if (method == 'bfgs'){
-      incr <- step * d
-      y <- g - oldg
-      Hm1 <- Hm1 +
-        outer( incr[!fixed], incr[!fixed]) *
-          (sum(y[!fixed] * incr[!fixed]) +
-           as.vector( t(y[!fixed]) %*% Hm1 %*% y[!fixed])) / sum(incr[!fixed] * y[!fixed])^2 -
-             (Hm1 %*% outer(y[!fixed], incr[!fixed])
-              + outer(incr[!fixed], y[!fixed]) %*% Hm1)/
-                sum(incr[!fixed] * y[!fixed])
-    }
-    chi2 <- -  crossprod(d[!fixed], oldg[!fixed])
-    if (print.level > 0){
-      chaine <- paste("iteration ",i,", step = ",step,
-                      ", lnL = ",round(x,8),", chi2 = ",
-                      round(chi2,8),"\n",sep="")
-    cat(chaine)
-    }
-    if (print.level > 1){
-      resdet <- rbind(param = param, gradient = g)
-      print(round(resdet,3))
-      cat("--------------------------------------------\n")
-    }
-  }
-  if (i >= iterlim) message = "maximum number of iterations reached"
-  else message = "optimum reached"
-  if (method == 'bfgs') H <- solve(Hm1)
-  names(attr(x, 'gradient')) <- colnames(attr(x, 'gradi')) <- names(param)
-  attr(x, "fixed") <- fixed
-  est.stat = structure(list(elaps.time = NULL, nb.iter = i, eps = chi2,
-    method = method, message = message), class = 'est.stat')
-  result <- list(optimum = x,
-                 coefficients = param,
-                 est.stat = est.stat
-                 )
-  result
 }
 
 ###################################
@@ -237,12 +152,27 @@ mlogit.optim <- function(logLik, start,
   if (sum(m)) f <- f[-m]
   f[[1]] <- as.name(f[[2]])
   f$gradient <- TRUE
-  f$steptol <- steptol
+#  f$steptol <- steptol
+  f$stptol <- steptol
   if (method == 'nr') f$hessian <- TRUE else f$hessian <- FALSE
   f[[2]] <- NULL
   names(f)[2] <- 'param'
   # eval a first time the function, the gradient and the hessian
   x <- eval(f, parent.frame())
+
+  if (FALSE){
+    print(attr(x, "gradient"))
+    nd <- f
+    nd[["f"]] <- nd[[1]]
+    nd[[1]] <- as.name("numderiv")
+    nd$gradient <- FALSE
+    print(nd)
+    bla <- eval(nd, parent.frame())
+    print(bla)
+    cat("____________\n");
+#    stop()
+    }
+
   if (print.level > 0)
     cat(paste("Initial value of the function :", as.numeric(x), "\n"))
   g <- attr(x, "gradient")
@@ -257,8 +187,12 @@ mlogit.optim <- function(logLik, start,
     oldg <- g
 
     # Compute the direction, ie d = H^-1 g
-    if (method == "bfgs") d[!fixed] <- - as.vector(Hm1 %*% g[!fixed])
-    else d[!fixed] <- - as.vector(solve(H, g[!fixed]))
+    
+    # For the predict method, I don't want the solve
+    if (iterlim > 0){
+      if (method == "bfgs") d[!fixed] <- - as.vector(Hm1 %*% g[!fixed])
+      else d[!fixed] <- - as.vector(solve(H, g[!fixed]))
+    }
     i <- i + 1
     
     if (i > iterlim){
