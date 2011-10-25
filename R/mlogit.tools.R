@@ -62,7 +62,7 @@ print.est.stat <- function(x, ...){
   if (is.numeric(x$code)){
     msg <- switch(x$code,
                   "1" = "gradient close to zero",
-                  "2" = "successive fonction values within tolerance limits",
+                  "2" = "successive function values within tolerance limits",
                   "3" = "last step couldn't find higher value",
                   "4" = "iteration limit exceeded"
                   )

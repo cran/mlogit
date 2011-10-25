@@ -147,4 +147,7 @@ Changes since version 0.2-1
 	* an effects method is provided, which computes the marginal
 	effects of a covariate
 
+Changes since version 0.2-2
+	
+	* some sys.frame() changed to parent.frame() 
 	

@@ -43,7 +43,8 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
     mldata <- mldata[c(1L, m)]
     mldata[[1L]] <- as.name("mlogit.data")
     mldata$choice <- response.name
-    data <- eval(mldata, sys.frame(which = nframe))
+#    data <- eval(mldata, sys.frame(which = nframe))
+    data <- eval(mldata, parent.frame())
   }
 
   # 2 ###########################################################
@@ -60,7 +61,8 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
   mf$formula <- formula
   mf[[1L]] <- as.name("model.frame")
   mf$data <- data # fix the bug when the data is called mldata
-  mf <- eval(mf, sys.frame(which = nframe))
+#  mf <- eval(mf, sys.frame(which = nframe))
+  mf <- eval(mf, parent.frame())
 
   # change the reference level of the response if required
   if (!is.null(reflevel)) attr(mf, "index")[["alt"]] <- relevel(attr(mf, "index")[["alt"]], reflevel)
@@ -260,7 +262,8 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
       callst$nests <- callst$rpar <- callst$constPar <- callst$iterlim <- NULL
       callst$heterosc <- callst$panel <- callst$probit <- FALSE
       callst$print.level <- 0
-      start <- coef(eval(callst, sys.frame(which=nframe)))
+#      start <- coef(eval(callst, sys.frame(which=nframe)))
+      start <- coef(eval(callst, parent.frame()))
       if (mixed.logit){
         ln <- names(rpar[rpar == "ln"])
         start[ln] <- log(start[ln])
@@ -345,6 +348,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
     opt$unscaled <- as.name('unscaled')
     opt$un.nest.el <- as.name('un.nest.el')
   }
+  ## Plante avec parent.frame
   x <- eval(opt, sys.frame(which = nframe))
 
   # 6 ###########################################################
@@ -408,6 +412,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
         names(they) <- names(yl)
         opt$y <- they
       }
+      # Plante avec parent.frame
       probabilities <- cbind(probabilities,
                              attr(eval(opt, sys.frame(which = nframe)), 'fitted'))
     }
