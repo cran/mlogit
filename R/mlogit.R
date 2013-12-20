@@ -215,23 +215,28 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
     names.sup.coef <- paste("sp", alt.lev[-1], sep = ".")
   }
   if (mixed.logit){
-    Vara <- sort(match(names(rpar), colnamesX))
-    Varc <- (1:K)[- Vara]
-    nmean <- length(c(Varc, Vara))
-    nvar <- length(Vara)
-    if (!correlation){
-      if (is.null(start) || length(start) == K) sup.coef <- rep(.1, nvar)
-      names.sup.coef <- paste("sd", colnamesX[Vara], sep = ".")
-    }
-    else{
-      if (is.null(start) || length(start) == K) sup.coef <- rep(.1, 0.5 * nvar * (nvar + 1))
-      names.sup.coef <- c()
-      Ka <- length(rpar)
-      for (i in 1:Ka){
-        names.sup.coef <- c(names.sup.coef,
-                            paste(names(rpar)[i], names(rpar)[i:Ka], sep = "."))
+      unknowndist <- rpar[! (rpar %in% c("cn", "ln", "tn", "n", "u", "t"))]
+      if (length(unknowndist) > 0){
+          udstr <- paste("unknown distribution", paste(unique(unknowndist), collapse = ", "))
+          stop(udstr)
       }
-    }
+      Vara <- sort(match(names(rpar), colnamesX))
+      Varc <- (1:K)[- Vara]
+      nmean <- length(c(Varc, Vara))
+      nvar <- length(Vara)
+      if (!correlation){
+          if (is.null(start) || length(start) == K) sup.coef <- rep(.1, nvar)
+          names.sup.coef <- paste("sd", colnamesX[Vara], sep = ".")
+      }
+      else{
+          if (is.null(start) || length(start) == K) sup.coef <- rep(.1, 0.5 * nvar * (nvar + 1))
+          names.sup.coef <- c()
+          Ka <- length(rpar)
+          for (i in 1:Ka){
+              names.sup.coef <- c(names.sup.coef,
+                                  paste(names(rpar)[i], names(rpar)[i:Ka], sep = "."))
+          }
+      }
   }
   if (probit){
     names.sup.coef <- c()
@@ -316,8 +321,8 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
   else opt[c('X', 'y')] <- list(as.name('DX'), as.name('yv'))
   if (mixed.logit){
     opt$logLik <- as.name('lnl.rlogit')
-    opt[c('R', 'seed', 'id', 'rpar', 'correlation')] <-
-      list(as.name('R'), as.name('seed'), as.name('id'), as.name('rpar'), as.name('correlation'))
+    opt[c('R', 'seed', 'id', 'rpar', 'correlation', 'halton')] <-
+      list(as.name('R'), as.name('seed'), as.name('id'), as.name('rpar'), as.name('correlation'), as.name('halton'))
   }
   if (probit){
     opt$logLik <- as.name('lnl.mprobit')
@@ -374,6 +379,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
   resid <- Reduce("cbind", yl) - fitted
   attr(x$coefficients, "fixed") <- attr(x$optimum, "fixed")
   gradient <- -  attr(x$optimum, "gradient")
+  gradient <- - attr(x$optimum, "gradi")
 
   
   # compute the probabilities for all the alternatives for

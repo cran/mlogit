@@ -3,6 +3,7 @@
 \alias{[[<-.mlogit.data}
 \alias{$<-.mlogit.data}
 \alias{print.pseries}
+\alias{index}
 \alias{mean.mlogit.data}
 
 

@@ -1,12 +1,16 @@
 export("mlogit", "mlogit.data", "hmftest", "mFormula", "is.mFormula",
        "mlogit.optim", "cov.mlogit", "cor.mlogit", "rpar", "scoretest",
-       "med", "rg", "stdev", "qrpar", "prpar", "drpar")
-
+       "med", "rg", "stdev", "qrpar", "prpar", "drpar",
+       "lrtest", "waldtest", "index")
+import("Formula", "maxLik")
 importFrom("lmtest", "lrtest")
+importFrom("lmtest", "lrtest.default")
 importFrom("lmtest", "waldtest")
+importFrom("lmtest", "waldtest.default")
 importFrom("zoo", "index")
 importFrom("MASS", "ginv")
 importFrom("stats", "effects")
+importFrom("statmod", "gauss.quad")
 
 #mlogit.data methods
 S3method("index", "mlogit.data")

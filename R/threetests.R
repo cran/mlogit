@@ -249,7 +249,9 @@ scoretest.mlogit <- function(object, ...){
   mc[[1]] <- as.name('update')
   mc[c('iterlim', 'method', 'start', 'print.level')] <- list(0, 'bfgs', start.values, 0)
   newmodel <- eval(mc, parent.frame())
-  stat <- - sum(newmodel$gradient * solve(newmodel$hessian, newmodel$gradient))
+  # gradient used to be a vector, now a matrix (the following ifelse should may be removed
+  if (is.matrix(newmodel$gradient)) gradvect <- apply(newmodel$gradient, 2, sum) else gradvect <- newmodel$gradient
+  stat <- - sum(gradvect * solve(newmodel$hessian, gradvect))
   names(stat) <- "chisq"
   df <- c(df = length(coef(newmodel)) - length(coef(object)))
   pval <- pchisq(stat, df = df, lower.tail = FALSE)
@@ -282,7 +284,8 @@ scoretest.default <- function(object, ...){
   newmodel <- update(object, new, start= start, iterlim = 0)
   data.name <- paste(deparse(formula(newmodel)))
   alt.hyp <- "unconstrained model"
-  stat <- - sum(newmodel$gradient * solve(newmodel$hessian, newmodel$gradient))
+  if (is.matrix(newmodel$gradient)) gradvect <- apply(newmodel$gradient, 2, sum) else gradvect <- newmodel$gradient
+  stat <- - sum(gradvect * solve(newmodel$hessian, gradvect))
   names(stat) <- "chisq"
   df <- c(df = length(coef(newmodel)) - length(coef(object)))
   pval <- pchisq(stat, df = df, lower.tail = FALSE)

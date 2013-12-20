@@ -6,9 +6,8 @@ make.beta <- function(mua, siga, rpar, random.nb, correlation){
   normal  <-     nr[rpar ==  "n"]
   uniform  <-    nr[rpar ==  "u"]
   triangular  <- nr[rpar ==  "t"]
-
   Ka <- ncol(random.nb)
-  R <- nrow(random.nb)
+  R <- nrow(random.nb) 
   
   betaa <- matrix(NA, R, Ka)
   betaa.mu <- betaa.sigma <- betaa
@@ -102,7 +101,10 @@ make.random.nb <- function(R, Ka, halton){
 # Create the matrix of random numbers
   if (!is.null(halton)){
     length.halton <- rep(R,Ka)
-    prime <- c(2,3,5,7,11,13,17,19,23)
+    prime <- c(2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43,
+               47, 53, 59, 61, 71, 73, 79, 83, 89, 97, 101, 103,
+               107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167,
+               173, 179, 181, 191, 193, 197, 199)
     drop.halton <- rep(100,Ka)
     if (!is.na(halton) && !is.null(halton$prime)){
       if (length(halton$prime) != Ka){
