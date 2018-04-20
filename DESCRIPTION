@@ -1,20 +1,22 @@
 Package: mlogit
-Version: 0.2-4
-Date: 2013-12-20
-Title: multinomial logit model
+Version: 0.3-0
+Date: 2018-04-20
+Title: Multinomial Logit Models
 Authors@R: person("Yves", "Croissant", role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr")
 Depends: R (>= 2.10), Formula, maxLik
 Imports: statmod, zoo, MASS, lmtest
-Suggests: car, nnet, lattice, AER
-Description: Estimation of the multinomial logit model
+Suggests: knitr, car, nnet, lattice, AER, ggplot2, texreg
+Description: Maximum Likelihood estimation of random utility discrete choice models (logit and probit).
+VignetteBuilder: knitr
 License: GPL (>= 2)
-URL: http://www.r-project.org
+URL: https://cran.r-project.org/package=mlogit,
+        https://r-forge.r-project.org/projects/mlogit/
 Author: Yves Croissant [aut, cre]
 Maintainer: Yves Croissant <yves.croissant@univ-reunion.fr>
 Repository: CRAN
 Repository/R-Forge/Project: mlogit
-Repository/R-Forge/Revision: 42
-Repository/R-Forge/DateTimeStamp: 2013-12-23 20:17:01
-Date/Publication: 2013-12-27 13:28:20
-Packaged: 2013-12-23 23:16:57 UTC; rforge
+Repository/R-Forge/Revision: 54
+Repository/R-Forge/DateTimeStamp: 2018-04-20 04:07:04
+Date/Publication: 2018-04-20 12:35:12 UTC
 NeedsCompilation: no
+Packaged: 2018-04-20 04:32:25 UTC; rforge

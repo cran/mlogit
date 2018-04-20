@@ -153,14 +153,54 @@ Changes since version 0.2-2
 	
 Changes since version 0.2-3
 
-	* the list of primes used to generate halton sequences was two
+	* the list of primes used to generate halton sequences was too
 	short, its length has been increased
 
-	* halton sequences where used to estimate mixed logit even for the
-	default value of halton (NULL), this has been fixed
+	* halton sequences where used to estimate mixed logit even for
+	the default value of halton (NULL), this has been fixed
 
 	* the contribution of each observation to the gradient is not
 	returned as the 'gradient' element of mlogit objects
 
 	* the distributions are now checked for rpar and an error is
 	returned in case of unknown distribution
+
+Changes since version 0.2-4
+
+	* the id series (one observation per choice situation) was
+          badly constructed, it is now fixed
+
+	* the levels of the choice variable are now equalized to the
+          those of the alt variable, allowing the case were some
+          alternatives are never chosen
+
+	* mlogit is now able to estimate models with singular matrix
+          of covariates. At the end of model.matrix.mformula, the
+          linear dependent columns of X are removed
+
+	* group-hetheroscedastic model can be estimated by setting the
+	  relevant covariates in the 4th part of the formula
+
+	* correlation can still be a boolean, but can also be a
+	  character vector if one wants that a subset of the random
+	  parameters being correlated
+
+        * zbu and zbt distributions are added : these are
+          one-parameter distributions for which the lower bond is 0.
+
+	* there was a bug in the triangular distribution which is now
+          fixed
+
+	* bug in the effects method fixed
+	
+	* a new iv function is provided
+	  
+	* the linear predictor is now returned
+	
+
+	 
+
+
+
+
+

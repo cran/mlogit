@@ -7,7 +7,8 @@
 %\VignetteDepends{Formula, statmod}
 %\VignetteKeywords{discrete choice models, maximum likelihood estimation, R, econometrics}
 %\VignettePackage{mlogit}
-
+%\VignetteEngine{knitr::knitr}
+%\VignetteEncoding{UTF-8}
 \author{Yves Croissant\\Universit\'e de la R\'eunion}
 
 \Plainauthor{Yves Croissant}
@@ -52,8 +53,6 @@ E-mail: \email{yves.croissant@univ-reunion.fr}
 
 
 \begin{document}
-
-\SweaveOpts{engine=R,eps=FALSE}
 
 %\maketitle
 
@@ -172,14 +171,24 @@ interpreted at the aggregate level as predicted market shares.
 \subsection{Data management}
 \addcontentsline{toc}{subsection}{Data management}
 
-<<echo=FALSE,results=hide>>=
-options(prompt= "R> ", useFancyQuotes = FALSE)
-@
+
+<<include = FALSE>>=
+library('knitr')
+knit_theme$set('edit-kwrite')
+@ 
+
+<<label = setup, include = FALSE>>=
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE, widtht = 65,
+                      cache.path = "./cache/mlogit/")
+options(width = 65)
+@ 
 
 \proglang{mlogit} is loaded using :
 
-<<echo=TRUE, results=hide>>=
+<<>>=
 library("mlogit")
+#ra <- lapply(system("ls ~/Dropbox/Forge/mlogit/pkg/R/*R", intern = TRUE), source)
+#library("Formula");library("statmod");library("zoo");library("MASS");library("lmtest")
 @ 
 
 It comes with several data sets that we'll use to illustrate the
@@ -366,8 +375,8 @@ this panel dimension into account, one has to add an argument
 index.
 
 <<>>=
-Tr <- mlogit.data(Train, shape = 'wide', choice="choice", 
-                  varying=4:11, sep="", alt.levels=c(1, 2), id = "id")
+Tr <- mlogit.data(Train, shape = 'wide', choice = "choice", id = "id",
+                  varying = 4:11, sep = "_", alt.levels = c("A", "B")) 
 head(Tr, 3)
 head(index(Tr), 3)
 @ 
@@ -1288,8 +1297,8 @@ characterized by four attributes :
 
 <<>>=
 data("Train", package="mlogit")
-Tr <- mlogit.data(Train, shape = 'wide', choice="choice", 
-                  varying=4:11, sep="", alt.levels=c(1, 2), id = "id")
+Tr <- mlogit.data(Train, shape = 'wide', choice = "choice", 
+                  varying = 4:11, sep = "_", alt.levels = c("A", "B"), id = "id")
 
 @ 
 
@@ -1561,7 +1570,7 @@ don't choose the bus and choose a mode among the four modes available
 
 <<>>=
 busUsers <- with(ModeCanada, case[choice == 1 & alt == 'bus'])
-Bhat <- subset(ModeCanada, !case %in% busUsers & alt != 'bus' & nchoice == 4)
+Bhat <- subset(ModeCanada, !case %in% busUsers & alt != 'bus' & noalt == 4)
 Bhat$alt <- Bhat$alt[drop = TRUE]
 Bhat <- mlogit.data(Bhat, shape='long', chid.var = 'case',
                     alt.var = 'alt', choice='choice',
@@ -2482,21 +2491,17 @@ model. A basic multinomial model \va{ml} is also estimated.
 <<>>=
 data("Train", package = "mlogit")
 Tr <- mlogit.data(Train, shape = "wide", varying = 4:11, 
-                  choice = "choice", sep = "", 
+                  choice = "choice", sep = "_", 
                   opposite = c("price", "time", "change", "comfort"),
-                  alt.levels=c("choice1", "choice2"), id="id")
+                  alt.levels=c("A", "B"), id.var ="id")
 @ 
-<<echo = TRUE, eval = FALSE>>=
+<<echo = TRUE>>=
 Train.ml <- mlogit(choice ~ price + time + change + comfort, Tr)
 Train.mxlc <- mlogit(choice ~ price + time + change + comfort, Tr,
                panel = TRUE, rpar = c(time = "cn", change = "n", comfort = "ln"),
                correlation = TRUE, R = 100, halton = NA)
 Train.mxlu <- update(Train.mxlc, correlation = FALSE)
-@ 
-
-<<echo = FALSE>>=
-data("Examples", package = "mlogit")
-@ 
+@  
 
 The summary method supplies the usual table of coefficients, and also
 some statistics about the random parameters. Random parameters may be
@@ -2865,7 +2870,7 @@ We use again the \Rd{Fishing} data frame, with only a subset of three
 alternatives used. The multinomial probit model is estimated using
 \Rf{mlogit} with the \Ra{probit}{mlogit} argument equal to \Rv{TRUE}
 
-<<echo = TRUE, eval = FALSE>>=
+<<>>=
 data("Fishing", package = "mlogit")
 Fish <- mlogit.data(Fishing, shape="wide", varying=2:9, choice="mode")
 Fish.mprobit <- mlogit(mode~price | income | catch, Fish, probit = TRUE, alt.subset=c('beach', 'boat','pier'))
@@ -3036,7 +3041,7 @@ lrtest(hl.MC, ml.MC)
 waldtest(hl.MC, heterosc = FALSE)
 @ 
 or, more simply :
-<<results=hide>>=
+<<results = 'hide'>>=
 lrtest(hl.MC)
 waldtest(hl.MC)
 @ 
@@ -3099,7 +3104,7 @@ scoretest(ml.HC, nests = list(cooling = c('ecc', 'erc', 'gcc', 'hpc'),
 The wald test can also be performed using the \Rf{linearHypothesis}
 function :
 <<>>=
-linearHypothesis(nl.HC, c("iv.cooling=1", "iv.noncool=1"))
+linearHypothesis(nl.HC, c("iv:cooling = 1", "iv:noncool = 1"))
 @ 
 
 The three tests reject the null hypothesis of no correlation at the
@@ -3112,7 +3117,7 @@ model that is called \va{nl.HC.u}
 lrtest(nl.HC,nl.HC.u)
 waldtest(nl.HC, un.nest.el = TRUE)
 scoretest(nl.HC.u, un.nest.el = FALSE)
-linearHypothesis(nl.HC, "iv.cooling=iv.noncool")
+linearHypothesis(nl.HC, "iv:cooling = iv:noncool")
 @ 
 
 

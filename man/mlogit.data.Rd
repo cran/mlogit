@@ -5,6 +5,7 @@
 \alias{print.pseries}
 \alias{index}
 \alias{mean.mlogit.data}
+\alias{formula.mlogit.data}
 
 
 \title{data.frame for logit model}
@@ -12,13 +13,13 @@
   shape a \code{data.frame} in a suitable form for the use of the \code{mlogit} function.
 }
 \usage{
-mlogit.data(data, choice, shape = c("wide","long"), varying = NULL,
-            sep=".",alt.var = NULL, chid.var = NULL, alt.levels = NULL,
-            id.var = NULL, opposite = NULL, drop.index = FALSE,
-            ranked = FALSE, ...)
+mlogit.data(data, choice = NULL, shape = c("long", "wide"), varying = NULL,
+            sep=".", alt.var = NULL, chid.var = NULL, alt.levels = NULL,
+            id.var = NULL, group.var = NULL, opposite = NULL,
+            drop.index = FALSE, ranked = FALSE, subset = NULL, ...)
 \method{mean}{mlogit.data}(x, ...)
 \method{print}{pseries}(x, ...)
-
+\method{formula}{mlogit.data}(x, ...)
 }
 
 \arguments{
@@ -56,12 +57,19 @@ mlogit.data(data, choice, shape = c("wide","long"), varying = NULL,
   \item{id.var}{the name of the variable that contains the individual
   index if any,}
 
+  \item{group.var}{the name of the variable that contains the group
+  index if any,}
+
   \item{opposite}{returns the opposite of the specified variables,}
   
   \item{drop.index}{should the index variables be dropped from the
     \code{data.frame},}
 
-  \item{ranked}{a logical value which is true if the response is a rank.}
+  \item{ranked}{a logical value which is true if the response is a
+    rank,}
+
+  \item{subset}{a logical expression which defines the subset of
+  observations to be selected,}
   
   \item{...}{further arguments passed to \code{reshape}.}
 }
@@ -103,20 +111,20 @@ TM <- mlogit.data(TravelMode, choice = "choice",
 TM <- mlogit.data(TravelMode, choice = "choice", shape = "long",
                  id.var = "individual", alt.var = "mode")
 
-# Same but with two own provided variables which are deleted from the
-  data.frame
+#  Same but with two own provided variables which are deleted from the
+#  data.frame
 
 TM <- mlogit.data(TravelMode, choice = "choice", shape = "long",
                  id.var = "individual", alt.var = "mode", drop.index = TRUE)
 
 
-# Train is a wide data.frame with columns 'choiceid' is the choice
+#  Train is a wide data.frame with columns 'choiceid' is the choice
 #  index, the alternatives are named "ch1" and "ch2", the opposite of
 #  the variables is returned
 
 data("Train", package = "mlogit")
 Train <- mlogit.data(Train, choice = "choice", shape = "wide",
-                     varying = 4:11, alt.levels = c("ch1", "ch2"), sep = "",
+                     varying = 4:11, alt.levels = c("A", "B"), sep = "_",
                      opposite = c("price", "time", "change", "comfort"))
 
 

@@ -3,9 +3,9 @@ library("lmtest")
 library("mlogit")
 data("Train", package = "mlogit")
 Tr <- mlogit.data(Train, shape = "wide", varying = 4:11, 
-                  choice = "choice", sep = "", 
+                  choice = "choice", sep = "_", 
                   opposite = c("price", "time", "change", "comfort"),
-                  alt.levels=c("choice1", "choice2"), id="id")
+                  alt.levels=c("A", "B"), id.var = "id")
 
 # mixed mogit model :
 #  - H0 : uncorrelated model

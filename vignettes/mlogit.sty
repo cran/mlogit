@@ -59,7 +59,9 @@
 \newenvironment{Rcmd}[1]{\vspace{0.5cm}\begin{center}\hrulefill
      \textbf{\ #1\ } \hrulefill\par
  }{\par\hrulefill \end{center}\vspace{.5cm}}
-\newcommand{\Rat}[1]{{\color{cv}\usefont{T1}{pag}{m}{n} #1}}
+
+\newcommand{\Rat}[1]{{\color{cv} #1}}
+
 \newcommand{\Rfi}[2]{{\color{red}
    \fontsize{9}{13}\usefont{T1}{pag}{m}{n}
    #1\index{\textbf{#2}!#1}

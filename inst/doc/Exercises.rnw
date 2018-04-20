@@ -6,6 +6,9 @@
 %\VignetteDepends{Formula, statmod}
 %\VignetteKeywords{discrete choice models, maximum likelihood estimation, R, econometrics}
 %\VignettePackage{mlogit}
+%\VignetteEngine{knitr::knitr}
+%\VignetteEncoding{UTF-8}
+
 
 \author{Kenneth Train\\University of California-Berkeley \And Yves Croissant\\Universit\'e de la R\'eunion}
 
@@ -43,10 +46,15 @@ E-mail: \email{yves.croissant@univ-reunion.fr}
 
 \begin{document}
 
-\SweaveOpts{engine=R,eps=FALSE}
+<<include = FALSE>>=
+library('knitr')
+knit_theme$set('edit-kwrite')
+@ 
 
-<<echo=FALSE,results=hide>>=
-options(prompt= "R> ", useFancyQuotes = FALSE)
+<<label = setup, include = FALSE>>=
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE, message = FALSE, warning = FALSE, widtht = 65,
+                      cache.path = "./cache/Exercises/")
+options(width = 65)
 @
 
 %\maketitle
@@ -124,9 +132,11 @@ alternative, etc.
 <<>>=
 library("mlogit")
 #source("~/Forge/mlogit/chargement.R")
+#ra <- lapply(system("ls ~/Dropbox/Forge/mlogit/pkg/R/*R", intern = TRUE), source)
+#library("Formula");library("statmod");library("zoo");library("MASS");library("lmtest")
 data("Heating", package = "mlogit")
-H <- mlogit.data(Heating, shape="wide", choice="depvar", varying=c(3:12))
-m <- mlogit(depvar~ic+oc|0, H)
+H <- mlogit.data(Heating, shape = "wide", choice = "depvar", varying = c(3:12))
+m <- mlogit(depvar ~ ic + oc | 0, H)
 summary(m)
 @ 
 Yes, they are negative as expected, meaning that as the cost of a
@@ -145,7 +155,7 @@ probability of that system being chosen falls.
 customers choosing each alternative?
 \begin{answer}[5]
 <<>>=
-apply(fitted(m, outcome=FALSE), 2, mean)
+apply(fitted(m, outcome = FALSE), 2, mean)
 @  
 Not very well. 63.67\% of the sample chose \va{gc} (as shown at the top of
 the summary) and yet the estimated model gives an average probability
@@ -216,8 +226,8 @@ $wtp=8.33$). Test the hypothesis that $r=0.12$.
   the constraint $lcc=ic+oc/0.12$ and estimate the model with this
   variable. 
 <<>>=
-H$lcc=H$ic+H$oc/0.12
-mlcc <- mlogit(depvar~lcc|0, H)
+H$lcc <- H$ic + H$oc / 0.12
+mlcc <- mlogit(depvar ~ lcc | 0, H)
 lrtest(m, mlcc)
 qchisq(0.05, df = 1, lower.tail = FALSE)
 @   
@@ -242,7 +252,7 @@ the alternative \va{hp} to 0.
 customers choosing each alternative? 
 \begin{answer}[5]
 <<>>=
-mc <- mlogit(depvar~ic+oc, H, reflevel = 'hp')
+mc <- mlogit(depvar ~ ic + oc, H, reflevel = 'hp')
 summary(mc)
 apply(fitted(mc, outcome = FALSE), 2, mean)
 @   
@@ -255,9 +265,9 @@ shares.
 estimates. Are these reasonable?
 \begin{answer}[5]
 <<>>=
-wtp <- coef(mc)["oc"]/coef(mc)["ic"]
+wtp <- coef(mc)["oc"] / coef(mc)["ic"]
 wtp
-r <- 1/wtp
+r <- 1 / wtp
 r
 @ 
 The decision-maker is willing to pay \$4.56 for a \$1 year stream of
@@ -293,9 +303,11 @@ logically rather than actually estimating the model.
   \va{gc} than alt \va{gr}. Similarly for the other alternatives.
   Note the the constant for alt 5 would be $0-.30777=-.3077$, since
   \va{hp} is normalized to zero in the model with \va{hp} left out.
+
 <<>>=
-update(mc, reflevel="gr")
+update(mc, reflevel = "gr")
 @ 
+
 \end{answer}
 
 5. Now try some models with sociodemographic variables entering.
@@ -308,7 +320,7 @@ income households. Does dividing installation cost by income seem to
 make the model better or worse?
 \begin{answer}[5]
 <<>>=
-mi <- mlogit(depvar~oc+I(ic/income), H)
+mi <- mlogit(depvar ~ oc + I(ic / income), H)
 summary(mi)
 @   
 The model seems to get worse. The $\ln L$ is lower (more negative) and the
@@ -321,9 +333,11 @@ alternative-specific income effects.  What do the estimates imply
 about the impact of income on the choice of central systems versus
 room system? Do these income terms enter significantly?
 \begin{answer}[5]
+
 <<>>=
-mi2 <- mlogit(depvar~oc+ic|income, H, reflevel="hp")
+mi2 <- mlogit(depvar ~ oc + ic | income, H, reflevel = "hp")
 @   
+
 The model implies that as income rises, the probability of heat pump
 rises relative to all the others (since income in the heat pump alt is
 normalized to zero, and the others enter with negative signs such that
@@ -335,11 +349,13 @@ Do these income terms enter significantly? No. It seems that income
 doesn't really have an effect. Maybe this is because income is for the
 family that lives in the house, whereas the builder made decision of
 which system to install.
+
 <<>>=
 lrtest(mc, mi2)
 waldtest(mc, mi2)
 scoretest(mc, mi2)
 @ 
+
 \end{answer}
 
 (c) Try other models. Determine which model you think is best from these data.
@@ -355,6 +371,7 @@ and alternative specific constants. Calculate the probabilities for
 each house explicitly. Check to be sure that the mean probabilities
 are the same as you got in exercise 4.
 \begin{answer}[5]
+
 <<>>=
 X <- model.matrix(mc)
 alt <- index(H)$alt
@@ -366,6 +383,7 @@ P <- matrix(P, ncol = 5, byrow = TRUE)
 head(P)
 apply(P, 2, mean)
 @
+
 \end{answer}
 
 This can be computed much more simply using the \Rf{fitted} function,
@@ -430,6 +448,7 @@ P <- eXb / SeXb[sort(chidb)]
 P <- matrix(P, ncol = 6, byrow = TRUE)
 apply(P, 2, mean)
 @   
+
 The new technology captures a market share of 0.1036. That is, it gets
 slightly more than ten percent of the market.
 
@@ -494,8 +513,8 @@ specified to have the cooling alternatives (\va{gcc}, \va{ecc},
 \va{erc}, \va{hpc}) in one nest and the non-cooling alternatives
 (\va{gc}, \va{ec}, \va{er}) in another nest.
 \begin{answer}[5]
-<<>>=
-library("mlogit")
+
+<<nest1>>=
 data("HC", package = "mlogit")
 HC <- mlogit.data(HC, varying = c(2:8, 10:16), choice = "depvar", shape = "wide")
 cooling.modes <- index(HC)$alt %in% c('gcc', 'ecc', 'erc', 'hpc')
@@ -535,7 +554,7 @@ true model is standard logit be rejected?
   We can use a t-test of the hypothesis that the log-sum coefficient
   equal to 1. The t-statistic is :
 <<>>=
- (coef(nl)['iv']-1)/sqrt(vcov(nl)['iv', 'iv'])
+ (coef(nl)['iv'] - 1) / sqrt(vcov(nl)['iv', 'iv'])
 @ 
  The critical value of t for 95\% confidence is 1.96. So we can reject
  the hypothesis at 95\% confidence.
@@ -576,8 +595,8 @@ across alternatives? Do you think the estimate is plausible?
 
 \begin{answer}[5]
   The t-statistic is :
-<<>>=
- (coef(nl2)['iv']-1)/sqrt(vcov(nl2)['iv', 'iv'])
+<<tstat>>=
+ (coef(nl2)['iv'] - 1) / sqrt(vcov(nl2)['iv', 'iv'])
 lrtest(nl2, ml)
 @   
 We cannot reject the hypothesis at standard confidence levels.
@@ -599,9 +618,11 @@ appropriate nesting structure.
 3. Rerun the model that has the cooling alternatives in one nest and
 the non-cooling alternatives in the other nest (like for exercise 1),
 with a separate log-sum coefficient for each nest.
-<<>>=
+
+<<nl3>>=
 nl3 <- update(nl, un.nest.el = FALSE)
-@ 
+@
+
 (a) Which nest is estimated to have the higher correlation in
 unobserved factors? Can you think of a real-world reason for this nest
 to have a higher correlation?
@@ -621,9 +642,11 @@ exercise 1 is the true model?
 \begin{answer}[5]
   We can use a likelihood ratio tests with models \texttt{nl} and
   \texttt{nl3}.
-<<>>=
+
+<<lrtest1>>=
 lrtest(nl, nl3)
 @   
+
 The restricted model is the one from exercise 1 that has one log-sum
 coefficient. The unrestricted model is the one we just estimated. The
 test statistics is 0.6299. The critical value of chi-squared with 1
@@ -640,11 +663,13 @@ nests. Estimate a model with alternatives \va{gcc}, \va{ecc} and
 worse than the model in exercise 1, which puts alternative \va{hpc} in
 the same nest as alternatives \va{gcc}, \va{ecc} and \va{erc}?
 \begin{answer}[5]
-<<>>=
+
+<<threentest>>=
 nl4 <- update(nl, nests=list(n1 = c('gcc', 'ecc', 'erc'), n2 = c('hpc'),
                     n3 = c('gc', 'ec', 'er')))
 summary(nl4)
 @ 
+
 The $\ln L$ for this model is $-180.26$, which is lower (more negative)
 than for the model with two nests, which got $-178.12$.
 \end{answer}
@@ -691,30 +716,28 @@ then nothing was said about them in this regard \footnote{These are
 1. Run a mixed logit model without intercepts and a normal
 distribution for the 6 parameters of the model, using 100 draws,
 halton sequences and taking into account the panel data structure.
+
 <<>>=
-library("mlogit")
 data("Electricity", package = "mlogit")
-Electr <- mlogit.data(Electricity, id="id", choice="choice", 
-                      varying=3:26, shape="wide", sep="")
+Electr <- mlogit.data(Electricity, id = "id", choice = "choice", 
+                      varying = 3:26, shape = "wide", sep = "")
 @ 
-<<eval=FALSE>>=
-Elec.mxl <- mlogit(choice~pf+cl+loc+wk+tod+seas|0, Electr, 
-              rpar=c(pf='n', cl='n', loc='n', wk='n', tod='n', seas='n'), 
-              R=100, halton=NA, print.level=0, panel=TRUE)
-@ 
-<<echo=FALSE, eval = TRUE>>=
-data("Examples", package = "mlogit")
-@ 
+
 <<>>=
+Elec.mxl <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+              rpar=c(pf = 'n', cl = 'n', loc = 'n', wk = 'n', 
+                     tod = 'n', seas = 'n'), 
+              R = 100, halton = NA, panel = TRUE)
 summary(Elec.mxl)
 @ 
 
 2. (a) Using the estimated mean coefficients, determine the amount
 that a customer with average coefficients for price and length is
 willing to pay for an extra year of contract length.
+
 \begin{answer}[5]
 <<>>=
-coef(Elec.mxl)['cl']/coef(Elec.mxl)['pf']
+coef(Elec.mxl)['cl'] / coef(Elec.mxl)['pf']
 @ 
 The mean coefficient of length is -0.20. The consumer with this
 average coefficient dislikes having a longer contract. So this person
@@ -728,7 +751,7 @@ contract that is one year shorter.
 long term contracts (ie have a negative coefficient for the length.)
 \begin{answer}[5]
 <<>>=
-pnorm(-coef(Elec.mxl)['cl']/coef(Elec.mxl)['sd.cl'])
+pnorm(- coef(Elec.mxl)['cl'] / coef(Elec.mxl)['sd.cl'])
 @ 
 The coefficient of length is normally distributed with mean -0.20 and
 standard deviation 0.35. The share of people with coefficients below
@@ -757,7 +780,7 @@ distribution of wtp is the ratio of two distributions, which is harder
 to work with.
 \begin{answer}[5]
 <<>>=
-pnorm(-coef(Elec.mxl)['pf']/coef(Elec.mxl)['sd.pf'])
+pnorm(- coef(Elec.mxl)['pf'] / coef(Elec.mxl)['sd.pf'])
 @ 
 The price coefficient is distributed normal with mean -0.97 and
 standard deviation 0.20. The cumulative standard normal distribution
@@ -765,10 +788,11 @@ evaluated at 0.97/0.20=4.85 is more than 0.999, which means that more
 than 99.9\% of the population are estimated to have negative price
 coefficients. Essentially no one is estimated to have a positive price
 coefficient.
-<<eval=FALSE>>=
-Elec.mxl2 <- mlogit(choice~pf+cl+loc+wk+tod+seas|0, Electr, 
-                   rpar=c(cl='n', loc='n', wk='n', tod='n', seas='n'), 
-                   R=100, halton=NA, print.level=0, panel=TRUE)
+<<>>=
+Elec.mxl2 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+                   rpar = c(cl = 'n', loc = 'n', wk = 'n', 
+                            tod = 'n', seas = 'n'), 
+                   R = 100, halton = NA,  panel = TRUE)
 @
 <<>>=
 summary(Elec.mxl2)
@@ -782,8 +806,9 @@ coefficient of \va{wk} a uniform distribution
 %between zero and b,where b is estimated 
 (do this with the price coefficient fixed).
 \begin{answer}[5]
-<<eval=FALSE>>=
-Elec.mxl3 <- update(Elec.mxl, rpar=c(cl='n', loc='n', wk='u', tod='n', seas='n'))
+<<>>=
+Elec.mxl3 <- update(Elec.mxl, rpar = c(cl = 'n', loc = 'n', wk = 'u', 
+                                       tod = 'n', seas = 'n'))
 @   
 The price coefficient is uniformly distributed with parameters 1.541
 and 1.585.
@@ -792,7 +817,7 @@ summary(Elec.mxl3)
 rpar(Elec.mxl3, 'wk')
 summary(rpar(Elec.mxl3, 'wk'))
 @ 
-<<fig=TRUE>>=
+<<>>=
 plot(rpar(Elec.mxl3, 'wk'))
 @
 
@@ -832,18 +857,18 @@ A lognormal is specified as $\exp(b+se)$ where $e$ is a standard
 normal deviate. The parameters of the lognormal are $b$ and $s$. The
 mean of the lognormal is $\exp(b+0.5s^2)$ and the standard deviation
 is the mean times $\sqrt{(\exp(s^2))-1}$.
-<<eval=FALSE>>=
-Electr <- mlogit.data(Electricity, id="id", choice="choice", 
-                      varying=3:26, shape="wide", sep="",
-                      opposite=c('tod', 'seas'))
-Elec.mxl4 <- mlogit(choice~pf+cl+loc+wk+tod+seas|0, Electr, 
-              rpar=c(cl='n', loc='n', wk='u', tod='ln', seas='ln'), 
-              R=100, halton=NA, print.level=0, panel=TRUE)
+<<>>=
+Electr <- mlogit.data(Electricity, id = "id", choice = "choice", 
+                      varying = 3:26, shape = "wide", sep = "",
+                      opposite = c('tod', 'seas'))
+Elec.mxl4 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+              rpar = c(cl = 'n', loc = 'n', wk = 'u', tod = 'ln', seas = 'ln'), 
+              R = 100, halton = NA, panel = TRUE)
 @ 
 <<>>=
 summary(Elec.mxl4)
 @ 
-<<fig=TRUE>>=
+<<>>=
 plot(rpar(Elec.mxl4, 'seas'))
 @ 
 
@@ -852,7 +877,7 @@ correlation between random parameters. Compute the correlation matrix
 of the random parameters. Test the hypothesis that the random
 parameters are uncorrelated.
 \begin{answer}[5]
-<<eval=FALSE>>=
+<<>>=
 Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE)
 @ 
 <<>>=
@@ -917,11 +942,13 @@ between bus and rail?
 
 <<>>=
 data("Mode", package="mlogit")
-Mo <- mlogit.data(Mode, choice='choice', shape='wide', varying=c(2:9))
+Mo <- mlogit.data(Mode, choice = 'choice', shape = 'wide', 
+                  varying = c(2:9))
 @   
   
-<<echo = TRUE, eval = FALSE>>=
-p1 <- mlogit(choice~cost+time, Mo, seed = 20, R = 100, probit = TRUE)
+<<>>=
+p1 <- mlogit(choice ~ cost + time, Mo, seed = 20, 
+             R = 100, probit = TRUE)
 @   
 
 <<>>=
@@ -974,8 +1001,9 @@ indication.)
 
 \begin{answer}
 
-<<echo = TRUE, eval = FALSE>>=
-p2 <- mlogit(choice~cost+time, Mo, seed = 21, R = 100, probit = TRUE)
+<<>>=
+p2 <- mlogit(choice ~ cost + time, Mo, seed = 21, 
+             R = 100, probit = TRUE)
 @   
 
 <<>>=
@@ -1033,7 +1061,8 @@ increase in demand? What is the percent change in share for each mode?
 Mo2 <- Mo
 Mo2[Mo2$alt == 'car', 'cost'] <- Mo2[Mo2$alt == 'car', 'cost'] * 2
 newShares <- apply(predict(p1, newdata = Mo2), 2, mean)
-cbind(original = actShares, new = newShares, change = round((newShares - actShares) / actShares * 100))
+cbind(original = actShares, new = newShares, 
+      change = round((newShares - actShares) / actShares * 100))
 @ 
 
 Substitution is not proportional. Carpool gets the largest percent

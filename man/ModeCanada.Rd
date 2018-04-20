@@ -26,8 +26,6 @@
   }
 }
 
-
-
 \references{
 
   Bhat, Chandra R. (1995) \dQuote{A heteroscedastic extreme value model
@@ -46,8 +44,8 @@
 \examples{
 data("ModeCanada", package = "mlogit")
 bususers <- with(ModeCanada, case[choice == 1 & alt == "bus"])
-ModeCanada <- subset(ModeCanada, !case \%in\% bususers)
-ModeCanada <- subset(ModeCanada, nchoice == 4)
+ModeCanada <- subset(ModeCanada, ! case \%in\% bususers)
+ModeCanada <- subset(ModeCanada, noalt == 4)
 ModeCanada <- subset(ModeCanada, alt != "bus")
 ModeCanada$alt <- ModeCanada$alt[drop = TRUE]
 KoppWen00 <- mlogit.data(ModeCanada, shape='long', chid.var = 'case',
