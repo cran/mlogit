@@ -1,0 +1,104 @@
+---
+output: rmarkdown::html_vignette
+bibliography: bibmlogit.bib
+vignette: >
+  %\VignetteIndexEntry{mlogit}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+Random utility models is the reference approach in economics when one
+wants to analyze the choice by a decision maker of one among a set of
+mutually exclusive alternatives. Since the seminal works of Daniel Mc
+Fadden [@MCFAD:74, MCFAD:78] who won the Nobel prize in economics "for
+his development of theory and methods for analyzing discrete choice",
+a large amount of theoretical and empirical literature have been
+developed in this field.^[For a presentation of this literature, see
+@TRAI:03 ; the theoretical parts of this paper draw heavily on this
+book.]
+
+Among the numerous applications of such models, we can cite the
+following: @HEAD:MAYE:04 investigate the determinants of the choice by
+Japanese firms of an European region for implementing a new production
+unit, @FOWL:10 analyse the choice of a NO$_x$ emissions reduction
+technology by electricity production plants, @KLIN:THOM:96 and
+@HERR:KLIN:99 consider how the choice of a fishing mode can be
+explained by the price and the catch expectency, @DIPA:JAIN:94
+investigate the brand choice for yogurts, @BHAT:95 analyse transport
+mode choice for the Montreal-Toronto corridor.
+
+These models rely on the hypothesis that the decision maker is able to
+rank the different alternatives by an order of preference represented
+by a utility function, the chosen alternative being the one which is
+associated with the highest level of utility. They are called random
+utility models because part of the utility is unobserved and is
+modelised as the realisation of a random deviate. 
+
+Different hypothesis on the distribution of this random deviate lead
+to different flavors of random utility models. Early developments of
+these models were based on the hypothesis of identically and
+independent errors following a Gumbel distribution,^[This
+  distribution has the distinctive advantage that it leads to a
+  probability which can be written has an integral which has a closed
+  form.] leading to the multinomial logit model (**MNL**). More
+general models have since been proposed, either based on less
+restrictive distribution hypothesis or by introducing individual
+heterogeneity.
+
+Maintaining the Gumbel distribution hypothesis but relaxing the iid
+hypothesis leads to more general logit models (the heteroscedastic and
+the nested logit models). Relaxing the Gumbel distribution hypothesis
+and using a normal distribution instead leads to the multinomial
+probit model which can deal with heteroscedasticity and correlation of
+the errors.
+
+Individual heterogeneity can be introduced in the parameters
+associated with the covariates entering the observable part of the
+utility or in the variance of the errors. This leads respectively to
+the mixed effect models (**MXL**) and the scale heterogeneity
+model (**S-MNL**).
+
+
+The first version of `mlogit` was posted in 2008, it was the first `R`
+package allowing the estimation of random utility models. Since then,
+other package have emerged [see @SARR:DAZI:17 page 4 for a survey of
+revelant R pakages].  `mlogit` still provides the widests set of
+estimators for random utility models and, moreover, its syntax has
+been adopted by other `R` packages. Those packages provide usefull
+additions to `mlogit`:
+
+- `mnlogit` enables efficient estimation of **MNL** for
+  large data sets,
+- `gmnl` estimates **MXL** and **S-MNL**, but also the
+  so called generalized multinomial logit model **G-MNL** which
+  nests them,
+- latent-class multinomial logit models (**LC-MNL**), for
+  which the heterogeneity is due to the fact that individuals belong to
+  different classes and mixed-mixed models (**MM-MNL**) which are a
+  mixture of **LC-MNL** and **MXL** can also be estimated
+  using the `gmnl` package,
+- bayesian estimators for multinomial models are provided by the
+  `bayesm`, `MNP` and `RSGHB` packages.
+
+The article is organized as follow. Vignette
+[formula/data](./2.formula.data.html) explains how the usual
+formula-data and testing interface can be extended in order to
+describes in a very natural way the model to be estimated. Vignette
+[random utility models](./3.rum.html) describe the landmark
+multinomial logit model. Vignette [relaxing the iid
+hypothesis](./4.relaxiid.html), [mixed logit model](./5.mxl.html) and
+[multinomial probit model](./6.mprobit.html) present three important
+extensions of this basic model: Vignette [relaxing the iid
+hypothesis](./4.relaxiid.html) presents models that relax the iid
+Gumbel hypothesis, [mixed logit model](./5.mxl.html) introduces slope
+heterogeneity by considering some parameters as random and
+[multinomial probit model](./6.mprobit.html) relax the Gumbel
+distribution hypothesis by assuming a multivariate norm
+distribution.
+
+### Bibliography

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Kenneth Train and Yves Croissant" />
+
+<meta name="date" content="2019-01-31" />
+
+<title>Exercise 4: Multinomial probit</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Exercise 4: Multinomial probit</h1>
+<h4 class="author"><em>Kenneth Train and Yves Croissant</em></h4>
+<h4 class="date"><em>2019-01-31</em></h4>
+
+
+
+<p>We have data on the mode choice of 453 commuters. Four modes are available: (1) bus, (2) car alone, (3) carpool, and (4) rail. We have data for each commuter on the cost and time on each mode and the chosen mode.</p>
+<p><code>mlogit</code> estimates the multinomial probit model if the <code>probit</code> argument is <code>TRUE</code> using the GHK procedure. This program estimates the full covariance matrix subject to normalization.</p>
+<p>More precisely, utility differences are computed respective to the reference level of the response (by default the bus alternative) and the 3 <span class="math inline">\(\times\)</span> 3 matrix of covariance is estimated. As the scale of utility is unobserved, the first element of the matrix is further set to 1. The Choleski factor of the covariance is :</p>
+<p><span class="math display">\[
+L = 
+\left(
+\begin{array}{ccc}
+  1 &amp; 0 &amp; 0 \\
+  \theta_{32} &amp; \theta_{33} &amp; 0 \\
+  \theta_{42} &amp; \theta_{43} &amp; \theta_{44}
+\end{array}
+\right)
+\]</span></p>
+<p>that is, five covariance parameters are estimated. The covariance matrix of the utility differences is then <span class="math inline">\(\Omega = L L^{\top}\)</span>. By working in a Choleski factor that has this form, the normalization constraints are automatically imposed and the covariance matrix is guaranteed to be positive semi-definite (with the covariance matrix for any error differences being positive-definite).</p>
+<ol class="example" style="list-style-type: decimal">
+<li>Estimate a model where mode choice is explained by the time and the cost of an alternative, using 100 draws and set the seed to</li>
+</ol>
+<ol start="20" style="list-style-type: decimal">
+<li>Calculate the covariance matrix that is implied by the estimates of the Choleski factor. What, if anything, can you say about the degree of heteroskedasticity and correlation? For comparison, what would the covariance matrix be if there were no heteroskedasticity or correlation (ie, iid errors for each alternative)? Can you tell whether the covariance is higher between car alone and carpool or between bus and rail?</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;Mode&quot;</span>, <span class="dt">package=</span><span class="st">&quot;mlogit&quot;</span>)
+Mo &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Mode, <span class="dt">choice =</span> <span class="st">'choice'</span>, <span class="dt">shape =</span> <span class="st">'wide'</span>, 
+                  <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">9</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p1 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>time, Mo, <span class="dt">seed =</span> <span class="dv">20</span>, 
+             <span class="dt">R =</span> <span class="dv">100</span>, <span class="dt">probit =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(p1)</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = choice ~ cost + time, data = Mo, start = strt, 
+##     probit = TRUE, R = 100, seed = 20)
+## 
+## Frequencies of alternatives:
+##     bus     car carpool    rail 
+## 0.17881 0.48124 0.07064 0.26932 
+## 
+## bfgs method
+## 1 iterations, 0h:0m:5s 
+## g'(-H)^-1g = 3.14E-08 
+## gradient close to zero 
+## 
+## Coefficients :
+##                       Estimate Std. Error z-value  Pr(&gt;|z|)    
+## car:(intercept)      1.8308557  0.2506437  7.3046 2.780e-13 ***
+## carpool:(intercept) -1.2816822  0.5677907 -2.2573 0.0239884 *  
+## rail:(intercept)     0.3093559  0.1151693  2.6861 0.0072292 ** 
+## cost                -0.4134374  0.0731593 -5.6512 1.593e-08 ***
+## time                -0.0466545  0.0068263 -6.8346 8.225e-12 ***
+## car.carpool          0.2599571  0.3850390  0.6751 0.4995837    
+## car.rail             0.7364831  0.2145726  3.4323 0.0005984 ***
+## carpool.carpool      1.3078997  0.3916806  3.3392 0.0008402 ***
+## carpool.rail        -0.7981622  0.3463812 -2.3043 0.0212065 *  
+## rail.rail            0.4301445  0.4874502  0.8824 0.3775401    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -347.92
+## McFadden R^2:  0.36012 
+## Likelihood ratio test : chisq = 391.62 (p.value = &lt; 2.22e-16)</code></pre>
+<blockquote>
+<p>The estimated Choleski factor <span class="math inline">\(L_1\)</span> is :</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">L1 &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">3</span>)
+L1[<span class="op">!</span><span class="kw">upper.tri</span>(L1)] &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">1</span>, <span class="kw">coef</span>(p1)[<span class="dv">6</span><span class="op">:</span><span class="dv">10</span>])</code></pre></div>
+<blockquote>
+<p>Multiplying L1 by its transpose gives <span class="math inline">\(\Omega_1\)</span> :</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">L1 <span class="op">%*%</span><span class="st"> </span><span class="kw">t</span>(L1)</code></pre></div>
+<pre><code>##           [,1]       [,2]       [,3]
+## [1,] 1.0000000  0.2599571  0.7364831
+## [2,] 0.2599571  1.7781792 -0.8524620
+## [3,] 0.7364831 -0.8524620  1.3644946</code></pre>
+<blockquote>
+<p>With iid errors, <span class="math inline">\(\Omega_1\)</span> would be :</p>
+</blockquote>
+<blockquote>
+<p><span class="math display">\[
+\left(
+\begin{array}{ccc}
+  1 &amp; 0.5 &amp; 0.5 \\
+  0.5 &amp; 1 &amp; 0.5 \\
+  0.5 &amp; 0.5 &amp; 1 \\
+\end{array}
+\right)
+\]</span></p>
+</blockquote>
+<blockquote>
+<p>I find it hard to tell anything from the estimated covariance terms.</p>
+</blockquote>
+<blockquote>
+<p>I agree: it is hard – if not impossible – to meaningfully interpret the covariance parameters when all free parameters are estimated. However, the substitutiuon patterns that the estimates imply can be observed by forecasting with the model; we do this in exercise 4 below. Also, when structure is placed on the covariance matrix, the estimates are usually easier to interpret; this is explored in exercise 6.]</p>
+</blockquote>
+<ol start="2" class="example" style="list-style-type: decimal">
+<li>Change the seed to 21 and rerun the model. (Even though the seed is just one digit different, the random draws are completely different.) See how much the estimates change. Does there seem to be a relation between the standard error of a parameter and the amount that its estimate changes with the new seed? (Of course, you are only getting two estimates, and so you are not estimating the true simulation variance very well. But the two estimates will probably give you an indication.)</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">p2 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>time, Mo, <span class="dt">seed =</span> <span class="dv">21</span>, 
+             <span class="dt">R =</span> <span class="dv">100</span>, <span class="dt">probit =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(p2)</code></pre></div>
+<pre><code>##     car:(intercept) carpool:(intercept)    rail:(intercept) 
+##          1.87148465         -1.28886230          0.31455718 
+##                cost                time         car.carpool 
+##         -0.43068483         -0.04752316          0.22887121 
+##            car.rail     carpool.carpool        carpool.rail 
+##          0.69779915          1.33065508         -0.56797982 
+##           rail.rail 
+##          0.71064723</code></pre>
+<blockquote>
+<p>The estimates seem to change more for parameters with larger standard error, though this is not uniformly the case by any means. One would expect larger samplign variance (which arises from a flatter <span class="math inline">\(\ln L\)</span> near the max) to translate into greater simulation variance (which raises when the location of the max changes with different draws).</p>
+</blockquote>
+<ol start="3" class="example" style="list-style-type: decimal">
+<li>Compute the probit shares (average probabilities) under user-specified parameters and data. How well do predicted shares match the actual share of commuters choosing each mode?</li>
+</ol>
+<blockquote>
+<p>The actual shares are :</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">actShares &lt;-<span class="st"> </span><span class="kw">with</span>(Mo, <span class="kw">tapply</span>(choice, alt, mean))</code></pre></div>
+<blockquote>
+<p>The predicted shares are :</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">predShares &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">fitted</span>(p1, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)
+predShares</code></pre></div>
+<pre><code>##        bus        car    carpool       rail 
+## 0.17596137 0.48239527 0.06923828 0.27209814</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(predShares)</code></pre></div>
+<pre><code>## [1] 0.9996931</code></pre>
+<blockquote>
+<p>The correspondence is very close but not exact.</p>
+</blockquote>
+<blockquote>
+<p>Note: Simulated GHK probabilities do not necessarily sum to one over alternatives. This summing-up error at the individual level tends to cancel out when the probabilities are averaged over the sample. The forecasted shares (ie, average probabilities) sum to 0.9991102, which is only slightly different from 1.</p>
+</blockquote>
+<ol start="4" class="example" style="list-style-type: decimal">
+<li>We want to examine the impact of a large tax on driving alone. Raise the cost of the car alone mode by 50% and forecast shares at these higher costs. Is the substitution proportional, as a logit model would predict? Which mode has the greatest percent increase in demand? What is the percent change in share for each mode?</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Mo2 &lt;-<span class="st"> </span>Mo
+Mo2[Mo2<span class="op">$</span>alt <span class="op">==</span><span class="st"> 'car'</span>, <span class="st">'cost'</span>] &lt;-<span class="st"> </span>Mo2[Mo2<span class="op">$</span>alt <span class="op">==</span><span class="st"> 'car'</span>, <span class="st">'cost'</span>] <span class="op">*</span><span class="st"> </span><span class="dv">2</span>
+newShares &lt;-<span class="st"> </span><span class="kw">apply</span>(<span class="kw">predict</span>(p1, <span class="dt">newdata =</span> Mo2), <span class="dv">2</span>, mean)
+<span class="kw">cbind</span>(<span class="dt">original =</span> actShares, <span class="dt">new =</span> newShares, 
+      <span class="dt">change =</span> <span class="kw">round</span>((newShares <span class="op">-</span><span class="st"> </span>actShares) <span class="op">/</span><span class="st"> </span>actShares <span class="op">*</span><span class="st"> </span><span class="dv">100</span>))</code></pre></div>
+<pre><code>##           original       new change
+## bus     0.17880795 0.2517884     41
+## car     0.48123620 0.1689329    -65
+## carpool 0.07064018 0.1432553    103
+## rail    0.26931567 0.4356112     62</code></pre>
+<blockquote>
+<p>Substitution is not proportional. Carpool gets the largest percent increase.</p>
+</blockquote>
+<p><!-- 6. Now, lets go back to estimation. As stated above, probit.txt --> <!-- estimates the entire set of identified covariance parameters. Often --> <!-- when running probit models you will want to impose some structure on --> <!-- the covariance matrix instead of estimating all identifiable --> <!-- parameters. You might want to do this because there are too many --> <!-- covariance parameters to estimate meaningfully. For example, with 8 --> <!-- alternatives, there are 28 identified covariance parameters. In our --> <!-- model with only 4 alternatives, some of the covariance parameters are --> <!-- insignificant. Even if the number of parameters is not an issue, you --> <!-- might have some reason to believe that a particular structure is --> <!-- appropriate. For example, with panel data, the covariance matrix of --> <!-- unobserved utility over time might have an AR1 structure.  We want to --> <!-- be able to revise the estimation program to allow for various --> <!-- structures imposed on the covariance matrix. --></p>
+<p><!-- Suppose that you are primarily interested in the carpool mode. You --> <!-- suspect that you might not be capturing many of the relevant issues --> <!-- for carpooling such that the unincluded factors would have a --> <!-- relatively large variance. You also expect a correlation between some --> <!-- of the unobserved factors for carpool and those for car alone. You are --> <!-- not so concerned about the transit modes and are willing to assume --> <!-- that their unobserved factors are iid. You specify a covariance matrix --> <!-- with the following structure: --></p>
+<p><!-- 1 r   0   0 --> <!-- r m   0   0 --> <!-- 0 0   1   0 --> <!-- 0 0   0   1  --></p>
+<p><!-- That is, you want to estimate the variance of carpool utility --> <!-- (relative to the variance for the other modes) and the covariance of --> <!-- carpool with car alone, under the maintained assumption that the --> <!-- transit modes have the same variance as car alone and are --> <!-- independent. You want to revise probit.txt to allow you to estimate --> <!-- this model. --></p>
+<p><!-- First, derive the covariance matrix for the error differences, where --> <!-- the differences are against the first alternative. (This will be a 4x4 --> <!-- matrix with zeros in the top row and the left-most column. You want to --> <!-- determine the 3x3 submatrix in terms of m and r.) --></p>
+<p><!-- Second, normalize the model for scale by dividing matrix by the <2,2> --> <!-- element, such that the <2,2> element becomes 1. (The <2,2> element of --> <!-- the 4x4 matrix is the top-left element of the 3x3 submatrix.) When the --> <!-- matrix is expressed in this form, you will see that natural parameters --> <!-- are s=m-2r and r. --></p>
+<p><!-- Then, revise probit.txt to estimate s and r along with the variable --> <!-- coefficients. Note that when the matrix omega is created in the ll --> <!-- proc, the 3x3 submatrix (also called omega) is created first and the --> <!-- the row and column of zeros are added at the top and left with the --> <!-- commands: omega=k3 | omega; omega=k4~omega; So, create the 3x3 matrix --> <!-- first and then just re-use these two commands to make it 4x4. --></p>
+<p><!-- To save time when you run the model, set the starting values to the --> <!-- estimated coefficients from pout.txt and 2 for s and .3 for m. You can --> <!-- cut and paste these starting values: --></p>
+<p><!-- b={-.3252, -.3950, -2.2592, -1.4636, -1.2500}; --> <!-- k={ 2, .3 };              ```Covariance parameters s and r``` --> <!-- b=b|k; --></p>
+<p><!-- Just so we can all compare results, use seed2=246 and NREP=100, like --> <!-- in probit.txt. --></p>
+<p><!-- Based on the estimation results: (i) How large is the variance of the --> <!-- unobserved factors relating to carpool, relative to the variances for --> <!-- the other modes? (ii) What is the correlation between the unobserved --> <!-- utility of carpool and car alone? --></p>
+<p><!-- \begin{answer} --></p>
+<p><!--   See pout6.txt for the coding. The estimates of s and r are s = 2.18 --> <!--   and r = 0.896. So the estimate of m is calculated as: s=m-2r, --> <!--   2.18=m-2*0.896, m=2.18+2*0.896=3.97. --></p>
+<p><!--   Based on the estimation results: (i) How large is the variance of --> <!--   the unobserved factors relating to carpool, relative to the --> <!--   variances for the other modes? --></p>
+<p><!--   The variance for carpool is about 4 times greater than that for the --> <!--   other modes. A higher variance for carpool is to be expected since --> <!--   there are important aspects of carpooling (eg. coordinating --> <!--   schedules) that are not included in the model. --></p>
+<p><!--   (ii) What is the correlation between the unobserved utility of --> <!--   carpool and car alone? --></p>
+<p><!--   Estimated correlation = r / sqrt(1*m) = .896/sqrt(3.97) = 0.45. --></p>
+<p><!-- \end{answer} --></p>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

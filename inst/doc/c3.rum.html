@@ -1,0 +1,656 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Random utility model and the multinomial logit model</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Random utility model and the multinomial logit model</h1>
+
+
+
+<div id="random-utility-model" class="section level2">
+<h2>Random utility model</h2>
+<p>The utility for alternative <span class="math inline">\(l\)</span> is written as: <span class="math inline">\(U_l=V_l+\epsilon_l\)</span> where <span class="math inline">\(V_l\)</span> is a function of some observable covariates and unknown parameters to be estimated, and <span class="math inline">\(\epsilon_l\)</span> is a random deviate which contains all the unobserved determinants of the utility. Alternative <span class="math inline">\(l\)</span> is therefore chosen if <span class="math inline">\(\epsilon_j &lt; (V_l-V_j)+\epsilon_l \;\forall\;j\neq l\)</span> and the probability of choosing this alternative is then:</p>
+<p><span class="math display">\[
+\mbox{P}(\epsilon_1 &lt; V_l-V_1+\epsilon_l, 
+\epsilon_2 &lt; V_l-V_2+\epsilon_l, ..., 
+\epsilon_J &lt; V_l-V_J+\epsilon_l).
+\]</span></p>
+<p>Denoting <span class="math inline">\(F_{-l}\)</span> the cumulative density function of all the <span class="math inline">\(\epsilon\)</span>s except <span class="math inline">\(\epsilon_l\)</span>, this probability is:</p>
+<span class="math display">\[\begin{equation*}
+  (\mbox{P}_l \mid \epsilon_l)=
+  F_{-l}(V_l-V_1+\epsilon_l, ..., V_l-V_J+\epsilon_l).
+\end{equation*}\]</span>
+<p>Note that this probability is conditional on the value of <span class="math inline">\(\epsilon_l\)</span>. The unconditional probability (which depends only on <span class="math inline">\(\beta\)</span> and on the value of the observed explanatory variables) is obtained by integrating out the conditional probability using the marginal density of <span class="math inline">\(\epsilon_l\)</span>, denoted <span class="math inline">\(f_l\)</span>:</p>
+<span class="math display">\[\begin{equation*}
+  \mbox{P}_l=\int F_{-l}(V_l-V_1+\epsilon_l, ...,V_l-V_J)+\epsilon_l)f_l(\epsilon_l) d\epsilon_l.
+\end{equation*}\]</span>
+<p>The conditional probability is an integral of dimension <span class="math inline">\(J-1\)</span> and the computation of the unconditional probability adds on more dimension of integration.</p>
+</div>
+<div id="the-distribution-of-the-error-terms" class="section level2">
+<h2>The distribution of the error terms</h2>
+<p>The multinomial logit model <span class="citation">(McFadden 1974)</span> is a special case of the model developed in the previous section. It is based on three hypothesis.</p>
+<p>The first hypothesis is the independence of the errors. In this case, the univariate distribution of the errors can be used, which leads to the following conditional and unconditional probabilities:</p>
+<span class="math display">\[\begin{equation*}
+  (\mbox{P}_l \mid \epsilon_l)=\prod_{j\neq l}F_j(V_l-V_j+\epsilon_l)
+\mbox{ and }
+  \mbox{P}_l =\int \prod_{j\neq l}F_j(V_l-V_j+\epsilon_l) \; f_l(\epsilon_l) \;d\epsilon_l,
+\end{equation*}\]</span>
+<p>which means that the conditional probability is the product of <span class="math inline">\(J-1\)</span> univariate cumulative density functions and the evaluation of only a one-dimensional integral is required to compute the unconditional probability.</p>
+<p>The second hypothesis is that each <span class="math inline">\(\epsilon\)</span> follows a Gumbel distribution, whose density and probability functions are respectively:</p>
+<span class="math display">\[\begin{equation}
+f(z)=\frac{1}{\theta}e^{-\frac{z-\mu}{\theta}} e^{-e^{-\frac{z-\mu}{\theta}}}
+\mbox{ and }
+F(z)=\int_{-\infty}^{z} f(t) dt=e^{-e^{-\frac{z-\mu}{\theta}}},
+\end{equation}\]</span>
+<p>where <span class="math inline">\(\mu\)</span> is the location parameter and <span class="math inline">\(\theta\)</span> the scale parameter. The first two moments of the Gumbel distribution are <span class="math inline">\(\mbox{E}(z)=\mu+\theta \gamma\)</span>, where <span class="math inline">\(\gamma\)</span> is the Euler-Mascheroni constant (<span class="math inline">\(\approx 0.577\)</span>) and <span class="math inline">\(\mbox{V}(z)=\frac{\pi^2}{6}\theta^2\)</span>. The mean of <span class="math inline">\(\epsilon_j\)</span> is not identified if <span class="math inline">\(V_j\)</span> contains an intercept. We can then, without loss of generality suppose that <span class="math inline">\(\mu_j=0, \; \forall j\)</span>. Moreover, the overall scale of utility is not identified. Therefore, only <span class="math inline">\(J-1\)</span> scale parameters may be identified, and a natural choice of normalization is to impose that one of the <span class="math inline">\(\theta_j\)</span> is equal to 1.</p>
+<p>The last hypothesis is that the errors are identically distributed. As the location parameter is not identified for any error term, this hypothesis is essentially an homoscedasticity hypothesis, which means that the scale parameter of the Gumbel distribution is the same for all the alternatives. As one of them has been previously set to 1, we can therefore suppose that, without loss of generality, <span class="math inline">\(\theta_j = 1, \;\forall j \in 1... J\)</span>. The conditional and unconditional probabilities then further simplify to:</p>
+<span class="math display">\[\begin{equation*}
+  (\mbox{P}_l \mid \epsilon_l)%=\prod_{j\neq l}F(V_l-V_j+\epsilon_l)
+  =\prod_{j\neq l}e^{-e^{-(V_l-Vj+\epsilon_l)}}
+\mbox{ and }
+  \mbox{P}_l =\int_{-\infty}^{+\infty}\prod_{j\neq l}e^{-e^{-(V_l-Vj+t)}}e^{-t}e^{-e^{-t}}dt.
+\end{equation*}\]</span>
+<p>The probabilities have then very simple, closed forms, which correspond to the logit transformation of the deterministic part of the utility.</p>
+<span class="math display">\[\begin{equation*}
+  P_l=\frac{e^{V_l}}{\sum_{j=1}^J e^{V_j}}.
+\end{equation*}\]</span>
+</div>
+<div id="iia-property" class="section level2">
+<h2>IIA property</h2>
+<p>If we consider the probabilities of choice for two alternatives <span class="math inline">\(l\)</span> and <span class="math inline">\(m\)</span>, we have <span class="math inline">\(P_l=\frac{e^{V_l}}{\sum_j e^{V_j}}\)</span> and <span class="math inline">\(P_m=\frac{e^{V_m}}{\sum_j e^{V_j}}\)</span>. The ratio of these two probabilities is:</p>
+<p><span class="math display">\[
+\frac{P_l}{P_m}=\frac{e^{V_l}}{e^{V_m}}=e^{V_l-V_m}.
+\]</span></p>
+<p>This probability ratio for the two alternatives depends only on the characteristics of these two alternatives and not on those of other alternatives. This is called the IIA property (for independence of irrelevant alternatives). IIA relies on the hypothesis that the errors are identical and independent. It is not a problem by itself and may even be considered as a useful feature for a well specified model. However, this hypothesis may be in practice violated, especially if some important variables are omitted.</p>
+</div>
+<div id="interpretation" class="section level2">
+<h2>Interpretation</h2>
+<p>In a linear model, the coefficients are the marginal effects of the explanatory variables on the explained variable. This is not the case for the multinomial logit model. However, meaningful results can be obtained using relevant transformations of the coefficients.</p>
+<div id="marginal-effects" class="section level3">
+<h3>Marginal effects</h3>
+<p>The marginal effects are the derivatives of the probabilities with respect to the covariates, which can be be choice situation-specific (<span class="math inline">\(z_i\)</span>) or alternative specific (<span class="math inline">\(x_{ij}\)</span>):</p>
+<p><span class="math display">\[
+  \begin{array}{rcl}
+    \displaystyle \frac{\partial P_{il}}{\partial z_{i}}&amp;=&amp;P_{il}\left(\beta_l-\sum_j
+    P_{ij}\beta_j\right) \\
+    \displaystyle    \frac{\partial P_{il}}{\partial x_{il}}&amp;=&amp;\gamma P_{il}(1-P_{il})\\
+    \displaystyle    \frac{\partial P_{il}}{\partial x_{ik}}&amp;=&amp;-\gamma P_{il}P_{ik}.
+  \end{array}
+\]</span></p>
+<ul>
+<li><p>For a choice situation specific variable, the sign of the marginal effect is not necessarily the sign of the coefficient. Actually, the sign of the marginal effect is given by <span class="math inline">\(\left(\beta_l-\sum_j P_{ij}\beta_j\right)\)</span>, which is positive if the coefficient for alternative <span class="math inline">\(l\)</span> is greater than a weighted average of the coefficients for all the alternatives, the weights being the probabilities of choosing the alternatives. In this case, the sign of the marginal effect can be established with no ambiguity only for the alternatives with the lowest and the greatest coefficients.</p></li>
+<li><p>For an alternative-specific variable, the sign of the coefficient can be directly interpreted. The marginal effect is obtained by multiplying the coefficient by the product of two probabilities which is at most 0.25. The rule of thumb is therefore to divide the coefficient by 4 in order to have an upper bound of the marginal effect.</p></li>
+</ul>
+<p>Note that the last equation can be rewritten: <span class="math inline">\(\frac{\mbox{d} P_{il} / P_{il}}{\mbox{d}x_{ik}} = -\gamma P_{ik}\)</span>. Therefore, when a characteristic of alternative <span class="math inline">\(k\)</span> changes, the relative change of the probabilities for every alternatives except <span class="math inline">\(k\)</span> are the same, which is a consequence of the IIA property.</p>
+</div>
+<div id="marginal-rates-of-substitution" class="section level3">
+<h3>Marginal rates of substitution</h3>
+<p>Coefficients are marginal utilities, which cannot be interpreted. However, ratios of coefficients are marginal rates of substitution. For example, if the observable part of utility is: <span class="math inline">\(V=\beta_o +\beta_1 x_1 +\beta x_2 + \beta x_3\)</span>, join variations of <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> which ensure the same level of utility are such that: <span class="math inline">\(dV=\beta_1 dx_1+\beta_2 dx_2=0\)</span> so that:</p>
+<p><span class="math display">\[
+- \frac{dx_2}{dx_1}\mid_{dV = 0} = \frac{\beta_1}{\beta_2}.
+\]</span></p>
+<p>For example, if <span class="math inline">\(x_2\)</span> is transport cost (in $), <span class="math inline">\(x_1\)</span> transport time (in hours), <span class="math inline">\(\beta_1 = 1.5\)</span> and <span class="math inline">\(\beta_2=0.2\)</span>, <span class="math inline">\(\frac{\beta_1}{\beta_2}=30\)</span> is the marginal rate of substitution of time in terms of $ and the value of 30 means that to reduce the travel time of one hour, the individual is willing to pay at most 30$ more. Stated more simply, time value is 30$ per hour.</p>
+</div>
+<div id="consumers-surplus" class="section level3">
+<h3>Consumer’s surplus</h3>
+<p>Consumer’s surplus has a very simple expression for multinomial logit models, which was first derived by <span class="citation">Small and Rosen (1981)</span>. The level of utility attained by an individual is <span class="math inline">\(U_j=V_j+\epsilon_j\)</span>, <span class="math inline">\(j\)</span> being the chosen alternative. The expected utility, from the searcher’s point of view is then: <span class="math inline">\(\mbox{E}(\max_j U_j)\)</span>, where the expectation is taken over the values of all the error terms. Its expression is simply, up to an additive unknown constant, the log of the denominator of the logit probabilities, often called the “log-sum”:</p>
+<p><span class="math display">\[
+\mbox{E}(U)=\ln \sum_{j=1}^Je^{V_j}+C.
+\]</span></p>
+<p>If the marginal utility of income (<span class="math inline">\(\alpha\)</span>) is known and constant, the expected surplus is simply <span class="math inline">\(\frac{\mbox{E}(U)}{\alpha}\)</span>.</p>
+</div>
+</div>
+<div id="application" class="section level2">
+<h2>Application</h2>
+<p>Random utility models are fitted using the <code>mlogit</code> function. Basically, only two arguments are mandatory, <code>formula</code> and <code>data</code>, if a <code>mlogit.data</code> object (and not an ordinary <code>data.frame</code>) is provided.</p>
+<div id="modecanada" class="section level3">
+<h3>ModeCanada</h3>
+<p>We first use the <code>ModeCanada</code> data set, which was already coerced to a <code>mlogit.data</code> object (called <code>MC</code>) in the previous section. The same model can then be estimated using as <code>data</code> argument this <code>mlogit.data</code> object:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,
+                  <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>, <span class="dt">drop.index =</span> <span class="ot">TRUE</span>)
+ml.MC1 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>ovt <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>ivt, MC)</code></pre></div>
+<p>or a <code>data.frame</code>. In this latter case, further arguments that will be passed to <code>mlogit.data</code> should be indicated:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ml.MC1b &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>ovt <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>ivt, ModeCanada,
+<span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>)</code></pre></div>
+<p><code>mlogit</code> provides two further useful arguments:</p>
+<ul>
+<li><code>reflevel</code> indicates which alternative is the “reference” alternative, i.e., the one for which the coefficients of choice situation specific covariates are set to 0,</li>
+<li><code>alt.subset</code> indicates a subset of alternatives on which the estimation has to be performed; in this case, only the lines that correspond to the selected alternatives are used and all the choice situations where not selected alternatives has been chosen are removed.</li>
+</ul>
+<p>We estimate the model on the subset of three alternatives (we exclude <code>bus</code> whose market share is negligible in our sample) and we set <code>car</code> as the reference alternative. Moreover, we use a total transport time variable computed as the sum of the in vehicle and the out of vehicle time variables.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MC<span class="op">$</span>time &lt;-<span class="st"> </span><span class="kw">with</span>(MC, ivt <span class="op">+</span><span class="st"> </span>ovt)
+ml.MC1 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>time, MC, 
+<span class="dt">alt.subset =</span> <span class="kw">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>), <span class="dt">reflevel =</span> <span class="st">&quot;car&quot;</span>)</code></pre></div>
+<p>The main results of the model are computed and displayed using the <code>summary</code> method:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(ml.MC1)</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = choice ~ cost + freq | income | time, data = MC, 
+##     alt.subset = c(&quot;car&quot;, &quot;train&quot;, &quot;air&quot;), reflevel = &quot;car&quot;, 
+##     method = &quot;nr&quot;)
+## 
+## Frequencies of alternatives:
+##     car   train     air 
+## 0.45757 0.16721 0.37523 
+## 
+## nr method
+## 6 iterations, 0h:0m:0s 
+## g'(-H)^-1g = 6.94E-06 
+## successive function values within tolerance limits 
+## 
+## Coefficients :
+##                      Estimate  Std. Error  z-value  Pr(&gt;|z|)    
+## train:(intercept) -0.97034440  0.26513065  -3.6599 0.0002523 ***
+## air:(intercept)   -1.89856552  0.68414300  -2.7751 0.0055185 ** 
+## cost              -0.02849715  0.00655909  -4.3447 1.395e-05 ***
+## freq               0.07402902  0.00473270  15.6420 &lt; 2.2e-16 ***
+## train:income      -0.00646892  0.00310366  -2.0843 0.0371342 *  
+## air:income         0.02824632  0.00365435   7.7295 1.088e-14 ***
+## car:time          -0.01402405  0.00138047 -10.1589 &lt; 2.2e-16 ***
+## train:time        -0.01096877  0.00081834 -13.4036 &lt; 2.2e-16 ***
+## air:time          -0.01755120  0.00399181  -4.3968 1.099e-05 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -1951.3
+## McFadden R^2:  0.31221 
+## Likelihood ratio test : chisq = 1771.6 (p.value = &lt; 2.22e-16)</code></pre>
+<p>The frequencies of the different alternatives in the sample are first indicated. Next, some information about the optimization are displayed: the Newton-Ralphson method (with analytic gradient and hessian) is used, as it is the most efficient method for this simple model for which the log-likelihood function is concave. Note that very few iterations and computing time are required to estimate this model. Then the usual table of coefficients is displayed followed by some goodness of fit measures: the value of the log-likelihood function, which is compared to the value when only intercepts are introduced, which leads to the computation of the McFadden <span class="math inline">\(R^2\)</span> and to the likelihood ratio test.</p>
+<p>The <code>fitted</code> method can be used either to obtain the probability of actual choices (<code>type = &quot;outcome&quot;</code>) or the probabilities for all the alternatives (<code>type = &quot;probabilities&quot;</code>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;outcome&quot;</span>))</code></pre></div>
+<pre><code>##       109       110       111       112       113       114 
+## 0.1909475 0.3399941 0.1470527 0.3399941 0.3399941 0.2440011</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>), <span class="dv">4</span>)</code></pre></div>
+<pre><code>##           car     train       air
+## 109 0.4206404 0.3884120 0.1909475
+## 110 0.3696476 0.2903582 0.3399941
+## 111 0.4296769 0.4232704 0.1470527
+## 112 0.3696476 0.2903582 0.3399941</code></pre>
+<p>Note that the log-likelihood is the sum of the log of the fitted outcome probabilities and that, as the model contains intercepts, the average fitted probabilities for every alternative equals the market shares of the alternatives in the sample.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sum</span>(<span class="kw">log</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;outcome&quot;</span>)))</code></pre></div>
+<pre><code>## [1] -1951.344</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">logLik</span>(ml.MC1)</code></pre></div>
+<pre><code>## 'log Lik.' -1951.344 (df=9)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>), <span class="dv">2</span>, mean)</code></pre></div>
+<pre><code>##       car     train       air 
+## 0.4575659 0.1672084 0.3752257</code></pre>
+<p>Predictions can be made using the <code>predict</code> method. If no data is provided, predictions are made for the sample mean values of the covariates.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">predict</span>(ml.MC1)</code></pre></div>
+<pre><code>##       car     train       air 
+## 0.5066362 0.2116876 0.2816761</code></pre>
+<p>Assume, for example, that we wish to predict the effect of a reduction of train transport time of 20%. We first create a new <code>data.frame</code> simply by multiplying train transport time by 0.8 and then using the <code>predict</code> method with this new <code>data.frame</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">NMC &lt;-<span class="st"> </span>MC
+NMC[<span class="kw">index</span>(NMC)<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;train&quot;</span>, <span class="st">&quot;time&quot;</span>] &lt;-<span class="st"> </span><span class="fl">0.8</span> <span class="op">*</span>
+NMC[<span class="kw">index</span>(NMC)<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;train&quot;</span>, <span class="st">&quot;time&quot;</span>]
+Oprob &lt;-<span class="st"> </span><span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>)
+Nprob &lt;-<span class="st"> </span><span class="kw">predict</span>(ml.MC1, <span class="dt">newdata =</span> NMC)
+<span class="kw">rbind</span>(<span class="dt">old =</span> <span class="kw">apply</span>(Oprob, <span class="dv">2</span>, mean), <span class="dt">new =</span> <span class="kw">apply</span>(Nprob, <span class="dv">2</span>, mean))</code></pre></div>
+<pre><code>##           car     train       air
+## old 0.4575659 0.1672084 0.3752257
+## new 0.4044736 0.2635801 0.3319462</code></pre>
+<p>If, for the first individuals in the sample, we compute the ratio of the probabilities of the air and the car mode, we obtain:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(Nprob[, <span class="st">&quot;air&quot;</span>] <span class="op">/</span><span class="st"> </span>Nprob[, <span class="st">&quot;car&quot;</span>])</code></pre></div>
+<pre><code>##       109       110       111       112       113       114 
+## 0.4539448 0.9197791 0.3422401 0.9197791 0.9197791 0.6021092</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(Oprob[, <span class="st">&quot;air&quot;</span>] <span class="op">/</span><span class="st"> </span>Oprob[, <span class="st">&quot;car&quot;</span>])</code></pre></div>
+<pre><code>##       109       110       111       112       113       114 
+## 0.4539448 0.9197791 0.3422401 0.9197791 0.9197791 0.6021092</code></pre>
+<p>which is an illustration of the IIA property. If train time changes, it changes the probabilities of choosing air and car, but not their ratio.</p>
+<p>We next compute the surplus for individuals of the sample induced by train time reduction. This requires the computation of the log-sum term (also called inclusive value or inclusive utility) for every choice situation, which is:</p>
+<p><span class="math display">\[
+\mbox{iv}_i = \ln \sum_{j = 1} ^ J e^{\beta^\top x_{ij}}.
+\]</span></p>
+<p>For this purpose, we use the <code>logsum</code> function, which works on a vector of <code>coefficients</code> and a <code>model.matrix</code>. The basic use of <code>logsum</code> consists on providing as unique argument (called <code>coef</code>) a <code>mlogit</code> object. In this case, the <code>model.matrix</code> and the <code>coef</code> are extracted from the same model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ivbefore &lt;-<span class="st"> </span><span class="kw">logsum</span>(ml.MC1)</code></pre></div>
+<p>To compute the log-sum after train time reduction, we must provide a <code>model.matrix</code> which is not the one corresponding to the fitted model. This can be done using the <code>X</code> argument which is a matrix or an object from which a <code>model.matrix</code> can be extracted. This can also be done by filling the <code>data</code> argument (a <code>data.frame</code> or an object from which a <code>data.frame</code> can be extracted using a <code>model.frame</code> method), and eventually the <code>formula</code> argument (a <code>formula</code> or an object for which the <code>formula</code> method can be applied). If no formula is provided but if <code>data</code> is a <code>mlogit.data</code> object, the formula is extracted from it.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ivafter &lt;-<span class="st"> </span><span class="kw">logsum</span>(ml.MC1, <span class="dt">data =</span> NMC)</code></pre></div>
+<p>Surplus variation is then computed as the difference of the log-sums divided by the opposite of the cost coefficient which can be interpreted as the marginal utility of income:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">surplus &lt;-<span class="st"> </span><span class="op">-</span><span class="st"> </span>(ivafter <span class="op">-</span><span class="st"> </span>ivbefore) <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(ml.MC1)[<span class="st">&quot;cost&quot;</span>]
+<span class="kw">summary</span>(surplus)</code></pre></div>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##  0.5852  2.8439  3.8998  4.6971  5.8437 31.3912</code></pre>
+<p>Consumer’s surplus variation range from 0.6 to 31 Canadian $, with a median value of about 4$.</p>
+<p>Marginal effects are computed using the <code>effects</code> method. By default, they are computed at the sample mean, but a <code>data</code> argument can be provided. The variation of the probability and of the covariate can be either absolute or relative. This is indicated with the <code>type</code> argument which is a combination of two <code>a</code> (as absolute) and <code>r</code> (as relative) characters. For example, <code>type = &quot;ar&quot;</code> means that what is measured is an absolute variation of the probability for a relative variation of the covariate.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;income&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;ar&quot;</span>)</code></pre></div>
+<pre><code>##        car      train        air 
+## -0.1822177 -0.1509079  0.3331256 
+## attr(,&quot;class&quot;)
+## [1] &quot;pseries&quot; &quot;numeric&quot;
+## attr(,&quot;index&quot;)
+##           alt chid
+## 1.car     car    1
+## 1.train train    1
+## 1.air     air    1</code></pre>
+<p>The results indicate that, for a 100% increase of income, the probability of choosing <code>air</code> increases by 33 points of percentage, as the probabilities of choosing <code>car</code> and <code>train</code> decrease by 18 and 15 points of percentage.</p>
+<p>For an alternative specific covariate, a matrix of marginal effects is displayed.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;cost&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;rr&quot;</span>)</code></pre></div>
+<pre><code>##              car      train        air
+## car   -0.9131273  0.9376923  0.9376923
+## train  0.3358005 -1.2505014  0.3358005
+## air    1.2316679  1.2316679 -3.1409703</code></pre>
+<p>The cell in the <span class="math inline">\(l^{\mbox{th}}\)</span> row and the <span class="math inline">\(c^{\mbox{th}}\)</span> column indicates the change of the probability of choosing alternative <span class="math inline">\(c\)</span> when the cost of alternative <span class="math inline">\(l\)</span> changes. As <code>type = &quot;rr&quot;</code>, elasticities are computed. For example, a 10% change of train cost increases the probabilities of choosing car and air by 3.36%. Note that the relative changes of the probabilities of choosing one of these two modes are equal, which is a consequence of the IIA property.</p>
+<p>Finally, in order to compute travel time valuation, we divide the coefficients of travel times (in minutes) by the coefficient of monetary cost (in $).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(ml.MC1)[<span class="kw">grep</span>(<span class="st">&quot;time&quot;</span>, <span class="kw">names</span>(<span class="kw">coef</span>(ml.MC1)))] <span class="op">/</span>
+<span class="st">    </span><span class="kw">coef</span>(ml.MC1)[<span class="st">&quot;cost&quot;</span>] <span class="op">*</span><span class="st"> </span><span class="dv">60</span> </code></pre></div>
+<pre><code>##   car:time train:time   air:time 
+##   29.52728   23.09447   36.95360</code></pre>
+<p>The value of travel time ranges from 23 for train to 37 Canadian $ per hour for plane.</p>
+</div>
+<div id="nox" class="section level3">
+<h3>NOx</h3>
+<p>The second example is a data set used by <span class="citation">Fowlie (2010)</span>, called <code>NOx</code>. She analyzed the effect of an emissions trading program (the NOx budget program which seeks to reduce the emission of nitrogen oxides) on the behavior of producers. More precisely, coal electricity plant managers may adopt one out of fifteen different technologies in order to comply to the emissions defined by the program. Some of them require high investment (the capital cost is <code>kcost</code>) and are very efficient to reduce emissions, some other require much less investment but are less efficient and the operating cost (denoted <code>vcost</code>) is then higher, especially because pollution permits must be purchased to offset emissions exceeding their allocation.</p>
+<p>The focus of the paper is on the effects of the regulatory environment on manager’s behavior. Some firms are deregulated, whereas other are either regulated or public. Rate of returns is applied for regulated firms, which means that they perceive a “fair” rate of return on their investment. Public firms also enjoy significant cost of capital advantages. Therefore, the main hypothesis of the paper is that public and regulated firms will adopt much more capitalistic intensive technologies than deregulated and public ones, which means that the coefficient of capital cost should take a higher negative value for deregulated firms. Capital cost is interacted with the age of the plant (measured as a deviation from the sample mean age), as firms should weight capital costs more heavily for older plants, as they have less time to recover these costs.</p>
+<p>Multinomial logit models are estimated for the three subsamples defined by the regulatory environment. The 15 technologies are not available for every plants, the sample is therefore restricted to available technologies, using the <code>available</code> covariate. Three technology dummies are introduced: <code>post</code> for post-combustion polution control technology, <code>cm</code> for combustion modification technology and <code>lnb</code> for low NOx burners technology.</p>
+<p>A last model is estimated for the whole sample, but the parameters are allowed to be proportional to each other. The scedasticity function is described in the fourth part of the formula, it contains here only one covariate, <code>env</code>. Note also that for the last model, the author introduced a specific capital cost coefficient for deregulated firms.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;NOx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+NOx<span class="op">$</span>kdereg &lt;-<span class="st"> </span><span class="kw">with</span>(NOx, kcost <span class="op">*</span><span class="st"> </span>(env <span class="op">==</span><span class="st"> &quot;deregulated&quot;</span>))
+NOxml &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(NOx, <span class="dt">chid.var =</span> <span class="st">&quot;chid&quot;</span>, <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>,
+<span class="dt">id.var =</span> <span class="st">&quot;id&quot;</span>)
+ml.pub &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>post <span class="op">+</span><span class="st"> </span>cm <span class="op">+</span><span class="st"> </span>lnb <span class="op">+</span><span class="st"> </span>vcost <span class="op">+</span><span class="st"> </span>kcost <span class="op">+</span><span class="st"> </span>kcost<span class="op">:</span>age <span class="op">|</span>
+<span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;public&quot;</span>, <span class="dt">data =</span> NOxml)
+ml.reg &lt;-<span class="st"> </span><span class="kw">update</span>(ml.pub, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;regulated&quot;</span>)
+ml.dereg &lt;-<span class="st"> </span><span class="kw">update</span>(ml.pub, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;deregulated&quot;</span>)
+ml.pool &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>post <span class="op">+</span><span class="st"> </span>cm <span class="op">+</span><span class="st"> </span>lnb <span class="op">+</span><span class="st"> </span>vcost <span class="op">+</span><span class="st"> </span>kcost <span class="op">+</span><span class="st"> </span>kcost<span class="op">:</span>age <span class="op">+</span>
+kdereg <span class="op">|</span><span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>env, <span class="dt">subset =</span> available <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> NOxml,
+<span class="dt">method =</span> <span class="st">&quot;bhhh&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;texreg&quot;</span>)
+<span class="kw">htmlreg</span>(<span class="kw">list</span>(<span class="dt">Public =</span> ml.pub, <span class="dt">Deregulated =</span> ml.dereg, <span class="dt">Regulated =</span> ml.reg,
+             <span class="dt">Pooled =</span> ml.pool), <span class="dt">caption =</span> <span class="st">&quot;Environmental compliance choices.&quot;</span>,
+        <span class="dt">omit.coef =</span> <span class="st">&quot;(post)|(cm)|(lnb)&quot;</span>, <span class="dt">float.pos =</span> <span class="st">&quot;hbt&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;tab:nox&quot;</span>)</code></pre></div>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<table cellspacing="0" align="center" style="border: none;">
+<caption align="bottom" style="margin-top:0.3em;">
+Environmental compliance choices.
+</caption>
+<tr>
+<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
+<b></b>
+</th>
+<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
+<b>Public</b>
+</th>
+<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
+<b>Deregulated</b>
+</th>
+<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
+<b>Regulated</b>
+</th>
+<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
+<b>Pooled</b>
+</th>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+vcost
+</td>
+<td style="padding-right: 12px; border: none;">
+-1.56<sup style="vertical-align: 0px;">***</sup>
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.19<sup style="vertical-align: 0px;">***</sup>
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.28<sup style="vertical-align: 0px;">***</sup>
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.31<sup style="vertical-align: 0px;">***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.36)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.06)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.06)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.04)
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+kcost
+</td>
+<td style="padding-right: 12px; border: none;">
+0.04
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.06<sup style="vertical-align: 0px;">**</sup>
+</td>
+<td style="padding-right: 12px; border: none;">
+0.01
+</td>
+<td style="padding-right: 12px; border: none;">
+0.01
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.11)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.02)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.03)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.02)
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+kcost:age
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.08
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.04<sup style="vertical-align: 0px;">**</sup>
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.02<sup style="vertical-align: 0px;">*</sup>
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.02<sup style="vertical-align: 0px;">***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.04)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.01)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.01)
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.01)
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+kdereg
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.07<sup style="vertical-align: 0px;">***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.01)
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+sig.envderegulated
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+0.32<sup style="vertical-align: 0px;">**</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.12)
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+sig.envpublic
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+-0.33<sup style="vertical-align: 0px;">***</sup>
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+</td>
+<td style="padding-right: 12px; border: none;">
+(0.08)
+</td>
+</tr>
+<tr>
+<td style="border-top: 1px solid black;">
+AIC
+</td>
+<td style="border-top: 1px solid black;">
+168.92
+</td>
+<td style="border-top: 1px solid black;">
+690.15
+</td>
+<td style="border-top: 1px solid black;">
+731.48
+</td>
+<td style="border-top: 1px solid black;">
+1634.22
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;">
+Log Likelihood
+</td>
+<td style="padding-right: 12px; border: none;">
+-78.46
+</td>
+<td style="padding-right: 12px; border: none;">
+-339.07
+</td>
+<td style="padding-right: 12px; border: none;">
+-359.74
+</td>
+<td style="padding-right: 12px; border: none;">
+-808.11
+</td>
+</tr>
+<tr>
+<td style="border-bottom: 2px solid black;">
+Num. obs.
+</td>
+<td style="border-bottom: 2px solid black;">
+113
+</td>
+<td style="border-bottom: 2px solid black;">
+227
+</td>
+<td style="border-bottom: 2px solid black;">
+292
+</td>
+<td style="border-bottom: 2px solid black;">
+632
+</td>
+</tr>
+<tr>
+<td style="padding-right: 12px; border: none;" colspan="6">
+<span style="font-size:0.8em"><sup style="vertical-align: 0px;"><em><strong></sup>p &lt; 0.001, <sup style="vertical-align: 0px;"></strong></sup>p &lt; 0.01, <sup style="vertical-align: 0px;"></em></sup>p &lt; 0.05</span>
+</td>
+</tr>
+</table>
+<p>Results are presented in the preceeding table, using the <code>texreg</code> package <span class="citation">(Leifeld 2013)</span>. Coefficients are very different on the sub-samples defined by the regulatory environment. Note in particular that the capital cost coefficient is positive and insignificant for public and regulated firms, as it is significantly negative for deregulated firms. Errors seems to have significant larger variance for deregulated firms and lower ones for public firms compared to regulated firms. The hypothesis that the coefficients (except the <code>kcost</code> one) are identical up to a multiplicative scalar can be performed using a likelihood ratio test:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">stat &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="kw">logLik</span>(ml.dereg) <span class="op">+</span><span class="st"> </span><span class="kw">logLik</span>(ml.reg) <span class="op">+</span>
+<span class="st">             </span><span class="kw">logLik</span>(ml.pub) <span class="op">-</span><span class="st"> </span><span class="kw">logLik</span>(ml.pool))
+stat</code></pre></div>
+<pre><code>## 'log Lik.' 61.67179 (df=6)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">pchisq</span>(stat, <span class="dt">df =</span> <span class="dv">9</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>## 'log Lik.' 6.377284e-10 (df=6)</code></pre>
+<p>The hypothesis is strongly rejected.</p>
+</div>
+</div>
+<div id="bibliography" class="section level2 unnumbered">
+<h2>Bibliography</h2>
+<div id="refs" class="references">
+<div id="ref-FOWL:10">
+<p>Fowlie, Meredith. 2010. “Emissions Trading, Electricity Restructuring, and Investment in Pollution Abatement.” <em>American Economic Review</em> 100 (3): 837–69. doi:<a href="https://doi.org/10.1257/aer.100.3.837">10.1257/aer.100.3.837</a>.</p>
+</div>
+<div id="ref-LEIF:13">
+<p>Leifeld, Philip. 2013. “texreg: Conversion of Statistical Model Output in R to LaTeX and HTML Tables.” <em>Journal of Statistical Software</em> 55 (8): 1–24. <a href="https://www.jstatsoft.org/v55/i08/" class="uri">https://www.jstatsoft.org/v55/i08/</a>.</p>
+</div>
+<div id="ref-MCFAD:74">
+<p>McFadden, D. 1974. “The Measurment of Urban Travel Demand.” <em>Journal of Public Economics</em> 3: 303–28.</p>
+</div>
+<div id="ref-SMAL:ROSE:81">
+<p>Small, K. A., and H. S. Rosen. 1981. “Applied Welfare Economics with Discrete Choice Models.” <em>Econometrica</em> 49: 105–30.</p>
+</div>
+<div id="ref-MAXLIK:10">
+<p>Toomet, Ott, and Arne Henningsen. 2010. <em>MaxLik: Maximum Likelihood Estimation</em>. <a href="https://CRAN.R-project.org/package=maxLik" class="uri">https://CRAN.R-project.org/package=maxLik</a>.</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Note the use of the <code>method</code> argument, set to <code>bhhh</code>. <code>mlogit</code> use its own optimisation functions, but borrows its syntax from package <code>maxLik</code> <span class="citation">(Toomet and Henningsen 2010)</span>. The default method is <code>bfgs</code>, except for the basic model, for which it is <code>nr</code>. As the default algorithm failed to converged, we use here <code>bhhh</code>.<a href="#fnref1">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

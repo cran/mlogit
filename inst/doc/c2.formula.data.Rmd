@@ -1,0 +1,416 @@
+---
+title: "Data management, model description and testing"
+output: rmarkdown::html_vignette
+bibliography: bibmlogit.bib
+vignette: >
+  %\VignetteIndexEntry{2. Data management, model description and testing}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+The formula-data interface is a critical advantage of the `R`
+software. It provides a practical way to describe the model to be
+estimated and to store data. However, the usual interface is not
+flexible enough to deal correctly with random utility
+models. Therefore, `mlogit` provides tools to construct richer
+`data.frame`s and `formula`s.
+
+## Data management
+
+`mlogit` is loaded using:
+
+```{r label = 'loading mlogit'}
+library("mlogit")
+``` 
+
+It comes with several data sets that we'll use to illustrate the
+features of the library. Data sets used for multinomial logit
+estimation concern some individuals, that make one or a sequential
+choice of one alternative among a set of mutually exclusive
+alternatives. The determinants of these choices are covariates that
+can depend on the alternative and the choice situation, only on the
+alternative or only on the choice situation.
+
+To illustrate this typology of the covariates, consider the case of
+repeated choice of destinations for vacations by families:
+
+
+- the length of the vacation, the season are choice situation
+  specific variables,
+- income, family size are individual specific variables,
+- distance to destination, cost are alternative specific
+  variables.
+
+The unit of observation is therefore the choice situation, and it is
+also the individual if there is only one choice situation per
+individual observed, which is often the case. 
+
+Such data have therefore a specific structure that can be
+characterized by three indexes: the alternative, the choice situation
+and the individual. These three indexes will be denoted `alt`, `chid`
+and `id`.  Note that the distinction between `chid` and `id` is only
+relevant if we have repeated observations for the same individual.
+
+Data sets can have two different shapes: a *wide* shape (one row for
+each choice situation) or a *long* shape (one row for each alternative
+and, therefore, as many rows as there are alternatives for each choice
+situation).
+
+`mlogit` deals with both format. It provides a `mlogit.data` function
+that take as first argument a `data.frame` and returns a `data.frame`
+in "long" format with some supplementary information about the
+structure of the data.
+
+### Wide format
+
+`Train`^[Used by @BENA:BOLD:BRAD:93 and @MEIL:ROUW:06.] is an example
+  of a *wide* data set:
+
+```{r label = 'Train data'}
+data("Train", package = "mlogit")
+head(Train, 3)
+``` 
+
+This data set contains data about a stated preference survey in
+Netherlands. Each individual has responded to several (up to 16)
+scenarios. For every scenario, two train trips are proposed to the
+user, with different combinations of four attributes: `price` (the
+price in cents of guilders), `time` (travel time in minutes),
+`change` (the number of changes) and `comfort` (the class of
+comfort, 0, 1 or 2, 0 being the most comfortable class).
+
+This "wide" format is suitable to store choice situation (or
+individual specific) variables because, in this case, they are stored
+only once in the data. Otherwise, it is cumbersome for alternative
+specific variables because there are as many columns for such
+variables that there are alternatives.
+
+For such a wide data set, the `shape` argument of `mlogit.data` is
+mandatory, as its default value is `"long"`. The alternative specific
+variables are indicated with the `varying` argument which is a numeric
+vector that indicates their position in the data frame. This argument
+is then passed to `stats::reshape` that coerced the original
+`data.frame` in "long" format. Further arguments may be passed to
+`reshape`. For example, as the names of the variables are of the form
+`price_A`, one must add `sep = "_"` (the default value being
+`"."`). The `choice` argument is also mandatory because the response
+has to be transformed in a logical value in the long format.  To take
+the panel dimension into account, one has to add an argument `id.var`
+which is the name of the individual index.
+
+```{r label = 'mlogit.data for Train'}
+Tr <- mlogit.data(Train, shape = "wide", choice = "choice",
+                  varying = 4:11, sep = "_", id.var = "id",
+                  opposite = c("price", "comfort", "time", "change"))
+``` 
+
+Note the use of the `opposite` argument for the 4 covariates: we
+expect negative coefficients for all of them, taking the opposite of
+the covariates will lead to expected positive coefficients.  We next
+convert `price` and `time` in more meaningful unities, hours and euros
+(1 guilder was $2.20371$ euros):
+
+```{r label = 'data transformation for Train'}
+Tr$price <- Tr$price / 100 * 2.20371
+Tr$time <- Tr$time / 60
+``` 
+
+```{r label = 'head of the transformed Train data set'}
+head(Tr, 3)
+``` 
+
+An `index` attribute is added to the data, which contains the
+three relevant indexes: `chid` is the choice situation index,
+`alt` the alternative index and `id` is the individual
+index. This attribute is a `data.frame` that can be extracted
+using the `index` function.
+
+```{r label = 'index of the transformed Train data set'}
+head(index(Tr), 3)
+``` 
+
+### Long format
+
+`ModeCanada`,^[Used in particular by [@FORI:KOPP:93],
+  @BHAT:95, @KOPP:WEN:98 and @KOPP:WEN:00.] is an example of a data
+  set in long format. It presents the choice of individuals for a
+  transport mode for the Ontario-Quebec corridor:
+  
+```{r label = 'loading ModeCanada'}
+data("ModeCanada", package = "mlogit")
+head(ModeCanada)
+``` 
+
+There are four transport modes (`air`, `train`, `bus` and `car`) and
+most of the variable are alternative specific (`cost` for monetary
+cost, `ivt` for in vehicle time, `ovt` for out of vehicle time, `freq`
+for frequency). The only choice situation specific variables are
+`dist` (the distance of the trip), `income` (household income),
+`urban` (a dummy for trips which have a large city at the origin or
+the destination) and `noalt` the number of available alternatives. The
+advantage of this shape is that there are much fewer columns than in
+the wide format, the caveat being that values of `dist`, `income` and
+`urban` are repeated four times.
+
+For data in "long" format, the `shape` and the `choice` arguments are
+no more mandatory.
+
+To replicate published results later in the text, we'll use only a
+subset of the choice situations, namely those for which the 4
+alternatives are available. This can be done using the `subset`
+function with the `subset` argument set to `noalt == 4` while
+estimating the model. This can also be done within `mlogit.data`,
+using the `subset` argument.
+
+The information about the structure of the data can be explicitly
+indicated using choice situations and alternative indexes
+(respectively `case` and `alt` in this data set) or, in part, guessed
+by the `mlogit.data` function. Here, after subsetting, we have 2779
+choice situations with 4 alternatives, and the rows are ordered first
+by choice situation and then by alternative (`train`, `air`, `bus` and
+`car` in this order).
+
+The first way to read correctly this data frame is to ignore
+completely the two index variables. In this case, the only
+supplementary argument to provide is the `alt.levels` argument which
+is a character vector that contains the name of the alternatives in
+their order of appearance:
+
+```{r label = 'applying mlogit.data to Modecanada (1)'}
+MC <- mlogit.data(ModeCanada, subset = noalt == 4,
+                  alt.levels = c("train", "air", "bus", "car"))
+``` 
+
+Note that this can only be used if the data set is "balanced", which
+means than the same set of alternatives is available for all choice
+situations.  It is also possible to provide an argument `alt.var`
+which indicates the name of the variable that contains the
+alternatives
+
+```{r label = 'applying mlogit.data to Modecanada (2)'}
+MC <- mlogit.data(ModeCanada , subset = noalt == 4, alt.var = "alt")
+``` 
+
+The name of the variable that contains the information about the
+choice situations can be indicated using the `chid.var` argument:
+
+```{r label = 'applying mlogit.data to Modecanada (3)'}
+MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
+                  alt.levels = c("train", "air", "bus", "car"))
+``` 
+
+Both alternative and choice situation variable can also be provided:
+
+```{r label = 'applying mlogit.data to Modecanada (4)'}
+MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
+                  alt.var = "alt")
+``` 
+
+and dropped from the data frame using the `drop.index` argument:
+
+```{r label = 'applying mlogit.data to Modecanada (5)'}
+MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
+                  alt.var = "alt", drop.index = TRUE)
+head(MC)
+``` 
+
+## Model description
+
+Standard `formula`s are not very practical to describe random utility
+models, as these models may use different sets of covariates.
+Actually, working with random utility models, one has to consider at
+most four sets of covariates:
+
+
+1. alternative and choice situation specific covariates $x_{ij}$
+  with generic coefficients $\beta$ and and alternative specific
+  covariates $t_j$ with a generic coefficient $\nu$,
+2. choice situation specific covariates $z_i$ with alternative
+  specific coefficients $\gamma_j$,
+3. alternative and choice situation specific covariates $w_{ij}$ with
+  alternative specific coefficients $\delta_j$,
+4. choice situation specific covariates $v_i$ that influence the
+  variance of the errors.
+
+
+The first three sets of covariates enter the observable part of the
+utility which can be written, alternative $j$:
+
+$$
+V_{ij}=\alpha_j + \beta x_{ij} + \nu t_j + \gamma_j z_i + \delta_j w_{ij} .
+$$
+
+As the absolute value of utility is irrelevant, only utility
+differences are useful to modelise the choice for one alternative. For
+two alternatives $j$ and $k$, we obtain:
+
+$$ V_{ij}-V_{ik}=(\alpha_j-\alpha_k) + \beta (x_{ij}-x_{ik}) +
+(\gamma_j-\gamma_k) z_i + (\delta_j w_{ij} - \delta_k w_{ik}) +
+\nu(t_j - t_k).  $$
+
+It is clear from the previous expression that coefficients of choice
+situation specific variables (the intercept being one of those) should
+be alternative specific, otherwise they would disappear in the
+differentiation. Moreover, only differences of these coefficients are
+relevant and can be identified. For example, with three alternatives
+1, 2 and 3, the three coefficients $\gamma_1, \gamma_2, \gamma_3$
+associated to a choice situation specific variable cannot be
+identified, but only two linear combinations of them. Therefore, one
+has to make a choice of normalization and the simplest one is just to
+set $\gamma_1 = 0$.
+
+Coefficients for alternative and choice situation specific variables
+may (or may not) be alternative specific. For example, transport time
+is alternative specific, but 10 mn in public transport may not have
+the same impact on utility than 10 mn in a car. In this case,
+alternative specific coefficients are relevant. Monetary cost is also
+alternative specific, but in this case, one can consider than 1\$ is
+1\$ whatever it is spent for the use of a car or in public
+transports. In this case, a generic coefficient is relevant.
+
+The treatment of alternative specific variables don't differ much from
+the alternative and choice situation specific variables with a generic
+coefficient. However, if some of these variables are introduced, the
+$\nu$ parameter can only be estimated in a model without intercepts to
+avoid perfect multicolinearity.
+
+Individual-related heteroscedasticity \citep[see][]{SWAI:LOUV:93} can
+be addressed by writing the utility of choosing $j$ for individual
+$i$: $U_{ij}=V_{ij} + \sigma_i \epsilon_{ij}$, where $\epsilon$ has a
+variance that doesn't depend on $i$ and $j$ and $\sigma_i^2 = f(v_i)$
+is a parametric function of some individual-specific covariates.  Note
+that this specification induce choice situation heteroscedasticity,
+also denoted scale heterogeneity.^[This kind of heteroscedasticity
+shouldn't be confused with alternative heteroscedasticity ($\sigma^2_j
+\neq \sigma^2_k$) which is introduced in the heteroskedastic logit
+model described in vignette [relaxing the iid
+hypothesis](./4.relaxiid.html)].  As the overall scale of utility is
+irrelevant, the utility can also be writen as: $U_{ij}^* = U_{ij} /
+\sigma_i = V_{ij}/\sigma_i + \epsilon_{ij}$, i.e., with homoscedastic
+errors. if $V_{ij}$ is a linear combination of covariates, the
+associated coefficients are then divided by $\sigma_i$.
+
+A logit model with only choice situation specific variables is
+sometimes called a *multinomial logit model*, one with only
+alternative specific variables a *conditional logit model* and one
+with both kind of variables a *mixed logit model*. This is seriously
+misleading: *conditional logit model* is also a logit model for
+longitudinal data in the statistical literature and *mixed logit* is
+one of the names of a logit model with random parameters. Therefore,
+in what follows, we'll use the name *multinomial logit model* for the
+model we've just described whatever the nature of the explanatory
+variables used.
+
+`mlogit` package provides objects of class `mFormula` which are built
+upon `Formula` objects provided by the `Formula` package.^[See
+[@ZEIL:CROIS:10] for a description of the `Formula` package.] The
+`Formula` package provides richer `formula`s, which accept multiple
+responses (a feature not used here) and multiple set of covariates. It
+has in particular specific `model.frame` and `model.matrix` methods
+which can be used with one or several sets of covariates.
+
+To illustrate the use of `mFormula` objects, we use again the
+`ModeCanada` data set and consider three sets of covariates that will
+be indicated in a three-part formula, which refers to the first three
+items of the four points list at start of this section.
+
+- `cost` (monetary cost) is an alternative specific covariate
+  with a generic coefficient (part 1),
+- `income` and `urban` are choice situation specific
+covariates (part 2),
+- `ivt` (in vehicle travel time) is alternative specific and
+  alternative specific coefficients  are expected (part 3).
+
+```{r label = 'a three parts formula'}
+f <- mFormula(choice ~ cost | income + urban | ivt)
+``` 
+
+Some parts of the formula may be omitted when there is no
+ambiguity. For example, the following sets of `formula`s are
+identical:
+
+```{r label = 'ommission of some parts (1)'}
+f2 <- mFormula(choice ~ cost + ivt | income + urban)
+f2 <- mFormula(choice ~ cost + ivt | income + urban | 0)
+``` 
+
+```{r label = 'ommission of some parts (2)'}
+f3 <- mFormula(choice ~ 0 | income | 0)
+f3 <- mFormula(choice ~ 0 | income)
+``` 
+
+```{r label = 'ommission of some parts (3)'}
+f4 <- mFormula(choice ~ cost + ivt)
+f4 <- mFormula(choice ~ cost + ivt | 1)
+f4 <- mFormula(choice ~ cost + ivt | 1 | 0)
+``` 
+
+By default, an intercept is added to the model, it can be removed by
+using `+ 0` or `- 1` in the second part.
+
+```{r label = 'removing the intercept'}
+f5 <- mFormula(choice ~ cost | income + 0 | ivt)
+f5 <- mFormula(choice ~ cost | income - 1 | ivt)
+``` 
+
+`model.frame` and `model.matrix` methods are provided for `mFormula`
+objects. The latter is of particular interest, as illustrated in the
+following example:
+
+```{r label = 'model.matrix method for Formula objects'}
+f <- mFormula(choice ~ cost | income  | ivt)
+head(model.matrix(f, MC), 4)
+``` 
+
+The model matrix contains $J-1$ columns for every choice situation specific
+variables (`income` and the intercept), which means that the
+coefficient associated to the first alternative (`air`) is set to
+0. It contains only one column for `cost` because we want a generic
+coefficient for this variable. It contains $J$ columns for `ivt`,
+because it is an alternative specific variable for which we want
+alternative specific coefficients.
+
+## Testing
+
+As for all models estimated by maximum likelihood, three testing
+procedures may be applied to test hypothesis about models fitted using
+`mlogit`. The set of hypothesis tested defines two models: the
+unconstrained model that doesn't take these hypothesis into account
+and the constrained model that impose these hypothesis.
+
+This in turns define three principles of tests: the *Wald test*, based
+only on the unconstrained model, the *Lagrange multiplier test*
+(or *score test*), based only on the constrained model and the
+*likelihood ratio test*, based on the comparison of both models.
+
+Two of these three tests are implemented in the `lmtest` package
+[@ZEIL:HOTH:02]: `waldtest` and `lrtest`. The Wald test is also implemented 
+as `linearHypothesis` in package `car` [@FOX:WEIS:10], with a fairly 
+different syntax. We provide special methods of `waldtest` and
+`lrtest` for `mlogit` objects and we also provide a function for 
+the Lagrange multiplier (or score) test called `scoretest`.
+
+We'll see later that the score test is especially useful for `mlogit`
+objects when one is interested in extending the basic multinomial
+logit model because, in this case, the unconstrained model may be
+difficult to estimate.  For the presentation of further tests, we
+provide a convenient `statpval` function which extract the statistic
+and the p-value from the objects returned by the testing function,
+which can be either of class `anova` or `htest`.
+
+```{r label = 'convenient statpval function'}
+statpval <- function(x){
+    if (inherits(x, "anova")) 
+        result <- as.matrix(x)[2, c("Chisq", "Pr(>Chisq)")]
+    if (inherits(x, "htest")) result <- c(x$statistic, x$p.value)
+    names(result) <- c("stat", "p-value")
+    round(result, 3)
+}
+``` 
+
+## Bibliography

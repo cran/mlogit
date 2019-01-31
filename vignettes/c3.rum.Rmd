@@ -1,0 +1,536 @@
+---
+title: "Random utility model and the multinomial logit model"
+output: rmarkdown::html_vignette
+bibliography: bibmlogit.bib
+vignette: >
+  %\VignetteIndexEntry{3. Random utility model and the multinomial logit model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+## Random utility model
+
+The utility for alternative $l$  is written as:
+$U_l=V_l+\epsilon_l$ where $V_l$ is a function of some observable
+covariates and unknown parameters to be estimated, and $\epsilon_l$ is a
+random deviate which contains all the unobserved determinants of the
+utility. Alternative $l$ is therefore chosen if
+$\epsilon_j < (V_l-V_j)+\epsilon_l \;\forall\;j\neq l$ and the
+probability of choosing this alternative is then:
+
+$$
+\mbox{P}(\epsilon_1 < V_l-V_1+\epsilon_l, 
+\epsilon_2 < V_l-V_2+\epsilon_l, ..., 
+\epsilon_J < V_l-V_J+\epsilon_l).
+$$
+
+Denoting $F_{-l}$ the cumulative density function of all the $\epsilon$s
+except $\epsilon_l$, this probability is:
+
+\begin{equation*}
+  (\mbox{P}_l \mid \epsilon_l)=
+  F_{-l}(V_l-V_1+\epsilon_l, ..., V_l-V_J+\epsilon_l).
+\end{equation*}
+
+Note that this probability is conditional on the value of
+$\epsilon_l$.  The unconditional probability (which depends only on
+$\beta$ and on the value of the observed explanatory variables) is
+obtained by integrating out the conditional probability using the
+marginal density of $\epsilon_l$, denoted $f_l$:
+
+\begin{equation*}
+  \mbox{P}_l=\int F_{-l}(V_l-V_1+\epsilon_l, ...,V_l-V_J)+\epsilon_l)f_l(\epsilon_l) d\epsilon_l.
+\end{equation*}
+
+The conditional probability is an integral of dimension $J-1$ and the
+computation of the unconditional probability adds on more dimension of
+integration.
+
+## The distribution of the error terms
+
+The multinomial logit model [@MCFAD:74] is a special case of the
+model developed in the previous section. It is based on three
+hypothesis.
+
+The first hypothesis is the independence of the errors. In this case,
+the univariate distribution of the errors can be used, which leads to
+the following conditional and unconditional probabilities:
+
+\begin{equation*}
+  (\mbox{P}_l \mid \epsilon_l)=\prod_{j\neq l}F_j(V_l-V_j+\epsilon_l)
+\mbox{ and }
+  \mbox{P}_l =\int \prod_{j\neq l}F_j(V_l-V_j+\epsilon_l) \; f_l(\epsilon_l) \;d\epsilon_l,
+\end{equation*}
+
+which means that the conditional probability is the product of $J-1$
+univariate cumulative density functions and the evaluation of only a
+one-dimensional integral is required to compute the unconditional
+probability.
+
+The second hypothesis is that each $\epsilon$ follows a Gumbel
+distribution, whose density and probability functions are
+respectively:
+
+\begin{equation}
+f(z)=\frac{1}{\theta}e^{-\frac{z-\mu}{\theta}} e^{-e^{-\frac{z-\mu}{\theta}}}
+\mbox{ and }
+F(z)=\int_{-\infty}^{z} f(t) dt=e^{-e^{-\frac{z-\mu}{\theta}}},
+\end{equation}
+
+where $\mu$ is the location parameter and $\theta$ the scale
+parameter.  The first two moments of the Gumbel distribution are
+$\mbox{E}(z)=\mu+\theta \gamma$, where $\gamma$ is the
+Euler-Mascheroni constant ($\approx 0.577$) and
+$\mbox{V}(z)=\frac{\pi^2}{6}\theta^2$.  The mean of $\epsilon_j$ is
+not identified if $V_j$ contains an intercept. We can then, without
+loss of generality suppose that $\mu_j=0, \; \forall j$. Moreover, the
+overall scale of utility is not identified. Therefore, only $J-1$
+scale parameters may be identified, and a natural choice of
+normalization is to impose that one of the $\theta_j$ is equal to 1.
+
+The last hypothesis is that the errors are identically distributed. As
+the location parameter is not identified for any error term, this
+hypothesis is essentially an homoscedasticity hypothesis, which means
+that the scale parameter of the Gumbel distribution is the same for
+all the alternatives. As one of them has been previously set to 1, we
+can therefore suppose that, without loss of generality, $\theta_j = 1,
+\;\forall j \in 1... J$. The conditional and unconditional
+probabilities then further simplify to:
+
+\begin{equation*}
+  (\mbox{P}_l \mid \epsilon_l)%=\prod_{j\neq l}F(V_l-V_j+\epsilon_l)
+  =\prod_{j\neq l}e^{-e^{-(V_l-Vj+\epsilon_l)}}
+\mbox{ and }
+  \mbox{P}_l =\int_{-\infty}^{+\infty}\prod_{j\neq l}e^{-e^{-(V_l-Vj+t)}}e^{-t}e^{-e^{-t}}dt.
+\end{equation*}
+
+The probabilities have then very simple, closed forms, which
+correspond to the logit transformation of the deterministic part of
+the utility.
+
+\begin{equation*}
+  P_l=\frac{e^{V_l}}{\sum_{j=1}^J e^{V_j}}.
+\end{equation*}
+
+
+
+## IIA property
+
+If we consider the probabilities of choice for two alternatives $l$
+and $m$, we have $P_l=\frac{e^{V_l}}{\sum_j e^{V_j}}$ and
+$P_m=\frac{e^{V_m}}{\sum_j e^{V_j}}$.  The ratio of these two
+probabilities is:
+
+$$
+\frac{P_l}{P_m}=\frac{e^{V_l}}{e^{V_m}}=e^{V_l-V_m}.
+$$
+
+This probability ratio for the two alternatives depends only on the
+characteristics of these two alternatives and not on those of other
+alternatives. This is called the IIA property (for independence of
+irrelevant alternatives).  IIA relies on the hypothesis that the
+errors are identical and independent. It is not a problem by itself
+and may even be considered as a useful feature for a well specified
+model. However, this hypothesis may be in practice violated,
+especially if some important variables are omitted.
+
+## Interpretation
+
+In a linear model, the coefficients are the marginal effects of the
+explanatory variables on the explained variable. This is not the case
+for the multinomial logit model. However, meaningful results can be
+obtained using relevant transformations of the coefficients.
+
+### Marginal effects
+
+The marginal effects are the derivatives of the probabilities with
+respect to the covariates, which can be be choice situation-specific ($z_i$)
+or alternative specific ($x_{ij}$):
+
+$$
+  \begin{array}{rcl}
+    \displaystyle \frac{\partial P_{il}}{\partial z_{i}}&=&P_{il}\left(\beta_l-\sum_j
+    P_{ij}\beta_j\right) \\
+    \displaystyle    \frac{\partial P_{il}}{\partial x_{il}}&=&\gamma P_{il}(1-P_{il})\\
+    \displaystyle    \frac{\partial P_{il}}{\partial x_{ik}}&=&-\gamma P_{il}P_{ik}.
+  \end{array}
+$$
+
+- For a choice situation specific variable, the sign of the marginal
+  effect is not necessarily the sign of the coefficient. Actually, the
+  sign of the marginal effect is given by
+  $\left(\beta_l-\sum_j P_{ij}\beta_j\right)$, which is positive if
+  the coefficient for alternative $l$ is greater than a weighted
+  average of the coefficients for all the alternatives, the weights
+  being the probabilities of choosing the alternatives. In this case,
+  the sign of the marginal effect can be established with no ambiguity
+  only for the alternatives with the lowest and the greatest
+  coefficients.
+  
+- For an alternative-specific variable, the sign of the
+  coefficient can be directly interpreted. The marginal effect is
+  obtained by multiplying the coefficient by the product of two
+  probabilities which is at most 0.25. The rule of thumb is therefore
+  to divide the coefficient by 4 in order to have an upper bound of
+  the marginal effect.
+
+
+
+Note that the last equation can be rewritten:
+$\frac{\mbox{d} P_{il} / P_{il}}{\mbox{d}x_{ik}} = -\gamma P_{ik}$.
+Therefore, when a characteristic of alternative $k$ changes, the
+relative change of the probabilities for every alternatives except $k$
+are the same, which is a consequence of the IIA property.
+
+
+### Marginal rates of substitution
+
+Coefficients are marginal utilities, which cannot be 
+interpreted. However, ratios of coefficients are marginal rates of
+substitution. For example, if the observable part of utility is:
+$V=\beta_o +\beta_1 x_1 +\beta x_2 + \beta x_3$, join variations of
+$x_1$ and $x_2$ which ensure the same level of utility are such that:
+$dV=\beta_1 dx_1+\beta_2 dx_2=0$ so that:
+
+$$
+- \frac{dx_2}{dx_1}\mid_{dV = 0} = \frac{\beta_1}{\beta_2}.
+$$
+
+For example, if $x_2$ is transport cost (in \$), $x_1$ transport time
+(in hours), $\beta_1 = 1.5$ and $\beta_2=0.2$,
+$\frac{\beta_1}{\beta_2}=30$ is the marginal rate of substitution of
+time in terms of \$ and the value of 30 means that to reduce the
+travel time of one hour, the individual is willing to pay at most 30\$
+more. Stated more simply, time value is 30\$ per hour.
+
+### Consumer's surplus
+
+Consumer's surplus has a very simple expression for multinomial logit
+models, which was first derived by @SMAL:ROSE:81. The level of
+utility attained by an individual is $U_j=V_j+\epsilon_j$, $j$ being
+the chosen alternative. The expected utility, from the searcher's
+point of view is then: $\mbox{E}(\max_j U_j)$, where the expectation
+is taken over the values of all the error terms. Its expression is
+simply, up to an additive unknown constant, the log of the denominator
+of the logit probabilities, often called the "log-sum":
+
+$$
+\mbox{E}(U)=\ln \sum_{j=1}^Je^{V_j}+C.
+$$
+
+If the marginal utility of income ($\alpha$) is known and constant,
+the expected surplus is simply $\frac{\mbox{E}(U)}{\alpha}$.
+
+## Application
+
+Random utility models are fitted using the `mlogit`
+function. Basically, only two arguments are mandatory,
+`formula` and `data`, if a `mlogit.data`
+object (and not an ordinary `data.frame`) is provided.
+
+### ModeCanada
+
+We first use the `ModeCanada` data set, which was already coerced
+to a `mlogit.data` object (called `MC`) in the previous
+section. The same model can then be estimated using as `data`
+argument this `mlogit.data` object:
+
+```{r label = 'multinomial logit with a mlogit.data'}
+library("mlogit")
+data("ModeCanada", package = "mlogit")
+MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
+                  alt.var = "alt", drop.index = TRUE)
+ml.MC1 <- mlogit(choice ~ cost + freq + ovt | income | ivt, MC)
+``` 
+
+or a `data.frame`. In this latter case, further arguments that
+will be passed to `mlogit.data` should be indicated:
+
+```{r label = 'multinomial logit with an ordinary data.frame'}
+ml.MC1b <- mlogit(choice ~ cost + freq + ovt | income | ivt, ModeCanada,
+subset = noalt == 4, alt.var = "alt", chid.var = "case")
+``` 
+
+`mlogit` provides two further useful arguments:
+
+- `reflevel` indicates which alternative is the "reference"
+  alternative, i.e., the one for which the coefficients of choice
+  situation specific covariates are set to 0,
+- `alt.subset` indicates a subset of alternatives on
+  which the estimation has to be performed; in this case, only the
+  lines that correspond to the selected alternatives are used and all
+  the choice situations where not selected alternatives has been
+  chosen are removed.
+
+We estimate the model on the subset of three alternatives (we exclude
+`bus` whose market share is negligible in our sample) and we set
+`car` as the reference alternative. Moreover, we use a total
+transport time variable computed as the sum of the in vehicle and the
+out of vehicle time variables.
+
+```{r label = 'estimation on a subset of alternatives'}
+MC$time <- with(MC, ivt + ovt)
+ml.MC1 <- mlogit(choice ~ cost + freq | income | time, MC, 
+alt.subset = c("car", "train", "air"), reflevel = "car")
+``` 
+
+The main results of the model are computed and displayed using the
+ `summary` method:
+
+```{r label = 'summary method for mlogit'}
+summary(ml.MC1)
+``` 
+
+The frequencies of the different alternatives in the sample are first
+indicated. Next, some information about the optimization are
+displayed: the Newton-Ralphson method (with analytic gradient and
+hessian) is used, as it is the most efficient method for this simple
+model for which the log-likelihood function is concave. Note that very
+few iterations and computing time are required to estimate this
+model. Then the usual table of coefficients is displayed followed by
+some goodness of fit measures: the value of the log-likelihood
+function, which is compared to the value when only intercepts are
+introduced, which leads to the computation of the McFadden $R^2$ and
+to the likelihood ratio test.
+
+The `fitted` method can be used either to obtain the probability
+of actual choices (`type = "outcome"`) or the probabilities for
+all the alternatives (`type = "probabilities"`).
+
+```{r label = 'fitted method for mlogit'}
+head(fitted(ml.MC1, type = "outcome"))
+head(fitted(ml.MC1, type = "probabilities"), 4)
+``` 
+
+Note that the log-likelihood is the sum of the log of the fitted
+outcome probabilities and that, as the model contains intercepts, the
+average fitted probabilities for every alternative equals the market
+shares of the alternatives in the sample.
+
+```{r label = 'computation of the log likelihood and the market shares'}
+sum(log(fitted(ml.MC1, type = "outcome")))
+logLik(ml.MC1)
+apply(fitted(ml.MC1, type = "probabilities"), 2, mean)
+``` 
+
+Predictions can be made using the `predict` method. If no data is
+provided, predictions are made for the sample mean values of the
+covariates.
+
+```{r label = 'default behaviour of the predict method'}
+predict(ml.MC1)
+``` 
+
+Assume, for example, that we wish to predict the effect of a reduction
+of train transport time of 20\%. We first create a new
+`data.frame` simply by multiplying train transport time by 0.8
+and then using the `predict` method with this new
+`data.frame`.
+
+```{r label = 'predicting with different data'}
+NMC <- MC
+NMC[index(NMC)$alt == "train", "time"] <- 0.8 *
+NMC[index(NMC)$alt == "train", "time"]
+Oprob <- fitted(ml.MC1, type = "probabilities")
+Nprob <- predict(ml.MC1, newdata = NMC)
+rbind(old = apply(Oprob, 2, mean), new = apply(Nprob, 2, mean))
+``` 
+
+If, for the first individuals in the sample, we compute the ratio of
+the probabilities of the air and the car mode, we obtain:
+
+```{r label = 'illustration of the IIA property'}
+head(Nprob[, "air"] / Nprob[, "car"])
+head(Oprob[, "air"] / Oprob[, "car"])
+``` 
+
+which is an illustration of the IIA property. If train time changes,
+it changes the probabilities of choosing air and car, but not their
+ratio.
+
+We next compute the surplus for individuals of the sample induced by
+train time reduction. This requires the computation of the log-sum
+term (also called inclusive value or inclusive utility) for every
+choice situation, which is:
+
+$$
+\mbox{iv}_i = \ln \sum_{j = 1} ^ J e^{\beta^\top x_{ij}}.
+$$
+
+For this purpose, we use the `logsum` function, which works on a
+vector of `coefficients` and a `model.matrix`. The basic use
+of `logsum` consists on providing as unique argument (called
+`coef`) a `mlogit` object. In this case, the
+`model.matrix` and the `coef` are extracted from the same
+model.
+
+```{r label = 'computation of the initital logsum'}
+ivbefore <- logsum(ml.MC1)
+``` 
+
+To compute the log-sum after train time reduction, we must provide a
+`model.matrix` which is not the one corresponding to the fitted
+model. This can be done using the `X` argument which is a matrix or an
+object from which a `model.matrix` can be extracted. This can also be
+done by filling the `data` argument (a `data.frame` or an object from
+which a `data.frame` can be extracted using a `model.frame` method),
+and eventually the `formula` argument (a `formula` or an object for
+which the `formula` method can be applied). If no formula is provided
+but if `data` is a `mlogit.data` object, the formula is extracted from
+it.
+
+```{r label = 'computation of the after change logsum'}
+ivafter <- logsum(ml.MC1, data = NMC)
+``` 
+
+Surplus variation is then computed as the difference of the log-sums
+divided by the opposite of the cost coefficient which can be
+interpreted as the marginal utility of income:
+
+```{r label = 'computation of consumers surplus'}
+surplus <- - (ivafter - ivbefore) / coef(ml.MC1)["cost"]
+summary(surplus)
+``` 
+
+Consumer's surplus variation range from 0.6 to 31 Canadian \$, with a
+median value of about 4\$.
+
+Marginal effects are computed using the `effects` method. By default,
+they are computed at the sample mean, but a `data` argument can be
+provided. The variation of the probability and of the covariate can be
+either absolute or relative. This is indicated with the `type`
+argument which is a combination of two `a` (as absolute) and `r` (as
+relative) characters. For example, `type = "ar"` means that what is
+measured is an absolute variation of the probability for a relative
+variation of the covariate.
+
+```{r label = 'marginal effects for an individual specific covariate'}
+effects(ml.MC1, covariate = "income", type = "ar")
+``` 
+
+The results indicate that, for a 100\% increase of income, the
+probability of choosing `air` increases by 33 points of percentage, as
+the probabilities of choosing `car` and `train` decrease by 18 and 15
+points of percentage.
+
+For an alternative specific covariate, a matrix of marginal effects is
+displayed.
+
+```{r label = 'marginal effects for an alternative specific covariate'}
+effects(ml.MC1, covariate = "cost", type = "rr")
+``` 
+
+The cell in the $l^{\mbox{th}}$ row and the $c^{\mbox{th}}$ column
+indicates the change of the probability of choosing alternative $c$
+when the cost of alternative $l$ changes. As `type = "rr"`,
+elasticities are computed. For example, a 10\% change of train cost
+increases the probabilities of choosing car and air by 3.36\%. Note
+that the relative changes of the probabilities of choosing one of
+these two modes are equal, which is a consequence of the IIA property.
+
+Finally, in order to compute travel time valuation, we divide the
+coefficients of travel times (in minutes) by the coefficient of
+monetary cost (in \$).
+
+```{r label = 'computation of the marginal rate of substitution'}
+coef(ml.MC1)[grep("time", names(coef(ml.MC1)))] /
+    coef(ml.MC1)["cost"] * 60 
+``` 
+
+The value of travel time ranges from 23 for train to 37 Canadian \$
+per hour for plane.
+
+### NOx
+
+The second example is a data set used by @FOWL:10, called `NOx`. She
+analyzed the effect of an emissions trading program (the NOx budget
+program which seeks to reduce the emission of nitrogen oxides) on the
+behavior of producers. More precisely, coal electricity plant managers
+may adopt one out of fifteen different technologies in order to comply
+to the emissions defined by the program. Some of them require high
+investment (the capital cost is `kcost`) and are very efficient to
+reduce emissions, some other require much less investment but are less
+efficient and the operating cost (denoted `vcost`) is then higher,
+especially because pollution permits must be purchased to offset
+emissions exceeding their allocation.
+
+The focus of the paper is on the effects of the regulatory environment
+on manager's behavior. Some firms are deregulated, whereas other are
+either regulated or public. Rate of returns is applied for regulated
+firms, which means that they perceive a "fair" rate of return on
+their investment. Public firms also enjoy significant cost of capital
+advantages. Therefore, the main hypothesis of the paper is that public
+and regulated firms will adopt much more capitalistic intensive
+technologies than deregulated and public ones, which means that the
+coefficient of capital cost should take a higher negative value for
+deregulated firms. Capital cost is interacted with the age of the
+plant (measured as a deviation from the sample mean age), as firms
+should weight capital costs more heavily for older plants, as they
+have less time to recover these costs.
+
+Multinomial logit models are estimated for the three subsamples
+defined by the regulatory environment. The 15 technologies are not
+available for every plants, the sample is therefore restricted to
+available technologies, using the `available` covariate. Three
+technology dummies are introduced: `post` for post-combustion
+polution control technology, `cm` for combustion modification
+technology and `lnb` for low NOx burners technology.
+
+A last model is estimated for the whole sample, but the parameters are
+allowed to be proportional to each other. The scedasticity function is
+described in the fourth part of the formula, it contains here only one
+covariate, `env`. Note also that for the last model, the author
+introduced a specific capital cost coefficient for deregulated
+firms.^[Note the use of the `method` argument, set to
+`bhhh`. `mlogit` use its own optimisation functions, but borrows its
+syntax from package `maxLik` [@MAXLIK:10]. The default method is
+`bfgs`, except for the basic model, for which it is `nr`. As the
+default algorithm failed to converged, we use here `bhhh`.]
+
+```{r label = 'estimation of the multinomial logit model for the NOx data'}
+data("NOx", package = "mlogit")
+NOx$kdereg <- with(NOx, kcost * (env == "deregulated"))
+NOxml <- mlogit.data(NOx, chid.var = "chid", alt.var = "alt",
+id.var = "id")
+ml.pub <- mlogit(choice ~ post + cm + lnb + vcost + kcost + kcost:age |
+- 1, subset = available & env == "public", data = NOxml)
+ml.reg <- update(ml.pub, subset = available & env == "regulated")
+ml.dereg <- update(ml.pub, subset = available & env == "deregulated")
+ml.pool <- mlogit(choice ~ post + cm + lnb + vcost + kcost + kcost:age +
+kdereg | - 1 | 0 | env, subset = available == 1, data = NOxml,
+method = "bhhh")
+``` 
+
+```{r label = 'results of the NOx estimations', results = 'asis'} 
+library("texreg")
+htmlreg(list(Public = ml.pub, Deregulated = ml.dereg, Regulated = ml.reg,
+             Pooled = ml.pool), caption = "Environmental compliance choices.",
+        omit.coef = "(post)|(cm)|(lnb)", float.pos = "hbt", label = "tab:nox")
+``` 
+
+Results are presented in the preceeding table, using the `texreg`
+package [@LEIF:13]. Coefficients are very different on the sub-samples
+defined by the regulatory environment. Note in particular that the
+capital cost coefficient is positive and insignificant for public and
+regulated firms, as it is significantly negative for deregulated
+firms. Errors seems to have significant larger variance for
+deregulated firms and lower ones for public firms compared to
+regulated firms. The hypothesis that the coefficients (except the
+`kcost` one) are identical up to a multiplicative scalar can be
+performed using a likelihood ratio test:
+
+```{r label = 'likelihood ratio test for the NOx data'}
+stat <- 2 * (logLik(ml.dereg) + logLik(ml.reg) +
+             logLik(ml.pub) - logLik(ml.pool))
+stat
+pchisq(stat, df = 9, lower.tail = FALSE)
+``` 
+
+The hypothesis is strongly rejected. 
+
+## Bibliography

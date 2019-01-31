@@ -1,0 +1,296 @@
+---
+title: "Exercise 3: Mixed logit model"
+author: Kenneth Train and Yves Croissant
+date: '`r Sys.Date()`'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Exercise 3: The mixed effects logit model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+A sample of residential electricity customers were asked a series of
+choice experiments. In each experiment, four hypothetical electricity
+suppliers were described. The person was asked which of the four
+suppliers he/she would choose. As many as 12 experiments were
+presented to each person. Some people stopped before answering all
+12. There are 361 people in the sample, and a total of 4308
+experiments.  In the experiments, the characteristics of each supplier
+were stated. The price of the supplier was either :
+
+- a fixed price at a stated cents per kWh, with the price varying
+  over suppliers and experiments.
+- a time-of-day (TOD) rate under which the price is 11
+  cents per kWh from 8am to 8pm and 5 cents per kWh from 8pm to
+  8am. These TOD prices did not vary over suppliers or
+  experiments: whenever the supplier was said to offer TOD,
+  the prices were stated as above.
+- a seasonal rate under which the price is 10 cents per kWh in the
+  summer, 8 cents per kWh in the winter, and 6 cents per kWh in the
+  spring and fall. Like TOD rates, these prices did not vary.
+  Note that the price is for the electricity only, not transmission
+  and distribution, which is supplied by the local regulated utility.
+
+The length of contract that the supplier offered was also stated, in
+years (such as 1 year or 5 years.) During this contract period, the
+supplier guaranteed the prices and the buyer would have to pay a
+penalty if he/she switched to another supplier. The supplier could
+offer no contract in which case either side could stop the agreement
+at any time. This is recorded as a contract length of 0.
+
+Some suppliers were also described as being a local company or a
+"well-known" company. If the supplier was not local or well-known,
+then nothing was said about them in this regard \footnote{These are
+the data used in @REVE:TRAI:00 and @HUBE:TRAI:01.}.
+
+@. Run a mixed logit model without intercepts and a normal
+distribution for the 6 parameters of the model, using 100 draws,
+halton sequences and taking into account the panel data structure.
+
+```{r }
+library("mlogit")
+data("Electricity", package = "mlogit")
+Electr <- mlogit.data(Electricity, id = "id", choice = "choice", 
+                      varying = 3:26, shape = "wide", sep = "")
+``` 
+
+```{r Elec.mxl, echo = FALSE, results = 'hide'}
+strt <- c(-0.9901049, -0.1985715, 2.0572983, 1.5908743, -9.1176130, -9.1946436, 0.2140892, 
+          0.4019263, 1.5845577, 1.0130424, 2.5459903, 0.8854062)
+strt <- c(-0.9733844, -0.2055565,  2.0757333,  1.4756497, -9.0525423, -9.1037717,
+          0.2199450,  0.3783044,  1.4829803,  1.0000609,  2.2894889,  1.1808827)
+Elec.mxl <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+              rpar=c(pf = 'n', cl = 'n', loc = 'n', wk = 'n', 
+                     tod = 'n', seas = 'n'), 
+              R = 100, halton = NA, panel = TRUE, start = strt)
+``` 
+
+```{r eval = FALSE}
+Elec.mxl <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+              rpar=c(pf = 'n', cl = 'n', loc = 'n', wk = 'n', 
+                     tod = 'n', seas = 'n'), 
+              R = 100, halton = NA, panel = TRUE)
+``` 
+
+```{r } 
+summary(Elec.mxl)
+``` 
+
+@. (a) Using the estimated mean coefficients, determine the amount
+that a customer with average coefficients for price and length is
+willing to pay for an extra year of contract length.
+
+```{r }
+coef(Elec.mxl)['cl'] / coef(Elec.mxl)['pf']
+``` 
+
+> The mean coefficient of length is -0.20. The consumer with this
+> average coefficient dislikes having a longer contract. So this person
+> is willing to pay to reduce the length of the contract. The mean price
+> coefficient is -0.97. A customer with these coefficients is willing to
+> pay 0.20/0.97=0.21, or one-fifth a cent per kWh extra to have a
+> contract that is one year shorter.
+
+
+(b) Determine the share of the population who are estimated to dislike
+long term contracts (ie have a negative coefficient for the length.)
+\begin{answer}[5]
+
+```{r }
+pnorm(- coef(Elec.mxl)['cl'] / coef(Elec.mxl)['sd.cl'])
+``` 
+
+> The coefficient of length is normally distributed with mean -0.20 and
+> standard deviation 0.35. The share of people with coefficients below
+> zero is the cumulative probability of a standardized normal deviate
+> evaluated at 0.20/0.35=0.57. Looking 0.57 up in a table of the
+> standard normal distribution, we find that the share below 0.57 is
+> 0.72. About seventy percent of the population are estimated to dislike
+> long-term contracts.
+
+
+@. The price coefficient is assumed to be normally distributed in
+these runs. This assumption means that some people are assumed to have
+positive price coefficients, since the normal distribution has support
+on both sides of zero. Using your estimates from exercise 1, determine
+the share of customers with positive price coefficients. As you can
+see, this is pretty small share and can probably be ignored. However,
+in some situations, a normal distribution for the price coefficient
+will give a fairly large share with the wrong sign. Revise the program
+to make the price coefficient fixed rather than random. A fixed price
+coefficient also makes it easier to calculate the distribution of
+willingness to pay (wtp) for each non-price attribute. If the price
+coefficient is fixed, the distribtion of wtp for an attribute has the
+same distribution as the attribute's coefficient, simply scaled by the
+price coefficient. However, when the price coefficient is random, the
+distribution of wtp is the ratio of two distributions, which is harder
+to work with.
+
+```{r }
+pnorm(- coef(Elec.mxl)['pf'] / coef(Elec.mxl)['sd.pf'])
+``` 
+
+> The price coefficient is distributed normal with mean -0.97 and
+> standard deviation 0.20. The cumulative standard normal distribution
+> evaluated at 0.97/0.20=4.85 is more than 0.999, which means that more
+> than 99.9\% of the population are estimated to have negative price
+> coefficients. Essentially no one is estimated to have a positive price
+> coefficient.
+
+```{r Elec.mxl2, echo = FALSE, results = 'hide'}
+strt <- c(-0.8710529, -0.2082428,  2.0460954,  1.4473149,  8.4091315,  8.5432555,  
+          0.3687390,  1.5773527,  0.8837160,  2.5638874,  2.0722178)
+strt <- c(-0.8799042, -0.2170603,  2.0922916,  1.4908937, -8.5818566, -8.5832956,
+          0.3734776,  1.5588576,  1.0508114,  2.6946672,  1.9507270)
+Elec.mxl2 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+                   rpar = c(cl = 'n', loc = 'n', wk = 'n', 
+                            tod = 'n', seas = 'n'), 
+                   R = 100, halton = NA,  panel = TRUE, start = strt)
+```
+
+```{r eval = FALSE}
+Elec.mxl2 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+                   rpar = c(cl = 'n', loc = 'n', wk = 'n', 
+                            tod = 'n', seas = 'n'), 
+                   R = 100, halton = NA,  panel = TRUE)
+```
+
+```{r }
+summary(Elec.mxl2)
+``` 
+
+@. You think that everyone must like using a known company rather than
+an unknown one, and yet the normal distribution implies that some
+people dislike using a known company. Revise the program to give the
+coefficient of \va{wk} a uniform distribution 
+between zero and b,where b is estimated 
+(do this with the price coefficient fixed).
+
+```{r Elec.mxl3, echo = FALSE, results = 'hide'}
+strt <- c(-0.8685207, -0.2103447,  2.0269971,  1.4773713,  8.3994921,  8.4976319, 
+          0.3693250,  1.5862809,  1.5916990,  2.5775540,  2.0405350)
+strt <- c(-0.9303806,  -0.2478098,   2.3808084,   1.5921023,  -5.8173333, -10.7742475,
+          0.4115700,   1.4761539,   1.3644855,   5.1445848,   2.7185711)
+strt <- c(-0.8822317, -0.2171273,  2.0993191,  1.5094101, -8.6070022, -8.6024084,
+          0.3810701,  1.5938502,  1.7863766,  2.7190780,  1.9453765)
+Elec.mxl3 <- update(Elec.mxl, rpar = c(cl = 'n', loc = 'n', wk = 'u', 
+                                       tod = 'n', seas = 'n'), start = strt)
+```   
+  
+```{r eval = FALSE}
+Elec.mxl3 <- update(Elec.mxl, rpar = c(cl = 'n', loc = 'n', wk = 'u', 
+                                       tod = 'n', seas = 'n'))
+```   
+
+> The price coefficient is uniformly distributed with parameters 1.541
+> and 1.585.
+
+```{r }
+summary(Elec.mxl3)
+rpar(Elec.mxl3, 'wk')
+summary(rpar(Elec.mxl3, 'wk'))
+``` 
+
+```{r }
+plot(rpar(Elec.mxl3, 'wk'))
+```
+
+> The upper bound is 3.13. The estimated price coefficient is -0.88 and
+> so the willingness to pay for a known provided ranges uniformly from
+> -0.05 to 3.55 cents per kWh.
+
+
+ <!-- 5. The file mxlp.g estimates mixed logits with many options for the -->
+ <!-- user. Read the manual so that you understand the options. Run mxlp.g -->
+ <!-- as is. You should get results that are similar to those for exercise -->
+ <!-- 1. They differ because the random draws are taken differently with the -->
+ <!-- two programs. -->
+
+ <!-- 6. Your runs so far have calculated regular standard errors. Specify -->
+ <!-- the appropriate option in mxlp.g to calculate robust standard errors -->
+ <!-- and rerun it. Compare the robust standard errors to the regular -->
+ <!-- ones. Does the relation between the two sets of standard errors seem -->
+ <!-- reasonable? -->
+
+ <!-- \begin{answer}[5] -->
+ <!--   The robust standard errors are larger, as expected. Simulation noise -->
+ <!--   causes the non-robust standard errors underestimate the true -->
+ <!--   standard error; this underestimation disappears as the number of -->
+ <!--   draws used in simulation rises. -->
+
+ <!-- \end{answer} -->
+
+@. Rerun the model with a fixed coefficient for price and lognormal
+distributions for the coefficients of TOD and seasonal (since their
+coefficient should be negative for all people.) To do this, you need
+to reverse the sign of the TOD and seasonal variables, since the
+lognormal is always positive and you want the these coefficients to be
+always negative.
+
+A lognormal is specified as $\exp(b+se)$ where $e$ is a standard
+normal deviate. The parameters of the lognormal are $b$ and $s$. The
+mean of the lognormal is $\exp(b+0.5s^2)$ and the standard deviation
+is the mean times $\sqrt{(\exp(s^2))-1}$.
+
+```{r }
+Electr <- mlogit.data(Electricity, id = "id", choice = "choice", 
+                      varying = 3:26, shape = "wide", sep = "",
+                      opposite = c('tod', 'seas'))
+``` 
+
+```{r Elec.mxl4, echo = FALSE, results = 'hide'}
+strt <- c(-0.8689874, -0.2113327,  2.0238880,  1.4791236,  2.1123811,  2.1242071,
+ 0.3731202,  1.5485101,  1.5217919,  0.3670763,  0.2753497)
+Elec.mxl4 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+              rpar = c(cl = 'n', loc = 'n', wk = 'u', tod = 'ln', seas = 'ln'), 
+              R = 100, halton = NA, panel = TRUE, start = strt)
+``` 
+
+```{r eval = FALSE}
+Elec.mxl4 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr, 
+              rpar = c(cl = 'n', loc = 'n', wk = 'u', tod = 'ln', seas = 'ln'), 
+              R = 100, halton = NA, panel = TRUE)
+``` 
+
+```{r }
+summary(Elec.mxl4)
+``` 
+
+```{r }
+plot(rpar(Elec.mxl4, 'seas'))
+``` 
+
+@. Rerun the same model as previously, but allowing now the
+correlation between random parameters. Compute the correlation matrix
+of the random parameters. Test the hypothesis that the random
+parameters are uncorrelated.
+
+```{r Elec.mxl5, echo = FALSE, results = 'hide'}
+strt <-  c(-0.917703974, -0.215851727,  2.392570989,  1.747531863,  2.155462393,
+           2.169548103,  0.396252325,  0.617497150, -2.071718067,  0.195238185,
+           -1.236664544,  0.643190285,  0.001982314,  0.062508396,  0.160672338,
+           0.375855648,  0.025996362, -0.001225349,  0.141381623,  0.089990150,
+           0.211244575)
+#Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE, start = strt)
+``` 
+  
+```{r eval = FALSE}
+Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE)
+``` 
+
+```{r }
+#summary(Elec.mxl5)
+#cor.mlogit(Elec.mxl5)
+#lrtest(Elec.mxl5, Elec.mxl4)
+#waldtest(Elec.mxl5, correlation = FALSE)
+#scoretest(Elec.mxl4, correlation = TRUE)
+``` 
+
+> The three tests clearly reject the hypothesis that the random
+> parameters are uncorrelated.
+

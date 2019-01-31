@@ -1,0 +1,412 @@
+---
+title: "Exercise 1: Multinomial logit model"
+author: Kenneth Train and Yves Croissant
+date: '`r Sys.Date()`'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Exercise 1: The multinomial logit model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+@. The problem set uses data on choice of heating system in California
+houses. The data set `Heating` from the `mlogit` package
+contains the data in `R` format. The observations consist of
+single-family houses in California that were newly built and had
+central air-conditioning. The choice is among heating systems. Five
+types of systems are considered to have been possible:
+
+- gas central (`gc`),
+- gas room (`gr`),
+- electric central (`ec`),
+- electric room (`er`),
+- heat pump (`hp`). 
+
+There are 900 observations with the following variables:
+
+- `idcase` gives the observation number (1-900),
+- `depvar` identifies the chosen alternative (`gc`, `gr`, `ec`, `er`, `hp`),
+- `ic.alt` is the installation cost for the 5 alternatives,
+- `oc.alt` is the annual operating cost for the 5 alternatives,
+- `income` is the annual income of the household,
+- `agehed` is the age of the household head,
+- `rooms` is the number of rooms in the house,
+- `region` a factor with levels `ncostl` (northern coastal
+  region), `scostl` (southern coastal region), `mountn`
+  (mountain region), `valley` (central valley region).
+
+Note that the attributes of the alternatives, namely, installation
+cost and operating cost, take a different value for each
+alternative. Therefore, there are 5 installation costs (one for each
+of the 5 systems) and 5 operating costs. To estimate the logit model,
+the researcher needs data on the attributes of all the alternatives,
+not just the attributes for the chosen alternative. For example, it is
+not sufficient for the researcher to determine how much was paid for
+the system that was actually installed (ie., the bill for the
+installation). The researcher needs to determine how much it would
+have cost to install each of the systems if they had been
+installed. The importance of costs in the choice process (i.e., the
+coefficients of installation and operating costs) is determined
+through comparison of the costs of the chosen system with the costs of
+the non-chosen systems.
+ 
+For these data, the costs were calculated as the amount the system
+would cost if it were installed in the house, given the
+characteristics of the house (such as size), the price of gas and
+electricity in the house location, and the weather conditions in the
+area (which determine the necessary capacity of the system and the
+amount it will be run.) These cost are conditional on the house having
+central air-conditioning. (That's why the installation cost of gas
+central is lower than that for gas room: the central system can use
+the air-conditioning ducts that have been installed.)
+
+In a logit model, each variable takes a different value in each
+alternative. So, in our case, for example, we want to know the
+coefficient of installation cost in the logit model of system
+choice. The variable installation cost in the model actually consists
+of five variables in the dataset: `ic.gc`, `ic.gr`, `ic.ec`,
+`ic.er` and `ic.hp`, for the installation costs of the five
+systems. In the current code, there are two variables in the logit
+model. The first variable is called `ic` for installation
+cost. This variable consists of five variables in the dataset:
+`ic.gc` in the first alternative, `ic.gr` in the second
+alternative, etc.
+
+2. Run a model with installation cost and operating cost, without intercepts
+
+(a) Do the estimated coefficients have the expected signs?
+
+```{r }
+library("mlogit")
+data("Heating", package = "mlogit")
+H <- mlogit.data(Heating, shape = "wide", choice = "depvar", varying = c(3:12))
+m <- mlogit(depvar ~ ic + oc | 0, H)
+summary(m)
+``` 
+
+> Yes, they are negative as expected, meaning that as the cost of a
+> system rises (and the costs of the other systems remain the same) the
+> probability of that system being chosen falls.
+
+(b) Are both coefficients significantly different from zero?
+
+> Yes, the t-statistics are greater than 1.96, which is the critical
+> level for 95\% confidence level.
+
+
+(c) How closely do the average probabilities match the shares of
+customers choosing each alternative?
+
+```{r }
+apply(fitted(m, outcome = FALSE), 2, mean)
+```  
+
+> Not very well. 63.67\% of the sample chose `gc` (as shown at the top of
+> the summary) and yet the estimated model gives an average probability
+> of only 51.695\%. The other alternatives are also fairly poorly
+> predicted. We will find how to fix this problem in one of the models
+> below.
+
+(d) The ratio of coefficients usually provides economically meaningful
+information. The willingness to pay ($wtp$) through higher installation
+cost for a one-dollar reduction in operating costs is the ratio of the
+operating cost coefficient to the installation cost coefficient. What
+is the estimated $wtp$ from this model? Is it reasonable in magnitude?
+
+$$
+U = \beta_{ic} ic + \beta_{oc} oc
+$$
+
+$$
+dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow 
+-\frac{dic}{doc}\mid_{dU=0}=\frac{\beta_{oc}}{\beta_{ic}}
+$$
+
+```{r }
+coef(m)["oc"]/coef(m)["ic"]
+```   
+
+> The model implies that the decision-maker is willing to pay \$.73 (ie.,
+> 73 cents) in higher installation cost in order to reduce annual
+> operating costs by \$1.
+
+> A \$1 reduction in annual operating costs recurs each year. It is
+> unreasonable to think that the decision-maker is only willing to pay
+> only 73 cents as a one-time payment in return for a \$1/year stream of
+> saving. This unreasonable implication is another reason (along with
+> the inaccurate average probabilities) to believe this model is not so
+> good. We will find below how the model can be improved.
+
+(e) We can use the estimated $wtp$ to obtain an estimate of the
+discount rate that is implied by the model of choice of operating
+system. The present value of the future operating costs is the
+discounted sum of operating costs over the life of the system:
+$PV=\sum_{t=1}^L\frac{OC}{(1+r)^t}$ where $r$ is the discount rate and
+$L$ being the life of the system. As $L$ rises, the $PV$ approaches
+$OC/r$. Therefore, for a system with a sufficiently long life (which
+we will assume these systems have), a one-dollar reduction in $OC$
+reduces the present value of future operating costs by $(1/r)$. This
+means that if the person choosing the system were incurring the
+installation costs and the operating costs over the life of the
+system, and rationally traded-off the two at a discount rate of $r$,
+the decisionmaker's $wtp$ for operating cost reductions would be
+$(1/r)$. Given this, what value of $r$ is implied by the estimated
+$wtp$ that you calculated in part (c)? Is this reasonable?
+
+
+> $U=a LC$ where $LC$ is lifecycle cost, equal to the sum of
+>   installation cost and the present value of operating costs:
+>   $LC=IC+(1/r)OC$. Substituting, we have $U=aIC + (a/r)OC$.
+
+> The models estimates $a$ as $-0.00623$ and $a/r$ as $-0.00457$. So $r =
+>   a/(a/r)=-.000623/.00457 = 1.36$ or 136\% discount rate.
+>   This is not reasonable, because it is far too high.
+
+@. Estimate a model that imposes the constraint that $r=0.12$ (such that
+$wtp=8.33$). Test the hypothesis that $r=0.12$.
+
+
+> To impose this constraint, we create a lifecycle cost that embodies
+> the constraint $lcc=ic+oc/0.12$ and estimate the model with this
+> variable.
+
+```{r }
+H$lcc <- H$ic + H$oc / 0.12
+mlcc <- mlogit(depvar ~ lcc | 0, H)
+library("lmtest")
+lrtest(m, mlcc)
+qchisq(0.05, df = 1, lower.tail = FALSE)
+```   
+
+> We perform a likelihood ratio test. The $\ln L$ for this constrained model
+> is $-1248.7$. The $\ln L$ for the unconstrained model is $-1095.2$. The test
+> statistic is twice the difference in $\ln L$: $2(1248.7-1095.2)=307$. This
+> test is for one restriction (ie a restiction on the relation of the
+> coefficient of operating cost to that of installation cost.) We
+> therefore compare $307$ with the critical value of chi-squared with
+> $1$ degree of freedom. This critical value for 95\% confidence is
+> $3.8$. Since the statistic exceeds the critical value, we reject the
+> hypothesis that $r=0.12$.
+
+@. Add alternative-specific constants to the model. With $J$
+alternatives, at most $J-1$ alternative-specific constants can be
+estimated. The coefficients of $J-1$ constants are interpreted as
+relative to alternative $J$th alternative. Normalize the constant for
+the alternative `hp` to 0.
+
+(a) How well do the estimated probabilities match the shares of
+customers choosing each alternative? 
+
+```{r }
+mc <- mlogit(depvar ~ ic + oc, H, reflevel = 'hp')
+summary(mc)
+apply(fitted(mc, outcome = FALSE), 2, mean)
+```   
+
+> Note that they match exactly: alternative-specific constants in a
+> logit model insure that the average probabilities equal the observed
+> shares.
+
+(b) Calculate the $wtp$ and discount rate $r$ that is implied by the
+estimates. Are these reasonable?
+
+```{r }
+wtp <- coef(mc)["oc"] / coef(mc)["ic"]
+wtp
+r <- 1 / wtp
+r
+``` 
+
+> The decision-maker is willing to pay \$4.56 for a \$1 year stream of
+> savings. This implies $r = 0.22$. The decision-maker applies a 22\%
+> discount rate.  These results are certainly more reasonable that in
+> the previous model. The decision-maker is still estimated to be
+> valuing saving somewhat less than would seem rational (ie applying a
+> higher discount rate than seems reasonable). However, we need to
+> remember that the decision-maker here is the builder. If home buyers
+> were perfectly informed, then the builder would adopt the buyer's
+> discount rate. However, the builder would adopt a higher discount rate
+> if home buyers were not perfectly informed about (or believed) the
+> stream of saving.
+
+(c) This model contains constants for all alternatives
+`ec`-`er`-`gc`-`gr`, with the constant for alternative
+`hp` normalized to zero. Suppose you had included constants for
+alternatives `ec`-`er`-`gc`-`hp`, with the constant for
+alternative `gr` normalized to zero. What would be the estimated
+coefficient of the constant for alternative `gc`? Figure this out
+logically rather than actually estimating the model.
+
+> We know that when the hp is left out, the constant for alternative
+> `gc` is $1.71074$ meaning that the average impact of unicluded factors
+> is $1.71074$ higher for alternative `gc` than for alternative
+> hp. Similarly, the constant for alternative `gr` is $0.30777$. If `gr`
+> were left out instead of `hp`, then all the constants would be
+> relative to alternative `gr`. The constant for alternative `gc` would
+> the be $1.71074-.30777=1.40297$. That is, the average impact of
+> unincluded factors is $1.40297$ higher for alt `gc` than alt
+> `gr`. Similarly for the other alternatives.  Note the the constant for
+> alt 5 would be $0-.30777=-.3077$, since `hp` is normalized to zero in
+> the model with `hp` left out.
+
+```{r }
+update(mc, reflevel = "gr")
+``` 
+
+@. Now try some models with sociodemographic variables entering.
+
+(a) Enter installation cost divided by income, instead of installation
+cost. With this specification, the magnitude of the installation cost
+coefficient is inversely related to income, such that high income
+households are less concerned with installation costs than lower
+income households. Does dividing installation cost by income seem to
+make the model better or worse?
+
+```{r }
+mi <- mlogit(depvar ~ oc + I(ic / income), H)
+summary(mi)
+```   
+
+> The model seems to get worse. The $\ln L$ is lower (more negative) and the
+> coefficient on installation cost becomes insignificant (t-stat below
+> 2).
+
+
+(b) Instead of dividing installation cost by income, enter
+alternative-specific income effects.  What do the estimates imply
+about the impact of income on the choice of central systems versus
+room system? Do these income terms enter significantly?
+
+```{r }
+mi2 <- mlogit(depvar ~ oc + ic | income, H, reflevel = "hp")
+```   
+
+> The model implies that as income rises, the probability of heat pump
+> rises relative to all the others (since income in the heat pump alt is
+> normalized to zero, and the others enter with negative signs such that
+> they are lower than that for heat pumps. Also, as income rises, the
+> probability of gas room drops relative to the other non-heat-pump
+> systems (since it is most negative).
+
+> Do these income terms enter significantly? No. It seems that income
+> doesn't really have an effect. Maybe this is because income is for the
+> family that lives in the house, whereas the builder made decision of
+> which system to install.
+
+```{r }
+lrtest(mc, mi2)
+waldtest(mc, mi2)
+scoretest(mc, mi2)
+``` 
+
+(c) Try other models. Determine which model you think is best from these data.
+
+> I'm not going to give what I consider my best model: your ideas on
+> what's best are what matter here.
+
+
+6. We now are going to consider the use of logit model for
+prediction. Estimate a model with installation costs, operating costs,
+and alternative specific constants. Calculate the probabilities for
+each house explicitly. Check to be sure that the mean probabilities
+are the same as you got in exercise 4.
+
+```{r }
+X <- model.matrix(mc)
+alt <- index(H)$alt
+chid <- index(H)$chid
+eXb <- as.numeric(exp(X %*% coef(mc)))
+SeXb <- tapply(eXb, chid, sum)
+P <- eXb / SeXb[chid]
+P <- matrix(P, ncol = 5, byrow = TRUE)
+head(P)
+apply(P, 2, mean)
+```
+
+> This can be computed much more simply using the \Rf{fitted` function,
+> with the \Ra{outcome`{fitted` argument set to \Rv{FALSE` so that the
+> probabilities for all the alternatives (and not only the chosen one)
+> is returned.
+
+```{r }
+apply(fitted(mc, outcome = FALSE), 2, mean)
+``` 
+
+@. The California Energy Commission (CEC) is considering whether to
+offer rebates on heat pumps. The CEC wants to predict the effect of
+the rebates on the heating system choices of customers in
+California. The rebates will be set at 10\% of the installation
+cost. Using the estimated coefficients from the model in exercise 6,
+calculate new probabilities and predicted shares using the new
+installation cost of heat pump. How much do the rebates raise the
+share of houses with heat pumps?  
+
+```{r }
+Hn <- H
+Hn[Hn$alt == "hp", "ic"] <- 0.9 * Hn[Hn$alt == "hp", "ic"]
+apply(predict(mc, newdata = Hn), 2, mean)
+```
+
+> We estimate the model with the actual costs. Then we change the costs
+> and calculate probabilities with the new costs. The average
+> probability is the predicted share for an alternative. At the original
+> costs, the heat pump share is $0.0555$ (ie, about 5.5\%) This share is
+> predicted to rise to $0.0645$ (about 6.5\%) when rebates are given.
+
+@. Suppose a new technology is developed that provides more efficient
+central heating. The new technology costs \$200 more than the central
+electric system. However, it saves 25\% of the electricity, such that
+its operating costs are 75\% of the operating costs of `ec`. We want
+to predict the potential market penetration of this technology. Note
+that there are now six alternatives: the original five alternatives
+plus this new one. Calculate the probability and predict the market
+share (i.e., the average probability) for all six alternatives, using
+the model that is estimated on the original five alternatives. (Be
+sure to use the original installation cost for heat pumps, rather than
+the reduced cost in exercise 7.) What is the predicted market share
+for the new technology? From which of the original five systems does
+the new technology draw the most customers? 
+
+```{r }
+X <- model.matrix(mc)
+Xn <- X[alt == "ec",]
+Xn[, "ic"] <- Xn[, "ic"] + 200
+Xn[, "oc"] <- Xn[, "oc"] * 0.75
+unchid <- unique(index(H)$chid)
+rownames(Xn) <- paste(unchid, 'new', sep = ".")
+chidb <- c(chid, unchid)
+X <- rbind(X, Xn)
+X <- X[order(chidb), ]
+eXb <- as.numeric(exp(X %*% coef(mc)))
+SeXb <- as.numeric(tapply(eXb, sort(chidb), sum))
+P <- eXb / SeXb[sort(chidb)]
+P <- matrix(P, ncol = 6, byrow = TRUE)
+apply(P, 2, mean)
+```   
+
+> The new technology captures a market share of 0.1036. That is, it gets
+> slightly more than ten percent of the market.
+
+> It draws the same percent (about 10\%) from each system. This means
+> that it draws the most in absolute terms from the most popular system,
+> gas central. For example, gas central drops from to $0.637$ to
+> $0.571$; this is an absolute drop of $0.637-0.571=0.065$ and a percent
+> drop of $0.065/0.637$ about 10\%. Of the 10.36\% market share that is
+> attained by the new technology, 6.5\% of it comes from gas
+> central. The other systems drop by about the same percent, which is
+> less in absolute terms.
+
+> The same percent drop for all systems is a consequence of the IIA
+> property of logit. To me, this property seems unreasonable in this
+> application. The new technology is a type of electric system. It seems
+> reasonable that it would draw more from other electric systems than
+> from gas systems. Models like nested logit, probit, and mixed logit
+> allow more flexible, and in this case, more realistic substitution
+> patterns.
+
+

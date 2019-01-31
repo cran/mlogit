@@ -1,0 +1,515 @@
+---
+title: "The random parameters (or mixed) logit model"
+output: rmarkdown::html_vignette
+bibliography: bibmlogit.bib
+vignette: >
+  %\VignetteIndexEntry{5. The random parameters (or mixed) logit model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+## Derivation of the model
+
+A mixed logit model or random parameters logit model is a logit model
+for which the parameters are assumed to vary from one individual to
+another. It is therefore a model that takes the heterogeneity of the
+population into account.
+
+### The probabilities
+
+For the standard logit model, the probability that individual $i$
+choose alternative $j$ is:
+$$
+P_{il}=\frac{e^{\beta'x_{il}}}{\sum_j e^{\beta'x_{ij}}}.
+$$
+
+Suppose now that the coefficients are individual-specific. The
+probabilities are then:
+
+$$
+P_{il}=\frac{e^{\beta_i'x_{il}}}{\sum_j e^{\beta_i'x_{ij}}}.
+$$
+
+A first approach consists on estimating the parameters for every
+individual. However, these parameters are identified and can be
+consistently estimated only if a large number of choice situations per
+individual is available, which is scarcely the case. 
+
+A more appealing approach consists on considering the $\beta_i$'s as
+random draws from a distribution whose parameters are estimated, which
+leads to the mixed logit model.  The probability that individual $i$
+will choose alternative $l$, for a given value of $\beta_i$ is:
+
+$$
+P_{il} \mid \beta_i =\frac{e^{\beta_i'x_{il}}}{\sum_j e^{\beta_i'x_{ij}}}.
+$$
+
+To get the unconditional probability, we have to integrate out this
+conditional probability, using the density function of $\beta$.
+Suppose that $V_{il}=\alpha+\beta_i x_{il}$, i.e.,  there is only
+one individual-specific coefficient and that the density of $\beta_i$
+is $f(\beta,\theta)$, $\theta$ being the vector of the parameters of
+the distribution of $\beta$. The unconditional probability is then:
+
+$$
+P_{il}= \mbox{E}(P_{il} \mid \beta_i) =
+\int_{\beta}(P_{il} \mid \beta)f(\beta,\theta)d\beta
+=
+\int_{\beta}\frac{e^{\beta_i'x_{il}}}{\sum_j e^{\beta_i'x_{ij}}}f(\beta,\theta)d\beta,
+$$
+
+which is a one-dimensional integral that can be efficiently estimated
+by quadrature methods.  If $V_{il}=\beta_i^{\top} x_{il}$ where
+$\beta_i$ is a vector of length $K$ and $f(\beta,\theta)$ is the joint
+density of the $K$ individual-specific coefficients, the unconditional
+probability is:
+
+$$
+P_{il}= \mbox{E}(P_{il} \mid \beta_i) =
+\int_{\beta_1}\int_{\beta_2}...\int_{\beta_K}(P_{il} \mid
+\beta)f(\beta,\theta)d\beta_1d\beta_2... d\beta_K.
+$$
+
+This is a $K$-dimensional integral which cannot easily be estimated by
+quadrature methods. The only practical method is then to use
+simulations. More precisely, $R$ draws of the parameters are taken
+from the distribution of $\beta$, the probability is computed for
+every draw and the unconditional probability, which is the expected
+value of the conditional probabilities is estimated by the average of
+the $R$ probabilities.
+
+### Individual parameters
+
+The expected value of a random coefficient ($\mbox{E}(\beta)$) is
+simply estimated by the mean of the $R$ draws on its distribution:
+$\bar{\beta}=\sum_{r=1}^R \beta_r$.  Individual parameters are
+obtained by first computing the probabilities of the observed choice
+of $i$ for every value of $\beta_r$:
+
+$$
+P_{ir}=\frac{\sum_j y_{ij} e^{\beta_r^{'}x_{ij}}}{\sum_j e^{\beta_r^{'}x_{ij}}},
+$$
+
+where $y_{ij}$ is a dummy equal to one if $i$ has chosen alternative
+$j$. The expected value of the parameter for an individual is then
+estimated by using these probabilities to weight the $R$ $\beta$
+values:
+
+$$
+\hat{\beta}_i = \frac{\sum_r P_{ir} \beta_r}{\sum_r P_{ir}}.
+$$
+
+### Panel data
+
+If there are repeated observations for the same individuals, the
+longitudinal dimension of the data can be taken into account in the
+mixed logit model, assuming that the random parameters of individual
+$i$ are the same for all his choice situations. Denoting $y_{itl}$ a
+dummy equal to 1 if $i$ choose alternative $l$ for the $t^{th}$ choice
+situation, the probability of the observed choice is:
+
+$$P_{it}=\prod_j \frac{\sum_j y_{itj}e^{\beta_i x_{itl}}}{\sum_j e^{\beta_i x_{itj}}}.
+$$
+
+The joint probability for the $T$
+observations of individual $i$ is then:
+
+$$P_{i}=\prod_t \prod_j \frac{\sum_jy_{itj}e^{\beta_i x_{itj}}}{\sum_j e^{\beta_i x_{itj}}},$$
+
+and the log-likelihood is simply $\sum_i \ln P_i$.
+
+## Application
+
+The random parameter logit model is estimated by providing a
+`rpar` argument to `mlogit`. This argument is a named
+vector, the names being the random coefficients and the values the
+name of the law of distribution. Currently, the normal (`"n"`),
+log-normal (`"ln"`), zero-censored normal (`"cn"`), uniform
+(`"u"`) and triangular (`"t"`) distributions are
+available. For these distributions, two parameters are estimated which
+are, for normal related distributions, the mean and the
+standard-deviation of the underlying normal distribution and for the
+uniform and triangular distribution, the mean and the half range of
+the distribution. For these last two distributions, zero-bounded
+variants are also provided (`"zbt"` and `"zbu"`). These two
+distributions are defined by only one parameter (the mean) and their
+definition domain varies from 0 to twice the mean.
+
+Several considerations may lead to the choice of a specific
+distribution:
+
+
+
+- if correlated coefficients are required, the natural choice is a
+  (transformed-) normal distribution, `"n"`, `"ln"`,
+  `"tn"` and `"cn"`,
+- it's often the case that one wants to impose that the
+  distribution of a random parameter takes only positive or negative
+  values. For example, the price coefficient should be negative for
+  every individual. In this case, `"zbt"` and `"zbu"` can be
+  used. The use of `"ln"` and `"cn"` can also be relevant
+  but, in this case, if only negative values are expected, one should
+  consider the distribution of the opposite of the random price
+  coefficient. This can easily be done using the `opposite`
+  argument of `mlogit.data`.^[See vignette
+    [formula/data](./2.formula.data.html).],
+- the use of unbounded distributions often leads to implausible
+  values of some statistics of the random parameters, especially the
+  mean. This is particularly the case of the log-normal distribution,
+  which has an heavy left tail. In this case, the use of bounded
+  distribution like the uniform and the triangular distributions can be
+  used.
+
+`R` is the number of draws, `halton` indicates whether
+halton draws [see @TRAI:03 chapter 9] should be used (`NA`
+and `NULL` indicate respectively that default halton draws are
+used and that pseudo-random numbers are used), `panel` is a
+boolean which indicates if the panel data version of the
+log-likelihood should be used.
+
+Correlations between random parameters can be introduced only for
+normal-related distributed random parameters, using the
+`correlation` argument. If `TRUE`, all the normal-related
+random parameters are correlated. The `correlation` argument can
+also be a character vector indicating the random parameters that are
+assumed to be correlated.
+
+### Train
+
+We use the `Train` data set, previously coerced to a
+`mlogit.data` object called `Tr`. We first estimate the
+multinomial model: both alternatives being virtual train trips, it is
+relevant to use only generic coefficients and to remove the intercept:
+
+
+```{r label = 'multinomial logit for the Train data'}
+library("mlogit")
+data("Train", package = "mlogit")
+Tr <- mlogit.data(Train, shape = "wide", choice = "choice",
+                  varying = 4:11, sep = "_", id.var = "id",
+                  opposite = c("price", "comfort", "time", "change"))
+Tr$price <- Tr$price / 100 * 2.20371
+Tr$time <- Tr$time / 60
+Train.ml <- mlogit(choice ~ price + time + change + comfort | - 1, Tr)
+coef(summary(Train.ml))
+``` 
+
+All the coefficients are highly significant and have the predicted
+positive sign (remind than an increase in the variable `comfort`
+implies using a less comfortable class). The coefficients can't be
+directly interpreted, but dividing them by the price coefficient, we
+get monetary values:
+
+```{r label = 'marginal rates of substitution for Train'}
+coef(Train.ml)[- 1] / coef(Train.ml)[1]
+``` 
+
+We obtain the value of 26 euros for an hour of traveling, 5 euros for
+a change and 14 euros to travel in a more comfortable class. We then
+estimate a model with three random parameters, `time`,
+`change` and `comfort`. We first estimate the uncorrelated
+mixed logit model:
+
+```{r label = 'mixed logit estimation for Train (1)'}
+Train.mxlu <- mlogit(choice ~ price + time + change + comfort | - 1, Tr,
+panel = TRUE, rpar = c(time = "n", change = "n", comfort = "n"), R = 100,
+correlation = FALSE, halton = NA, method = "bhhh")
+names(coef(Train.mxlu))
+``` 
+
+Compared to the multinomial logit model, there are now three more
+coefficients which are the standard deviations of the distribution of
+the three random parameters. The correlated model is obtained by
+setting the `correlation` argument to `TRUE`.
+
+```{r label = 'mixed logit estimation for Train (2)'}
+Train.mxlc <- update(Train.mxlu, correlation = TRUE)
+names(coef(Train.mxlc))
+``` 
+
+There are now 6 parameters which are the elements of the Choleski
+decomposition of the covariance matrix of the three random parameters.
+
+These 6 parameters are therefore the elements of the following matrix
+
+$$
+C=
+\left(
+  \begin{array}{ccc}
+    c_{11} & 0  & 0 \\
+    c_{12} & c_{22} & 0 \\
+    c_{13} & c_{23} & c_{33}
+  \end{array}
+\right)
+$$
+
+such that:
+
+$$
+CC^{\top}=
+\left(
+  \begin{array}{ccc}
+    c_{11}^2 & c_{11} c_{12}  & c_{11}c_{13} \\
+    c_{11}c_{12} & c_{12}^2 + c_{22}^2 & c_{12}c_{23}+c_{22}c_{23} \\
+    c_{11}c_{13} & c_{12}c_{3} + c_{22}c_{23} & c_{13}^2 + c_{23}^2 c_{33}^2
+  \end{array}
+\right)
+=
+\left(
+  \begin{array}{ccc}
+    \sigma_{1}^2 & \sigma_{12}  & \sigma_{13} \\
+    \sigma_{12} & \sigma_{2}^2 & \sigma_{23} \\
+    \sigma_{13} & \sigma_{23} & \sigma_{3}^2
+  \end{array}
+\right)
+$$
+
+where $\sigma_i^2$ and $\sigma_{ij}$ are respectively the variance
+of the random parameter $i$ and the covariance between two random
+parameters $i$ and $j$. Therefore, the first estimated parameter can
+be simply interpreted as the standard deviation of the first random
+parameter, but the five other can't be interpreted easily.
+
+Random parameters may be extracted using the function `rpar`
+which take as first argument a `mlogit` object and as second
+argument `par` the parameter(s) to be extracted. This function
+returns a `rpar` object and a `summary` method is provided
+to describe it:
+
+```{r label = 'summary of a random parameter in the preference space'}
+marg.ut.time <- rpar(Train.mxlc, "time")
+summary(marg.ut.time)
+``` 
+
+The estimated random parameter is in the "preference space", which
+means that it is the marginal utility of time.
+
+**Note that `summary(marg.ut.time)` displays the unconditional
+distribution of the marginal utility of time.**
+
+Parameters in the "willingness to pay" (WTP) space are more easy to
+interpret. They can be estimated directly (a feature not supported by
+`mlogit`) or can be obtained from the marginal utility by dividing
+it by the coefficient of a covariate expressed in monetary value (a
+price for example), taken as a non random parameter. The ratio can
+then be interpreted as a monetary value (or willingness to pay). To
+obtain the distribution of the random parameters in the WTP space, one
+can use the `norm` argument of `rpar`:
+
+```{r label = 'summary of a random parameter in the wtp space'}
+wtp.time <- rpar(Train.mxlc, "time", norm = "price")
+summary(wtp.time)
+``` 
+
+The median value (and the mean value as the distribution is symmetric)
+of transport time is about 33 euros. Several methods/functions are
+provided to extract the individual statistics (`mean`, `med`
+and `stdev` respectively for the mean, the median and the
+standard deviation):
+
+
+```{r label = 'statistics of the random parameter in the wtp space'}
+mean(rpar(Train.mxlc, "time", norm = "price"))
+med(rpar(Train.mxlc, "time", norm = "price"))
+stdev(rpar(Train.mxlc, "time", norm = "price"))
+``` 
+
+In case of correlated random parameters, as the estimated parameters
+can't be directly interpreted, a `vcov` method for `mlogit`
+objects is provided. It has a `what` argument which default value
+is `coefficient`. In this case the usual covariance matrix of the
+coefficients is return. If `what = "rpar"`, the covariance matrix
+of the correlated random parameters is returned if `type = "cov"`
+(the default) and the correlation matrix (with standard deviations on
+the diagonal) is returned if `type = "cor"`. The object is of
+class `vcov.mlogit` and a `summary` method for this object
+is provided which computes, using the delta method, the standard
+errors of the parameters of the covariance or the correlation matrix.
+
+```{r label = 'vcov method for mlogit objects'}
+vcov(Train.mxlc, what = "rpar")
+vcov(Train.mxlc, what = "rpar", type = "cor")
+summary(vcov(Train.mxlc, what = "rpar", type = "cor"))
+summary(vcov(Train.mxlc, what = "rpar", type = "cov"))
+``` 
+
+ In case of correlated random parameters, as the estimated parameters
+ are not directly interpretable, further functions are provided to
+ analyze the correlation of the coefficients:
+
+ ```{r label = 'specific methods for random parameters'}
+ cor.mlogit(Train.mxlc)
+ cov.mlogit(Train.mxlc)
+ stdev(Train.mxlc)
+ ``` 
+
+The correlation can be restricted to a subset of random parameters by
+filling the `correlation` argument with a character vector
+indicating the corresponding covariates:
+
+```{r label = 'mixed logit with a subset of correlated paramaters'}
+Train.mxlc2 <- update(Train.mxlc, correlation = c("time", "comfort"))
+vcov(Train.mxlc2, what = "rpar", type = "cor")
+``` 
+
+The presence of random coefficients and their correlation can be
+investigated using any of the three tests. Actually, three nested
+models can be considered, a model with no random effects, a model with
+random but uncorrelated effects and a model with random and correlated
+effects. We first present the three tests of no correlated random
+effects:
+
+```{r label = 'convenient statpval function 3', include = FALSE}
+statpval <- function(x){
+    if (inherits(x, "anova")) 
+        result <- as.matrix(x)[2, c("Chisq", "Pr(>Chisq)")]
+    if (inherits(x, "htest")) result <- c(x$statistic, x$p.value)
+    names(result) <- c("stat", "p-value")
+    round(result, 3)
+}
+``` 
+
+
+```{r label = 'tests of no correlated random effects'}
+lr.mxc <- lrtest(Train.mxlc, Train.ml)
+wd.mxc <- waldtest(Train.mxlc)
+library("car")
+lh.mxc <- linearHypothesis(Train.mxlc, c("chol.time:time = 0",
+"chol.time:change =  0", "chol.time:comfort = 0", "chol.change:change = 0",
+"chol.change:comfort = 0", "chol.comfort:comfort = 0"))
+sc.mxc <- scoretest(Train.ml, rpar = c(time = "n", change = "n",
+comfort = "n"), R = 100, correlation = TRUE, halton = NA, panel = TRUE)
+sapply(list(wald = wd.mxc, lh = lh.mxc, score = sc.mxc, lr = lr.mxc),
+statpval)
+``` 
+
+The hypothesis of no correlated random parameters is strongly
+rejected. We then present the three tests of no correlation, the
+existence of random parameters being maintained.
+
+
+```{r label = 'tests of no correlation'}
+lr.corr <- lrtest(Train.mxlc, Train.mxlu)
+lh.corr <- linearHypothesis(Train.mxlc, c("chol.time:change = 0",
+"chol.time:comfort = 0", "chol.change:comfort = 0"))
+wd.corr <- waldtest(Train.mxlc, correlation = FALSE)
+sc.corr <- scoretest(Train.mxlu, correlation = TRUE)
+sapply(list(wald = wd.corr, lh = lh.corr, score = sc.corr, lr = lr.corr),
+statpval)
+``` 
+
+The hypothesis of no correlation is strongly reject with the Wald and
+the likelihood ratio test, only at the 5\% level for the score test.
+
+### RiskyTransport
+
+The second example is a study by @LEON:MIGU:17 who consider a
+mode-choice model for transit from Freetown's airport (Sierra-Leone)
+to downtown. Four alternatives are available: ferry, helicopter,
+water-taxi and hovercraft. A striking characteristic of their study is
+that all these alternatives experienced fatal accidents in recent
+years, so that the fatality risk is non-negligible and differs much
+from an alternative to another. For example, the probabilities of
+dying using the water taxi and the helicopter are respectively of 2.55
+and 18.41 out of 100,000 passenger-trips. This feature enables the
+authors to estimate the value of a statistical life. For an individual
+$i$, the utility of choosing alternative $j$ is:
+
+$$
+U_{ij}=\beta_{il} (1 - p_j) + \beta_{ic} (c_j + w_i t_j)+\epsilon_{ij},
+$$
+
+where $p_j$ is the probability of dying while using alternative $j$,
+$c_j$ and $t_j$ the monetary cost and the transport time of
+alternative $j$ and $w_i$ the wage rate of individual $i$ (which is
+supposed to be his valuation of transportation time).
+$C_{ij} = c_j + w_i t_j$ is therefore the individual specific
+generalized cost for alternative $j$. $\beta_{il}$ and $\beta_{ic}$
+are the (individual specific) marginal utility of surviving and of
+expense. The value of the statistical life (VSL) is then defined by:
+
+$$
+\mbox{VSL}_i = -\frac{\beta_{il}}{\beta_{îc}} = \frac{\Delta
+  C_{ij}}{\Delta (1-p_j)}.
+$$
+
+The two covariates of interest are `cost` (the generalized cost in
+\$PPP) and `risk` (mortality per 100,000 passenger-trips).  The
+`risk` variable being purely alternative specific, intercepts for
+the alternatives cannot therefore be estimated. To avoid endogeneity
+problems, the authors introduce as covariates marks the individuals
+gave to 5 attributes of the alternatives: comfort, noise level,
+crowdedness, convenience and transfer location and the "quality" of the
+clientele. We first estimate a multinomial logit model.
+
+```{r label = 'multinomial model for RiskyTransport'}
+data("RiskyTransport", package = "mlogit")
+RT <- mlogit.data(RiskyTransport, shape = "long", choice = "choice", 
+chid.var = "chid", alt.var = "mode", id.var = "id")
+ml.rt <- mlogit(choice ~ cost + risk  + seats + noise + crowdness +
+convloc + clientele | 0, data = RT, weights = weight)
+``` 
+
+Note the use of the `weights` argument in order to set
+weights to the observations, as done in the original study.
+
+```{r label = 'coef of risk and cost'}
+coef(ml.rt)[c("risk", "cost")]
+``` 
+
+The ratio of the coefficients of risk and of cost is `r
+round(coef(ml.rt)['risk'] / coef(ml.rt)['cost'], 2)` (hundred of
+thousands of \$), which means that the estimated value of the
+statistical life is a bit less than one million \$.  We next consider
+a mixed logit model. The coefficients of `cost` and `risk` are assumed
+to be random, following a zero-bounded triangular distribution.
+
+```{r label = 'mixed effects model for RiskyTransport'}
+mx.rt <- mlogit(choice ~ cost + risk  + seats + noise + crowdness +
+convloc + clientele | 0, data = RT, weights = weight,
+rpar = c(cost = 'zbt', risk = 'zbt'), R = 100, halton = NA, panel = TRUE)
+``` 
+
+The results are presented in the following table:
+```{r label = 'results for RiskyTransport', results = 'asis'}
+library("texreg")
+htmlreg(list('Multinomial logit' = ml.rt, 'Mixed logit' = mx.rt),
+digits = 3, float.pos = "hbt", label = "tab:risktr", single.row = TRUE,
+caption = "Transportation choices.")
+``` 
+
+Not that the log-likelihood is much larger for the mixed effect logit.
+Individual-level parameters can be extracted using the `fitted`
+method, with the type argument set to `parameters`.
+
+```{r label = 'individual parameters'}
+indpar <- fitted(mx.rt, type = "parameters")
+head(indpar)
+``` 
+
+We can then compute the VSL for every individual and analyse their
+distribution, using quantiles for African and non-African travelers
+\citep[as done in][Table 4, p.219]{LEON:MIGU:17}.
+
+```{r label = 'individal parameters'}
+indpar$VSL <- with(indpar, risk / cost * 100)
+quantile(indpar$VSL, c(0.025, 0.975))
+mean(indpar$VSL)
+```
+
+Note that computing the VSL as the ratio of two random parameters
+which can take zero value can lead to extremely high values if the
+individual parameter for cost is close to 0.
+
+```{r label = 'max VSL'}
+max(indpar$cost)
+max(indpar$VSL)
+``` 
+
+This is not the case here as (absolute) minimum value of `cost`
+is $-0.003$ which leads to a maximum value of VSL of \$ $3131$.
+

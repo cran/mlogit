@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Multinomial probit</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Multinomial probit</h1>
+
+
+
+<div id="the-model" class="section level2">
+<h2>The model</h2>
+<p>The multinomial probit is obtained with the same modeling that we used while presenting the random utility model. The utility of an alternative is still the sum of two components : <span class="math inline">\(U_j = V_j + \epsilon_j\)</span>.</p>
+<p>but the joint distribution of the error terms is now a multivariate normal with mean 0 and with a matrix of covariance denoted <span class="math inline">\(\Omega\)</span><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>.</p>
+<p>Alternative <span class="math inline">\(l\)</span> is chosen if : <span class="math display">\[
+\left\{
+\begin{array}{rcl}
+U_1-U_l&amp;=&amp;(V_1-V_l)+(\epsilon_1-\epsilon_l)&lt;0\\
+U_2-U_l&amp;=&amp;(V_2-V_l)+(\epsilon_2-\epsilon_l)&lt;0\\
+ &amp; \vdots &amp;  \\
+U_J-U_l&amp;=&amp;(V_J-V_l)+(\epsilon_J-\epsilon_l)&lt;0\\
+\end{array}
+\right.
+\]</span></p>
+<p>wich implies, denoting <span class="math inline">\(V^l_j=V_j-V_l\)</span> :</p>
+<p><span class="math display">\[
+\left\{
+\begin{array}{rclrcl}
+  \epsilon^l_1 &amp;=&amp; (\epsilon_1-\epsilon_l) &amp;&lt;&amp; - V^l_1\\
+  \epsilon^l_2 &amp;=&amp; (\epsilon_2-\epsilon_l) &amp;&lt;&amp; - V^l_2\\
+  &amp;\vdots &amp; &amp; \vdots &amp;  \\
+  \epsilon^l_J &amp;=&amp; (\epsilon_J-\epsilon_l) &amp;&lt;&amp; - V^l_J\\
+\end{array}
+\right.
+\]</span></p>
+<p>The initial vector of errors <span class="math inline">\(\epsilon\)</span> are transformed using the following transformation :</p>
+<p><span class="math display">\[\epsilon^l = M^l \epsilon\]</span></p>
+<p>where the transformation matrix <span class="math inline">\(M^l\)</span> is a <span class="math inline">\((J-1) \times J\)</span> matrix obtained by inserting in an identity matrix a <span class="math inline">\(l^{\mbox{th}}\)</span> column of <span class="math inline">\(-1\)</span>. For example, if <span class="math inline">\(J = 4\)</span> and <span class="math inline">\(l = 3\)</span> :</p>
+<p><span class="math display">\[
+M^3 = 
+\left(
+\begin{array}{cccc}
+1 &amp; 0 &amp; -1 &amp; 0 \\
+0 &amp; 1 &amp; -1 &amp; 0 \\
+0 &amp; 0 &amp; -1 &amp; 1 \\
+\end{array}
+\right)
+\]</span></p>
+<p>The covariance matrix of the error differences is obtained using the following matrix :</p>
+<p><span class="math display">\[
+\mbox{V}\left(\epsilon^l\right)=\mbox{V}\left(M^l\epsilon\right)
+=
+M^l\mbox{V}\left(\epsilon\right){M^l}^{\top}
+=
+M^l\Omega{M^l}^{\top}
+\]</span></p>
+<p>The probability of choosing <span class="math inline">\(l\)</span> is then :</p>
+<span class="math display">\[\begin{equation}
+P_l =\mbox{P}(\epsilon^l_1&lt;-V_1^l \;\&amp;\; \epsilon^l_2&lt;-V_2^l \;\&amp;\; ... \; \epsilon^l_J&lt;-V_J^l)
+\end{equation}\]</span>
+<p>with the hypothesis of distribution, this writes :</p>
+<span class="math display">\[\begin{equation}
+P_l = \int_{-\infty}^{-V_1^l}\int_{-\infty}^{-V_2^l}...\int_{-\infty}^{-V_J^l}\phi(\epsilon^l)
+d\epsilon^l_1 d\epsilon^l_2... d^l_J
+\end{equation}\]</span>
+<p>with :</p>
+<span class="math display">\[\begin{equation}
+\phi\left(\epsilon^l\right)=\frac{1}{(2\pi)^{(J-1)/2}\mid\Omega^l\mid^{1/2}}
+e^{-\frac{1}{2}\epsilon^l{\Omega^l}^{-1}\epsilon^l}
+\end{equation}\]</span>
+<p>Two problems arise with this model :</p>
+<ul>
+<li>the first one is that the identified parameters are the elements of <span class="math inline">\(\Omega^l\)</span> and not of <span class="math inline">\(\Omega\)</span>. We must then carefully investigate the meanings of these elements.</li>
+<li>the second one is that the probability is a <span class="math inline">\(J-1\)</span> integral, which should be numerically computed. The relevant strategy in this context is to use simulations.</li>
+</ul>
+</div>
+<div id="identification" class="section level2">
+<h2>Identification</h2>
+<p>The meaning-full parameters are those of the covariance matrix of the error <span class="math inline">\(\Omega\)</span>. For example, with <span class="math inline">\(J = 3\)</span> :</p>
+<p><span class="math display">\[
+\Omega =
+\left(
+\begin{array}{ccc}
+\sigma_{11} &amp; \sigma_{12} &amp; \sigma_{13}  \\
+\sigma_{21} &amp; \sigma_{22} &amp; \sigma_{23} \\
+\sigma_{31} &amp; \sigma_{32} &amp; \sigma_{33} \\
+\end{array}
+\right)
+\]</span></p>
+<p><span class="math display">\[
+\Omega^1 = M^1 \Omega {M^1}^{\top}=
+\left(
+\begin{array}{cc}
+\sigma_{11}+\sigma_{22}-2\sigma_{12} &amp; \sigma_{11} + \sigma_{23} - \sigma_{12} -\sigma_{13} \\
+\sigma_{11}+\sigma_{23}- \sigma_{12} - \sigma_{13} &amp; \sigma_{11} + \sigma_{33} - 2 \sigma_{13} \\
+\end{array}
+\right)
+\]</span></p>
+<p>The overall scale of utility being unidentified, one has to impose the value of one of the variance, for example the first one is fixed to 1. We then have :</p>
+<p><span class="math display">\[
+\Omega^1 = \left(
+\begin{array}{cc}
+  1 &amp; \frac{\sigma_{11}+ \sigma_{23} - \sigma_{12} -\sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} \\
+  \frac{\sigma_{11}+\sigma_{23}- \sigma_{12} - \sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} &amp; \frac{\sigma_{11} + \sigma_{33} - 2 \sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} \\
+\end{array}
+\right)
+\]</span></p>
+<p>Therefore, out the 6 structural parameters of the covariance matrix, only 3 can be identified. Moreover, it’s almost impossible to interpret these parameters.</p>
+<p>More generally, with <span class="math inline">\(J\)</span> alternatives, the number of the parameters of the covariance matrix is <span class="math inline">\((J+1)\times J/2\)</span> and the number of identified parameters is <span class="math inline">\(J\times(J-1)/2-1\)</span>.</p>
+</div>
+<div id="simulations" class="section level2">
+<h2>Simulations</h2>
+<p>Let <span class="math inline">\(L^l\)</span> be the Choleski decomposition of the covariance matrix of the error differences :</p>
+<p><span class="math display">\[
+\Omega^l=L^l {L^l}^{\top}
+\]</span></p>
+<p>This matrix is a lower triangular matrix of dimension <span class="math inline">\((J-1)\)</span> :</p>
+<p><span class="math display">\[
+L^l=
+\left(
+\begin{array}{ccccc}
+l_{11} &amp; 0 &amp; 0 &amp;... &amp; 0 \\
+l_{21} &amp; l_{22} &amp; 0 &amp; ... &amp; 0 \\
+l_{31} &amp; l_{32} &amp; l_{33} &amp; ... &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+l_{(J-1)1} &amp; l_{(J-1)2} &amp; l_{(J-1)3} &amp; ... &amp; l_{(J-1)(J-1)} \\
+\end{array}
+\right)
+\]</span></p>
+<p>Let <span class="math inline">\(\eta\)</span> be a vector of standard normal deviates :</p>
+<p><span class="math display">\[
+\eta \sim N(0, I)
+\]</span></p>
+<p>Therefore, we have :</p>
+<p><span class="math display">\[
+\mbox{V}\left(L^l\eta\right)=L^lV(\eta){L^l}^{\top}=L^lI{L^l}^{\top}=\Omega^l
+\]</span></p>
+<p>Therefore, if we draw a vector of standard normal deviates <span class="math inline">\(\eta\)</span> and apply to it this transformation, we get a realization of <span class="math inline">\(\epsilon^l\)</span>.</p>
+<p>This joint probability can be written as a product of conditional and marginal probabilities :</p>
+<p><span class="math display">\[
+\begin{array}{rcl}
+  P_l &amp;=&amp; \mbox{P}(\epsilon^l_1&lt;- V_1^l \;\&amp;\; \epsilon^l_2&lt;-V_2^l \;\&amp;\; ... \;\&amp;\; \epsilon^l_J&lt;-V_J^l))\\
+  &amp;=&amp; \mbox{P}(\epsilon^l_1&lt;- V_1^l))\\
+  &amp;\times&amp;\mbox{P}(\epsilon^l_2&lt;-V_2^l \mid \epsilon^l_1&lt;-V_1^l) \\
+  &amp;\times&amp;\mbox{P}(\epsilon^l_3&lt;-V_3^l \mid \epsilon^l_1&lt;-V_1^l \;\&amp;\; \epsilon^l_2&lt;-V_2^l) \\
+  &amp; \vdots &amp; \\
+  &amp;\times&amp;\mbox{P}(\epsilon^l_J&lt;-V_J^l \mid \epsilon^l_1&lt;-V_1^l \;\&amp;\; ... \;\&amp;\; \epsilon^l_{J-1}&lt;-V_{J-1}^l)) \\
+\end{array}
+\]</span></p>
+<p>The vector of error differences deviates is :</p>
+<p><span class="math display">\[
+\left(
+\begin{array}{c}
+  \epsilon^l_1 \\ \epsilon^l_2 \\ \epsilon^l_3 \\ \vdots \\ \epsilon^l_J
+\end{array}
+\right)
+=
+\left(
+\begin{array}{ccccc}
+l_{11} &amp; 0 &amp; 0 &amp;... &amp; 0 \\
+l_{21} &amp; l_{22} &amp; 0 &amp; ... &amp; 0 \\
+l_{31} &amp; l_{32} &amp; l_{33} &amp; ... &amp; 0 \\
+\vdots &amp; \vdots &amp; \vdots &amp; \ddots &amp; \vdots \\
+l_{(J-1)1} &amp; l_{(J-1)2} &amp; l_{(J-1)3} &amp; ... &amp; l_{(J-1)(J-1)} \\
+\end{array}
+\right)
+\times
+\left(
+\begin{array}{c}
+\eta_1 \\ \eta_2 \\ \eta_3 \\ \vdots \\ \eta_J
+\end{array}
+\right)
+\]</span></p>
+<p><span class="math display">\[
+\left(
+\begin{array}{c}
+  \epsilon^l_1 \\ \epsilon^l_2 \\ \epsilon^l_3 \\ \vdots \\ \epsilon^l_J
+\end{array}
+\right)
+=
+\left(
+\begin{array}{l}
+l_{11}\eta_1 \\ 
+l_{21}\eta_1+l_{22}\eta_2 \\ 
+l_{31}\eta_1+l_{32}\eta_2 + l_{33}\eta_3\\ 
+\vdots \\ 
+l_{(J-1)1}\eta_1+l_{(J-1)2}\eta_2+...+l_{(J-1)(J-1)}\eta_{J-1}
+\end{array}
+\right)
+\]</span></p>
+<p>Let’s now investigate the marginal and conditional probabilities :</p>
+<ul>
+<li>the first one is simply the marginal probability for a standard normal deviates, therefore we have : <span class="math inline">\(\mbox{P}(\epsilon^l_1&lt;-V_1^l) = \Phi\left(-\frac{V_1^l}{l_{11}}\right)\)</span></li>
+<li>the second one is, for a given value of <span class="math inline">\(\eta_1\)</span> equal to <span class="math inline">\(\Phi\left(-\frac{V^l_2+l_{21}\eta_1}{l_{22}}\right)\)</span>. We then have to compute the mean of this expression for any value of <span class="math inline">\(\eta_1\)</span> lower than <span class="math inline">\(-\frac{V^l_1}{l_{11}}\)</span>. We then have, denoting <span class="math inline">\(\bar{\phi}_1\)</span> the truncated normal density : <span class="math display">\[\mbox{P}(\epsilon^l_2&lt;-V_2^l)=\int_{-\infty}^{-\frac{V^l_1}{l_{11}}}\Phi\left(-\frac{V^l_2+l_{21}\eta_1}{l_{22}}\right)
+  \bar{\phi}_1(\eta_1)d\eta_1\]</span></li>
+<li>the third one is, for given values of <span class="math inline">\(\eta_1\)</span> and <span class="math inline">\(\eta_2\)</span> equal to : <span class="math inline">\(\Phi\left(-\frac{V^l_3+l_{31}\eta_1+l_{32}\eta_2}{l_{33}}\right)\)</span>. We then have : <span class="math display">\[\mbox{P}(\epsilon^l_3&lt;-V_3^l)=\int_{-\infty}^{-\frac{V^l_1}{l_{11}}}\int_{-\infty}^{-\frac{V^l_2+l_{21}\eta_1}{l_{22}}}
+  \Phi\left(-\frac{V^l_3+l_{31}\eta_1+l_{32}\eta_2}{l_{33}}\right)\bar{\phi}_1(\eta_1)\bar{\phi}_2(\eta_2)d\eta_1d\eta_2\]</span></li>
+<li>and so on.</li>
+</ul>
+<p>This probabilities can easily be simulated by drawing numbers from a truncated normal distribution.</p>
+<p>This so called GHK algorithm<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> (for Geweke, Hajivassiliou and Keane who developed this algorithm) can be described as follow :</p>
+<p>\begin{enumerate} - compute <span class="math inline">\(\Phi\left(-\frac{V_1^l}{l_{11}}\right)\)</span> - draw a number called <span class="math inline">\(\eta_1^r\)</span> from a standard normal distribution upper-truncated at <span class="math inline">\(-\frac{V_1^l}{l_{11}}\)</span> and compute <span class="math inline">\(\Phi\left(-\frac{V^l_2+l_{21}\eta_1^r}{l_{22}}\right)\)</span> - draw a number called <span class="math inline">\(\eta_2^r\)</span> from a standard normal distribution upper-truncated at <span class="math inline">\(-\frac{V^l_2+l_{21}\eta_1^r}{l_{22}}\)</span> and compute <span class="math inline">\(\Phi\left(-\frac{V^l_3+l_{31}\eta_1^r+l_{32}\eta_2^r}{l_{33}}\right)\)</span> - <span class="math inline">\(...\)</span> draw a number called <span class="math inline">\(\eta_{J-1}^r\)</span> from a standard normal distribution upper-truncated at <span class="math inline">\(-\frac{V^l_{J-1}+l_{(J-1)1}\eta_1^r+... V^l_{J-1}+l_{(J-1)(J-2)}\eta_{J-2}^r}{l_{(J-1)(J-1)}}\)</span> - multiply all these probabilities and get a realization of the probability called <span class="math inline">\(P^r_l\)</span>. - repeat all these steps many times and average all these probabilities ; this average is an estimation of the probability : <span class="math inline">\(\bar{P}_l = \sum_{r=1}^R P^r_l/R\)</span>. \end{enumerate}</p>
+<p>Several points should be noted concerning this algorithm :</p>
+<ul>
+<li>the utility differences should be computed respective to the chosen alternative for each individual,</li>
+<li>the Choleski decomposition used should relies on the same covariance matrix of the errors. One method to attained this goal is to start from a given difference, <em>e.g.</em> the difference respective with the first alternative. The vector of error difference is then <span class="math inline">\(\epsilon^1\)</span> and its covariance matrix is <span class="math inline">\(\Omega^1=L^1{L^1}^{\top}\)</span>. To apply a difference respective with an other alternative <span class="math inline">\(l\)</span>, we construct a matrix called <span class="math inline">\(S^l\)</span> which is obtained by using a <span class="math inline">\(J-2\)</span> identity matrix, adding a first row of 0 and inserting a column of <span class="math inline">\(-1\)</span> at the <span class="math inline">\(l-1^{\mbox{th}}\)</span> position. For example, with 4 alternatives and <span class="math inline">\(l=3\)</span>, we have : <span class="math display">\[S^3=
+  \left(
+\begin{array}{ccc}
+  0 &amp; -1 &amp; 0 \\
+  1 &amp; -1 &amp; 0 \\
+  0 &amp; -1 &amp; 1 \\
+\end{array}
+  \right)
+  \]</span> The elements of the choleski decomposition of the covariance matrix is then obtained as follow : <span class="math display">\[
+  \Omega^l = S^l \Omega^1 {S^l}^{\top}=L^l {L^l}^{\top}
+  \]</span></li>
+<li>to compute draws from a normal distribution truncated at <span class="math inline">\(a\)</span>, the following trick is used : take a draw <span class="math inline">\(\mu\)</span> from a uniform distribution (between 0 and 1) ; then <span class="math inline">\(\eta = \Phi^{-1}\left(\mu \Phi(a)\right)\)</span> is a draw from a normal distribution truncated at <span class="math inline">\(a\)</span></li>
+</ul>
+</div>
+<div id="applications" class="section level2">
+<h2>Applications</h2>
+<p>We use again the <code>Fishing</code> data frame, with only a subset of three alternatives used. The multinomial probit model is estimated using <code>mlogit</code> with the <code>probit</code> argument equal to <code>TRUE</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;Fishing&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+Fish &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Fishing, <span class="dt">shape=</span><span class="st">&quot;wide&quot;</span>, <span class="dt">varying=</span><span class="dv">2</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">choice=</span><span class="st">&quot;mode&quot;</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Fish.mprobit &lt;-<span class="st"> </span><span class="kw">mlogit</span>(mode<span class="op">~</span>price <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>catch, Fish, <span class="dt">probit =</span> <span class="ot">TRUE</span>, <span class="dt">alt.subset=</span><span class="kw">c</span>(<span class="st">'beach'</span>, <span class="st">'boat'</span>,<span class="st">'pier'</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(Fish.mprobit)</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = mode ~ price | income | catch, data = Fish, 
+##     start = strt, alt.subset = c(&quot;beach&quot;, &quot;boat&quot;, &quot;pier&quot;), probit = TRUE)
+## 
+## Frequencies of alternatives:
+##   beach    boat    pier 
+## 0.18356 0.57260 0.24384 
+## 
+## bfgs method
+## 1 iterations, 0h:0m:4s 
+## g'(-H)^-1g = 1E+10 
+## successive function values within tolerance limits 
+## 
+## Coefficients :
+##                     Estimate  Std. Error z-value  Pr(&gt;|z|)    
+## boat:(intercept)  7.2514e-01  3.5810e-01  2.0250 0.0428700 *  
+## pier:(intercept)  6.2393e-01  2.7397e-01  2.2773 0.0227657 *  
+## price            -1.2154e-02  1.7696e-03 -6.8684 6.493e-12 ***
+## boat:income       2.4005e-06  3.6698e-05  0.0654 0.9478450    
+## pier:income      -6.5419e-05  4.0831e-05 -1.6022 0.1091086    
+## beach:catch       1.5479e+00  4.3000e-01  3.5997 0.0003185 ***
+## boat:catch        4.0010e-01  4.1600e-01  0.9618 0.3361590    
+## pier:catch        1.2747e+00  5.5861e-01  2.2820 0.0224909 *  
+## boat.pier         5.4570e-01  4.6259e-01  1.1796 0.2381415    
+## pier.pier         6.9544e-01  2.9295e-01  2.3739 0.0175991 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -478.43
+## McFadden R^2:  0.32751 
+## Likelihood ratio test : chisq = 465.99 (p.value = &lt; 2.22e-16)</code></pre>
+<div id="refs" class="references">
+<div id="ref-DAGA:79">
+<p>Daganzo, C. 1979. <em>Multinomial Probit: The Theory and Its Application to Demand Forecasting</em>. Academic Press, New York.</p>
+</div>
+<div id="ref-GEWE:KEAN:RUNK:94">
+<p>Geweke, J., M. Keane, and D. Runkle. 1994. “Alternative Computational Approaches to Inference in the Multinomial Probit Model.” <em>Review of Economics and Statistics</em> 76: 609–32.</p>
+</div>
+<div id="ref-HAUS:WISE:78">
+<p>Hausman, J., and D. Wise. 1978. “A Conditional Probit Model for Qualitative Choice: Discrete Decisions Recognizing Interdemendence and Heterogeneous Preferences.” <em>Econometrica</em> 48: 403–29.</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>see <span class="citation">(Hausman and Wise 1978)</span> and <span class="citation">(Daganzo 1979)</span><a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>see for example <span class="citation">(Geweke, Keane, and Runkle 1994)</span>.<a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

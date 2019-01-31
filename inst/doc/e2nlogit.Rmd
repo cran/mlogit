@@ -1,0 +1,208 @@
+---
+title: "Exercise 2: Nested logit model"
+author: Kenneth Train and Yves Croissant
+date: '`r Sys.Date()`'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Exercise 2: The nested logit model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+The data set `HC` from `mlogit` contains data in `R` format on the
+choice of heating and central cooling system for 250 single-family,
+newly built houses in California.
+
+The alternatives are:
+
+- Gas central heat with cooling `gcc`,
+- Electric central resistence heat with cooling `ecc`,
+- Electric room resistence heat with cooling `erc`,
+- Electric heat pump, which provides cooling also `hpc`,
+- Gas central heat without cooling `gc`,
+- Electric central resistence heat without cooling `ec`,
+- Electric room resistence heat without cooling `er`.
+
+
+Heat pumps necessarily provide both heating and cooling such that heat
+pump without cooling is not an alternative.
+
+The variables are:
+
+- `depvar` gives the name of the chosen alternative,
+- `ich.alt` are the installation cost for the heating portion
+  of the system,
+- `icca` is the installation cost for cooling
+- `och.alt` are the operating cost for the heating portion of
+  the system
+- `occa` is the operating cost for cooling
+- `income` is the annual income of the household
+
+Note that the full installation cost of alternative `gcc` is
+`ich.gcc+icca`, and similarly for the operating cost and for the
+other alternatives with cooling.
+
+@. Run a nested logit model on the data for two nests and one log-sum
+coefficient that applies to both nests. Note that the model is
+specified to have the cooling alternatives (`gcc}, `ecc},
+`erc}, `hpc}) in one nest and the non-cooling alternatives
+(`gc}, `ec}, `er}) in another nest.
+
+```{r nest1}
+library("mlogit")
+data("HC", package = "mlogit")
+HC <- mlogit.data(HC, varying = c(2:8, 10:16), choice = "depvar", shape = "wide")
+cooling.modes <- index(HC)$alt %in% c('gcc', 'ecc', 'erc', 'hpc')
+room.modes <- index(HC)$alt %in% c('erc', 'er')
+# installation / operating costs for cooling are constants, 
+# only relevant for mixed systems
+HC$icca[!cooling.modes] <- 0
+HC$occa[!cooling.modes] <- 0
+# create income variables for two sets cooling and rooms
+HC$inc.cooling <- HC$inc.room <- 0
+HC$inc.cooling[cooling.modes] <- HC$income[cooling.modes]
+HC$inc.room[room.modes] <- HC$income[room.modes]
+# create an intercet for cooling modes
+HC$int.cooling <- as.numeric(cooling.modes)
+# estimate the model with only one nest elasticity
+nl <- mlogit(depvar ~ ich + och +icca + occa + inc.room + inc.cooling + int.cooling | 0, HC,
+             nests = list(cooling = c('gcc','ecc','erc','hpc'), 
+             other = c('gc', 'ec', 'er')), un.nest.el = TRUE)
+summary(nl)
+``` 
+
+(a) The estimated log-sum coefficient is $-0.59$. What does this
+estimate tell you about the degree of correlation in unobserved
+factors over alternatives within each nest?
+
+> The correlation is approximately $1-0.59=0.41$. It's a moderate
+> correlation.
+  
+(b) Test the hypothesis that the log-sum coefficient is 1.0 (the value
+that it takes for a standard logit model.) Can the hypothesis that the
+true model is standard logit be rejected?
+
+> We can use a t-test of the hypothesis that the log-sum coefficient
+> equal to 1. The t-statistic is :
+
+```{r }
+ (coef(nl)['iv'] - 1) / sqrt(vcov(nl)['iv', 'iv'])
+``` 
+
+> The critical value of t for 95\% confidence is 1.96. So we can reject
+> the hypothesis at 95\% confidence.
+ 
+> We can also use a likelihood ratio test because the multinomial logit
+> is a special case of the nested model.
+
+```{r }
+# First estimate the multinomial logit model
+ml <- update(nl, nests = NULL)
+lrtest(nl, ml)
+```  
+
+> Note that the hypothesis is rejected at 95\% confidence, but not at
+> 99\% confidence.
+
+2. Re-estimate the model with the room alternatives in one nest and
+the central alternatives in another nest. (Note that a heat pump is a
+central system.)
+
+```{r }
+nl2 <- update(nl, nests = list(central = c('ec', 'ecc', 'gc', 'gcc', 'hpc'), 
+                    room = c('er', 'erc')))
+summary(nl2)
+``` 
+
+(a) What does the estimate imply about the substitution patterns
+across alternatives? Do you think the estimate is plausible?
+
+> The log-sum coefficient is over 1. This implies that there is more
+> substitution across nests than within nests.  I don't think this is
+> very reasonable, but people can differ on their concepts of what's
+> reasonable.
+
+(b) Is the log-sum coefficient significantly different from 1?
+
+\begin{answer}[5]
+  The t-statistic is :
+```{r tstat}
+ (coef(nl2)['iv'] - 1) / sqrt(vcov(nl2)['iv', 'iv'])
+lrtest(nl2, ml)
+```   
+
+> We cannot reject the hypothesis at standard confidence levels.
+
+(c) How does the value of the log-likelihood function compare for this
+model relative to the model in exercise 1, where the cooling
+alternatives are in one nest and the heating alternatives in the other
+nest.
+
+```{r }
+logLik(nl)
+logLik(nl2)
+```   
+
+> The $\ln L$ is worse (more negative.) All in all, this seems like a less
+> appropriate nesting structure.
+
+3. Rerun the model that has the cooling alternatives in one nest and
+the non-cooling alternatives in the other nest (like for exercise 1),
+with a separate log-sum coefficient for each nest.
+
+```{r nl3}
+nl3 <- update(nl, un.nest.el = FALSE)
+```
+
+(a) Which nest is estimated to have the higher correlation in
+unobserved factors? Can you think of a real-world reason for this nest
+to have a higher correlation?
+
+> The correlation in the cooling nest is around 1-0.60 = 0.4 and that
+> for the non-cooling nest is around 1-0.45 = 0.55. So the correlation
+> is higher in the non-cooling nest.  Perhaps more variation in
+> comfort when there is no cooling. This variation in comfort is the
+> same for all the non-cooling alternatives.
+
+(b) Are the two log-sum coefficients significantly different from each
+other? That is, can you reject the hypothesis that the model in
+exercise 1 is the true model?
+
+
+> We can use a likelihood ratio tests with models `nl` and
+> `nl3`.
+
+```{r lrtest1}
+lrtest(nl, nl3)
+```   
+
+> The restricted model is the one from exercise 1 that has one log-sum
+> coefficient. The unrestricted model is the one we just estimated. The
+> test statistics is 0.6299. The critical value of chi-squared with 1
+> degree of freedom is 3.8 at the 95\% confidence level. We therefore
+> cannot reject the hypothesis that the two nests have the same log-sum
+> coefficient.
+
+4. Rewrite the code to allow three nests. For simplicity, estimate
+only one log-sum coefficient which is applied to all three
+nests. Estimate a model with alternatives `gcc`, `ecc` and
+`erc` in a nest, `hpc` in a nest alone, and alternatives
+`gc`, `ec` and `er` in a nest. Does this model seem better or
+worse than the model in exercise 1, which puts alternative `hpc` in
+the same nest as alternatives `gcc`, `ecc` and `erc`?
+
+```{r threentest}
+nl4 <- update(nl, nests=list(n1 = c('gcc', 'ecc', 'erc'), n2 = c('hpc'),
+                    n3 = c('gc', 'ec', 'er')))
+summary(nl4)
+``` 
+
+> The $\ln L$ for this model is $-180.26$, which is lower (more negative)
+> than for the model with two nests, which got $-178.12$.
+
+

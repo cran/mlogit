@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Kenneth Train and Yves Croissant" />
+
+<meta name="date" content="2019-01-31" />
+
+<title>Exercise 2: Nested logit model</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Exercise 2: Nested logit model</h1>
+<h4 class="author"><em>Kenneth Train and Yves Croissant</em></h4>
+<h4 class="date"><em>2019-01-31</em></h4>
+
+
+
+<p>The data set <code>HC</code> from <code>mlogit</code> contains data in <code>R</code> format on the choice of heating and central cooling system for 250 single-family, newly built houses in California.</p>
+<p>The alternatives are:</p>
+<ul>
+<li>Gas central heat with cooling <code>gcc</code>,</li>
+<li>Electric central resistence heat with cooling <code>ecc</code>,</li>
+<li>Electric room resistence heat with cooling <code>erc</code>,</li>
+<li>Electric heat pump, which provides cooling also <code>hpc</code>,</li>
+<li>Gas central heat without cooling <code>gc</code>,</li>
+<li>Electric central resistence heat without cooling <code>ec</code>,</li>
+<li>Electric room resistence heat without cooling <code>er</code>.</li>
+</ul>
+<p>Heat pumps necessarily provide both heating and cooling such that heat pump without cooling is not an alternative.</p>
+<p>The variables are:</p>
+<ul>
+<li><code>depvar</code> gives the name of the chosen alternative,</li>
+<li><code>ich.alt</code> are the installation cost for the heating portion of the system,</li>
+<li><code>icca</code> is the installation cost for cooling</li>
+<li><code>och.alt</code> are the operating cost for the heating portion of the system</li>
+<li><code>occa</code> is the operating cost for cooling</li>
+<li><code>income</code> is the annual income of the household</li>
+</ul>
+<p>Note that the full installation cost of alternative <code>gcc</code> is <code>ich.gcc+icca</code>, and similarly for the operating cost and for the other alternatives with cooling.</p>
+<ol class="example" style="list-style-type: decimal">
+<li>Run a nested logit model on the data for two nests and one log-sum coefficient that applies to both nests. Note that the model is specified to have the cooling alternatives (<code>gcc},</code>ecc}, <code>erc},</code>hpc}) in one nest and the non-cooling alternatives (<code>gc},</code>ec}, `er}) in another nest.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;HC&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+HC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(HC, <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">8</span>, <span class="dv">10</span><span class="op">:</span><span class="dv">16</span>), <span class="dt">choice =</span> <span class="st">&quot;depvar&quot;</span>, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>)
+cooling.modes &lt;-<span class="st"> </span><span class="kw">index</span>(HC)<span class="op">$</span>alt <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">'gcc'</span>, <span class="st">'ecc'</span>, <span class="st">'erc'</span>, <span class="st">'hpc'</span>)
+room.modes &lt;-<span class="st"> </span><span class="kw">index</span>(HC)<span class="op">$</span>alt <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">'erc'</span>, <span class="st">'er'</span>)
+<span class="co"># installation / operating costs for cooling are constants, </span>
+<span class="co"># only relevant for mixed systems</span>
+HC<span class="op">$</span>icca[<span class="op">!</span>cooling.modes] &lt;-<span class="st"> </span><span class="dv">0</span>
+HC<span class="op">$</span>occa[<span class="op">!</span>cooling.modes] &lt;-<span class="st"> </span><span class="dv">0</span>
+<span class="co"># create income variables for two sets cooling and rooms</span>
+HC<span class="op">$</span>inc.cooling &lt;-<span class="st"> </span>HC<span class="op">$</span>inc.room &lt;-<span class="st"> </span><span class="dv">0</span>
+HC<span class="op">$</span>inc.cooling[cooling.modes] &lt;-<span class="st"> </span>HC<span class="op">$</span>income[cooling.modes]
+HC<span class="op">$</span>inc.room[room.modes] &lt;-<span class="st"> </span>HC<span class="op">$</span>income[room.modes]
+<span class="co"># create an intercet for cooling modes</span>
+HC<span class="op">$</span>int.cooling &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cooling.modes)
+<span class="co"># estimate the model with only one nest elasticity</span>
+nl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ich <span class="op">+</span><span class="st"> </span>och <span class="op">+</span>icca <span class="op">+</span><span class="st"> </span>occa <span class="op">+</span><span class="st"> </span>inc.room <span class="op">+</span><span class="st"> </span>inc.cooling <span class="op">+</span><span class="st"> </span>int.cooling <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, HC,
+             <span class="dt">nests =</span> <span class="kw">list</span>(<span class="dt">cooling =</span> <span class="kw">c</span>(<span class="st">'gcc'</span>,<span class="st">'ecc'</span>,<span class="st">'erc'</span>,<span class="st">'hpc'</span>), 
+             <span class="dt">other =</span> <span class="kw">c</span>(<span class="st">'gc'</span>, <span class="st">'ec'</span>, <span class="st">'er'</span>)), <span class="dt">un.nest.el =</span> <span class="ot">TRUE</span>)
+<span class="kw">summary</span>(nl)</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = depvar ~ ich + och + icca + occa + inc.room + 
+##     inc.cooling + int.cooling | 0, data = HC, nests = list(cooling = c(&quot;gcc&quot;, 
+##     &quot;ecc&quot;, &quot;erc&quot;, &quot;hpc&quot;), other = c(&quot;gc&quot;, &quot;ec&quot;, &quot;er&quot;)), un.nest.el = TRUE)
+## 
+## Frequencies of alternatives:
+##    ec   ecc    er   erc    gc   gcc   hpc 
+## 0.004 0.016 0.032 0.004 0.096 0.744 0.104 
+## 
+## bfgs method
+## 11 iterations, 0h:0m:0s 
+## g'(-H)^-1g = 7.26E-06 
+## successive function values within tolerance limits 
+## 
+## Coefficients :
+##              Estimate Std. Error z-value  Pr(&gt;|z|)    
+## ich         -0.554878   0.144205 -3.8478 0.0001192 ***
+## och         -0.857886   0.255313 -3.3601 0.0007791 ***
+## icca        -0.225079   0.144423 -1.5585 0.1191212    
+## occa        -1.089458   1.219821 -0.8931 0.3717882    
+## inc.room    -0.378971   0.099631 -3.8038 0.0001425 ***
+## inc.cooling  0.249575   0.059213  4.2149 2.499e-05 ***
+## int.cooling -6.000415   5.562423 -1.0787 0.2807030    
+## iv           0.585922   0.179708  3.2604 0.0011125 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -178.12</code></pre>
+<ol style="list-style-type: lower-alpha">
+<li>The estimated log-sum coefficient is <span class="math inline">\(-0.59\)</span>. What does this estimate tell you about the degree of correlation in unobserved factors over alternatives within each nest?</li>
+</ol>
+<blockquote>
+<p>The correlation is approximately <span class="math inline">\(1-0.59=0.41\)</span>. It’s a moderate correlation.</p>
+</blockquote>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Test the hypothesis that the log-sum coefficient is 1.0 (the value that it takes for a standard logit model.) Can the hypothesis that the true model is standard logit be rejected?</li>
+</ol>
+<blockquote>
+<p>We can use a t-test of the hypothesis that the log-sum coefficient equal to 1. The t-statistic is :</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> (<span class="kw">coef</span>(nl)[<span class="st">'iv'</span>] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">vcov</span>(nl)[<span class="st">'iv'</span>, <span class="st">'iv'</span>])</code></pre></div>
+<pre><code>##        iv 
+## -2.304171</code></pre>
+<blockquote>
+<p>The critical value of t for 95% confidence is 1.96. So we can reject the hypothesis at 95% confidence.</p>
+</blockquote>
+<blockquote>
+<p>We can also use a likelihood ratio test because the multinomial logit is a special case of the nested model.</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># First estimate the multinomial logit model</span>
+ml &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests =</span> <span class="ot">NULL</span>)
+<span class="kw">lrtest</span>(nl, ml)</code></pre></div>
+<pre><code>## Likelihood ratio test
+## 
+## Model 1: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
+##     0
+## Model 2: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
+##     0
+##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)  
+## 1   8 -178.12                       
+## 2   7 -180.29 -1 4.3234    0.03759 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<blockquote>
+<p>Note that the hypothesis is rejected at 95% confidence, but not at 99% confidence.</p>
+</blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>Re-estimate the model with the room alternatives in one nest and the central alternatives in another nest. (Note that a heat pump is a central system.)</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nl2 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests =</span> <span class="kw">list</span>(<span class="dt">central =</span> <span class="kw">c</span>(<span class="st">'ec'</span>, <span class="st">'ecc'</span>, <span class="st">'gc'</span>, <span class="st">'gcc'</span>, <span class="st">'hpc'</span>), 
+                    <span class="dt">room =</span> <span class="kw">c</span>(<span class="st">'er'</span>, <span class="st">'erc'</span>)))
+<span class="kw">summary</span>(nl2)</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = depvar ~ ich + och + icca + occa + inc.room + 
+##     inc.cooling + int.cooling | 0, data = HC, nests = list(central = c(&quot;ec&quot;, 
+##     &quot;ecc&quot;, &quot;gc&quot;, &quot;gcc&quot;, &quot;hpc&quot;), room = c(&quot;er&quot;, &quot;erc&quot;)), un.nest.el = TRUE)
+## 
+## Frequencies of alternatives:
+##    ec   ecc    er   erc    gc   gcc   hpc 
+## 0.004 0.016 0.032 0.004 0.096 0.744 0.104 
+## 
+## bfgs method
+## 10 iterations, 0h:0m:0s 
+## g'(-H)^-1g = 5.87E-07 
+## gradient close to zero 
+## 
+## Coefficients :
+##              Estimate Std. Error z-value Pr(&gt;|z|)  
+## ich          -1.13818    0.54216 -2.0993  0.03579 *
+## och          -1.82532    0.93228 -1.9579  0.05024 .
+## icca         -0.33746    0.26934 -1.2529  0.21024  
+## occa         -2.06328    1.89726 -1.0875  0.27681  
+## inc.room     -0.75722    0.34292 -2.2081  0.02723 *
+## inc.cooling   0.41689    0.20742  2.0099  0.04444 *
+## int.cooling -13.82487    7.94031 -1.7411  0.08167 .
+## iv            1.36201    0.65393  2.0828  0.03727 *
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -180.02</code></pre>
+<ol style="list-style-type: lower-alpha">
+<li>What does the estimate imply about the substitution patterns across alternatives? Do you think the estimate is plausible?</li>
+</ol>
+<blockquote>
+<p>The log-sum coefficient is over 1. This implies that there is more substitution across nests than within nests. I don’t think this is very reasonable, but people can differ on their concepts of what’s reasonable.</p>
+</blockquote>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Is the log-sum coefficient significantly different from 1?</li>
+</ol>
+<p>\begin{answer}[5] The t-statistic is :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"> (<span class="kw">coef</span>(nl2)[<span class="st">'iv'</span>] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">vcov</span>(nl2)[<span class="st">'iv'</span>, <span class="st">'iv'</span>])</code></pre></div>
+<pre><code>##        iv 
+## 0.5535849</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lrtest</span>(nl2, ml)</code></pre></div>
+<pre><code>## Likelihood ratio test
+## 
+## Model 1: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
+##     0
+## Model 2: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
+##     0
+##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)
+## 1   8 -180.02                     
+## 2   7 -180.29 -1 0.5268      0.468</code></pre>
+<blockquote>
+<p>We cannot reject the hypothesis at standard confidence levels.</p>
+</blockquote>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>How does the value of the log-likelihood function compare for this model relative to the model in exercise 1, where the cooling alternatives are in one nest and the heating alternatives in the other nest.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">logLik</span>(nl)</code></pre></div>
+<pre><code>## 'log Lik.' -178.1247 (df=8)</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">logLik</span>(nl2)</code></pre></div>
+<pre><code>## 'log Lik.' -180.0231 (df=8)</code></pre>
+<blockquote>
+<p>The <span class="math inline">\(\ln L\)</span> is worse (more negative.) All in all, this seems like a less appropriate nesting structure.</p>
+</blockquote>
+<ol start="3" style="list-style-type: decimal">
+<li>Rerun the model that has the cooling alternatives in one nest and the non-cooling alternatives in the other nest (like for exercise 1), with a separate log-sum coefficient for each nest.</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nl3 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">un.nest.el =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<ol style="list-style-type: lower-alpha">
+<li>Which nest is estimated to have the higher correlation in unobserved factors? Can you think of a real-world reason for this nest to have a higher correlation?</li>
+</ol>
+<blockquote>
+<p>The correlation in the cooling nest is around 1-0.60 = 0.4 and that for the non-cooling nest is around 1-0.45 = 0.55. So the correlation is higher in the non-cooling nest. Perhaps more variation in comfort when there is no cooling. This variation in comfort is the same for all the non-cooling alternatives.</p>
+</blockquote>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Are the two log-sum coefficients significantly different from each other? That is, can you reject the hypothesis that the model in exercise 1 is the true model?</li>
+</ol>
+<blockquote>
+<p>We can use a likelihood ratio tests with models <code>nl</code> and <code>nl3</code>.</p>
+</blockquote>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lrtest</span>(nl, nl3)</code></pre></div>
+<pre><code>## Likelihood ratio test
+## 
+## Model 1: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
+##     0
+## Model 2: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
+##     0
+##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)
+## 1   8 -178.12                     
+## 2   9 -178.04  1 0.1758      0.675</code></pre>
+<blockquote>
+<p>The restricted model is the one from exercise 1 that has one log-sum coefficient. The unrestricted model is the one we just estimated. The test statistics is 0.6299. The critical value of chi-squared with 1 degree of freedom is 3.8 at the 95% confidence level. We therefore cannot reject the hypothesis that the two nests have the same log-sum coefficient.</p>
+</blockquote>
+<ol start="4" style="list-style-type: decimal">
+<li>Rewrite the code to allow three nests. For simplicity, estimate only one log-sum coefficient which is applied to all three nests. Estimate a model with alternatives <code>gcc</code>, <code>ecc</code> and <code>erc</code> in a nest, <code>hpc</code> in a nest alone, and alternatives <code>gc</code>, <code>ec</code> and <code>er</code> in a nest. Does this model seem better or worse than the model in exercise 1, which puts alternative <code>hpc</code> in the same nest as alternatives <code>gcc</code>, <code>ecc</code> and <code>erc</code>?</li>
+</ol>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">nl4 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests=</span><span class="kw">list</span>(<span class="dt">n1 =</span> <span class="kw">c</span>(<span class="st">'gcc'</span>, <span class="st">'ecc'</span>, <span class="st">'erc'</span>), <span class="dt">n2 =</span> <span class="kw">c</span>(<span class="st">'hpc'</span>),
+                    <span class="dt">n3 =</span> <span class="kw">c</span>(<span class="st">'gc'</span>, <span class="st">'ec'</span>, <span class="st">'er'</span>)))
+<span class="kw">summary</span>(nl4)</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = depvar ~ ich + och + icca + occa + inc.room + 
+##     inc.cooling + int.cooling | 0, data = HC, nests = list(n1 = c(&quot;gcc&quot;, 
+##     &quot;ecc&quot;, &quot;erc&quot;), n2 = c(&quot;hpc&quot;), n3 = c(&quot;gc&quot;, &quot;ec&quot;, &quot;er&quot;)), 
+##     un.nest.el = TRUE)
+## 
+## Frequencies of alternatives:
+##    ec   ecc    er   erc    gc   gcc   hpc 
+## 0.004 0.016 0.032 0.004 0.096 0.744 0.104 
+## 
+## bfgs method
+## 8 iterations, 0h:0m:0s 
+## g'(-H)^-1g = 3.71E-08 
+## gradient close to zero 
+## 
+## Coefficients :
+##               Estimate Std. Error z-value  Pr(&gt;|z|)    
+## ich          -0.838394   0.100546 -8.3384 &lt; 2.2e-16 ***
+## och          -1.331598   0.252069 -5.2827 1.273e-07 ***
+## icca         -0.256131   0.145564 -1.7596   0.07848 .  
+## occa         -1.405656   1.207281 -1.1643   0.24430    
+## inc.room     -0.571352   0.077950 -7.3297 2.307e-13 ***
+## inc.cooling   0.311355   0.056357  5.5247 3.301e-08 ***
+## int.cooling -10.413384   5.612445 -1.8554   0.06354 .  
+## iv            0.956544   0.180722  5.2929 1.204e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -180.26</code></pre>
+<blockquote>
+<p>The <span class="math inline">\(\ln L\)</span> for this model is <span class="math inline">\(-180.26\)</span>, which is lower (more negative) than for the model with two nests, which got <span class="math inline">\(-178.12\)</span>.</p>
+</blockquote>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

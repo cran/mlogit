@@ -1,0 +1,427 @@
+---
+title: "Logit models relaxing the iid hypothesis"
+output: rmarkdown::html_vignette
+bibliography: bibmlogit.bib
+vignette: >
+  %\VignetteIndexEntry{4. Logit models relaxing the iid hypothesis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+In the previous section, we assumed that the error terms were iid
+(identically and independently distributed), i.e., uncorrelated and
+homoscedastic. Extensions of the basic multinomial logit model have
+been proposed by relaxing one of these two hypothesis while
+maintaining the hypothesis of a Gumbel distribution.
+
+## The heteroskedastic logit model
+
+The heteroskedastic logit model was proposed by @BHAT:95.  The
+probability that $U_l>U_j$ is:
+
+$$
+P(\epsilon_j<V_l-V_j+\epsilon_l)=e^{-e^{-\frac{(V_l-V_j+\epsilon_l)}{\theta_j}}},
+$$
+
+which implies the following conditional and unconditional
+probabilities
+
+\begin{equation*}
+  (P_l \mid \epsilon_l) =\prod_{j\neq
+    l}e^{-e^{-\frac{(V_l-V_j+\epsilon_l)}{\theta_j}}},
+\end{equation*}
+
+\begin{equation*}
+  \begin{array}{rcl}
+  P_l&=&\displaystyle\int_{-\infty}^{+\infty} \prod_{j\neq l}
+  \left(e^{-e^{-\frac{(V_l-V_j+t)}{\theta_j}}}\right)\frac{1}{\theta_l}e^{-\frac{t}{\theta_l}}e^{-e^{-\frac{t}{\theta_l}}}
+  dt\\
+ &=& \displaystyle \int_{0}^{+\infty}\left(e^{-\sum_{j \neq
+      l}e^{-\frac{V_l-V_j-\theta_l \ln t}{\theta_j}}}\right)e^{-t}dt.
+     \end{array}
+\end{equation*}
+
+There is no closed form for this integral, but it can be efficiently
+computed using a Gauss quadrature method, and more precisely the
+Gauss-Laguerre quadrature method.
+
+## The nested logit model
+
+The nested logit model was first proposed by [@MCFAD:78]. It is a
+generalization of the multinomial logit model that is based on the
+idea that some alternatives may be joined in several groups (called
+nests). The error terms may then present some correlation in the same
+nest, whereas error terms of different nests are still uncorrelated.
+
+Denoting $m=1... M$ the nests and $B_m$ the set of alternatives
+belonging to nest $m$, the cumulative distribution of the errors is:
+
+$$
+\mbox{exp}\left(-\sum_{m=1}^M \left( \sum_{j \in B_m}
+    e^{-\epsilon_j/\lambda_m}\right)^{\lambda_m}\right).
+$$
+
+The marginal distributions of the $\epsilon$s are still univariate
+extreme value, but there is now some correlation within
+nests. $1-\lambda_m$ is a measure of the correlation, i.e., $\lambda_m
+= 1$ implies no correlation. In the special case where $\lambda_m=1\;
+\forall m$, the errors are iid Gumbel errors and the nested logit
+model reduce to the multinomial logit model.  It can then be shown
+that the probability of choosing alternative $j$ that belongs to nest
+$l$ is:
+
+$$
+P_j = \frac{e^{V_j/\lambda_l}\left(\sum_{k \in B_l}
+    e^{V_k/\lambda_l}\right)^{\lambda_l-1}} {\sum_{m=1}^M\left(\sum_{k
+      \in B_m} e^{V_k/\lambda_m}\right)^{\lambda_m}},
+$$
+
+and that this model is a random utility model if all the $\lambda$
+parameters are in the $0-1$ interval.^[A slightly different
+version of the nested logit model [@DALY:87] is often used, but is not
+compatible with the random utility maximization hypothesis. Its
+difference with the previous expression is that the deterministic
+parts of the utility for each alternative is not divided by the nest
+elasticity. The differences between the two versions have been
+discussed in @KOPP:WEN:98, @HEIS:02 and @HENS:GREEN:02.]
+
+Let us now write the deterministic part of the utility of alternative
+$j$ as the sum of two terms: the first one ($Z_j$) being specific to
+the alternative and the second one ($W_l$) to the nest it belongs to:
+
+$$V_j=Z_j+W_l.$$
+
+We can then rewrite the probabilities as follow:
+
+$$
+\begin{array}{rcl}  
+P_j&=&\frac{e^{(Z_j+W_l)/\lambda_l}}{\sum_{k \in B_l}
+  e^{(Z_k+W_l)/\lambda_l}}\times \frac{\left(\sum_{k \in B_l}
+    e^{(Z_k+W_l)/\lambda_l}\right)^{\lambda_l}}
+{\sum_{m=1}^M\left(\sum_{k \in B_m}
+    e^{(Z_k+W_m)/\lambda_m}\right)^{\lambda_m}}\\
+&=&\frac{e^{Z_j/\lambda_l}}{\sum_{k \in B_l}
+    e^{Z_k/\lambda_l}}\times 
+\frac{\left(e^{W_l/\lambda_l}\sum_{k \in B_l} e^{Z_k/\lambda_l}\right)^{\lambda_l}}
+{\sum_{m=1}^M\left(e^{W_m/\lambda_m}\sum_{k
+      \in B_m} e^{Z_k/\lambda_m}\right)^{\lambda_m}}.
+\end{array}
+$$
+
+Then denote $I_l=\ln \sum_{k \in B_l} e^{Z_k/\lambda_l}$ which is
+often called the log-sum, the inclusive value or the inclusive
+utility.^[We've already encountered this expression in
+Section~\@ref(sec:conssurplus).] We then can write the probability of
+choosing alternative $j$ as:
+
+$$
+P_j=\frac{e^{Z_j/\lambda_l}}{\sum_{k \in B_l}
+    e^{Z_k/\lambda_l}}\times 
+\frac{e^{W_l+\lambda_l I_l}}{\sum_{m=1}^Me^{W_m+\lambda_m I_m}}.
+$$
+
+The first term $\mbox{P}_{j\mid l}$ is the conditional probability of
+choosing alternative $j$ if nest $l$ is chosen. It is often referred
+as the *lower model*. The second term $\mbox{P}_l$ is the marginal
+probability of choosing nest $l$ and is referred as the *upper model*.
+$W_l+\lambda_l I_l$ can be interpreted as the expected utility of
+choosing the best alternative in $l$, $W_l$ being the expected utility
+of choosing an alternative in this nest (whatever this alternative is)
+and $\lambda_l I_l$ being the expected extra utility gained by being
+able to choose the best alternative in the nest.  The inclusive values
+link the two models.  It is then straightforward to show that IIA
+applies within nests, but not for two alternatives in different nests.
+
+A consistent but inefficient way of estimating the nested logit model
+is to estimate separately its two components. The coefficients of the
+lower model are first estimated, which enables the computation of the
+inclusive values $I_l$. The coefficients of the upper model are then
+estimated, using $I_l$ as covariates. Maximizing directly the
+likelihood function of the nested model leads to a more efficient
+estimator.
+
+## Applications
+
+### ModeCanada
+
+@BHAT:95 estimated the heteroscedastic logit model on the
+`ModeCanada` data set. Using `mlogit`, the heteroscedastic
+logit model is obtained by setting the `heterosc` argument
+to `TRUE`:
+
+```{r label = 'heteroscedastic model for the ModeCanada data'}
+library("mlogit")
+data("ModeCanada", package = "mlogit")
+MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
+                  alt.var = "alt", drop.index = TRUE)
+ml.MC <- mlogit(choice ~ freq + cost + ivt + ovt | urban + income, MC, 
+reflevel = 'car', alt.subset = c("car", "train", "air"))
+hl.MC <- mlogit(choice ~ freq + cost + ivt + ovt | urban + income, MC, 
+reflevel = 'car', alt.subset = c("car", "train", "air"), heterosc = TRUE)
+coef(summary(hl.MC))[11:12, ]
+``` 
+
+The variance of the error terms of train and air are respectively
+higher and lower than the variance of the error term of car (set to
+1). Note that the z-values and p-values of the output are not
+particularly meaningful, as the hypothesis that the coefficient is
+zero (and not one) is tested.  The homoscedasticity hypothesis can be
+tested using any of the three tests. A particular convenient syntax is
+provided in this case.  For the likelihood ratio and the wald test,
+one can use only the fitted heteroscedastic model as argument. In this
+case, it is guessed that the hypothesis that the user wants to test is
+the homoscedasticity hypothesis.
+
+```{r label = 'homoscedasticity tests: lr and Wald (1)'}
+lr.heter <- lrtest(hl.MC, ml.MC)
+wd.heter <- waldtest(hl.MC, heterosc = FALSE)
+``` 
+
+or, more simply:
+
+```{r label = 'homoscedasticity tests: lr and Wald (2)', results = 'hide'}
+lrtest(hl.MC)
+waldtest(hl.MC)
+``` 
+
+The Wald test can also be computed using the `linearHypothesis`
+function from the `car` package:
+
+```{r label = 'homoscedasticity tests: Wald test'}
+library("car")
+lh.heter <- linearHypothesis(hl.MC, c('sp.air = 1', 'sp.train = 1'))
+``` 
+
+For the score test, we provide the constrained model as argument,
+which is the standard multinomial logit model and the supplementary
+argument which defines the unconstrained model, which is in this case
+`heterosc = TRUE`.
+
+```{r label = 'homoscedasticity tests: score test'}
+sc.heter <- scoretest(ml.MC, heterosc = TRUE)
+``` 
+
+```{r label = 'convenient statpval function 2', include = FALSE}
+statpval <- function(x){
+    if (inherits(x, "anova")) 
+        result <- as.matrix(x)[2, c("Chisq", "Pr(>Chisq)")]
+    if (inherits(x, "htest")) result <- c(x$statistic, x$p.value)
+    names(result) <- c("stat", "p-value")
+    round(result, 3)
+}
+``` 
+
+
+```{r label = 'homoscedasticity tests: results'}
+sapply(list(wald = wd.heter, lh = lh.heter, score = sc.heter,
+lr = lr.heter), statpval)
+``` 
+
+The homoscedasticity hypothesis is strongly rejected using the Wald
+test, but only at the 1 and 5\% level for, respectively, the score and
+the likelihood ratio tests.
+
+### JapaneseFDI
+
+@HEAD:MAYE:04 analyzed the choice of one of the 57 European
+regions belonging to 9 countries by Japenese firms to implement a new
+production unit.
+
+```{r label = 'loading the JapaneseFDI data set'}
+data("JapaneseFDI", package = "mlogit")
+jfdi <- mlogit.data(JapaneseFDI, chid.var = "firm", alt.var = "region",
+group.var = "country")
+``` 
+
+Note that we've used an extra argument to `mlogit.data` called
+`group.var` which indicates the grouping variable,
+which will be used later to define easily the nests.  There are two
+sets of covariates: the wage rate `wage`, the unemployment rate
+`unemp`, a dummy indicating that the region is eligible to European
+funds `elig` and the area `area` are observed at the regional
+level and are therefore relevant for the estimation of the lower
+model, whereas the social cotisation rate `scrate` and the
+corporate tax rate `ctaxrate` are observed at the country level and
+are therefore suitable for the upper model.
+
+We first estimate a multinomial logit model:
+```{r label = 'multinomial logit for JapaneseFDI'} 
+ml.fdi <- mlogit(choice ~ log(wage) + unemp + elig + log(area) + scrate +
+ctaxrate | 0, data = jfdi)
+``` 
+
+Note that, as the covariates are only alternative specific, the
+intercepts are not identified and therefore have been removed.  We
+next estimate the lower model, which analyses the choice of a region
+within a given country. Therefore, for each choice situation, we
+estimate the choice of a region on the subset of regions of the
+country which has been chosen. Moreover, observations concerning
+Portugal and Ireland are removed as these two countries are
+mono-region.
+
+```{r label = 'lower model estimation'}
+lm.fdi <- mlogit(choice ~ log(wage) + unemp + elig + log(area) | 0,
+data = jfdi, subset = country == choice.c & ! country %in% c("PT", "IE"))
+``` 
+
+We next use the fitted lower model in order to compute the inclusive
+value, at the country level:
+
+$$
+\mbox{iv}_{ig} = \ln \sum_{j \in B_g} e^{\beta^\top x_{ij}},
+$$
+
+where $B_g$ is the set of regions for country $g$. When a grouping
+variable is provided in the `mlogit.data` function, inclusive values
+are by default computed for every group $g$ (global inclusive values
+are obtained by setting the `type` argument to `"global"`). By
+default, `output` is set to `"chid"` and the results is a vector (if
+`type = "global"`) or a matrix (if `type = "region"`) with row number
+equal to the number of choice situations. If `output` is set to
+`"obs"`, a vector of length equal to the number of lines of the data
+in long format is returned. The following code indicates different
+ways to use the `logsum` function:
+
+```{r label = 'use of the logsum function'}
+lmformula <- formula(lm.fdi)
+head(logsum(ml.fdi, data = jfdi, formula = lmformula, type = "group"), 2)
+head(logsum(ml.fdi, data = jfdi, formula = lmformula, type = "global"))
+head(logsum(ml.fdi, data = jfdi, formula = lmformula, output = "obs"))
+head(logsum(ml.fdi, data = jfdi, formula = lmformula, type = "global",
+output = "obs"))
+``` 
+
+To add the inclusive values in the original `data.frame`, we use
+`output = "obs"` and the `type` argument can be omitted as its default
+value is `"group"`:
+
+```{r label = 'adding the logsum to the data'}
+JapaneseFDI$iv <- logsum(lm.fdi, data = jfdi, formula = lmformula,
+output = "obs")
+``` 
+
+We next select the relevant variables for the estimation of the upper
+model, select unique lines in order to keep only one observation for
+every choice situation / country combination and finally we coerce the
+response (`choice.c`) to a logical for the chosen country.
+
+```{r label = 'data suitable for the upper model'}
+JapaneseFDI.c <- subset(JapaneseFDI, 
+select = c("firm", "country", "choice.c", "scrate", "ctaxrate", "iv"))
+JapaneseFDI.c <- unique(JapaneseFDI.c)
+JapaneseFDI.c$choice.c <- with(JapaneseFDI.c, choice.c == country)
+```
+
+Finally, we estimate the upper model, using the previously computed
+inclusive value as a covariate.
+
+```{r label = 'estimation of the upper model'}
+jfdi.c <- mlogit.data(JapaneseFDI.c, choice = "choice.c",
+alt.var = "country", chid.var = "firm", shape = "long")
+um.fdi <- mlogit(choice.c ~ scrate + ctaxrate + iv | 0, data = jfdi.c)
+```
+
+If one wants to obtain different `iv` coefficients for different
+countries, the `iv` covariate should be introduced in the 3th part
+of the formula and the coefficients for the two mono-region countries
+(Ireland and Portugal) should be set to 1, using the
+`constPar` argument.
+
+```{r label = 'upper model with different iv coefficients'}
+um2.fdi <- mlogit(choice.c ~ scrate + ctaxrate | 0 | iv, data = jfdi.c, 
+constPar = c("iv:PT" = 1, "iv:IE" = 1))
+``` 
+
+We next estimate the full-information maximum likelihood nested
+model. It is obtained by adding a `nests` argument to the
+`mlogit` function. This should be a named list of alternatives
+(here regions), the names being the nests (here the countries). More
+simply, if a group variable has been indicated while using
+`mlogit.data`, `nests` can be a boolean.
+
+Two flavors of nested models can be estimated, using the `un.nest.el`
+argument which is a boolean. If `TRUE`, one imposes that the
+coefficient associated with the inclusive utility is the same for
+every nest, which means that the degree of correlation inside each
+nest is the same. If `FALSE`, a different coefficient is estimated for
+every nest.
+
+```{r label = 'nested logit models'}
+nl.fdi <- mlogit(choice ~ log(wage) + unemp + elig + log(area) + scrate +
+ctaxrate | 0, data = jfdi, nests = TRUE, un.nest.el = TRUE)
+nl2.fdi <- update(nl.fdi, un.nest.el = FALSE, constPar = c('iv:PT' = 1,
+'iv:IE' = 1))
+``` 
+
+The results of the fitted models are presented in the following table:
+
+```{r label = 'results for the JapaneseFDI data', results = 'asis'}
+library("texreg")
+htmlreg(list('Mult. logit' = ml.fdi, 'Lower model' = lm.fdi,
+             'Upper model' = um.fdi, 'Upper model' = um2.fdi, 'Nested logit' = nl.fdi,
+             'Nested logit' = nl2.fdi),
+        fontsize = "footnotesize", float.pos = "hbt",  label = "tab:nlogit",
+        caption = "Choice by Japanese firms of a european region.")
+``` 
+
+For the nested logit models, two tests are of particular interest:
+
+
+- the test of no nests, which means that all the nest elasticities
+  are equal to 1,
+- the test of unique nest elasticities, which means that all the
+  nest elasticities are equal to each other.
+
+
+
+For the test of no nests, the nested model is provided as the unique
+argument for the `lrtest` and the `waldtest` function. For the
+`scoretest`, the constrained model (i.e., the multinomial logit model)
+is provided as the first argument and the second argument is `nests`,
+which describes the nesting structure that one wants to test.
+
+```{r label = 'test of no nests'}
+lr.nest <- lrtest(nl2.fdi)
+wd.nest <- waldtest(nl2.fdi)
+sc.nest <- scoretest(ml.fdi, nests = TRUE, constPar = c('iv:PT' = 1,
+'iv:IE' = 1))
+``` 
+
+The Wald test can also be performed using the `linearHypothesis`
+function:
+```{r label = 'test of no nests with linhyp'}
+lh.nest <- linearHypothesis(nl2.fdi, c("iv:BE = 1", "iv:DE = 1",
+"iv:ES = 1", "iv:FR = 1", "iv:IT = 1", "iv:NL = 1", "iv:UK = 1"))
+``` 
+
+```{r label = 'results of the tests of no nests'}
+sapply(list(wald = wd.nest, lh = lh.nest, score = sc.nest, lr = lr.nest),
+statpval)
+``` 
+
+The three tests reject the null hypothesis of no correlation. We next
+test the hypothesis that all the nest elasticities are equal.
+
+```{r label = 'computing the test for equal iv coefficients'}
+lr.unest <- lrtest(nl2.fdi, nl.fdi)
+wd.unest <- waldtest(nl2.fdi, un.nest.el = TRUE)
+sc.unest <- scoretest(ml.fdi, nests = TRUE, un.nest.el = FALSE,
+constPar = c('iv:IE' = 1, 'iv:PT' = 1))
+lh.unest <- linearHypothesis(nl2.fdi, c("iv:BE = iv:DE", "iv:BE = iv:ES", 
+"iv:BE = iv:FR", "iv:BE = iv:IT", "iv:BE = iv:NL", "iv:BE = iv:UK"))
+``` 
+
+```{r label = 'results of the tests of equal iv coefficients'}
+sapply(list(wald = wd.unest, lh = lh.unest, score = sc.unest,
+lr = lr.unest), statpval)
+```
+
+Once again, the three tests strongly reject the hypothesis.
+
+## Bibliography
+

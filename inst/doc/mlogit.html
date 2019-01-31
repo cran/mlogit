@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title></title>
+
+
+
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+
+
+
+<p>Random utility models is the reference approach in economics when one wants to analyze the choice by a decision maker of one among a set of mutually exclusive alternatives. Since the seminal works of Daniel Mc Fadden <span class="citation">(McFadden 1974, MCFAD:78)</span> who won the Nobel prize in economics “for his development of theory and methods for analyzing discrete choice”, a large amount of theoretical and empirical literature have been developed in this field.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
+<p>Among the numerous applications of such models, we can cite the following: <span class="citation">Head and Mayer (2004)</span> investigate the determinants of the choice by Japanese firms of an European region for implementing a new production unit, <span class="citation">Fowlie (2010)</span> analyse the choice of a NO<span class="math inline">\(_x\)</span> emissions reduction technology by electricity production plants, <span class="citation">Kling and Thomson (1996)</span> and <span class="citation">Herriges and Kling (1999)</span> consider how the choice of a fishing mode can be explained by the price and the catch expectency, <span class="citation">Jain, Vilcassim, and Chintagunta (1994)</span> investigate the brand choice for yogurts, <span class="citation">Bhat (1995)</span> analyse transport mode choice for the Montreal-Toronto corridor.</p>
+<p>These models rely on the hypothesis that the decision maker is able to rank the different alternatives by an order of preference represented by a utility function, the chosen alternative being the one which is associated with the highest level of utility. They are called random utility models because part of the utility is unobserved and is modelised as the realisation of a random deviate.</p>
+<p>Different hypothesis on the distribution of this random deviate lead to different flavors of random utility models. Early developments of these models were based on the hypothesis of identically and independent errors following a Gumbel distribution,<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> leading to the multinomial logit model (<strong>MNL</strong>). More general models have since been proposed, either based on less restrictive distribution hypothesis or by introducing individual heterogeneity.</p>
+<p>Maintaining the Gumbel distribution hypothesis but relaxing the iid hypothesis leads to more general logit models (the heteroscedastic and the nested logit models). Relaxing the Gumbel distribution hypothesis and using a normal distribution instead leads to the multinomial probit model which can deal with heteroscedasticity and correlation of the errors.</p>
+<p>Individual heterogeneity can be introduced in the parameters associated with the covariates entering the observable part of the utility or in the variance of the errors. This leads respectively to the mixed effect models (<strong>MXL</strong>) and the scale heterogeneity model (<strong>S-MNL</strong>).</p>
+<p>The first version of <code>mlogit</code> was posted in 2008, it was the first <code>R</code> package allowing the estimation of random utility models. Since then, other package have emerged <span class="citation">(see Sarrias and Daziano 2017, 4 for a survey of revelant R pakages)</span>. <code>mlogit</code> still provides the widests set of estimators for random utility models and, moreover, its syntax has been adopted by other <code>R</code> packages. Those packages provide usefull additions to <code>mlogit</code>:</p>
+<ul>
+<li><code>mnlogit</code> enables efficient estimation of <strong>MNL</strong> for large data sets,</li>
+<li><code>gmnl</code> estimates <strong>MXL</strong> and <strong>S-MNL</strong>, but also the so called generalized multinomial logit model <strong>G-MNL</strong> which nests them,</li>
+<li>latent-class multinomial logit models (<strong>LC-MNL</strong>), for which the heterogeneity is due to the fact that individuals belong to different classes and mixed-mixed models (<strong>MM-MNL</strong>) which are a mixture of <strong>LC-MNL</strong> and <strong>MXL</strong> can also be estimated using the <code>gmnl</code> package,</li>
+<li>bayesian estimators for multinomial models are provided by the <code>bayesm</code>, <code>MNP</code> and <code>RSGHB</code> packages.</li>
+</ul>
+<p>The article is organized as follow. Vignette <a href="./2.formula.data.html">formula/data</a> explains how the usual formula-data and testing interface can be extended in order to describes in a very natural way the model to be estimated. Vignette <a href="./3.rum.html">random utility models</a> describe the landmark multinomial logit model. Vignette <a href="./4.relaxiid.html">relaxing the iid hypothesis</a>, <a href="./5.mxl.html">mixed logit model</a> and <a href="./6.mprobit.html">multinomial probit model</a> present three important extensions of this basic model: Vignette <a href="./4.relaxiid.html">relaxing the iid hypothesis</a> presents models that relax the iid Gumbel hypothesis, <a href="./5.mxl.html">mixed logit model</a> introduces slope heterogeneity by considering some parameters as random and <a href="./6.mprobit.html">multinomial probit model</a> relax the Gumbel distribution hypothesis by assuming a multivariate norm distribution.</p>
+<div id="bibliography" class="section level3 unnumbered">
+<h3>Bibliography</h3>
+<div id="refs" class="references">
+<div id="ref-BHAT:95">
+<p>Bhat, C.R. 1995. “A Heterocedastic Extreme Value Model of Intercity Travel Mode Choice.” <em>Transportation Research B</em> 29 (6): 471–83.</p>
+</div>
+<div id="ref-FOWL:10">
+<p>Fowlie, Meredith. 2010. “Emissions Trading, Electricity Restructuring, and Investment in Pollution Abatement.” <em>American Economic Review</em> 100 (3): 837–69. doi:<a href="https://doi.org/10.1257/aer.100.3.837">10.1257/aer.100.3.837</a>.</p>
+</div>
+<div id="ref-HEAD:MAYE:04">
+<p>Head, Keith, and Thierry Mayer. 2004. “Market Potential and the Location of Japanese Investment in the European Union.” <em>The Review of Economics and Statistics</em> 86 (4): 959–72. doi:<a href="https://doi.org/10.1162/0034653043125257">10.1162/0034653043125257</a>.</p>
+</div>
+<div id="ref-HERR:KLIN:99">
+<p>Herriges, Joseph A., and Catherine L. Kling. 1999. “Nonlinear Income Effects in Random Utility Models.” <em>The Review of Economics and Statistics</em> 81 (1): 62–72. doi:<a href="https://doi.org/10.1162/003465399767923827">10.1162/003465399767923827</a>.</p>
+</div>
+<div id="ref-DIPA:JAIN:94">
+<p>Jain, Dipak C., Naufel J. Vilcassim, and Pradeep K. Chintagunta. 1994. “A Random-Coefficients Logit Brand-Choice Model Applied to Panel Data.” <em>Journal of Business &amp; Economic Statistics</em> 12 (3). [American Statistical Association, Taylor &amp; Francis, Ltd.]: 317–28.</p>
+</div>
+<div id="ref-KLIN:THOM:96">
+<p>Kling, Catherine L., and Cynthia J. Thomson. 1996. “The Implications of Model Specification for Welfare Estimation in Nested Logit Models.” <em>American Journal of Agricultural Economics</em> 78 (1). [Agricultural &amp; Applied Economics Association, Oxford University Press]: 103–14.</p>
+</div>
+<div id="ref-MCFAD:74">
+<p>McFadden, D. 1974. “The Measurment of Urban Travel Demand.” <em>Journal of Public Economics</em> 3: 303–28.</p>
+</div>
+<div id="ref-SARR:DAZI:17">
+<p>Sarrias, Mauricio, and Ricardo Daziano. 2017. “Multinomial Logit Models with Continuous and Discrete Individual Heterogeneity in R: The Gmnl Package.” <em>Journal of Statistical Software, Articles</em> 79 (2): 1–46. doi:<a href="https://doi.org/10.18637/jss.v079.i02">10.18637/jss.v079.i02</a>.</p>
+</div>
+<div id="ref-TRAI:03">
+<p>Train, Kenneth E. 2003. <em>Discrete Choice Methods with Simulation</em>. Cambridge, UK: Cambridge University Press.</p>
+</div>
+</div>
+</div>
+<div class="footnotes">
+<hr />
+<ol>
+<li id="fn1"><p>For a presentation of this literature, see <span class="citation">Train (2003)</span> ; the theoretical parts of this paper draw heavily on this book.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>This distribution has the distinctive advantage that it leads to a probability which can be written has an integral which has a closed form.<a href="#fnref2">↩</a></p></li>
+</ol>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

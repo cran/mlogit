@@ -1,0 +1,283 @@
+---
+title: "Exercise 4: Multinomial probit"
+author: Kenneth Train and Yves Croissant
+date: '`r Sys.Date()`'
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Exercise 4: The multinomial probit model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+We have data on the mode choice of 453 commuters. Four modes are
+available: (1) bus, (2) car alone, (3) carpool, and (4) rail. We have
+data for each commuter on the cost and time on each mode and the
+chosen mode.
+
+`mlogit` estimates the multinomial probit model if the `probit`
+argument is `TRUE` using the GHK procedure.  This program estimates
+the full covariance matrix subject to normalization.
+
+More precisely, utility differences are computed respective to the
+reference level of the response (by default the bus alternative) and
+the 3 $\times$ 3 matrix of covariance is estimated. As the scale of
+utility is unobserved, the first element of the matrix is further set
+to 1. The Choleski factor of the covariance is :
+
+$$
+L = 
+\left(
+\begin{array}{ccc}
+  1 & 0 & 0 \\
+  \theta_{32} & \theta_{33} & 0 \\
+  \theta_{42} & \theta_{43} & \theta_{44}
+\end{array}
+\right)
+$$
+
+that is, five covariance parameters are estimated. The covariance
+matrix of the utility differences is then $\Omega = L L^{\top}$. By
+working in a Choleski factor that has this form, the normalization
+constraints are automatically imposed and the covariance matrix is
+guaranteed to be positive semi-definite (with the covariance matrix
+for any error differences being positive-definite).
+
+@. Estimate a model where mode choice is explained by the time and the
+cost of an alternative, using 100 draws and set the seed to
+20. Calculate the covariance matrix that is implied by the estimates
+of the Choleski factor. What, if anything, can you say about the
+degree of heteroskedasticity and correlation?  For comparison, what
+would the covariance matrix be if there were no heteroskedasticity or
+correlation (ie, iid errors for each alternative)? Can you tell
+whether the covariance is higher between car alone and carpool or
+between bus and rail?
+
+```{r }
+library("mlogit")
+data("Mode", package="mlogit")
+Mo <- mlogit.data(Mode, choice = 'choice', shape = 'wide', 
+                  varying = c(2:9))
+```   
+
+```{r probit1, echo = FALSE, results = 'hide'}
+strt <- c(1.83086600, -1.28168186,  0.30935104, -0.41344010, -0.04665517,  1, 0.25997237,
+          0.73648694,  1.30789474, -0.79818416,  0.43013035)
+p1 <- mlogit(choice ~ cost + time, Mo, seed = 20, 
+             R = 100, probit = TRUE, start = strt)
+```   
+
+```{r eval = FALSE}
+p1 <- mlogit(choice ~ cost + time, Mo, seed = 20, 
+             R = 100, probit = TRUE)
+```   
+
+```{r }
+summary(p1)
+``` 
+> The estimated Choleski factor $L_1$ is :
+
+```{r }
+L1 <- matrix(0, 3, 3)
+L1[!upper.tri(L1)] <- c(1, coef(p1)[6:10])
+``` 
+
+> Multiplying L1 by its transpose gives $\Omega_1$  :
+
+```{r }
+L1 %*% t(L1)
+``` 
+
+> With iid errors, $\Omega_1$ would be :
+
+> $$
+> \left(
+> \begin{array}{ccc}
+>   1 & 0.5 & 0.5 \\
+>   0.5 & 1 & 0.5 \\
+>   0.5 & 0.5 & 1 \\
+> \end{array}
+> \right)
+> $$
+
+> I find it hard to tell anything from the estimated covariance terms. 
+
+
+> I agree: it is hard -- if not impossible -- to
+>  meaningfully interpret the covariance parameters when all free
+>  parameters are estimated. However, the substitutiuon patterns that the
+>  estimates imply can be observed by forecasting with the model; we do
+>  this in exercise 4 below. Also, when structure is placed on the
+>  covariance matrix, the estimates are usually easier to interpret; this
+>  is explored in exercise 6.]
+
+@. Change the seed to 21 and rerun the model. (Even though the seed is
+just one digit different, the random draws are completely different.)
+See how much the estimates change. Does there seem to be a relation
+between the standard error of a parameter and the amount that its
+estimate changes with the new seed? (Of course, you are only getting
+two estimates, and so you are not estimating the true simulation
+variance very well. But the two estimates will probably give you an
+indication.)
+
+```{r probit2, echo = FALSE, results = 'hide'}
+strt <-  c(1.87149948, -1.28893595,  0.31455318, -0.43068703, -0.04752315,  1, 0.22888163,
+           0.69781113,  1.33071717, -0.56802431,  0.71060138)
+p2 <- mlogit(choice ~ cost + time, Mo, seed = 21, 
+             R = 100, probit = TRUE, start = strt)
+```   
+  
+```{r eval = FALSE}
+p2 <- mlogit(choice ~ cost + time, Mo, seed = 21, 
+             R = 100, probit = TRUE)
+```   
+
+```{r }
+coef(p2)
+``` 
+
+> The estimates seem to change more for parameters with larger standard
+> error, though this is not uniformly the case by any means. One would
+> expect larger samplign variance (which arises from a flatter $\ln L$
+> near the max) to translate into greater simulation variance (which
+> raises when the location of the max changes with different draws).
+
+@. Compute the probit shares (average probabilities) under
+user-specified parameters and data. How well do predicted shares match
+the actual share of commuters choosing each mode?
+
+> The actual shares are : 
+
+```{r }
+actShares <- with(Mo, tapply(choice, alt, mean))
+``` 
+
+> The predicted shares are : 
+
+```{r }
+predShares <- apply(fitted(p1, outcome = FALSE), 2, mean)
+predShares
+sum(predShares)
+``` 
+
+> The correspondence is very close but not exact. 
+
+> Note: Simulated GHK probabilities do not necessarily sum to
+> one over alternatives. This summing-up error at the individual level
+> tends to cancel out when the probabilities are averaged over the
+> sample. The forecasted shares (ie, average probabilities) sum to
+> 0.9991102, which is only slightly different from 1.
+
+@. We want to examine the impact of a large tax on driving
+alone. Raise the cost of the car alone mode by 50\% and forecast
+shares at these higher costs. Is the substitution proportional, as a
+logit model would predict? Which mode has the greatest percent
+increase in demand? What is the percent change in share for each mode?
+
+```{r }
+Mo2 <- Mo
+Mo2[Mo2$alt == 'car', 'cost'] <- Mo2[Mo2$alt == 'car', 'cost'] * 2
+newShares <- apply(predict(p1, newdata = Mo2), 2, mean)
+cbind(original = actShares, new = newShares, 
+      change = round((newShares - actShares) / actShares * 100))
+``` 
+
+> Substitution is not proportional. Carpool gets the largest percent
+> increase.
+
+ <!-- 6. Now, lets go back to estimation. As stated above, probit.txt -->
+ <!-- estimates the entire set of identified covariance parameters. Often -->
+ <!-- when running probit models you will want to impose some structure on -->
+ <!-- the covariance matrix instead of estimating all identifiable -->
+ <!-- parameters. You might want to do this because there are too many -->
+ <!-- covariance parameters to estimate meaningfully. For example, with 8 -->
+ <!-- alternatives, there are 28 identified covariance parameters. In our -->
+ <!-- model with only 4 alternatives, some of the covariance parameters are -->
+ <!-- insignificant. Even if the number of parameters is not an issue, you -->
+ <!-- might have some reason to believe that a particular structure is -->
+ <!-- appropriate. For example, with panel data, the covariance matrix of -->
+ <!-- unobserved utility over time might have an AR1 structure.  We want to -->
+ <!-- be able to revise the estimation program to allow for various -->
+ <!-- structures imposed on the covariance matrix. -->
+
+ <!-- Suppose that you are primarily interested in the carpool mode. You -->
+ <!-- suspect that you might not be capturing many of the relevant issues -->
+ <!-- for carpooling such that the unincluded factors would have a -->
+ <!-- relatively large variance. You also expect a correlation between some -->
+ <!-- of the unobserved factors for carpool and those for car alone. You are -->
+ <!-- not so concerned about the transit modes and are willing to assume -->
+ <!-- that their unobserved factors are iid. You specify a covariance matrix -->
+ <!-- with the following structure: -->
+
+ <!-- 1	r	0	0 -->
+ <!-- r	m	0	0 -->
+ <!-- 0	0	1	0 -->
+ <!-- 0	0	0	1  -->
+
+ <!-- That is, you want to estimate the variance of carpool utility -->
+ <!-- (relative to the variance for the other modes) and the covariance of -->
+ <!-- carpool with car alone, under the maintained assumption that the -->
+ <!-- transit modes have the same variance as car alone and are -->
+ <!-- independent. You want to revise probit.txt to allow you to estimate -->
+ <!-- this model. -->
+
+ <!-- First, derive the covariance matrix for the error differences, where -->
+ <!-- the differences are against the first alternative. (This will be a 4x4 -->
+ <!-- matrix with zeros in the top row and the left-most column. You want to -->
+ <!-- determine the 3x3 submatrix in terms of m and r.) -->
+
+ <!-- Second, normalize the model for scale by dividing matrix by the <2,2> -->
+ <!-- element, such that the <2,2> element becomes 1. (The <2,2> element of -->
+ <!-- the 4x4 matrix is the top-left element of the 3x3 submatrix.) When the -->
+ <!-- matrix is expressed in this form, you will see that natural parameters -->
+ <!-- are s=m-2r and r. -->
+
+ <!-- Then, revise probit.txt to estimate s and r along with the variable -->
+ <!-- coefficients. Note that when the matrix omega is created in the ll -->
+ <!-- proc, the 3x3 submatrix (also called omega) is created first and the -->
+ <!-- the row and column of zeros are added at the top and left with the -->
+ <!-- commands: omega=k3 | omega; omega=k4~omega; So, create the 3x3 matrix -->
+ <!-- first and then just re-use these two commands to make it 4x4. -->
+
+ <!-- To save time when you run the model, set the starting values to the -->
+ <!-- estimated coefficients from pout.txt and 2 for s and .3 for m. You can -->
+ <!-- cut and paste these starting values: -->
+
+ <!-- b={-.3252, -.3950, -2.2592, -1.4636, -1.2500}; -->
+ <!-- k={ 2, .3 };              ```Covariance parameters s and r``` -->
+ <!-- b=b|k; -->
+
+ <!-- Just so we can all compare results, use seed2=246 and NREP=100, like -->
+ <!-- in probit.txt. -->
+
+ <!-- Based on the estimation results: (i) How large is the variance of the -->
+ <!-- unobserved factors relating to carpool, relative to the variances for -->
+ <!-- the other modes? (ii) What is the correlation between the unobserved -->
+ <!-- utility of carpool and car alone? -->
+
+ <!-- \begin{answer} -->
+
+ <!--   See pout6.txt for the coding. The estimates of s and r are s = 2.18 -->
+ <!--   and r = 0.896. So the estimate of m is calculated as: s=m-2r, -->
+ <!--   2.18=m-2*0.896, m=2.18+2*0.896=3.97. -->
+
+ <!--   Based on the estimation results: (i) How large is the variance of -->
+ <!--   the unobserved factors relating to carpool, relative to the -->
+ <!--   variances for the other modes? -->
+
+ <!--   The variance for carpool is about 4 times greater than that for the -->
+ <!--   other modes. A higher variance for carpool is to be expected since -->
+ <!--   there are important aspects of carpooling (eg. coordinating -->
+ <!--   schedules) that are not included in the model. -->
+
+ <!--   (ii) What is the correlation between the unobserved utility of -->
+ <!--   carpool and car alone? -->
+
+ <!--   Estimated correlation = r / sqrt(1*m) = .896/sqrt(3.97) = 0.45. -->
+
+ <!-- \end{answer} -->
+

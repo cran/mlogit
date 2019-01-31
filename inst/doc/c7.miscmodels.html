@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Miscellaneous models</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Miscellaneous models</h1>
+
+
+
+<div id="paired-combinatorial-logit-model" class="section level2">
+<h2>Paired combinatorial logit model</h2>
+<p><span class="citation">Koppelman and Wen (2000)</span> proposed the <em>paired combinatorial logit model</em>, which is a nested logit model with nests composed by every combination of two alternatives. This model is obtained by using the following <span class="math inline">\(G\)</span> function :</p>
+<p><span class="math display">\[
+G(y_1, y_2, ...,
+y_n)=\sum_{k=1}^{J-1}\sum_{l=k+1}^J\left(y_k^{1/\lambda_{kl}}+y_l^{1/\lambda_{kl}}
+\right)^{\lambda_{kl}}
+\]</span></p>
+<p>The <em>pcl</em> model is consistent with random utility maximisation if <span class="math inline">\(0&lt;\lambda_{kl}\leq 1\)</span> and the multinomial logit results if <span class="math inline">\(\lambda_{kl}=1 \;\forall (k,l)\)</span>. The resulting probabilities are :</p>
+<p><span class="math display">\[
+P_l = \frac{\sum_{k\neq l}e^{V_l/\lambda_{lk}}\left(e^{V_k/\lambda_{lk}} + e^{V_l/\lambda_{lk}}\right)^{\lambda_{lk}-1}}
+{\sum_{k=1}^{J-1}\sum_{l=k+1}^{J}\left(e^{V_k/\lambda_{lk}} + e^{V_l/\lambda_{lk}}\right)^{\lambda_{lk}}}
+\]</span></p>
+<p>which can be expressed as a sum of <span class="math inline">\(J-1\)</span> product of a conditional probability of choosing the alternative and the marginal probability of choosing the nest :</p>
+<p><span class="math display">\[
+P_l=\sum_{k\neq l}P_{l\mid lk} P_{lk}
+\]</span></p>
+<p>with :</p>
+<p><span class="math display">\[
+P_{l \mid lk} = \frac{e^{V_l/\lambda_{lk}}}{e^{V_k/\lambda_{lk}} + e^{V_l/\lambda_{lk}}}
+\]</span> <span class="math display">\[
+P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
+    e^{V_l/\lambda_{lk}}\right)^{\lambda_{lk}}}{\sum_{k=1}^{J-1}\sum_{l=k+1}^{J}\left(e^{V_k/\lambda_{lk}}
+    + e^{V_l/\lambda_{lk}}\right)^{\lambda_{lk}}}
+\]</span></p>
+<p>We reproduce the example used by <span class="citation">Koppelman and Wen (2000)</span> on the same subset of the <code>ModeCanada</code> than the one used by <span class="citation">Bhat (1995)</span>. Three modes are considered and there are therefore three nests. The elasticity of the train-air nest is set to one. To estimate this model, one has to set the <code>nests</code> argument to <code>&quot;pcl&quot;</code>. All the nests of two alternatives are then automatically created. The restriction on the nest elasticity for the train-air nest is performed by using the <code>constPar</code> argument.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+busUsers &lt;-<span class="st"> </span><span class="kw">with</span>(ModeCanada, case[choice <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">==</span><span class="st"> 'bus'</span>])
+Bhat &lt;-<span class="st"> </span><span class="kw">subset</span>(ModeCanada, <span class="op">!</span>case <span class="op">%in%</span><span class="st"> </span>busUsers <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">!=</span><span class="st"> 'bus'</span> <span class="op">&amp;</span><span class="st"> </span>noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)
+Bhat<span class="op">$</span>alt &lt;-<span class="st"> </span>Bhat<span class="op">$</span>alt[drop =<span class="st"> </span><span class="ot">TRUE</span>]
+Bhat &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Bhat, <span class="dt">shape=</span><span class="st">'long'</span>, <span class="dt">chid.var =</span> <span class="st">'case'</span>,
+                    <span class="dt">alt.var =</span> <span class="st">'alt'</span>, <span class="dt">choice=</span><span class="st">'choice'</span>,
+                    <span class="dt">drop.index=</span><span class="ot">TRUE</span>)
+pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice<span class="op">~</span>freq<span class="op">+</span>cost<span class="op">+</span>ivt<span class="op">+</span>ovt, Bhat, <span class="dt">reflevel=</span><span class="st">'car'</span>,
+              <span class="dt">nests=</span><span class="st">'pcl'</span>, <span class="dt">constPar=</span><span class="kw">c</span>(<span class="st">'iv:train.air'</span>))
+<span class="kw">summary</span>(pcl)</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = choice ~ freq + cost + ivt + ovt, data = Bhat, 
+##     reflevel = &quot;car&quot;, nests = &quot;pcl&quot;, constPar = c(&quot;iv:train.air&quot;))
+## 
+## Frequencies of alternatives:
+##     car   train     air 
+## 0.45757 0.16721 0.37523 
+## 
+## bfgs method
+## 16 iterations, 0h:0m:1s 
+## g'(-H)^-1g = 2.08E-07 
+## gradient close to zero 
+## 
+## Coefficients :
+##                      Estimate  Std. Error  z-value  Pr(&gt;|z|)    
+## train:(intercept)  1.30439316  0.16544227   7.8843 3.109e-15 ***
+## air:(intercept)    1.99012922  0.35570613   5.5949 2.208e-08 ***
+## freq               0.06537827  0.00435688  15.0057 &lt; 2.2e-16 ***
+## cost              -0.02448565  0.00316570  -7.7347 1.044e-14 ***
+## ivt               -0.00761538  0.00067374 -11.3032 &lt; 2.2e-16 ***
+## ovt               -0.03223993  0.00237097 -13.5978 &lt; 2.2e-16 ***
+## iv:car.train       0.42129039  0.08613435   4.8911 1.003e-06 ***
+## iv:car.air         0.27123320  0.09061319   2.9933   0.00276 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -1903
+## McFadden R^2:  0.32927 
+## Likelihood ratio test : chisq = 1868.3 (p.value = &lt; 2.22e-16)</code></pre>
+</div>
+<div id="the-rank-ordered-logit-model" class="section level2">
+<h2>The rank-ordered logit model</h2>
+<p>Sometimes, in stated-preference surveys, the respondents are asked to give the full rank of their preference for all the alternative, and not only the prefered alternative. The relevant model for this kind of data is the rank-ordered logit model, which can be estimated as a standard multinomial logit model if the data is reshaped correctly</p>
+<p>The ranking can be decomposed in a series of choices of the best alternative within a decreasing set of available alternatives. For example, with 4 alternatives, the probability that the ranking would be 3-1-4-2 can be writen as follow :</p>
+<ul>
+<li>alternative 3 is in the first position, the probability is then <span class="math inline">\(\frac{e^{\beta^{\top}x_3}}{e^{\beta^{\top}x_1}+e^{\beta^{\top}x_2}+e^{\beta^{\top}x_3}+e^{\beta^{\top}x_4}}\)</span>,</li>
+<li>alternative 1 is in second position, the relevant probability is the logit probability that 1 is the chosen alternative in the set of alternatives (1-2-4) : <span class="math inline">\(\frac{e^{\beta^{\top}x_1}}{e^{\beta^{\top}x_1}+e^{\beta^{\top}x_2}+e^{\beta^{\top}x_4}}\)</span>,</li>
+<li>alternative 4 is in third position, the relevant probability is the logit probability that 4 is the chosen alternative in the set of alternatives (2-4) : <span class="math inline">\(\frac{e^{\beta^{\top}x_4}}{e^{\beta^{\top}x_2}+e^{\beta^{\top}x_4}}\)</span>,</li>
+<li>the probability of the full ranking is then simply the product of these 3 probabilities.</li>
+</ul>
+<p>This model can therefore simply be fitted as a multinomial logit model ; the ranking for one individual amoung J alternatives is writen as <span class="math inline">\(J-1\)</span> choices among <span class="math inline">\(J, J-1, ..., 2\)</span> alternatives.</p>
+<p>The estimation of the rank-ordered logit model is illustrated using the <code>Game</code> data set <span class="citation">(Fok, Paap, and Dijk 2010)</span>. Respondents are asked to rank 6 gaming platforms. The covariates are a dummy <code>own</code> which indicates whether a specific platform is curently owned, the age of the respondent (<code>age</code>) and the number of hours spent on gaming per week (<code>hours</code>). The data set is available in wide (<code>game</code>) and long (<code>game2</code>) format. In wide format, the consists on <span class="math inline">\(J\)</span> columns which indicate the ranking of each alternative.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;Game&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;Game2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">head</span>(Game,<span class="dv">2</span>)</code></pre></div>
+<pre><code>##   ch.Xbox ch.PlayStation ch.PSPortable ch.GameCube ch.GameBoy
+## 1       2              1             3           5          6
+## 2       4              2             3           5          6
+##   ch.PC own.Xbox own.PlayStation own.PSPortable own.GameCube
+## 1     4        0               1              0            0
+## 2     1        0               1              0            0
+##   own.GameBoy own.PC age hours
+## 1           0      1  33  2.00
+## 2           0      1  19  3.25</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(Game2, <span class="dv">7</span>)</code></pre></div>
+<pre><code>##   age hours    platform ch own chid
+## 1  33  2.00     GameBoy  6   0    1
+## 2  33  2.00    GameCube  5   0    1
+## 3  33  2.00          PC  4   1    1
+## 4  33  2.00 PlayStation  1   1    1
+## 5  33  2.00  PSPortable  3   0    1
+## 6  33  2.00        Xbox  2   0    1
+## 7  19  3.25     GameBoy  6   0    2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(Game)</code></pre></div>
+<pre><code>## [1] 91</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(Game2)</code></pre></div>
+<pre><code>## [1] 546</code></pre>
+<p>Note that <code>Game</code> contains 91 rows (there are 91 individuals) and that <code>Game2</code> contains 546 rows (<span class="math inline">\(91\)</span> individuals <span class="math inline">\(times\)</span> 6 alternatives)</p>
+<p>To use <code>mlogit.data</code>, the <code>ranked</code> should <code>TRUE</code> :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">G &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Game2, <span class="dt">shape =</span> <span class="st">&quot;long&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">alt.var =</span> <span class="st">'platform'</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>)
+G &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Game, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">varying =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>)
+<span class="kw">head</span>(G)</code></pre></div>
+<pre><code>##               age hours         alt own chid    ch
+## 1.GameBoy      33     2     GameBoy   0    1 FALSE
+## 1.GameCube     33     2    GameCube   0    1 FALSE
+## 1.PC           33     2          PC   1    1 FALSE
+## 1.PSPortable   33     2  PSPortable   0    1 FALSE
+## 1.PlayStation  33     2 PlayStation   1    1  TRUE
+## 1.Xbox         33     2        Xbox   0    1 FALSE</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(G)</code></pre></div>
+<pre><code>## [1] 1820</code></pre>
+<p>Note that the choice variable is now a logical variable and that the number of row is now 1820 (91 individuals <span class="math inline">\(\times (6+5+4+3+2)\)</span> alternatives).</p>
+<p>Using <code>PC</code> as the reference level, we can then reproduce the results of the original reference :</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">mlogit</span>(ch <span class="op">~</span><span class="st"> </span>own <span class="op">|</span><span class="st"> </span>hours <span class="op">+</span><span class="st"> </span>age, G, <span class="dt">reflevel =</span> <span class="st">&quot;PC&quot;</span>))</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = ch ~ own | hours + age, data = G, reflevel = &quot;PC&quot;, 
+##     method = &quot;nr&quot;)
+## 
+## Frequencies of alternatives:
+##          PC     GameBoy    GameCube  PSPortable PlayStation 
+##     0.17363     0.13846     0.13407     0.17363     0.18462 
+##        Xbox 
+##     0.19560 
+## 
+## nr method
+## 5 iterations, 0h:0m:0s 
+## g'(-H)^-1g = 6.74E-06 
+## successive function values within tolerance limits 
+## 
+## Coefficients :
+##                          Estimate Std. Error z-value  Pr(&gt;|z|)
+## GameBoy:(intercept)      1.570379   1.600251  0.9813 0.3264288
+## GameCube:(intercept)     1.404095   1.603483  0.8757 0.3812185
+## PSPortable:(intercept)   2.583563   1.620778  1.5940 0.1109302
+## PlayStation:(intercept)  2.278506   1.606986  1.4179 0.1562270
+## Xbox:(intercept)         2.733774   1.536098  1.7797 0.0751272
+## own                      0.963367   0.190396  5.0598 4.197e-07
+## GameBoy:hours           -0.235611   0.052130 -4.5197 6.193e-06
+## GameCube:hours          -0.187070   0.051021 -3.6665 0.0002459
+## PSPortable:hours        -0.233688   0.049412 -4.7294 2.252e-06
+## PlayStation:hours       -0.129196   0.044682 -2.8915 0.0038345
+## Xbox:hours              -0.173006   0.045698 -3.7858 0.0001532
+## GameBoy:age             -0.073587   0.078630 -0.9359 0.3493442
+## GameCube:age            -0.067574   0.077631 -0.8704 0.3840547
+## PSPortable:age          -0.088669   0.079421 -1.1164 0.2642304
+## PlayStation:age         -0.067006   0.079365 -0.8443 0.3985154
+## Xbox:age                -0.066659   0.075205 -0.8864 0.3754227
+##                            
+## GameBoy:(intercept)        
+## GameCube:(intercept)       
+## PSPortable:(intercept)     
+## PlayStation:(intercept)    
+## Xbox:(intercept)        .  
+## own                     ***
+## GameBoy:hours           ***
+## GameCube:hours          ***
+## PSPortable:hours        ***
+## PlayStation:hours       ** 
+## Xbox:hours              ***
+## GameBoy:age                
+## GameCube:age               
+## PSPortable:age             
+## PlayStation:age            
+## Xbox:age                   
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -516.55
+## McFadden R^2:  0.36299 
+## Likelihood ratio test : chisq = 588.7 (p.value = &lt; 2.22e-16)</code></pre>
+<div id="refs" class="references">
+<div id="ref-BHAT:95">
+<p>Bhat, C.R. 1995. “A Heterocedastic Extreme Value Model of Intercity Travel Mode Choice.” <em>Transportation Research B</em> 29 (6): 471–83.</p>
+</div>
+<div id="ref-FOK:PAAP:DIJK:10">
+<p>Fok, Denis, Richard Paap, and Bram van Dijk. 2010. “A Rank-Ordered Logit Model with Unobserved Heterogeneity in Ranling Capabilities.” <em>Journal of Applied Econometrics</em>.</p>
+</div>
+<div id="ref-KOPP:WEN:00">
+<p>Koppelman, Franck S., and Chieh-Hua Wen. 2000. “The Paired Combinatorial Logit Model: Properties, Estimation and Application.” <em>Transportation Research B</em> 34: 75–89.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

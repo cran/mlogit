@@ -1,0 +1,363 @@
+---
+title: "Multinomial probit"
+output: rmarkdown::html_vignette
+bibliography: bibmlogit.bib
+vignette: >
+  %\VignetteIndexEntry{6. The multinomial probit model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r label = setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
+options(width = 65)
+```
+
+## The model
+
+The multinomial probit is obtained with the same modeling that we used
+while presenting the random utility model. The utility of an
+alternative is still the sum of two components : $U_j = V_j +
+\epsilon_j$.
+
+but the joint distribution of the error terms is now a multivariate
+normal with mean 0 and with a matrix of covariance denoted
+$\Omega$^[see [@HAUS:WISE:78] and [@DAGA:79]].
+
+Alternative $l$ is chosen if : 
+$$
+\left\{
+\begin{array}{rcl}
+U_1-U_l&=&(V_1-V_l)+(\epsilon_1-\epsilon_l)<0\\
+U_2-U_l&=&(V_2-V_l)+(\epsilon_2-\epsilon_l)<0\\
+ & \vdots &  \\
+U_J-U_l&=&(V_J-V_l)+(\epsilon_J-\epsilon_l)<0\\
+\end{array}
+\right.
+$$
+
+wich implies, denoting $V^l_j=V_j-V_l$ :
+
+$$
+\left\{
+\begin{array}{rclrcl}
+  \epsilon^l_1 &=& (\epsilon_1-\epsilon_l) &<& - V^l_1\\
+  \epsilon^l_2 &=& (\epsilon_2-\epsilon_l) &<& - V^l_2\\
+  &\vdots & & \vdots &  \\
+  \epsilon^l_J &=& (\epsilon_J-\epsilon_l) &<& - V^l_J\\
+\end{array}
+\right.
+$$
+
+The initial vector of errors $\epsilon$ are transformed using the
+following transformation :
+
+$$\epsilon^l = M^l \epsilon$$
+
+where the transformation matrix $M^l$ is a $(J-1) \times J$ matrix
+obtained by inserting in an identity matrix a $l^{\mbox{th}}$ column
+of $-1$. For example, if $J = 4$ and $l = 3$ :
+
+$$
+M^3 = 
+\left(
+\begin{array}{cccc}
+1 & 0 & -1 & 0 \\
+0 & 1 & -1 & 0 \\
+0 & 0 & -1 & 1 \\
+\end{array}
+\right)
+$$
+
+The covariance matrix of the error differences is obtained using the
+following matrix :
+
+$$
+\mbox{V}\left(\epsilon^l\right)=\mbox{V}\left(M^l\epsilon\right)
+=
+M^l\mbox{V}\left(\epsilon\right){M^l}^{\top}
+=
+M^l\Omega{M^l}^{\top}
+$$
+
+The probability of choosing $l$ is then :
+
+\begin{equation}
+P_l =\mbox{P}(\epsilon^l_1<-V_1^l \;\&\; \epsilon^l_2<-V_2^l \;\&\; ... \; \epsilon^l_J<-V_J^l)
+\end{equation}
+
+with the hypothesis of distribution, this writes :
+
+\begin{equation}
+P_l = \int_{-\infty}^{-V_1^l}\int_{-\infty}^{-V_2^l}...\int_{-\infty}^{-V_J^l}\phi(\epsilon^l)
+d\epsilon^l_1 d\epsilon^l_2... d^l_J
+\end{equation}
+
+with :
+
+\begin{equation}
+\phi\left(\epsilon^l\right)=\frac{1}{(2\pi)^{(J-1)/2}\mid\Omega^l\mid^{1/2}}
+e^{-\frac{1}{2}\epsilon^l{\Omega^l}^{-1}\epsilon^l}
+\end{equation}
+
+Two problems arise with this model :
+
+- the first one is that the identified parameters are the elements
+  of $\Omega^l$ and not of $\Omega$. We must then carefully investigate
+  the meanings of these elements.
+- the second one is that the probability is a $J-1$ integral,
+  which should be numerically computed. The relevant strategy in this
+  context is to use simulations.
+
+## Identification
+
+The meaning-full parameters are those of the covariance matrix of the
+error $\Omega$. For example, with $J = 3$ :
+
+$$
+\Omega =
+\left(
+\begin{array}{ccc}
+\sigma_{11} & \sigma_{12} & \sigma_{13}  \\
+\sigma_{21} & \sigma_{22} & \sigma_{23} \\
+\sigma_{31} & \sigma_{32} & \sigma_{33} \\
+\end{array}
+\right)
+$$
+
+$$
+\Omega^1 = M^1 \Omega {M^1}^{\top}=
+\left(
+\begin{array}{cc}
+\sigma_{11}+\sigma_{22}-2\sigma_{12} & \sigma_{11} + \sigma_{23} - \sigma_{12} -\sigma_{13} \\
+\sigma_{11}+\sigma_{23}- \sigma_{12} - \sigma_{13} & \sigma_{11} + \sigma_{33} - 2 \sigma_{13} \\
+\end{array}
+\right)
+$$
+
+The overall scale of utility being unidentified, one has to impose the
+value of one of the variance, for example the first one is fixed to
+1. We then have :
+
+$$
+\Omega^1 = \left(
+\begin{array}{cc}
+  1 & \frac{\sigma_{11}+ \sigma_{23} - \sigma_{12} -\sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} \\
+  \frac{\sigma_{11}+\sigma_{23}- \sigma_{12} - \sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} & \frac{\sigma_{11} + \sigma_{33} - 2 \sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} \\
+\end{array}
+\right)
+$$
+
+Therefore, out the 6 structural parameters of the covariance matrix,
+only 3 can be identified. Moreover, it's almost impossible to
+interpret these parameters.
+
+More generally, with $J$ alternatives, the number of the parameters of
+the covariance matrix is $(J+1)\times J/2$ and the number of identified
+parameters is $J\times(J-1)/2-1$.
+
+## Simulations
+
+Let $L^l$ be the Choleski decomposition of the covariance matrix of
+the error differences :
+
+$$
+\Omega^l=L^l {L^l}^{\top}
+$$
+
+This matrix is a lower triangular matrix of dimension $(J-1)$ :
+
+$$
+L^l=
+\left(
+\begin{array}{ccccc}
+l_{11} & 0 & 0 &... & 0 \\
+l_{21} & l_{22} & 0 & ... & 0 \\
+l_{31} & l_{32} & l_{33} & ... & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+l_{(J-1)1} & l_{(J-1)2} & l_{(J-1)3} & ... & l_{(J-1)(J-1)} \\
+\end{array}
+\right)
+$$
+
+Let $\eta$ be a vector of standard normal deviates :
+
+$$
+\eta \sim N(0, I)
+$$
+
+Therefore, we have :
+
+$$
+\mbox{V}\left(L^l\eta\right)=L^lV(\eta){L^l}^{\top}=L^lI{L^l}^{\top}=\Omega^l
+$$
+
+Therefore, if we draw a vector of standard normal deviates $\eta$ and
+apply to it this transformation, we get a realization of $\epsilon^l$.
+
+This joint probability can be written as a product of conditional and
+marginal probabilities :
+
+$$
+\begin{array}{rcl}
+  P_l &=& \mbox{P}(\epsilon^l_1<- V_1^l \;\&\; \epsilon^l_2<-V_2^l \;\&\; ... \;\&\; \epsilon^l_J<-V_J^l))\\
+  &=& \mbox{P}(\epsilon^l_1<- V_1^l))\\
+  &\times&\mbox{P}(\epsilon^l_2<-V_2^l \mid \epsilon^l_1<-V_1^l) \\
+  &\times&\mbox{P}(\epsilon^l_3<-V_3^l \mid \epsilon^l_1<-V_1^l \;\&\; \epsilon^l_2<-V_2^l) \\
+  & \vdots & \\
+  &\times&\mbox{P}(\epsilon^l_J<-V_J^l \mid \epsilon^l_1<-V_1^l \;\&\; ... \;\&\; \epsilon^l_{J-1}<-V_{J-1}^l)) \\
+\end{array}
+$$
+
+The vector of error differences deviates is :
+
+$$
+\left(
+\begin{array}{c}
+  \epsilon^l_1 \\ \epsilon^l_2 \\ \epsilon^l_3 \\ \vdots \\ \epsilon^l_J
+\end{array}
+\right)
+=
+\left(
+\begin{array}{ccccc}
+l_{11} & 0 & 0 &... & 0 \\
+l_{21} & l_{22} & 0 & ... & 0 \\
+l_{31} & l_{32} & l_{33} & ... & 0 \\
+\vdots & \vdots & \vdots & \ddots & \vdots \\
+l_{(J-1)1} & l_{(J-1)2} & l_{(J-1)3} & ... & l_{(J-1)(J-1)} \\
+\end{array}
+\right)
+\times
+\left(
+\begin{array}{c}
+\eta_1 \\ \eta_2 \\ \eta_3 \\ \vdots \\ \eta_J
+\end{array}
+\right)
+$$
+
+
+$$
+\left(
+\begin{array}{c}
+  \epsilon^l_1 \\ \epsilon^l_2 \\ \epsilon^l_3 \\ \vdots \\ \epsilon^l_J
+\end{array}
+\right)
+=
+\left(
+\begin{array}{l}
+l_{11}\eta_1 \\ 
+l_{21}\eta_1+l_{22}\eta_2 \\ 
+l_{31}\eta_1+l_{32}\eta_2 + l_{33}\eta_3\\ 
+\vdots \\ 
+l_{(J-1)1}\eta_1+l_{(J-1)2}\eta_2+...+l_{(J-1)(J-1)}\eta_{J-1}
+\end{array}
+\right)
+$$
+
+Let's now investigate the marginal and conditional probabilities : 
+
+- the first one is simply the marginal probability for a standard
+  normal deviates, therefore we have :
+  $\mbox{P}(\epsilon^l_1<-V_1^l) = \Phi\left(-\frac{V_1^l}{l_{11}}\right)$
+- the second one is, for a given value of $\eta_1$ equal to
+  $\Phi\left(-\frac{V^l_2+l_{21}\eta_1}{l_{22}}\right)$. We then have to compute the
+  mean of this expression for any value of $\eta_1$ lower than
+  $-\frac{V^l_1}{l_{11}}$. We then have, denoting $\bar{\phi}_1$ the truncated
+  normal density :
+  $$\mbox{P}(\epsilon^l_2<-V_2^l)=\int_{-\infty}^{-\frac{V^l_1}{l_{11}}}\Phi\left(-\frac{V^l_2+l_{21}\eta_1}{l_{22}}\right)
+  \bar{\phi}_1(\eta_1)d\eta_1$$
+- the third one is, for given values of $\eta_1$ and $\eta_2$
+  equal to :
+  $\Phi\left(-\frac{V^l_3+l_{31}\eta_1+l_{32}\eta_2}{l_{33}}\right)$. We
+  then have :
+  $$\mbox{P}(\epsilon^l_3<-V_3^l)=\int_{-\infty}^{-\frac{V^l_1}{l_{11}}}\int_{-\infty}^{-\frac{V^l_2+l_{21}\eta_1}{l_{22}}}
+  \Phi\left(-\frac{V^l_3+l_{31}\eta_1+l_{32}\eta_2}{l_{33}}\right)\bar{\phi}_1(\eta_1)\bar{\phi}_2(\eta_2)d\eta_1d\eta_2$$
+- and so on. 
+
+
+This probabilities can easily be simulated by drawing numbers from a
+truncated normal distribution.
+
+This so called GHK algorithm^[see for example
+  [@GEWE:KEAN:RUNK:94].] (for Geweke, Hajivassiliou and Keane who
+developed this algorithm) can be described as follow :
+
+\begin{enumerate}
+- compute $\Phi\left(-\frac{V_1^l}{l_{11}}\right)$
+- draw a number called $\eta_1^r$ from a standard normal
+  distribution upper-truncated at $-\frac{V_1^l}{l_{11}}$ and compute
+  $\Phi\left(-\frac{V^l_2+l_{21}\eta_1^r}{l_{22}}\right)$
+- draw a number called $\eta_2^r$ from a standard normal
+  distribution upper-truncated at
+  $-\frac{V^l_2+l_{21}\eta_1^r}{l_{22}}$ and compute
+  $\Phi\left(-\frac{V^l_3+l_{31}\eta_1^r+l_{32}\eta_2^r}{l_{33}}\right)$
+- $...$ draw a number called $\eta_{J-1}^r$ from a standard
+  normal distribution upper-truncated at $-\frac{V^l_{J-1}+l_{(J-1)1}\eta_1^r+... V^l_{J-1}+l_{(J-1)(J-2)}\eta_{J-2}^r}{l_{(J-1)(J-1)}}$
+- multiply all these probabilities and get a realization of the
+  probability called $P^r_l$.
+- repeat all these steps many times and average all these
+  probabilities ; this average is an estimation of the probability :
+  $\bar{P}_l = \sum_{r=1}^R P^r_l/R$.
+\end{enumerate}
+
+Several points should be noted concerning this algorithm :
+
+- the utility differences should be computed respective to the
+  chosen alternative for each individual,
+- the Choleski decomposition used should relies on the same
+  covariance matrix of the errors. One method to attained this goal is
+  to start from a given difference, *e.g.* the difference
+  respective with the first alternative. The vector of error
+  difference is then $\epsilon^1$ and its covariance matrix is
+  $\Omega^1=L^1{L^1}^{\top}$. To apply a difference respective with an
+  other alternative $l$, we construct a matrix called $S^l$ which is
+  obtained by using a $J-2$ identity matrix, adding a first row of 0
+  and inserting a column of $-1$ at the $l-1^{\mbox{th}}$
+  position. For example, with 4 alternatives and $l=3$, we have :
+  $$S^3=
+  \left(
+    \begin{array}{ccc}
+      0 & -1 & 0 \\
+      1 & -1 & 0 \\
+      0 & -1 & 1 \\
+    \end{array}
+  \right)
+  $$
+  The elements of the choleski decomposition of the covariance matrix
+  is then obtained as follow :
+  $$
+  \Omega^l = S^l \Omega^1 {S^l}^{\top}=L^l {L^l}^{\top}
+  $$
+- to compute draws from a normal distribution truncated at $a$,
+  the following trick is used : take a draw $\mu$ from a uniform
+  distribution (between 0 and 1) ; then $\eta = \Phi^{-1}\left(\mu
+    \Phi(a)\right)$ is a draw from a normal distribution truncated at
+  $a$
+
+## Applications
+
+We use again the `Fishing` data frame, with only a subset of three
+alternatives used. The multinomial probit model is estimated using
+`mlogit` with the `probit` argument equal to `TRUE`.
+
+```{r }
+library("mlogit")
+data("Fishing", package = "mlogit")
+Fish <- mlogit.data(Fishing, shape="wide", varying=2:9, choice="mode")
+``` 
+
+```{r echo = FALSE, results = 'hide'}
+strt <- c(0.725136619390524, 0.623929046825871, -0.012154264563254, 
+          2.40052090993936e-06, -6.54190678882061e-05, 1.54787449680641, 
+          0.400099854168002, 1.27472767540054, 1, 0.545695205792339, 0.695440476892784)
+Fish.mprobit <- mlogit(mode~price | income | catch, Fish, probit = TRUE,
+                       alt.subset=c('beach', 'boat','pier'), start = strt)
+```
+
+```{r eval = FALSE}
+Fish.mprobit <- mlogit(mode~price | income | catch, Fish, probit = TRUE, alt.subset=c('beach', 'boat','pier'))
+```
+
+```{r }
+summary(Fish.mprobit)
+``` 
