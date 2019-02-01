@@ -1,7 +1,6 @@
 lnl.slogit <- function(param, X, y, weights = NULL, gradient = FALSE,
                        hessian = FALSE, opposite, direction = rep(0, length(param)),
                        initial.value = NULL,stptol = 1E-01){
-    balanced <- FALSE
     step <- 2
     repeat{
         step <- step / 2

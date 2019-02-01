@@ -156,7 +156,10 @@ model.frame.mFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL, alt
         }
         mf[[1]] <- y
         # b/ change the reference level of the response if required
-        if (! is.null(reflevel)) index$alt <- relevel(index$alt, reflevel)
+        if (! is.null(reflevel)){
+            attr(index, "alt.ordering") <- levels(index$alt)
+            index$alt <- relevel(index$alt, reflevel)
+        }
         # c/ compute the relevent subset if required
         if (! is.null(alt.subset)){
             # we keep only choices that belong to the subset
@@ -170,10 +173,19 @@ model.frame.mFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL, alt
             # the relevant subset for the data.frame and the indexes
             mf <- mf[id.kept & alt.kept, , drop = FALSE]
             index <- index[id.kept & alt.kept, , drop = FALSE]
+            # drop the non-selected levels
+            index$alt <- index$alt[drop = TRUE]
+            if (! is.null(attr(index, "alt.ordering"))){
+                attr(index, "alt.ordering") <-
+                    intersect(attr(index, "alt.ordering"), levels(index$alt))
+            }
         }
         # d/ balance the data.frame i.e. insert rows with NA when an
         # alternative is not relevant
-        alt.un <- unique(index$alt)
+#        alt.un <- unique(index$alt)
+        alt.un <- levels(index$alt)
+        # be very careful, if some observations are missing unique may
+        # be different from levels
         chid.un <- unique(index$chid)
         alt.lev <- levels(index$alt)
         J <- length(alt.lev)
@@ -185,7 +197,10 @@ model.frame.mFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL, alt
             mf <- mf[all.rn, ]
             rownames(mf) <- all.rn
             chid <- rep(chid.un, each = T)
-            alt <- rep(alt.un, n)
+            alt <- factor(rep(alt.un, n), levels = alt.un, labels = alt.un)
+            # take care here to make a factor with the levels in the
+            # correct order
+            alt[is.na(mf[[1]])] <- NA
             index <- data.frame(chid = chid, alt = alt, row.names = rownames(mf))
             if (! is.null(oindex$group)){
                 ra <- oindex[c("alt", "group")][! duplicated(oindex$alt), ]
@@ -198,10 +213,12 @@ model.frame.mFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL, alt
                 ids <- ra$id
                 names(ids) <- ra$chid
                 index$id <- ids[index$chid]
+                index$id <- index$id[drop = TRUE]
             }
         }
     }
-    index <- data.frame(lapply(index, function(x) x[drop = TRUE]), row.names = rownames(index))
+#    index <- data.frame(lapply(index, function(x) x[drop = TRUE]), row.names = rownames(index))
+    index$chid <- index$chid[drop = TRUE]
     structure(mf,
               index = index,
               formula = formula,

@@ -350,6 +350,30 @@ NULL
 #' @keywords datasets
 NULL
 
+#' Choice of Brand for Crakers
+#' 
+#' a sample of 3292 individualscross-section
+#' 
+#' @name Cracker
+#' @docType data
+#' @format A dataframe containing :
+#'
+#' - id: individuals identifiers,
+#' - choice: one of sunshine, keebler, nabisco, private,
+#' - disp.z: is there a display for brand z?
+#' - feat.z: is there a newspaper feature advertisement for brand z?
+#' - price.z: price of brand z.
+#' 
+#' @source
+#' [Journal of Business Economics and Statistics web site](https://www.amstat.org).
+#' 
+#' @references
+#' \insertRef{DIPA:NAUF:CHIN:94}{mlogit}
+#'
+#' \insertRef{PAAP:FRAN:00}{mlogit}
+#' @keywords datasets
+NULL
+
 #' mlogit package: estimation of random utility discrete choice models
 #' by maximum likelihood
 #'
@@ -362,3 +386,59 @@ NULL
 #' @details For a gentle and comprehensive introduction to the
 #'     package, see the package's vignettes.
 NULL
+
+
+#' Choice of Brand for Catsup
+#' 
+#' a sample of 2798 individuals
+#' 
+#' @name Catsup
+#' @docType data
+#' @format A dataframe containing :
+#'
+#' - id: individuals identifiers,
+#' - choice: one of heinz41, heinz32, heinz28, hunts32,
+#' - disp.z: is there a display for brand z ?
+#' - feat.z: is there a newspaper feature advertisement for brand z?
+#' - price.z: price of brand z.
+#' @source
+#' [Journal of Business Economics and Statistics web site](https://www.amstat.org).
+#' 
+#' @references
+#' \insertRef{DIPA:NAUF:CHIN:94}{mlogit}
+#' @keywords datasets
+NULL
+
+#' Stated Preferences for Car Choice
+#' 
+#' a sample of 4654 individuals
+
+#' @name Car
+#' @docType data
+#' @format A dataframe containing :
+#'
+#' - choice: choice of a vehicule amoung 6 propositions, 
+#' - college: college education?,
+#' - hsg2: size of household greater than 2? 
+#' - coml5: commulte lower than 5 miles a day?, 
+#' - typez: body type, one of regcar (regular car), sportuv (sport utility vehicule), sportcar, stwagon (station wagon), truck, van, for each proposition z from 1 to 6, 
+#' - fuelz: fuel for proposition z, one of gasoline, methanol, cng (compressed natural gas), electric.,
+#' - pricez: price of vehicule divided by the logarithme of income,
+#' - rangez: hundreds of miles vehicule can travel between refuelings/rechargings, 
+#' - accz: acceleration, tens of seconds required to reach 30 mph from stop, 
+#' - speedz: highest attainable speed in hundreds of mph, 
+#' - pollutionz: tailpipe emissions as fraction of those for new gas vehicule, 
+#' - sizez: 0 for a mini, 1 for a subcompact, 2 for a compact and 3 for a mid--size or large vehicule, 
+#' - spacez: fraction of luggage space in comparable new gas vehicule, 
+#' - costz: cost per mile of travel (tens of cents) : home recharging for electric vehicule, station refueling otherwise, 
+#' - stationz: fraction of stations that can refuel/recharge vehicule.
+#'
+#' @source
+#' [Journal of Applied Econometrics data archive](http://jae.wiley.com/jae/).
+#' 
+#' @references
+#' \insertRef{MCFA:TRAI:00}{mlogit}
+#' 
+#' @keywords datasets
+NULL
+

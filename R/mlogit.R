@@ -287,9 +287,13 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
     alt <- index$alt
     chid <- index$chid
     alt.lev <- levels(alt)
+    if (is.null(attr(index, "alt.ordering"))) alt.ord <- levels(alt)
+    else alt.ord <- attr(index, "alt.ordering")
+    altnoNA <- rep(alt.ord, nrow(index) / length(alt.lev))
+    altnoNA <- factor(altnoNA, levels = alt.lev, labels = alt.lev)
     J <- length(alt.lev)
     n <- length(unique(chid))
-        
+
     # 5 ###########################################################
     # extract the elements of the model
     ###############################################################
@@ -344,10 +348,11 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
     # Xl and yl are lists of length J which contains n matrix / vector
     # of covariates and response (a boolean) ; yv is a vector that
     # contains the chosen alternative
+
     Xl <- vector(length = J, mode = "list")
     names(Xl) <- levels(alt)
-    for (i in levels(alt))  Xl[[i]] <- X[alt == i, , drop = FALSE]
-    yl <- split(y, alt)
+    for (i in levels(alt))  Xl[[i]] <- X[altnoNA == i, , drop = FALSE]
+    yl <- split(y, altnoNA)
     yl <- lapply(yl, function(x){x[is.na(x)] <- FALSE ; x})
     attr(yl, "chid") <- as.character(levels(chid))
     attr(yl, "id") <- as.character(levels(id))

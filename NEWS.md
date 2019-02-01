@@ -1,6 +1,14 @@
+# mlogit 0.4-1
+
+* the Cracker, Catsup and Car data set are back in mlogit since AER,
+  flexmix and mlogitBMA run examples based on them.
+
+* the alt vector in the index is now carrefully checked in case of
+  alternative subseting or reference level change.
+
 # mlogit 0.4-0
 
-* improved version of the vignette mlogit2, due to reviews and split
+* the main vignette is improved, writen in markdown and now and split
   by sections
 
 * the Exercises vignette is splited and is now writen in markdown
@@ -12,6 +20,8 @@
 
 * implementation of the computation of the standard deviations of the
   covariance matrix of the random parameters, using the delta method.
+  
+* some data sets are removed 
 
 # mlogit 0.3-0
 
