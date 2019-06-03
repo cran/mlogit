@@ -3,6 +3,7 @@
 \name{cor.mlogit}
 \alias{cor.mlogit}
 \alias{cov.mlogit}
+\alias{cov.mlogit}
 \title{Correlation structure of the random parameters}
 \usage{
 cor.mlogit(x)

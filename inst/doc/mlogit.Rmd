@@ -1,6 +1,6 @@
 ---
 output: rmarkdown::html_vignette
-bibliography: bibmlogit.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{mlogit}
   %\VignetteEngine{knitr::rmarkdown}
@@ -86,18 +86,18 @@ additions to `mlogit`:
   `bayesm`, `MNP` and `RSGHB` packages.
 
 The article is organized as follow. Vignette
-[formula/data](./2.formula.data.html) explains how the usual
+[formula/data](./c2.formula.data.html) explains how the usual
 formula-data and testing interface can be extended in order to
 describes in a very natural way the model to be estimated. Vignette
-[random utility models](./3.rum.html) describe the landmark
+[random utility models](./c3.rum.html) describe the landmark
 multinomial logit model. Vignette [relaxing the iid
-hypothesis](./4.relaxiid.html), [mixed logit model](./5.mxl.html) and
-[multinomial probit model](./6.mprobit.html) present three important
+hypothesis](./c4.relaxiid.html), [mixed logit model](./c5.mxl.html) and
+[multinomial probit model](./c6.mprobit.html) present three important
 extensions of this basic model: Vignette [relaxing the iid
-hypothesis](./4.relaxiid.html) presents models that relax the iid
-Gumbel hypothesis, [mixed logit model](./5.mxl.html) introduces slope
+hypothesis](./c4.relaxiid.html) presents models that relax the iid
+Gumbel hypothesis, [mixed logit model](./c5.mxl.html) introduces slope
 heterogeneity by considering some parameters as random and
-[multinomial probit model](./6.mprobit.html) relax the Gumbel
+[multinomial probit model](./c6.mprobit.html) relax the Gumbel
 distribution hypothesis by assuming a multivariate norm
 distribution.
 

@@ -22,6 +22,25 @@
 \alias{qrpar.mlogit}
 \alias{prpar.mlogit}
 \alias{drpar.mlogit}
+\alias{rg}
+\alias{med}
+\alias{mean.rpar}
+\alias{med.rpar}
+\alias{stdev.rpar}
+\alias{rg.rpar}
+\alias{mean.mlogit}
+\alias{med.mlogit}
+\alias{stdev.mlogit}
+\alias{rg.mlogit}
+\alias{qrpar}
+\alias{prpar}
+\alias{drpar}
+\alias{qrpar.rpar}
+\alias{prpar.rpar}
+\alias{drpar.rpar}
+\alias{qrpar.mlogit}
+\alias{prpar.mlogit}
+\alias{drpar.mlogit}
 \title{Functions used to describe the characteristics of estimated random
 parameters}
 \usage{

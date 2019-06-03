@@ -1,7 +1,7 @@
 ---
 title: "Logit models relaxing the iid hypothesis"
 output: rmarkdown::html_vignette
-bibliography: bibmlogit.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{4. Logit models relaxing the iid hypothesis}
   %\VignetteEngine{knitr::rmarkdown}

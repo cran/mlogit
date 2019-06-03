@@ -4,6 +4,8 @@
 \alias{rpar}
 \alias{print.rpar}
 \alias{summary.rpar}
+\alias{print.rpar}
+\alias{summary.rpar}
 \title{random parameter objects}
 \usage{
 rpar(x, par = NULL, norm = NULL, ...)

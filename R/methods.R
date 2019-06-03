@@ -756,7 +756,10 @@ logsum <- function(coef, X = NULL, formula = NULL, data = NULL,
         }
     }
     else{
-        iv <- log(with(idx, tapply(exp(linpred), chid, sum)))
+        #iv <- log(with(idx, tapply(exp(linpred), chid, sum))) bug
+        # (for unbalanced set of choices) fixed thanks to Malick
+        # Hossain
+        iv <- log(with(idx, tapply(exp(linpred), chid, sum, na.rm = TRUE)))
         if (output == "obs"){
             iv <- data.frame(chid = rownames(iv), iv = as.numeric(iv))
             iv <- merge(idx, iv)

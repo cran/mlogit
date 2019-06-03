@@ -9,17 +9,20 @@
 \alias{mean.mlogit.data}
 \alias{formula.mlogit.data}
 \alias{print.mlogit.data}
+\alias{print.mlogit.data}
 \alias{index.mlogit.data}
 \alias{[.mlogit.data}
 \alias{[[.mlogit.data}
 \alias{$.mlogit.data}
+\alias{$<-.mlogit.data}
+\alias{[[<-.mlogit.data}
+\alias{mean.mlogit.data}
 \title{data.frame for logit model}
 \usage{
 mlogit.data(data, choice = NULL, shape = c("long", "wide"),
   varying = NULL, sep = ".", alt.var = NULL, chid.var = NULL,
-  alt.levels = NULL, id.var = NULL, group.var = NULL,
-  opposite = NULL, drop.index = FALSE, ranked = FALSE,
-  subset = NULL, ...)
+  alt.levels = NULL, id.var = NULL, group.var = NULL, opposite = NULL,
+  drop.index = FALSE, ranked = FALSE, subset = NULL, ...)
 
 \method{print}{mlogit.data}(x, ...)
 

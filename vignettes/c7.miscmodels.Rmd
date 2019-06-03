@@ -1,7 +1,7 @@
 ---
 title: "Miscellaneous models"
 output: rmarkdown::html_vignette
-bibliography: bibmlogit.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{7. Miscellaneous models}
   %\VignetteEngine{knitr::rmarkdown}
@@ -109,7 +109,7 @@ This model can therefore simply be fitted as a multinomial logit model
 $J-1$ choices among $J, J-1, ..., 2$ alternatives.
 
 The estimation of the rank-ordered logit model is illustrated using
-the `Game` data set [@FOK:PAAP:DIJK:10]. Respondents are asked to rank
+the `Game` data set [@FOK:PAAP:VAND:12]. Respondents are asked to rank
 6 gaming platforms. The covariates are a dummy `own` which indicates
 whether a specific platform is curently owned, the age of the
 respondent (`age`) and the number of hours spent on gaming per week

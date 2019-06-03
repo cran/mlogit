@@ -1,7 +1,6 @@
 ---
 title: "Conclusions"
 output: rmarkdown::html_vignette
-bibliography: bibmlogit.bib
 vignette: >
   %\VignetteIndexEntry{7. Conclusions}
   %\VignetteEngine{knitr::rmarkdown}

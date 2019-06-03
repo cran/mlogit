@@ -1,7 +1,7 @@
 ---
 title: "Data management, model description and testing"
 output: rmarkdown::html_vignette
-bibliography: bibmlogit.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{2. Data management, model description and testing}
   %\VignetteEngine{knitr::rmarkdown}
@@ -68,7 +68,7 @@ structure of the data.
 
 ### Wide format
 
-`Train`^[Used by @BENA:BOLD:BRAD:93 and @MEIL:ROUW:06.] is an example
+`Train`^[Used by @BENA:BOLD:BRAD:93 and @MEIJ:ROUW:06.] is an example
   of a *wide* data set:
 
 ```{r label = 'Train data'}
@@ -289,7 +289,7 @@ also denoted scale heterogeneity.^[This kind of heteroscedasticity
 shouldn't be confused with alternative heteroscedasticity ($\sigma^2_j
 \neq \sigma^2_k$) which is introduced in the heteroskedastic logit
 model described in vignette [relaxing the iid
-hypothesis](./4.relaxiid.html)].  As the overall scale of utility is
+hypothesis](./c4.relaxiid.html)].  As the overall scale of utility is
 irrelevant, the utility can also be writen as: $U_{ij}^* = U_{ij} /
 \sigma_i = V_{ij}/\sigma_i + \epsilon_{ij}$, i.e., with homoscedastic
 errors. if $V_{ij}$ is a linear combination of covariates, the

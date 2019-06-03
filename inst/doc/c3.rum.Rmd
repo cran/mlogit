@@ -1,7 +1,7 @@
 ---
 title: "Random utility model and the multinomial logit model"
 output: rmarkdown::html_vignette
-bibliography: bibmlogit.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{3. Random utility model and the multinomial logit model}
   %\VignetteEngine{knitr::rmarkdown}

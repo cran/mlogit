@@ -1,7 +1,7 @@
 ---
 title: "The random parameters (or mixed) logit model"
 output: rmarkdown::html_vignette
-bibliography: bibmlogit.bib
+bibliography: ../inst/REFERENCES.bib
 vignette: >
   %\VignetteIndexEntry{5. The random parameters (or mixed) logit model}
   %\VignetteEngine{knitr::rmarkdown}
@@ -124,20 +124,19 @@ and the log-likelihood is simply $\sum_i \ln P_i$.
 
 ## Application
 
-The random parameter logit model is estimated by providing a
-`rpar` argument to `mlogit`. This argument is a named
-vector, the names being the random coefficients and the values the
-name of the law of distribution. Currently, the normal (`"n"`),
-log-normal (`"ln"`), zero-censored normal (`"cn"`), uniform
-(`"u"`) and triangular (`"t"`) distributions are
-available. For these distributions, two parameters are estimated which
-are, for normal related distributions, the mean and the
-standard-deviation of the underlying normal distribution and for the
-uniform and triangular distribution, the mean and the half range of
-the distribution. For these last two distributions, zero-bounded
-variants are also provided (`"zbt"` and `"zbu"`). These two
-distributions are defined by only one parameter (the mean) and their
-definition domain varies from 0 to twice the mean.
+The random parameter logit model is estimated by providing a `rpar`
+argument to `mlogit`. This argument is a named vector, the names being
+the random coefficients and the values the name of the law of
+distribution. Currently, the normal (`"n"`), log-normal (`"ln"`),
+zero-censored normal (`"cn"`), uniform (`"u"`) and triangular (`"t"`)
+distributions are available. For these distributions, two parameters
+are estimated which are, for normal related distributions, the mean
+and the standard-deviation of the underlying normal distribution and
+for the uniform and triangular distribution, the mean and the half
+range of the distribution. For these last two distributions,
+zero-bounded variants are also provided (`"zbt"` and `"zbu"`). These
+two distributions are defined by only one parameter (the mean) and
+their definition domain varies from 0 to twice the mean.
 
 Several considerations may lead to the choice of a specific
 distribution:
@@ -145,18 +144,17 @@ distribution:
 
 
 - if correlated coefficients are required, the natural choice is a
-  (transformed-) normal distribution, `"n"`, `"ln"`,
-  `"tn"` and `"cn"`,
-- it's often the case that one wants to impose that the
-  distribution of a random parameter takes only positive or negative
-  values. For example, the price coefficient should be negative for
-  every individual. In this case, `"zbt"` and `"zbu"` can be
-  used. The use of `"ln"` and `"cn"` can also be relevant
-  but, in this case, if only negative values are expected, one should
-  consider the distribution of the opposite of the random price
-  coefficient. This can easily be done using the `opposite`
-  argument of `mlogit.data`.^[See vignette
-    [formula/data](./2.formula.data.html).],
+  (transformed-) normal distribution, `"n"`, `"ln"`, `"tn"` and
+  `"cn"`,
+- it's often the case that one wants to impose that the distribution
+  of a random parameter takes only positive or negative values. For
+  example, the price coefficient should be negative for every
+  individual. In this case, `"zbt"` and `"zbu"` can be used. The use
+  of `"ln"` and `"cn"` can also be relevant but, in this case, if only
+  negative values are expected, one should consider the distribution
+  of the opposite of the random price coefficient. This can easily be
+  done using the `opposite` argument of `mlogit.data`.^[See vignette
+  [formula/data](./c2.formula.data.html).],
 - the use of unbounded distributions often leads to implausible
   values of some statistics of the random parameters, especially the
   mean. This is particularly the case of the log-normal distribution,
@@ -164,19 +162,17 @@ distribution:
   distribution like the uniform and the triangular distributions can be
   used.
 
-`R` is the number of draws, `halton` indicates whether
-halton draws [see @TRAI:03 chapter 9] should be used (`NA`
-and `NULL` indicate respectively that default halton draws are
-used and that pseudo-random numbers are used), `panel` is a
-boolean which indicates if the panel data version of the
-log-likelihood should be used.
+`R` is the number of draws, `halton` indicates whether halton draws
+[see @TRAI:03 chapter 9] should be used (`NA` and `NULL` indicate
+respectively that default halton draws are used and that pseudo-random
+numbers are used), `panel` is a boolean which indicates if the panel
+data version of the log-likelihood should be used.
 
 Correlations between random parameters can be introduced only for
-normal-related distributed random parameters, using the
-`correlation` argument. If `TRUE`, all the normal-related
-random parameters are correlated. The `correlation` argument can
-also be a character vector indicating the random parameters that are
-assumed to be correlated.
+normal-related distributed random parameters, using the `correlation`
+argument. If `TRUE`, all the normal-related random parameters are
+correlated. The `correlation` argument can also be a character vector
+indicating the random parameters that are assumed to be correlated.
 
 ### Train
 
@@ -210,9 +206,8 @@ coef(Train.ml)[- 1] / coef(Train.ml)[1]
 
 We obtain the value of 26 euros for an hour of traveling, 5 euros for
 a change and 14 euros to travel in a more comfortable class. We then
-estimate a model with three random parameters, `time`,
-`change` and `comfort`. We first estimate the uncorrelated
-mixed logit model:
+estimate a model with three random parameters, `time`, `change` and
+`comfort`. We first estimate the uncorrelated mixed logit model:
 
 ```{r label = 'mixed logit estimation for Train (1)'}
 Train.mxlu <- mlogit(choice ~ price + time + change + comfort | - 1, Tr,
@@ -268,17 +263,16 @@ CC^{\top}=
 \right)
 $$
 
-where $\sigma_i^2$ and $\sigma_{ij}$ are respectively the variance
-of the random parameter $i$ and the covariance between two random
+where $\sigma_i^2$ and $\sigma_{ij}$ are respectively the variance of
+the random parameter $i$ and the covariance between two random
 parameters $i$ and $j$. Therefore, the first estimated parameter can
 be simply interpreted as the standard deviation of the first random
 parameter, but the five other can't be interpreted easily.
 
-Random parameters may be extracted using the function `rpar`
-which take as first argument a `mlogit` object and as second
-argument `par` the parameter(s) to be extracted. This function
-returns a `rpar` object and a `summary` method is provided
-to describe it:
+Random parameters may be extracted using the function `rpar` which
+take as first argument a `mlogit` object and as second argument `par`
+the parameter(s) to be extracted. This function returns a `rpar`
+object and a `summary` method is provided to describe it:
 
 ```{r label = 'summary of a random parameter in the preference space'}
 marg.ut.time <- rpar(Train.mxlc, "time")
@@ -293,12 +287,12 @@ distribution of the marginal utility of time.**
 
 Parameters in the "willingness to pay" (WTP) space are more easy to
 interpret. They can be estimated directly (a feature not supported by
-`mlogit`) or can be obtained from the marginal utility by dividing
-it by the coefficient of a covariate expressed in monetary value (a
-price for example), taken as a non random parameter. The ratio can
-then be interpreted as a monetary value (or willingness to pay). To
-obtain the distribution of the random parameters in the WTP space, one
-can use the `norm` argument of `rpar`:
+`mlogit`) or can be obtained from the marginal utility by dividing it
+by the coefficient of a covariate expressed in monetary value (a price
+for example), taken as a non random parameter. The ratio can then be
+interpreted as a monetary value (or willingness to pay). To obtain the
+distribution of the random parameters in the WTP space, one can use
+the `norm` argument of `rpar`:
 
 ```{r label = 'summary of a random parameter in the wtp space'}
 wtp.time <- rpar(Train.mxlc, "time", norm = "price")
@@ -307,9 +301,9 @@ summary(wtp.time)
 
 The median value (and the mean value as the distribution is symmetric)
 of transport time is about 33 euros. Several methods/functions are
-provided to extract the individual statistics (`mean`, `med`
-and `stdev` respectively for the mean, the median and the
-standard deviation):
+provided to extract the individual statistics (`mean`, `med` and
+`stdev` respectively for the mean, the median and the standard
+deviation):
 
 
 ```{r label = 'statistics of the random parameter in the wtp space'}
@@ -319,16 +313,16 @@ stdev(rpar(Train.mxlc, "time", norm = "price"))
 ``` 
 
 In case of correlated random parameters, as the estimated parameters
-can't be directly interpreted, a `vcov` method for `mlogit`
-objects is provided. It has a `what` argument which default value
-is `coefficient`. In this case the usual covariance matrix of the
-coefficients is return. If `what = "rpar"`, the covariance matrix
-of the correlated random parameters is returned if `type = "cov"`
-(the default) and the correlation matrix (with standard deviations on
-the diagonal) is returned if `type = "cor"`. The object is of
-class `vcov.mlogit` and a `summary` method for this object
-is provided which computes, using the delta method, the standard
-errors of the parameters of the covariance or the correlation matrix.
+can't be directly interpreted, a `vcov` method for `mlogit` objects is
+provided. It has a `what` argument which default value is
+`coefficient`. In this case the usual covariance matrix of the
+coefficients is return. If `what = "rpar"`, the covariance matrix of
+the correlated random parameters is returned if `type = "cov"` (the
+default) and the correlation matrix (with standard deviations on the
+diagonal) is returned if `type = "cor"`. The object is of class
+`vcov.mlogit` and a `summary` method for this object is provided which
+computes, using the delta method, the standard errors of the
+parameters of the covariance or the correlation matrix.
 
 ```{r label = 'vcov method for mlogit objects'}
 vcov(Train.mxlc, what = "rpar")
@@ -348,8 +342,8 @@ summary(vcov(Train.mxlc, what = "rpar", type = "cov"))
  ``` 
 
 The correlation can be restricted to a subset of random parameters by
-filling the `correlation` argument with a character vector
-indicating the corresponding covariates:
+filling the `correlation` argument with a character vector indicating
+the corresponding covariates:
 
 ```{r label = 'mixed logit with a subset of correlated paramaters'}
 Train.mxlc2 <- update(Train.mxlc, correlation = c("time", "comfort"))

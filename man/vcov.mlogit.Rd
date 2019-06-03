@@ -5,18 +5,21 @@
 \alias{print.vcov.mlogit}
 \alias{summary.vcov.mlogit}
 \alias{print.summary.vcov.mlogit}
+\alias{print.vcov.mlogit}
+\alias{summary.vcov.mlogit}
+\alias{print.summary.vcov.mlogit}
 \title{vcov method for mlogit objects}
 \usage{
 \method{vcov}{mlogit}(object, what = c("coefficient", "errors", "rpar"),
-  subset = c("all", "iv", "sig", "sd", "sp", "chol"), type = c("cov",
-  "cor", "sd"), reflevel = NULL, ...)
+  subset = c("all", "iv", "sig", "sd", "sp", "chol"), type = c("cov", "cor",
+  "sd"), reflevel = NULL, ...)
 
 \method{print}{vcov.mlogit}(x, ...)
 
 \method{summary}{vcov.mlogit}(object, ...)
 
-\method{print}{summary.vcov.mlogit}(x, digits = max(3,
-  getOption("digits") - 2), width = getOption("width"), ...)
+\method{print}{summary.vcov.mlogit}(x, digits = max(3, getOption("digits") -
+  2), width = getOption("width"), ...)
 }
 \arguments{
 \item{object}{a \code{mlogit} object (and a \code{vcov.mlogit} for the

@@ -1,3 +1,9 @@
+# mlogit 0.4-2
+
+* the R files for the vignettes are added (they were note while building the package on RForge)
+
+* thank's to Mallick Hossain, a bug is fixed in the logsum function
+
 # mlogit 0.4-1
 
 * the Cracker, Catsup and Car data set are back in mlogit since AER,

@@ -17,6 +17,20 @@
 \alias{fitted.mlogit}
 \alias{coef.mlogit}
 \alias{coef.summary.mlogit}
+\alias{df.residual.mlogit}
+\alias{terms.mlogit}
+\alias{model.matrix.mlogit}
+\alias{model.response.mlogit}
+\alias{update.mlogit}
+\alias{print.mlogit}
+\alias{logLik.mlogit}
+\alias{summary.mlogit}
+\alias{print.summary.mlogit}
+\alias{index.mlogit}
+\alias{predict.mlogit}
+\alias{fitted.mlogit}
+\alias{coef.mlogit}
+\alias{coef.summary.mlogit}
 \title{Methods for mlogit objects}
 \usage{
 \method{residuals}{mlogit}(object, outcome = TRUE, ...)
@@ -38,13 +52,12 @@ model.response.mlogit(object, ...)
 
 \method{summary}{mlogit}(object, ..., type = c("chol", "cov", "cor"))
 
-\method{print}{summary.mlogit}(x, digits = max(3, getOption("digits") -
-  2), width = getOption("width"), ...)
+\method{print}{summary.mlogit}(x, digits = max(3, getOption("digits") - 2),
+  width = getOption("width"), ...)
 
 \method{index}{mlogit}(x, ...)
 
-\method{predict}{mlogit}(object, newdata = NULL, returnData = FALSE,
-  ...)
+\method{predict}{mlogit}(object, newdata = NULL, returnData = FALSE, ...)
 
 \method{fitted}{mlogit}(object, type = c("outcome", "probabilities",
   "linpred", "parameters"), outcome = NULL, ...)
