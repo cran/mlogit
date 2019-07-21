@@ -149,3 +149,5 @@ results of the original reference :
 ```{r }
 summary(mlogit(ch ~ own | hours + age, G, reflevel = "PC"))
 ``` 
+
+## Bibliography

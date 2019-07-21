@@ -1,0 +1,46 @@
+
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> library("mlogit")
+Loading required package: Formula
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: lmtest
+> data("TravelMode", package = "AER")
+> TravelMode$choice2 <- TravelMode$choice == "yes"
+> TravelMode$incair <- with(TravelMode, income * (mode == "air"))
+> tm_cl <- mlogit(choice2 ~ gcost + wait + incair, data = TravelMode, shape = "long", choice = "choice", alt.var = "mode", reflevel = "car")
+> # Greene table 21.15 first column
+> tm_hl <- mlogit(choice2 ~ gcost + wait + incair, data = TravelMode, shape = "long", choice = "choice", alt.var = "mode", reflevel = "car", heterosc = TRUE)
+> # Greene table 21.15 second column
+> tm_nl <- mlogit(choice2 ~ gcost + wait + incair, data = TravelMode, shape = "long", choice = "choice", alt.var = "mode", reflevel = "car", nests = list(fly = "air", ground = c("bus", "car", "train")), unscaled = TRUE)
+> 
+> ## tm_ml <- mlogit(choice2 ~ gcost + wait + incair, data = TravelMode,
+> ## shape = "long", choice = "choice", alt.var = "mode", reflevel =
+> ## "car", rpar = c(altair = "n", alttrain = "n", altbus = "n", gcost =
+> ## "n", wait = "n", incair = "n"), R = 400)
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  0.906   0.075   0.975 

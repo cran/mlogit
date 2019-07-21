@@ -5,10 +5,11 @@
 \title{Multinomial logit model}
 \usage{
 mlogit(formula, data, subset, weights, na.action, start = NULL,
-  alt.subset = NULL, reflevel = NULL, nests = NULL, un.nest.el = FALSE,
-  unscaled = FALSE, heterosc = FALSE, rpar = NULL, probit = FALSE,
-  R = 40, correlation = FALSE, halton = NULL, random.nb = NULL,
-  panel = FALSE, estimate = TRUE, seed = 10, ...)
+  alt.subset = NULL, reflevel = NULL, nests = NULL,
+  un.nest.el = FALSE, unscaled = FALSE, heterosc = FALSE,
+  rpar = NULL, probit = FALSE, R = 40, correlation = FALSE,
+  halton = NULL, random.nb = NULL, panel = FALSE, estimate = TRUE,
+  seed = 10, ...)
 }
 \arguments{
 \item{formula}{a symbolic description of the model to be estimated,}

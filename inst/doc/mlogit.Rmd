@@ -19,7 +19,7 @@ Fadden [@MCFAD:74, MCFAD:78] who won the Nobel prize in economics "for
 his development of theory and methods for analyzing discrete choice",
 a large amount of theoretical and empirical literature have been
 developed in this field.^[For a presentation of this literature, see
-@TRAI:03 ; the theoretical parts of this paper draw heavily on this
+@TRAI:09 ; the theoretical parts of this paper draw heavily on this
 book.]
 
 Among the numerous applications of such models, we can cite the

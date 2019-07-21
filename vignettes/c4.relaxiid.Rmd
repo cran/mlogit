@@ -116,8 +116,8 @@ $$
 Then denote $I_l=\ln \sum_{k \in B_l} e^{Z_k/\lambda_l}$ which is
 often called the log-sum, the inclusive value or the inclusive
 utility.^[We've already encountered this expression in
-Section~\@ref(sec:conssurplus).] We then can write the probability of
-choosing alternative $j$ as:
+vignette 3. Random utility model and the multinomial logit model.] We
+then can write the probability of choosing alternative $j$ as:
 
 $$
 P_j=\frac{e^{Z_j/\lambda_l}}{\sum_{k \in B_l}

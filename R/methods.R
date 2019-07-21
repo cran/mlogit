@@ -362,7 +362,8 @@ effects.mlogit <- function(object, covariate = NULL,
         if (xVar == "r") me <- me * data[[covariate]]
         names(me) <- alt.levels
     }
-    me
+    attr(me, "index") <- NULL
+    unclass(me)
 }
 
 #' vcov method for mlogit objects

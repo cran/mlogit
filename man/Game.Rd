@@ -6,17 +6,16 @@
 \alias{Game2}
 \title{Ranked data for gaming platforms}
 \format{A dataframe containing :
-
-ch.Platform
-:   where \code{platform} is one of \code{Xbox}, \code{PlayStation}, \code{PSPortable},
-\code{GameCube}, \code{GameBoy} and \code{PC}. This variables contain the ranking
-of the platforms from 1 to 6,
-own.Platform
-:   these 6 variables are dummies which indicate whether the given plaform is already owned by the respondent,
-age
-:    the age of the respondent,
-hours
-:    hours per week spent on gaming.,}
+\itemize{
+\item ch.Platform: where \code{platform} is one of \code{Xbox},
+\code{PlayStation}, \code{PSPortable}, \code{GameCube},
+\code{GameBoy} and \code{PC}. This variables contain the ranking of
+the platforms from 1 to 6,
+\item own.Platform: these 6 variables are dummies which indicate
+whether the given plaform is already owned by the respondent,
+\item age: the age of the respondent,
+\item hours: hours per week spent on gaming.,
+}}
 \source{
 \href{http://jae.wiley.com/jae/}{Journal of Applied Econometrics data archive}.
 }

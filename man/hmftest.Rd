@@ -4,8 +4,6 @@
 \alias{hmftest}
 \alias{hmftest.formula}
 \alias{hmftest.mlogit}
-\alias{hmftest.formula}
-\alias{hmftest.mlogit}
 \title{Hausman-McFadden Test}
 \usage{
 hmftest(x, ...)

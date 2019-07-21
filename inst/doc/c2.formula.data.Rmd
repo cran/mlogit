@@ -279,7 +279,7 @@ coefficient. However, if some of these variables are introduced, the
 $\nu$ parameter can only be estimated in a model without intercepts to
 avoid perfect multicolinearity.
 
-Individual-related heteroscedasticity \citep[see][]{SWAI:LOUV:93} can
+Individual-related heteroscedasticity [see @SWAI:LOUV:93] can
 be addressed by writing the utility of choosing $j$ for individual
 $i$: $U_{ij}=V_{ij} + \sigma_i \epsilon_{ij}$, where $\epsilon$ has a
 variance that doesn't depend on $i$ and $j$ and $\sigma_i^2 = f(v_i)$

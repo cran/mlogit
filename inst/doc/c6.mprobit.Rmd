@@ -361,3 +361,5 @@ Fish.mprobit <- mlogit(mode~price | income | catch, Fish, probit = TRUE, alt.sub
 ```{r }
 summary(Fish.mprobit)
 ``` 
+
+## Bibliography

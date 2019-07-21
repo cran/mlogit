@@ -1,3 +1,16 @@
+# mlogit 1.0-0
+
+* a new package version which coincides with the Journal of
+  Statistical Software article
+
+* some bugs fixed in the vignettes (citet/citep replaced by
+  markdown-like commands), the figure is added in the mixed logit
+  vignette
+
+* Rout.save files are added in the test directory
+
+* effects.mlogit now returns a matrix
+
 # mlogit 0.4-2
 
 * the R files for the vignettes are added (they were note while building the package on RForge)

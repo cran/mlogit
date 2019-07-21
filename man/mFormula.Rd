@@ -6,10 +6,6 @@
 \alias{mFormula.formula}
 \alias{model.matrix.mFormula}
 \alias{model.frame.mFormula}
-\alias{mFormula.formula}
-\alias{is.mFormula}
-\alias{model.frame.mFormula}
-\alias{model.matrix.mFormula}
 \title{Model formula for logit models}
 \usage{
 mFormula(object)
@@ -18,8 +14,8 @@ mFormula(object)
 
 is.mFormula(object)
 
-\method{model.frame}{mFormula}(formula, data, ..., lhs = NULL, rhs = NULL,
-  alt.subset = NULL, reflevel = NULL)
+\method{model.frame}{mFormula}(formula, data, ..., lhs = NULL,
+  rhs = NULL, alt.subset = NULL, reflevel = NULL)
 
 \method{model.matrix}{mFormula}(object, data, ...)
 }

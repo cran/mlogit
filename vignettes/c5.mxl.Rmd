@@ -163,7 +163,7 @@ distribution:
   used.
 
 `R` is the number of draws, `halton` indicates whether halton draws
-[see @TRAI:03 chapter 9] should be used (`NA` and `NULL` indicate
+[see @TRAI:09 chapter 9] should be used (`NA` and `NULL` indicate
 respectively that default halton draws are used and that pseudo-random
 numbers are used), `panel` is a boolean which indicates if the panel
 data version of the log-likelihood should be used.
@@ -486,8 +486,13 @@ head(indpar)
 ``` 
 
 We can then compute the VSL for every individual and analyse their
-distribution, using quantiles for African and non-African travelers
-\citep[as done in][Table 4, p.219]{LEON:MIGU:17}.
+distribution, using quantiles and plotting on
+figure 1 the empirical density of VSL for African
+and non-African travelers [as done in @LEON:MIGU:17 Table 4, p.219 and Figure
+5, p.223].^[Note that individual-specific parameters
+should be interpreted with caution, as they are consistent estimates
+of individual parameters only if the number of choice situations for
+every individual is large [see @TRAI:09 p.266].]
 
 ```{r label = 'individal parameters'}
 indpar$VSL <- with(indpar, risk / cost * 100)
@@ -497,7 +502,10 @@ mean(indpar$VSL)
 
 Note that computing the VSL as the ratio of two random parameters
 which can take zero value can lead to extremely high values if the
-individual parameter for cost is close to 0.
+individual parameter for cost is close to 0.^[See
+@DALY:HESS:TRAI:12 for a discussion of the specifications of
+mixed logit models which assure finite moments of the distribution of
+willingness to pay.]
 
 ```{r label = 'max VSL'}
 max(indpar$cost)
@@ -507,3 +515,13 @@ max(indpar$VSL)
 This is not the case here as (absolute) minimum value of `cost`
 is $-0.003$ which leads to a maximum value of VSL of \$ $3131$.
 
+```{r plotindpar, fig.cap = "The value of a statistical life."}
+library("ggplot2")
+indpar <- merge(unique(subset(as.data.frame(RT),
+                              select = c("id", "african"))),
+                indpar)
+ggplot(indpar) + geom_density(aes(x = VSL, linetype = african)) + 
+    scale_x_continuous(limits = c(200, 1200))
+```
+
+## Bibliography

@@ -1,0 +1,313 @@
+
+R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
+Copyright (C) 2019 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # BankWages.Rd
+> 
+> data("BankWages", package = "AER")
+> 
+> ## exploratory analysis of job ~ education
+> ## (tables and spine plots, some education levels merged)
+> xtabs(~ education + job, data = BankWages)
+         job
+education custodial admin manage
+       8         13    40      0
+       12        13   176      1
+       14         0     6      0
+       15         1   111      4
+       16         0    24     35
+       17         0     3      8
+       18         0     2      7
+       19         0     1     26
+       20         0     0      2
+       21         0     0      1
+> edcat <- factor(BankWages$education)
+> levels(edcat)[3:10] <- rep(c("14-15", "16-18", "19-21"), c(2, 3, 3))
+> tab <- xtabs(~ edcat + job, data = BankWages)
+> prop.table(tab, 1)
+       job
+edcat     custodial       admin      manage
+  8     0.245283019 0.754716981 0.000000000
+  12    0.068421053 0.926315789 0.005263158
+  14-15 0.008196721 0.959016393 0.032786885
+  16-18 0.000000000 0.367088608 0.632911392
+  19-21 0.000000000 0.033333333 0.966666667
+> spineplot(tab, off = 0)
+> plot(job ~ edcat, data = BankWages, off = 0)
+> 
+> ## fit multinomial model for male employees
+> library("nnet")
+> fm_mnl <- multinom(job ~ education + minority, data = BankWages,
++                    subset = gender == "male", trace = FALSE)
+> summary(fm_mnl)
+Call:
+multinom(formula = job ~ education + minority, data = BankWages, 
+    subset = gender == "male", trace = FALSE)
+
+Coefficients:
+       (Intercept) education minorityyes
+admin    -4.760725 0.5533995  -0.4269495
+manage  -30.774855 2.1867717  -2.5360409
+
+Std. Errors:
+       (Intercept)  education minorityyes
+admin     1.172774 0.09904108   0.5027084
+manage    4.478612 0.29483562   0.9342070
+
+Residual Deviance: 237.472 
+AIC: 249.472 
+> confint(fm_mnl)
+, , admin
+
+                 2.5 %     97.5 %
+(Intercept) -7.0593203 -2.4621301
+education    0.3592825  0.7475164
+minorityyes -1.4122398  0.5583409
+
+, , manage
+
+                 2.5 %      97.5 %
+(Intercept) -39.552774 -21.9969368
+education     1.608904   2.7646389
+minorityyes  -4.367053  -0.7050288
+
+> 
+> ## same with mlogit package
+> library("mlogit")
+Loading required package: Formula
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
+Loading required package: lmtest
+> fm_mlogit <- mlogit(job ~ 1 | education + minority, data = BankWages, subset = gender == "male", shape = "wide", choice = "job", reflevel = "custodial")
+> summary(fm_mlogit)
+
+Call:
+mlogit(formula = job ~ 1 | education + minority, data = BankWages, 
+    subset = gender == "male", reflevel = "custodial", shape = "wide", 
+    choice = "job", method = "nr")
+
+Frequencies of alternatives:
+custodial     admin    manage 
+  0.10465   0.60853   0.28682 
+
+nr method
+8 iterations, 0h:0m:0s 
+g'(-H)^-1g = 9.15E-06 
+successive function values within tolerance limits 
+
+Coefficients :
+                     Estimate Std. Error z-value  Pr(>|z|)    
+admin:(intercept)   -4.760722   1.172774 -4.0594 4.921e-05 ***
+manage:(intercept) -30.774826   4.478608 -6.8715 6.352e-12 ***
+admin:education      0.553399   0.099041  5.5876 2.303e-08 ***
+manage:education     2.186770   0.294835  7.4169 1.199e-13 ***
+admin:minorityyes   -0.426952   0.502708 -0.8493  0.395712    
+manage:minorityyes  -2.536041   0.934207 -2.7146  0.006635 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-Likelihood: -118.74
+McFadden R^2:  0.48676 
+Likelihood ratio test : chisq = 225.22 (p.value = < 2.22e-16)
+> 
+> # TravelMode.Rd
+> 
+> data("TravelMode", package = "AER")
+> 
+> ## overall proportions for chosen mode
+> with(TravelMode, prop.table(table(mode[choice == "yes"])))
+
+      air     train       bus       car 
+0.2761905 0.3000000 0.1428571 0.2809524 
+> 
+> ## travel vs. waiting time for different travel modes
+> library("lattice")
+> xyplot(travel ~ wait | mode, data = TravelMode)
+> 
+> ## Greene (2003), Table 21.11, conditional logit model
+> if(require("mlogit")) {
++ TravelMode$incair <- with(TravelMode, income * (mode == "air"))
++ tm_cl <- mlogit(choice ~ gcost + wait + incair, data = TravelMode,
++   shape = "long", alt.var = "mode", reflevel = "car")
++ summary(tm_cl)
++ }
+
+Call:
+mlogit(formula = choice ~ gcost + wait + incair, data = TravelMode, 
+    reflevel = "car", shape = "long", alt.var = "mode", method = "nr")
+
+Frequencies of alternatives:
+    car     air   train     bus 
+0.28095 0.27619 0.30000 0.14286 
+
+nr method
+5 iterations, 0h:0m:0s 
+g'(-H)^-1g = 0.000234 
+successive function values within tolerance limits 
+
+Coefficients :
+                   Estimate Std. Error z-value  Pr(>|z|)    
+air:(intercept)    5.207433   0.779055  6.6843 2.320e-11 ***
+train:(intercept)  3.869036   0.443127  8.7312 < 2.2e-16 ***
+bus:(intercept)    3.163190   0.450266  7.0252 2.138e-12 ***
+gcost             -0.015501   0.004408 -3.5167  0.000437 ***
+wait              -0.096125   0.010440 -9.2075 < 2.2e-16 ***
+incair             0.013287   0.010262  1.2947  0.195414    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-Likelihood: -199.13
+McFadden R^2:  0.29825 
+Likelihood ratio test : chisq = 169.26 (p.value = < 2.22e-16)
+> 
+> 
+> # GSOEP9402.Rd
+> 
+> ## data
+> data("GSOEP9402", package = "AER")
+> 
+> ## some convenience data transformations
+> gsoep <- GSOEP9402
+> gsoep$year2 <- factor(gsoep$year)
+> 
+> ## visualization
+> plot(school ~ meducation, data = gsoep, breaks = c(7, 9, 10.5, 11.5, 12.5, 15, 18))
+> 
+> 
+> ## Chapter 5, Table 5.1
+> library("nnet")
+> gsoep_mnl <- multinom(
++   school ~ meducation + memployment + log(income) + log(size) + parity + year2,
++   data = gsoep)
+# weights:  48 (30 variable)
+initial  value 741.563295 
+iter  10 value 655.748279
+iter  20 value 624.992858
+iter  30 value 618.605354
+final  value 618.475696 
+converged
+> #coeftest(gsoep_mnl)[c(1:6, 1:6 + 14),]
+>  
+> ## alternatively
+> if(require("mlogit")) {
++ gsoep_mnl2 <- mlogit(
++   school ~ 0 | meducation + memployment + log(income) + log(size) + parity + year2,
++   data = gsoep, shape = "wide", reflevel = "Hauptschule")
++ #coeftest(gsoep_mnl2)[1:12,]
++ }
+> 
+> # WinkelmannBoes2009.Rd
+> 
+> ## data
+> data("GSOEP9402", package = "AER")
+> 
+> ## some convenience data transformations
+> gsoep <- GSOEP9402
+> gsoep$meducation2 <- cut(gsoep$meducation, breaks = c(6, 10.25, 12.25, 18),
++   labels = c("7-10", "10.5-12", "12.5-18"))
+> gsoep$year2 <- factor(gsoep$year)
+> 
+> ## Chapter 1
+> ## Table 1.4 plus visualizations
+> gsoep_tab <- xtabs(~ meducation2 + school, data = gsoep)
+> round(prop.table(gsoep_tab, 1) * 100, digits = 2)
+           school
+meducation2 Hauptschule Realschule Gymnasium
+    7-10          55.12      25.20     19.69
+    10.5-12       28.09      34.16     37.75
+    12.5-18        3.88      14.56     81.55
+> spineplot(gsoep_tab)
+> plot(school ~ meducation, data = gsoep, breaks = c(7, 10.25, 12.25, 18))
+> plot(school ~ meducation, data = gsoep, breaks = c(7, 9, 10.5, 11.5, 12.5, 15, 18))
+> 
+> 
+> ## Chapter 5
+> ## Table 5.1
+> library("nnet")
+> gsoep_mnl <- multinom(
++   school ~ meducation + memployment + log(income) + log(size) + parity + year2,
++   data = gsoep)
+# weights:  48 (30 variable)
+initial  value 741.563295 
+iter  10 value 655.748279
+iter  20 value 624.992858
+iter  30 value 618.605354
+final  value 618.475696 
+converged
+> #coeftest(gsoep_mnl)[c(1:6, 1:6 + 14),]
+>  
+> ## alternatively
+> if(require("mlogit")) {
++ gsoep_mnl2 <- mlogit(school ~ 0 | meducation + memployment + log(income) +
++   log(size) + parity + year2, data = gsoep, shape = "wide", reflevel = "Hauptschule")
++ coeftest(gsoep_mnl2)[1:12,]
++ }
+                                  Estimate Std. Error   t value     Pr(>|t|)
+Gymnasium:(intercept)          -23.6982768 3.01026604 -7.872486 1.475202e-14
+Realschule:(intercept)          -6.3865987 2.36904833 -2.695850 7.204061e-03
+Gymnasium:meducation             0.6597829 0.08144157  8.101304 2.726719e-15
+Realschule:meducation            0.3004923 0.07910725  3.798543 1.593085e-04
+Gymnasium:memploymentparttime    0.9372401 0.34536576  2.713761 6.830145e-03
+Realschule:memploymentparttime   0.4933644 0.32189760  1.532675 1.258463e-01
+Gymnasium:memploymentnone        1.1007670 0.35842942  3.071084 2.222541e-03
+Realschule:memploymentnone       0.7526490 0.32884523  2.288764 2.241551e-02
+Gymnasium:log(income)            1.6677258 0.28408738  5.870468 6.954975e-09
+Realschule:log(income)           0.3934899 0.22539876  1.745750 8.133056e-02
+Gymnasium:log(size)             -1.5459256 0.48775919 -3.169444 1.599570e-03
+Realschule:log(size)            -1.1921835 0.44641174 -2.670592 7.762668e-03
+> 
+> ##################################
+> ## Choice of Brand for Crackers ##
+> ##################################
+> 
+> ## data
+> if(require("mlogit")) {
++ data("Cracker", package = "mlogit")
++ head(Cracker, 3)
++ crack <- mlogit.data(Cracker, varying = 2:13, shape = "wide", choice = "choice")
++ head(crack, 12)
++ 
++ ## Table 5.6 (model 3 probably not fully converged in W&B)
++ crack$price <- crack$price/100
++ crack_mlogit1 <- mlogit(choice ~ price | 0, data = crack, reflevel = "private")
++ crack_mlogit2 <- mlogit(choice ~ price | 1, data = crack, reflevel = "private")
++ crack_mlogit3 <- mlogit(choice ~ price + feat + disp | 1, data = crack,
++   reflevel = "private")
++ lrtest(crack_mlogit1, crack_mlogit2, crack_mlogit3)
++ 
++ ## IIA test
++ crack_mlogit_all <- update(crack_mlogit2, reflevel = "nabisco")
++ crack_mlogit_res <- update(crack_mlogit_all,
++   alt.subset = c("keebler", "nabisco", "sunshine"))
++ hmftest(crack_mlogit_all, crack_mlogit_res)
++ }
+
+	Hausman-McFadden test
+
+data:  crack
+chisq = 51.592, df = 3, p-value = 3.659e-11
+alternative hypothesis: IIA is rejected
+
+> 
+> proc.time()
+   user  system elapsed 
+  1.656   0.065   1.734 

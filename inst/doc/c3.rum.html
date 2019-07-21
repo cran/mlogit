@@ -324,7 +324,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="the-distribution-of-the-error-terms" class="section level2">
 <h2>The distribution of the error terms</h2>
-<p>The multinomial logit model <span class="citation">(<span class="citeproc-not-found" data-reference-id="MCFAD:74"><strong>???</strong></span>)</span> is a special case of the model developed in the previous section. It is based on three hypothesis.</p>
+<p>The multinomial logit model <span class="citation">(McFadden 1974)</span> is a special case of the model developed in the previous section. It is based on three hypothesis.</p>
 <p>The first hypothesis is the independence of the errors. In this case, the univariate distribution of the errors can be used, which leads to the following conditional and unconditional probabilities:</p>
 <p><span class="math display">\[\begin{equation*}
   (\mbox{P}_l \mid \epsilon_l)=\prod_{j\neq l}F_j(V_l-V_j+\epsilon_l)
@@ -511,14 +511,7 @@ F(z)=\int_{-\infty}^{z} f(t) dt=e^{-e^{-\frac{z-\mu}{\theta}}},
 <p>Marginal effects are computed using the <code>effects</code> method. By default, they are computed at the sample mean, but a <code>data</code> argument can be provided. The variation of the probability and of the covariate can be either absolute or relative. This is indicated with the <code>type</code> argument which is a combination of two <code>a</code> (as absolute) and <code>r</code> (as relative) characters. For example, <code>type = &quot;ar&quot;</code> means that what is measured is an absolute variation of the probability for a relative variation of the covariate.</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;income&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;ar&quot;</span>)</a></code></pre></div>
 <pre><code>##        car      train        air 
-## -0.1822177 -0.1509079  0.3331256 
-## attr(,&quot;class&quot;)
-## [1] &quot;pseries&quot; &quot;numeric&quot;
-## attr(,&quot;index&quot;)
-##           alt chid
-## 1.car     car    1
-## 1.train train    1
-## 1.air     air    1</code></pre>
+## -0.1822177 -0.1509079  0.3331256</code></pre>
 <p>The results indicate that, for a 100% increase of income, the probability of choosing <code>air</code> increases by 33 points of percentage, as the probabilities of choosing <code>car</code> and <code>train</code> decrease by 18 and 15 points of percentage.</p>
 <p>For an alternative specific covariate, a matrix of marginal effects is displayed.</p>
 <div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;cost&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;rr&quot;</span>)</a></code></pre></div>
@@ -810,7 +803,7 @@ Num. obs.
 </tr>
 <tr>
 <td style="padding-right: 12px; border: none;" colspan="6">
-<span style="font-size:0.8em"><sup style="vertical-align: 0px;"><em><strong></sup>p &lt; 0.001, <sup style="vertical-align: 0px;"></strong></sup>p &lt; 0.01, <sup style="vertical-align: 0px;"></em></sup>p &lt; 0.05</span>
+<span style="font-size:0.8em"><sup style="vertical-align: 0px;"><em><strong></sup>p &lt; 0.001; <sup style="vertical-align: 0px;"></strong></sup>p &lt; 0.01; <sup style="vertical-align: 0px;"></em></sup>p &lt; 0.05</span>
 </td>
 </tr>
 </table>
@@ -832,6 +825,9 @@ Num. obs.
 </div>
 <div id="ref-LEIF:13">
 <p>Leifeld, Philip. 2013. “texreg: Conversion of Statistical Model Output in R to LaTeX and HTML Tables.” <em>Journal of Statistical Software</em> 55 (8): 1–24. <a href="https://www.jstatsoft.org/v55/i08/" class="uri">https://www.jstatsoft.org/v55/i08/</a>.</p>
+</div>
+<div id="ref-MCFAD:74">
+<p>McFadden, D. 1974. “The Measurement of Urban Travel Demand.” <em>Journal of Public Economics</em> 3: 303–28.</p>
 </div>
 <div id="ref-SMAL:ROSE:81">
 <p>Small, K. A., and H. S. Rosen. 1981. “Applied Welfare Economics with Discrete Choice Models.” <em>Econometrica</em> 49: 105–30.</p>
