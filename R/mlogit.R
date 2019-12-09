@@ -356,7 +356,6 @@ mlogit <- function(formula, data, subset, weights, na.action, start= NULL,
     yl <- lapply(yl, function(x){x[is.na(x)] <- FALSE ; x})
     attr(yl, "chid") <- as.character(levels(chid))
     attr(yl, "id") <- as.character(levels(id))
-
     # for probit the response is a vector that contains the chosen
     # alternative as a numeric ; NA values of y are replaced by FALSE
     # so that the chosen alternative is correctly returned    

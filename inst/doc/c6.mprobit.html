@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -35,7 +35,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -515,11 +515,11 @@ l_{(J-1)1}\eta_1+l_{(J-1)2}\eta_2+...+l_{(J-1)(J-1)}\eta_{J-1}
 <div id="applications" class="section level2">
 <h2>Applications</h2>
 <p>We use again the <code>Fishing</code> data frame, with only a subset of three alternatives used. The multinomial probit model is estimated using <code>mlogit</code> with the <code>probit</code> argument equal to <code>TRUE</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;Fishing&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">Fish &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Fishing, <span class="dt">shape=</span><span class="st">&quot;wide&quot;</span>, <span class="dt">varying=</span><span class="dv">2</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">choice=</span><span class="st">&quot;mode&quot;</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">Fish.mprobit &lt;-<span class="st"> </span><span class="kw">mlogit</span>(mode<span class="op">~</span>price <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>catch, Fish, <span class="dt">probit =</span> <span class="ot">TRUE</span>, <span class="dt">alt.subset=</span><span class="kw">c</span>(<span class="st">'beach'</span>, <span class="st">'boat'</span>,<span class="st">'pier'</span>))</a></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">summary</span>(Fish.mprobit)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;Fishing&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">Fish &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Fishing, <span class="dt">shape=</span><span class="st">&quot;wide&quot;</span>, <span class="dt">varying=</span><span class="dv">2</span><span class="op">:</span><span class="dv">9</span>, <span class="dt">choice=</span><span class="st">&quot;mode&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">Fish.mprobit &lt;-<span class="st"> </span><span class="kw">mlogit</span>(mode<span class="op">~</span>price <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>catch, Fish, <span class="dt">probit =</span> <span class="ot">TRUE</span>, <span class="dt">alt.subset=</span><span class="kw">c</span>(<span class="st">'beach'</span>, <span class="st">'boat'</span>,<span class="st">'pier'</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">summary</span>(Fish.mprobit)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = mode ~ price | income | catch, data = Fish, 
@@ -530,7 +530,7 @@ l_{(J-1)1}\eta_1+l_{(J-1)2}\eta_2+...+l_{(J-1)(J-1)}\eta_{J-1}
 ## 0.18356 0.57260 0.24384 
 ## 
 ## bfgs method
-## 1 iterations, 0h:0m:3s 
+## 1 iterations, 0h:0m:4s 
 ## g'(-H)^-1g = 1E+10 
 ## successive function values within tolerance limits 
 ## 
@@ -575,6 +575,9 @@ l_{(J-1)1}\eta_1+l_{(J-1)2}\eta_2+...+l_{(J-1)(J-1)}\eta_{J-1}
 </ol>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

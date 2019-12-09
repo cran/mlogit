@@ -1,3 +1,8 @@
+# mlogit 1.0-2
+
+* bug in model.frame : indexing by a factor and not a character to get
+  the relevant subset of id in the index
+
 # mlogit 1.0-0
 
 * a new package version which coincides with the Journal of

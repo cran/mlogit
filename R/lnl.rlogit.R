@@ -262,7 +262,6 @@ lnl.rlogit <- function(param, X, y, Xs, weights = NULL,
                        gradient = TRUE, hessian = FALSE, opposite = TRUE,
                        direction = rep(0, length(param)), initial.value = NULL, stptol = 1e-10,
                        R, seed, id, rpar, correlation, halton){
-
     panel <- ! is.null(id)
     otime <- proc.time()
     K <- ncol(X[[1]])

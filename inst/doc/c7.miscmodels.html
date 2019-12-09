@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -35,7 +35,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -329,17 +329,17 @@ P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
     + e^{V_l/\lambda_{lk}}\right)^{\lambda_{lk}}}
 \]</span></p>
 <p>We reproduce the example used by <span class="citation">Koppelman and Wen (2000)</span> on the same subset of the <code>ModeCanada</code> than the one used by <span class="citation">Bhat (1995)</span>. Three modes are considered and there are therefore three nests. The elasticity of the train-air nest is set to one. To estimate this model, one has to set the <code>nests</code> argument to <code>&quot;pcl&quot;</code>. All the nests of two alternatives are then automatically created. The restriction on the nest elasticity for the train-air nest is performed by using the <code>constPar</code> argument.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">busUsers &lt;-<span class="st"> </span><span class="kw">with</span>(ModeCanada, case[choice <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">==</span><span class="st"> 'bus'</span>])</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">Bhat &lt;-<span class="st"> </span><span class="kw">subset</span>(ModeCanada, <span class="op">!</span>case <span class="op">%in%</span><span class="st"> </span>busUsers <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">!=</span><span class="st"> 'bus'</span> <span class="op">&amp;</span><span class="st"> </span>noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">Bhat<span class="op">$</span>alt &lt;-<span class="st"> </span>Bhat<span class="op">$</span>alt[drop =<span class="st"> </span><span class="ot">TRUE</span>]</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6">Bhat &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Bhat, <span class="dt">shape=</span><span class="st">'long'</span>, <span class="dt">chid.var =</span> <span class="st">'case'</span>,</a>
-<a class="sourceLine" id="cb1-7" data-line-number="7">                    <span class="dt">alt.var =</span> <span class="st">'alt'</span>, <span class="dt">choice=</span><span class="st">'choice'</span>,</a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">                    <span class="dt">drop.index=</span><span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice<span class="op">~</span>freq<span class="op">+</span>cost<span class="op">+</span>ivt<span class="op">+</span>ovt, Bhat, <span class="dt">reflevel=</span><span class="st">'car'</span>,</a>
-<a class="sourceLine" id="cb1-10" data-line-number="10">              <span class="dt">nests=</span><span class="st">'pcl'</span>, <span class="dt">constPar=</span><span class="kw">c</span>(<span class="st">'iv:train.air'</span>))</a>
-<a class="sourceLine" id="cb1-11" data-line-number="11"><span class="kw">summary</span>(pcl)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">busUsers &lt;-<span class="st"> </span><span class="kw">with</span>(ModeCanada, case[choice <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">==</span><span class="st"> 'bus'</span>])</a>
+<a class="sourceLine" id="cb1-4" title="4">Bhat &lt;-<span class="st"> </span><span class="kw">subset</span>(ModeCanada, <span class="op">!</span>case <span class="op">%in%</span><span class="st"> </span>busUsers <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">!=</span><span class="st"> 'bus'</span> <span class="op">&amp;</span><span class="st"> </span>noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)</a>
+<a class="sourceLine" id="cb1-5" title="5">Bhat<span class="op">$</span>alt &lt;-<span class="st"> </span>Bhat<span class="op">$</span>alt[drop =<span class="st"> </span><span class="ot">TRUE</span>]</a>
+<a class="sourceLine" id="cb1-6" title="6">Bhat &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Bhat, <span class="dt">shape=</span><span class="st">'long'</span>, <span class="dt">chid.var =</span> <span class="st">'case'</span>,</a>
+<a class="sourceLine" id="cb1-7" title="7">                    <span class="dt">alt.var =</span> <span class="st">'alt'</span>, <span class="dt">choice=</span><span class="st">'choice'</span>,</a>
+<a class="sourceLine" id="cb1-8" title="8">                    <span class="dt">drop.index=</span><span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-9" title="9">pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice<span class="op">~</span>freq<span class="op">+</span>cost<span class="op">+</span>ivt<span class="op">+</span>ovt, Bhat, <span class="dt">reflevel=</span><span class="st">'car'</span>,</a>
+<a class="sourceLine" id="cb1-10" title="10">              <span class="dt">nests=</span><span class="st">'pcl'</span>, <span class="dt">constPar=</span><span class="kw">c</span>(<span class="st">'iv:train.air'</span>))</a>
+<a class="sourceLine" id="cb1-11" title="11"><span class="kw">summary</span>(pcl)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = choice ~ freq + cost + ivt + ovt, data = Bhat, 
@@ -383,9 +383,9 @@ P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
 </ul>
 <p>This model can therefore simply be fitted as a multinomial logit model ; the ranking for one individual amoung J alternatives is writen as <span class="math inline">\(J-1\)</span> choices among <span class="math inline">\(J, J-1, ..., 2\)</span> alternatives.</p>
 <p>The estimation of the rank-ordered logit model is illustrated using the <code>Game</code> data set <span class="citation">(Fok, Paap, and Van Dijk 2012)</span>. Respondents are asked to rank 6 gaming platforms. The covariates are a dummy <code>own</code> which indicates whether a specific platform is curently owned, the age of the respondent (<code>age</code>) and the number of hours spent on gaming per week (<code>hours</code>). The data set is available in wide (<code>game</code>) and long (<code>game2</code>) format. In wide format, the consists on <span class="math inline">\(J\)</span> columns which indicate the ranking of each alternative.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;Game&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;Game2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="kw">head</span>(Game,<span class="dv">2</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">data</span>(<span class="st">&quot;Game&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">data</span>(<span class="st">&quot;Game2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="kw">head</span>(Game,<span class="dv">2</span>)</a></code></pre></div>
 <pre><code>##   ch.Xbox ch.PlayStation ch.PSPortable ch.GameCube ch.GameBoy
 ## 1       2              1             3           5          6
 ## 2       4              2             3           5          6
@@ -395,7 +395,7 @@ P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
 ##   own.GameBoy own.PC age hours
 ## 1           0      1  33  2.00
 ## 2           0      1  19  3.25</code></pre>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">head</span>(Game2, <span class="dv">7</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">head</span>(Game2, <span class="dv">7</span>)</a></code></pre></div>
 <pre><code>##   age hours    platform ch own chid
 ## 1  33  2.00     GameBoy  6   0    1
 ## 2  33  2.00    GameCube  5   0    1
@@ -404,15 +404,15 @@ P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
 ## 5  33  2.00  PSPortable  3   0    1
 ## 6  33  2.00        Xbox  2   0    1
 ## 7  19  3.25     GameBoy  6   0    2</code></pre>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">nrow</span>(Game)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">nrow</span>(Game)</a></code></pre></div>
 <pre><code>## [1] 91</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">nrow</span>(Game2)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">nrow</span>(Game2)</a></code></pre></div>
 <pre><code>## [1] 546</code></pre>
 <p>Note that <code>Game</code> contains 91 rows (there are 91 individuals) and that <code>Game2</code> contains 546 rows (<span class="math inline">\(91\)</span> individuals <span class="math inline">\(times\)</span> 6 alternatives)</p>
 <p>To use <code>mlogit.data</code>, the <code>ranked</code> should <code>TRUE</code> :</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">G &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Game2, <span class="dt">shape =</span> <span class="st">&quot;long&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">alt.var =</span> <span class="st">'platform'</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2">G &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Game, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">varying =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb11-3" data-line-number="3"><span class="kw">head</span>(G)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">G &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Game2, <span class="dt">shape =</span> <span class="st">&quot;long&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">alt.var =</span> <span class="st">'platform'</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb11-2" title="2">G &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Game, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">varying =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb11-3" title="3"><span class="kw">head</span>(G)</a></code></pre></div>
 <pre><code>##               age hours         alt own chid    ch
 ## 1.GameBoy      33     2     GameBoy   0    1 FALSE
 ## 1.GameCube     33     2    GameCube   0    1 FALSE
@@ -420,11 +420,11 @@ P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
 ## 1.PSPortable   33     2  PSPortable   0    1 FALSE
 ## 1.PlayStation  33     2 PlayStation   1    1  TRUE
 ## 1.Xbox         33     2        Xbox   0    1 FALSE</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">nrow</span>(G)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">nrow</span>(G)</a></code></pre></div>
 <pre><code>## [1] 1820</code></pre>
 <p>Note that the choice variable is now a logical variable and that the number of row is now 1820 (91 individuals <span class="math inline">\(\times (6+5+4+3+2)\)</span> alternatives).</p>
 <p>Using <code>PC</code> as the reference level, we can then reproduce the results of the original reference :</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">summary</span>(<span class="kw">mlogit</span>(ch <span class="op">~</span><span class="st"> </span>own <span class="op">|</span><span class="st"> </span>hours <span class="op">+</span><span class="st"> </span>age, G, <span class="dt">reflevel =</span> <span class="st">&quot;PC&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">summary</span>(<span class="kw">mlogit</span>(ch <span class="op">~</span><span class="st"> </span>own <span class="op">|</span><span class="st"> </span>hours <span class="op">+</span><span class="st"> </span>age, G, <span class="dt">reflevel =</span> <span class="st">&quot;PC&quot;</span>))</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = ch ~ own | hours + age, data = G, reflevel = &quot;PC&quot;, 
@@ -498,6 +498,9 @@ P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
 </div>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

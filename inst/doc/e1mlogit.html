@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Kenneth Train and Yves Croissant" />
 
-<meta name="date" content="2019-07-22" />
+<meta name="date" content="2019-12-09" />
 
 <title>Exercise 1: Multinomial logit model</title>
 
@@ -37,7 +37,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -96,7 +96,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -303,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Exercise 1: Multinomial logit model</h1>
 <h4 class="author">Kenneth Train and Yves Croissant</h4>
-<h4 class="date">2019-07-22</h4>
+<h4 class="date">2019-12-09</h4>
 
 
 
@@ -337,11 +337,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol style="list-style-type: lower-alpha">
 <li>Do the estimated coefficients have the expected signs?</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;Heating&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">H &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Heating, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;depvar&quot;</span>, <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">12</span>))</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">m &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ic <span class="op">+</span><span class="st"> </span>oc <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, H)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5"><span class="kw">summary</span>(m)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;Heating&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">H &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Heating, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;depvar&quot;</span>, <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">12</span>))</a>
+<a class="sourceLine" id="cb1-4" title="4">m &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ic <span class="op">+</span><span class="st"> </span>oc <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, H)</a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw">summary</span>(m)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ic + oc | 0, data = H, method = &quot;nr&quot;)
@@ -375,7 +375,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol start="3" style="list-style-type: lower-alpha">
 <li>How closely do the average probabilities match the shares of customers choosing each alternative?</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(m, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(m, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
 <pre><code>##         ec         er         gc         gr         hp 
 ## 0.10413057 0.05141477 0.51695653 0.24030898 0.08718915</code></pre>
 <blockquote>
@@ -391,7 +391,7 @@ U = \beta_{ic} ic + \beta_{oc} oc
 dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow 
 -\frac{dic}{doc}\mid_{dU=0}=\frac{\beta_{oc}}{\beta_{ic}}
 \]</span></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">coef</span>(m)[<span class="st">&quot;oc&quot;</span>]<span class="op">/</span><span class="kw">coef</span>(m)[<span class="st">&quot;ic&quot;</span>]</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">coef</span>(m)[<span class="st">&quot;oc&quot;</span>]<span class="op">/</span><span class="kw">coef</span>(m)[<span class="st">&quot;ic&quot;</span>]</a></code></pre></div>
 <pre><code>##        oc 
 ## 0.7349453</code></pre>
 <blockquote>
@@ -415,10 +415,10 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <blockquote>
 <p>To impose this constraint, we create a lifecycle cost that embodies the constraint <span class="math inline">\(lcc=ic+oc/0.12\)</span> and estimate the model with this variable.</p>
 </blockquote>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">H<span class="op">$</span>lcc &lt;-<span class="st"> </span>H<span class="op">$</span>ic <span class="op">+</span><span class="st"> </span>H<span class="op">$</span>oc <span class="op">/</span><span class="st"> </span><span class="fl">0.12</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">mlcc &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>lcc <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, H)</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">library</span>(<span class="st">&quot;lmtest&quot;</span>)</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="kw">lrtest</span>(m, mlcc)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">H<span class="op">$</span>lcc &lt;-<span class="st"> </span>H<span class="op">$</span>ic <span class="op">+</span><span class="st"> </span>H<span class="op">$</span>oc <span class="op">/</span><span class="st"> </span><span class="fl">0.12</span></a>
+<a class="sourceLine" id="cb7-2" title="2">mlcc &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>lcc <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, H)</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">library</span>(<span class="st">&quot;lmtest&quot;</span>)</a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="kw">lrtest</span>(m, mlcc)</a></code></pre></div>
 <pre><code>## Likelihood ratio test
 ## 
 ## Model 1: depvar ~ ic + oc | 0
@@ -428,7 +428,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ## 2   1 -1248.7 -1 306.93  &lt; 2.2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">qchisq</span>(<span class="fl">0.05</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">qchisq</span>(<span class="fl">0.05</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>## [1] 3.841459</code></pre>
 <blockquote>
 <p>We perform a likelihood ratio test. The <span class="math inline">\(\ln L\)</span> for this constrained model is <span class="math inline">\(-1248.7\)</span>. The <span class="math inline">\(\ln L\)</span> for the unconstrained model is <span class="math inline">\(-1095.2\)</span>. The test statistic is twice the difference in <span class="math inline">\(\ln L\)</span>: <span class="math inline">\(2(1248.7-1095.2)=307\)</span>. This test is for one restriction (ie a restiction on the relation of the coefficient of operating cost to that of installation cost.) We therefore compare <span class="math inline">\(307\)</span> with the critical value of chi-squared with <span class="math inline">\(1\)</span> degree of freedom. This critical value for 95% confidence is <span class="math inline">\(3.8\)</span>. Since the statistic exceeds the critical value, we reject the hypothesis that <span class="math inline">\(r=0.12\)</span>.</p>
@@ -439,8 +439,8 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol style="list-style-type: lower-alpha">
 <li>How well do the estimated probabilities match the shares of customers choosing each alternative?</li>
 </ol>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1">mc &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ic <span class="op">+</span><span class="st"> </span>oc, H, <span class="dt">reflevel =</span> <span class="st">'hp'</span>)</a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"><span class="kw">summary</span>(mc)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">mc &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ic <span class="op">+</span><span class="st"> </span>oc, H, <span class="dt">reflevel =</span> <span class="st">'hp'</span>)</a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="kw">summary</span>(mc)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ic + oc, data = H, reflevel = &quot;hp&quot;, 
@@ -469,7 +469,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ## Log-Likelihood: -1008.2
 ## McFadden R^2:  0.013691 
 ## Likelihood ratio test : chisq = 27.99 (p.value = 8.3572e-07)</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(mc, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(mc, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
 <pre><code>##         hp         ec         er         gc         gr 
 ## 0.05555556 0.07111111 0.09333333 0.63666667 0.14333333</code></pre>
 <blockquote>
@@ -478,12 +478,12 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Calculate the <span class="math inline">\(wtp\)</span> and discount rate <span class="math inline">\(r\)</span> that is implied by the estimates. Are these reasonable?</li>
 </ol>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1">wtp &lt;-<span class="st"> </span><span class="kw">coef</span>(mc)[<span class="st">&quot;oc&quot;</span>] <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(mc)[<span class="st">&quot;ic&quot;</span>]</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">wtp</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">wtp &lt;-<span class="st"> </span><span class="kw">coef</span>(mc)[<span class="st">&quot;oc&quot;</span>] <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(mc)[<span class="st">&quot;ic&quot;</span>]</a>
+<a class="sourceLine" id="cb15-2" title="2">wtp</a></code></pre></div>
 <pre><code>##       oc 
 ## 4.563385</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">r &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>wtp</a>
-<a class="sourceLine" id="cb17-2" data-line-number="2">r</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">r &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>wtp</a>
+<a class="sourceLine" id="cb17-2" title="2">r</a></code></pre></div>
 <pre><code>##        oc 
 ## 0.2191356</code></pre>
 <blockquote>
@@ -495,7 +495,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <blockquote>
 <p>We know that when the hp is left out, the constant for alternative <code>gc</code> is <span class="math inline">\(1.71074\)</span> meaning that the average impact of unicluded factors is <span class="math inline">\(1.71074\)</span> higher for alternative <code>gc</code> than for alternative hp. Similarly, the constant for alternative <code>gr</code> is <span class="math inline">\(0.30777\)</span>. If <code>gr</code> were left out instead of <code>hp</code>, then all the constants would be relative to alternative <code>gr</code>. The constant for alternative <code>gc</code> would the be <span class="math inline">\(1.71074-.30777=1.40297\)</span>. That is, the average impact of unincluded factors is <span class="math inline">\(1.40297\)</span> higher for alt <code>gc</code> than alt <code>gr</code>. Similarly for the other alternatives. Note the the constant for alt 5 would be <span class="math inline">\(0-.30777=-.3077\)</span>, since <code>hp</code> is normalized to zero in the model with <code>hp</code> left out.</p>
 </blockquote>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1"><span class="kw">update</span>(mc, <span class="dt">reflevel =</span> <span class="st">&quot;gr&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">update</span>(mc, <span class="dt">reflevel =</span> <span class="st">&quot;gr&quot;</span>)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ic + oc, data = H, reflevel = &quot;gr&quot;,     method = &quot;nr&quot;)
@@ -511,8 +511,8 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol style="list-style-type: lower-alpha">
 <li>Enter installation cost divided by income, instead of installation cost. With this specification, the magnitude of the installation cost coefficient is inversely related to income, such that high income households are less concerned with installation costs than lower income households. Does dividing installation cost by income seem to make the model better or worse?</li>
 </ol>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">mi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>oc <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(ic <span class="op">/</span><span class="st"> </span>income), H)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">summary</span>(mi)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">mi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>oc <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(ic <span class="op">/</span><span class="st"> </span>income), H)</a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="kw">summary</span>(mi)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ oc + I(ic/income), data = H, method = &quot;nr&quot;)
@@ -546,14 +546,14 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Instead of dividing installation cost by income, enter alternative-specific income effects. What do the estimates imply about the impact of income on the choice of central systems versus room system? Do these income terms enter significantly?</li>
 </ol>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" data-line-number="1">mi2 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>oc <span class="op">+</span><span class="st"> </span>ic <span class="op">|</span><span class="st"> </span>income, H, <span class="dt">reflevel =</span> <span class="st">&quot;hp&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">mi2 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>oc <span class="op">+</span><span class="st"> </span>ic <span class="op">|</span><span class="st"> </span>income, H, <span class="dt">reflevel =</span> <span class="st">&quot;hp&quot;</span>)</a></code></pre></div>
 <blockquote>
 <p>The model implies that as income rises, the probability of heat pump rises relative to all the others (since income in the heat pump alt is normalized to zero, and the others enter with negative signs such that they are lower than that for heat pumps. Also, as income rises, the probability of gas room drops relative to the other non-heat-pump systems (since it is most negative).</p>
 </blockquote>
 <blockquote>
 <p>Do these income terms enter significantly? No. It seems that income doesn’t really have an effect. Maybe this is because income is for the family that lives in the house, whereas the builder made decision of which system to install.</p>
 </blockquote>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1"><span class="kw">lrtest</span>(mc, mi2)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">lrtest</span>(mc, mi2)</a></code></pre></div>
 <pre><code>## Likelihood ratio test
 ## 
 ## Model 1: depvar ~ ic + oc
@@ -561,7 +561,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)
 ## 1   6 -1008.2                     
 ## 2  10 -1005.9  4 4.6803     0.3217</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1"><span class="kw">waldtest</span>(mc, mi2)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">waldtest</span>(mc, mi2)</a></code></pre></div>
 <pre><code>## Wald test
 ## 
 ## Model 1: depvar ~ ic + oc
@@ -569,7 +569,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ##   Res.Df Df  Chisq Pr(&gt;Chisq)
 ## 1    894                     
 ## 2    890  4 4.6456     0.3256</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">scoretest</span>(mc, mi2)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw">scoretest</span>(mc, mi2)</a></code></pre></div>
 <pre><code>## 
 ##  score test
 ## 
@@ -585,14 +585,14 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol start="6" style="list-style-type: decimal">
 <li>We now are going to consider the use of logit model for prediction. Estimate a model with installation costs, operating costs, and alternative specific constants. Calculate the probabilities for each house explicitly. Check to be sure that the mean probabilities are the same as you got in exercise 4.</li>
 </ol>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1">X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(mc)</a>
-<a class="sourceLine" id="cb30-2" data-line-number="2">alt &lt;-<span class="st"> </span><span class="kw">index</span>(H)<span class="op">$</span>alt</a>
-<a class="sourceLine" id="cb30-3" data-line-number="3">chid &lt;-<span class="st"> </span><span class="kw">index</span>(H)<span class="op">$</span>chid</a>
-<a class="sourceLine" id="cb30-4" data-line-number="4">eXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span><span class="kw">coef</span>(mc)))</a>
-<a class="sourceLine" id="cb30-5" data-line-number="5">SeXb &lt;-<span class="st"> </span><span class="kw">tapply</span>(eXb, chid, sum)</a>
-<a class="sourceLine" id="cb30-6" data-line-number="6">P &lt;-<span class="st"> </span>eXb <span class="op">/</span><span class="st"> </span>SeXb[chid]</a>
-<a class="sourceLine" id="cb30-7" data-line-number="7">P &lt;-<span class="st"> </span><span class="kw">matrix</span>(P, <span class="dt">ncol =</span> <span class="dv">5</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb30-8" data-line-number="8"><span class="kw">head</span>(P)</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(mc)</a>
+<a class="sourceLine" id="cb30-2" title="2">alt &lt;-<span class="st"> </span><span class="kw">index</span>(H)<span class="op">$</span>alt</a>
+<a class="sourceLine" id="cb30-3" title="3">chid &lt;-<span class="st"> </span><span class="kw">index</span>(H)<span class="op">$</span>chid</a>
+<a class="sourceLine" id="cb30-4" title="4">eXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span><span class="kw">coef</span>(mc)))</a>
+<a class="sourceLine" id="cb30-5" title="5">SeXb &lt;-<span class="st"> </span><span class="kw">tapply</span>(eXb, chid, sum)</a>
+<a class="sourceLine" id="cb30-6" title="6">P &lt;-<span class="st"> </span>eXb <span class="op">/</span><span class="st"> </span>SeXb[chid]</a>
+<a class="sourceLine" id="cb30-7" title="7">P &lt;-<span class="st"> </span><span class="kw">matrix</span>(P, <span class="dt">ncol =</span> <span class="dv">5</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb30-8" title="8"><span class="kw">head</span>(P)</a></code></pre></div>
 <pre><code>##            [,1]       [,2]      [,3]      [,4]       [,5]
 ## [1,] 0.05107444 0.07035738 0.6329116 0.1877416 0.05791494
 ## [2,] 0.04849337 0.06420595 0.6644519 0.1558322 0.06701658
@@ -600,20 +600,20 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ## [4,] 0.07264503 0.11879833 0.5657376 0.1879231 0.05489595
 ## [5,] 0.09223575 0.10238514 0.5670663 0.1561227 0.08219005
 ## [6,] 0.09228184 0.10466584 0.6366615 0.1152634 0.05112739</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">apply</span>(P, <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw">apply</span>(P, <span class="dv">2</span>, mean)</a></code></pre></div>
 <pre><code>## [1] 0.07111111 0.09333333 0.63666666 0.14333334 0.05555556</code></pre>
 <blockquote>
 <p>This can be computed much more simply using the \Rf{fitted<code>function, with the \Ra{outcome</code>{fitted<code>argument set to \Rv{FALSE</code> so that the probabilities for all the alternatives (and not only the chosen one) is returned.</p>
 </blockquote>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(mc, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(mc, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
 <pre><code>##         hp         ec         er         gc         gr 
 ## 0.05555556 0.07111111 0.09333333 0.63666667 0.14333333</code></pre>
 <ol start="5" class="example" style="list-style-type: decimal">
 <li>The California Energy Commission (CEC) is considering whether to offer rebates on heat pumps. The CEC wants to predict the effect of the rebates on the heating system choices of customers in California. The rebates will be set at 10% of the installation cost. Using the estimated coefficients from the model in exercise 6, calculate new probabilities and predicted shares using the new installation cost of heat pump. How much do the rebates raise the share of houses with heat pumps?</li>
 </ol>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">Hn &lt;-<span class="st"> </span>H</a>
-<a class="sourceLine" id="cb36-2" data-line-number="2">Hn[Hn<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;hp&quot;</span>, <span class="st">&quot;ic&quot;</span>] &lt;-<span class="st"> </span><span class="fl">0.9</span> <span class="op">*</span><span class="st"> </span>Hn[Hn<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;hp&quot;</span>, <span class="st">&quot;ic&quot;</span>]</a>
-<a class="sourceLine" id="cb36-3" data-line-number="3"><span class="kw">apply</span>(<span class="kw">predict</span>(mc, <span class="dt">newdata =</span> Hn), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">Hn &lt;-<span class="st"> </span>H</a>
+<a class="sourceLine" id="cb36-2" title="2">Hn[Hn<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;hp&quot;</span>, <span class="st">&quot;ic&quot;</span>] &lt;-<span class="st"> </span><span class="fl">0.9</span> <span class="op">*</span><span class="st"> </span>Hn[Hn<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;hp&quot;</span>, <span class="st">&quot;ic&quot;</span>]</a>
+<a class="sourceLine" id="cb36-3" title="3"><span class="kw">apply</span>(<span class="kw">predict</span>(mc, <span class="dt">newdata =</span> Hn), <span class="dv">2</span>, mean)</a></code></pre></div>
 <pre><code>##         hp         ec         er         gc         gr 
 ## 0.06446230 0.07045486 0.09247026 0.63064443 0.14196814</code></pre>
 <blockquote>
@@ -622,20 +622,20 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol start="6" class="example" style="list-style-type: decimal">
 <li>Suppose a new technology is developed that provides more efficient central heating. The new technology costs $200 more than the central electric system. However, it saves 25% of the electricity, such that its operating costs are 75% of the operating costs of <code>ec</code>. We want to predict the potential market penetration of this technology. Note that there are now six alternatives: the original five alternatives plus this new one. Calculate the probability and predict the market share (i.e., the average probability) for all six alternatives, using the model that is estimated on the original five alternatives. (Be sure to use the original installation cost for heat pumps, rather than the reduced cost in exercise 7.) What is the predicted market share for the new technology? From which of the original five systems does the new technology draw the most customers?</li>
 </ol>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1">X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(mc)</a>
-<a class="sourceLine" id="cb38-2" data-line-number="2">Xn &lt;-<span class="st"> </span>X[alt <span class="op">==</span><span class="st"> &quot;ec&quot;</span>,]</a>
-<a class="sourceLine" id="cb38-3" data-line-number="3">Xn[, <span class="st">&quot;ic&quot;</span>] &lt;-<span class="st"> </span>Xn[, <span class="st">&quot;ic&quot;</span>] <span class="op">+</span><span class="st"> </span><span class="dv">200</span></a>
-<a class="sourceLine" id="cb38-4" data-line-number="4">Xn[, <span class="st">&quot;oc&quot;</span>] &lt;-<span class="st"> </span>Xn[, <span class="st">&quot;oc&quot;</span>] <span class="op">*</span><span class="st"> </span><span class="fl">0.75</span></a>
-<a class="sourceLine" id="cb38-5" data-line-number="5">unchid &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">index</span>(H)<span class="op">$</span>chid)</a>
-<a class="sourceLine" id="cb38-6" data-line-number="6"><span class="kw">rownames</span>(Xn) &lt;-<span class="st"> </span><span class="kw">paste</span>(unchid, <span class="st">'new'</span>, <span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>)</a>
-<a class="sourceLine" id="cb38-7" data-line-number="7">chidb &lt;-<span class="st"> </span><span class="kw">c</span>(chid, unchid)</a>
-<a class="sourceLine" id="cb38-8" data-line-number="8">X &lt;-<span class="st"> </span><span class="kw">rbind</span>(X, Xn)</a>
-<a class="sourceLine" id="cb38-9" data-line-number="9">X &lt;-<span class="st"> </span>X[<span class="kw">order</span>(chidb), ]</a>
-<a class="sourceLine" id="cb38-10" data-line-number="10">eXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span><span class="kw">coef</span>(mc)))</a>
-<a class="sourceLine" id="cb38-11" data-line-number="11">SeXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">tapply</span>(eXb, <span class="kw">sort</span>(chidb), sum))</a>
-<a class="sourceLine" id="cb38-12" data-line-number="12">P &lt;-<span class="st"> </span>eXb <span class="op">/</span><span class="st"> </span>SeXb[<span class="kw">sort</span>(chidb)]</a>
-<a class="sourceLine" id="cb38-13" data-line-number="13">P &lt;-<span class="st"> </span><span class="kw">matrix</span>(P, <span class="dt">ncol =</span> <span class="dv">6</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb38-14" data-line-number="14"><span class="kw">apply</span>(P, <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(mc)</a>
+<a class="sourceLine" id="cb38-2" title="2">Xn &lt;-<span class="st"> </span>X[alt <span class="op">==</span><span class="st"> &quot;ec&quot;</span>,]</a>
+<a class="sourceLine" id="cb38-3" title="3">Xn[, <span class="st">&quot;ic&quot;</span>] &lt;-<span class="st"> </span>Xn[, <span class="st">&quot;ic&quot;</span>] <span class="op">+</span><span class="st"> </span><span class="dv">200</span></a>
+<a class="sourceLine" id="cb38-4" title="4">Xn[, <span class="st">&quot;oc&quot;</span>] &lt;-<span class="st"> </span>Xn[, <span class="st">&quot;oc&quot;</span>] <span class="op">*</span><span class="st"> </span><span class="fl">0.75</span></a>
+<a class="sourceLine" id="cb38-5" title="5">unchid &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">index</span>(H)<span class="op">$</span>chid)</a>
+<a class="sourceLine" id="cb38-6" title="6"><span class="kw">rownames</span>(Xn) &lt;-<span class="st"> </span><span class="kw">paste</span>(unchid, <span class="st">'new'</span>, <span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>)</a>
+<a class="sourceLine" id="cb38-7" title="7">chidb &lt;-<span class="st"> </span><span class="kw">c</span>(chid, unchid)</a>
+<a class="sourceLine" id="cb38-8" title="8">X &lt;-<span class="st"> </span><span class="kw">rbind</span>(X, Xn)</a>
+<a class="sourceLine" id="cb38-9" title="9">X &lt;-<span class="st"> </span>X[<span class="kw">order</span>(chidb), ]</a>
+<a class="sourceLine" id="cb38-10" title="10">eXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span><span class="kw">coef</span>(mc)))</a>
+<a class="sourceLine" id="cb38-11" title="11">SeXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">tapply</span>(eXb, <span class="kw">sort</span>(chidb), sum))</a>
+<a class="sourceLine" id="cb38-12" title="12">P &lt;-<span class="st"> </span>eXb <span class="op">/</span><span class="st"> </span>SeXb[<span class="kw">sort</span>(chidb)]</a>
+<a class="sourceLine" id="cb38-13" title="13">P &lt;-<span class="st"> </span><span class="kw">matrix</span>(P, <span class="dt">ncol =</span> <span class="dv">6</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb38-14" title="14"><span class="kw">apply</span>(P, <span class="dv">2</span>, mean)</a></code></pre></div>
 <pre><code>## [1] 0.06311578 0.08347713 0.57145108 0.12855080 0.04977350
 ## [6] 0.10363170</code></pre>
 <blockquote>
@@ -648,6 +648,9 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <p>The same percent drop for all systems is a consequence of the IIA property of logit. To me, this property seems unreasonable in this application. The new technology is a type of electric system. It seems reasonable that it would draw more from other electric systems than from gas systems. Models like nested logit, probit, and mixed logit allow more flexible, and in this case, more realistic substitution patterns.</p>
 </blockquote>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

@@ -212,7 +212,9 @@ model.frame.mFormula <- function(formula, data, ..., lhs = NULL, rhs = NULL, alt
                 ra <- oindex[c("chid", "id")][! duplicated(oindex$chid), ]
                 ids <- ra$id
                 names(ids) <- ra$chid
-                index$id <- ids[index$chid]
+# YC 2019/12/09 : factor indexation leads to a position and not a character indexing                
+#                index$id <- ids[index$chid]
+                index$id <- ids[as.character(index$chid)]
                 index$id <- index$id[drop = TRUE]
             }
         }

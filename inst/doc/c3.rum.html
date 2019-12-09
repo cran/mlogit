@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -35,7 +35,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -94,7 +94,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -402,25 +402,25 @@ F(z)=\int_{-\infty}^{z} f(t) dt=e^{-e^{-\frac{z-\mu}{\theta}}},
 <div id="modecanada" class="section level3">
 <h3>ModeCanada</h3>
 <p>We first use the <code>ModeCanada</code> data set, which was already coerced to a <code>mlogit.data</code> object (called <code>MC</code>) in the previous section. The same model can then be estimated using as <code>data</code> argument this <code>mlogit.data</code> object:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">                  <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>, <span class="dt">drop.index =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">ml.MC1 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>ovt <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>ivt, MC)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,</a>
+<a class="sourceLine" id="cb1-4" title="4">                  <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>, <span class="dt">drop.index =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-5" title="5">ml.MC1 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>ovt <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>ivt, MC)</a></code></pre></div>
 <p>or a <code>data.frame</code>. In this latter case, further arguments that will be passed to <code>mlogit.data</code> should be indicated:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">ml.MC1b &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>ovt <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>ivt, ModeCanada,</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">ml.MC1b &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>ovt <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>ivt, ModeCanada,</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>)</a></code></pre></div>
 <p><code>mlogit</code> provides two further useful arguments:</p>
 <ul>
 <li><code>reflevel</code> indicates which alternative is the “reference” alternative, i.e., the one for which the coefficients of choice situation specific covariates are set to 0,</li>
 <li><code>alt.subset</code> indicates a subset of alternatives on which the estimation has to be performed; in this case, only the lines that correspond to the selected alternatives are used and all the choice situations where not selected alternatives has been chosen are removed.</li>
 </ul>
 <p>We estimate the model on the subset of three alternatives (we exclude <code>bus</code> whose market share is negligible in our sample) and we set <code>car</code> as the reference alternative. Moreover, we use a total transport time variable computed as the sum of the in vehicle and the out of vehicle time variables.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">MC<span class="op">$</span>time &lt;-<span class="st"> </span><span class="kw">with</span>(MC, ivt <span class="op">+</span><span class="st"> </span>ovt)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">ml.MC1 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>time, MC, </a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="dt">alt.subset =</span> <span class="kw">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>), <span class="dt">reflevel =</span> <span class="st">&quot;car&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">MC<span class="op">$</span>time &lt;-<span class="st"> </span><span class="kw">with</span>(MC, ivt <span class="op">+</span><span class="st"> </span>ovt)</a>
+<a class="sourceLine" id="cb3-2" title="2">ml.MC1 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>freq <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span>time, MC, </a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="dt">alt.subset =</span> <span class="kw">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>), <span class="dt">reflevel =</span> <span class="st">&quot;car&quot;</span>)</a></code></pre></div>
 <p>The main results of the model are computed and displayed using the <code>summary</code> method:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">summary</span>(ml.MC1)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">summary</span>(ml.MC1)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = choice ~ cost + freq | income | time, data = MC, 
@@ -455,42 +455,42 @@ F(z)=\int_{-\infty}^{z} f(t) dt=e^{-e^{-\frac{z-\mu}{\theta}}},
 ## Likelihood ratio test : chisq = 1771.6 (p.value = &lt; 2.22e-16)</code></pre>
 <p>The frequencies of the different alternatives in the sample are first indicated. Next, some information about the optimization are displayed: the Newton-Ralphson method (with analytic gradient and hessian) is used, as it is the most efficient method for this simple model for which the log-likelihood function is concave. Note that very few iterations and computing time are required to estimate this model. Then the usual table of coefficients is displayed followed by some goodness of fit measures: the value of the log-likelihood function, which is compared to the value when only intercepts are introduced, which leads to the computation of the McFadden <span class="math inline">\(R^2\)</span> and to the likelihood ratio test.</p>
 <p>The <code>fitted</code> method can be used either to obtain the probability of actual choices (<code>type = &quot;outcome&quot;</code>) or the probabilities for all the alternatives (<code>type = &quot;probabilities&quot;</code>).</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;outcome&quot;</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">head</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;outcome&quot;</span>))</a></code></pre></div>
 <pre><code>##       109       110       111       112       113       114 
 ## 0.1909475 0.3399941 0.1470527 0.3399941 0.3399941 0.2440011</code></pre>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">head</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>), <span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">head</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>), <span class="dv">4</span>)</a></code></pre></div>
 <pre><code>##           car     train       air
 ## 109 0.4206404 0.3884120 0.1909475
 ## 110 0.3696476 0.2903582 0.3399941
 ## 111 0.4296769 0.4232704 0.1470527
 ## 112 0.3696476 0.2903582 0.3399941</code></pre>
 <p>Note that the log-likelihood is the sum of the log of the fitted outcome probabilities and that, as the model contains intercepts, the average fitted probabilities for every alternative equals the market shares of the alternatives in the sample.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">sum</span>(<span class="kw">log</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;outcome&quot;</span>)))</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">sum</span>(<span class="kw">log</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;outcome&quot;</span>)))</a></code></pre></div>
 <pre><code>## [1] -1951.344</code></pre>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">logLik</span>(ml.MC1)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"><span class="kw">logLik</span>(ml.MC1)</a></code></pre></div>
 <pre><code>## 'log Lik.' -1951.344 (df=9)</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
 <pre><code>##       car     train       air 
 ## 0.4575659 0.1672084 0.3752257</code></pre>
 <p>Predictions can be made using the <code>predict</code> method. If no data is provided, predictions are made for the sample mean values of the covariates.</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">predict</span>(ml.MC1)</a></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">predict</span>(ml.MC1)</a></code></pre></div>
 <pre><code>##       car     train       air 
 ## 0.5066362 0.2116876 0.2816761</code></pre>
 <p>Assume, for example, that we wish to predict the effect of a reduction of train transport time of 20%. We first create a new <code>data.frame</code> simply by multiplying train transport time by 0.8 and then using the <code>predict</code> method with this new <code>data.frame</code>.</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1">NMC &lt;-<span class="st"> </span>MC</a>
-<a class="sourceLine" id="cb18-2" data-line-number="2">NMC[<span class="kw">index</span>(NMC)<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;train&quot;</span>, <span class="st">&quot;time&quot;</span>] &lt;-<span class="st"> </span><span class="fl">0.8</span> <span class="op">*</span></a>
-<a class="sourceLine" id="cb18-3" data-line-number="3">NMC[<span class="kw">index</span>(NMC)<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;train&quot;</span>, <span class="st">&quot;time&quot;</span>]</a>
-<a class="sourceLine" id="cb18-4" data-line-number="4">Oprob &lt;-<span class="st"> </span><span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>)</a>
-<a class="sourceLine" id="cb18-5" data-line-number="5">Nprob &lt;-<span class="st"> </span><span class="kw">predict</span>(ml.MC1, <span class="dt">newdata =</span> NMC)</a>
-<a class="sourceLine" id="cb18-6" data-line-number="6"><span class="kw">rbind</span>(<span class="dt">old =</span> <span class="kw">apply</span>(Oprob, <span class="dv">2</span>, mean), <span class="dt">new =</span> <span class="kw">apply</span>(Nprob, <span class="dv">2</span>, mean))</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">NMC &lt;-<span class="st"> </span>MC</a>
+<a class="sourceLine" id="cb18-2" title="2">NMC[<span class="kw">index</span>(NMC)<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;train&quot;</span>, <span class="st">&quot;time&quot;</span>] &lt;-<span class="st"> </span><span class="fl">0.8</span> <span class="op">*</span></a>
+<a class="sourceLine" id="cb18-3" title="3">NMC[<span class="kw">index</span>(NMC)<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;train&quot;</span>, <span class="st">&quot;time&quot;</span>]</a>
+<a class="sourceLine" id="cb18-4" title="4">Oprob &lt;-<span class="st"> </span><span class="kw">fitted</span>(ml.MC1, <span class="dt">type =</span> <span class="st">&quot;probabilities&quot;</span>)</a>
+<a class="sourceLine" id="cb18-5" title="5">Nprob &lt;-<span class="st"> </span><span class="kw">predict</span>(ml.MC1, <span class="dt">newdata =</span> NMC)</a>
+<a class="sourceLine" id="cb18-6" title="6"><span class="kw">rbind</span>(<span class="dt">old =</span> <span class="kw">apply</span>(Oprob, <span class="dv">2</span>, mean), <span class="dt">new =</span> <span class="kw">apply</span>(Nprob, <span class="dv">2</span>, mean))</a></code></pre></div>
 <pre><code>##           car     train       air
 ## old 0.4575659 0.1672084 0.3752257
 ## new 0.4044736 0.2635801 0.3319462</code></pre>
 <p>If, for the first individuals in the sample, we compute the ratio of the probabilities of the air and the car mode, we obtain:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1"><span class="kw">head</span>(Nprob[, <span class="st">&quot;air&quot;</span>] <span class="op">/</span><span class="st"> </span>Nprob[, <span class="st">&quot;car&quot;</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">head</span>(Nprob[, <span class="st">&quot;air&quot;</span>] <span class="op">/</span><span class="st"> </span>Nprob[, <span class="st">&quot;car&quot;</span>])</a></code></pre></div>
 <pre><code>##       109       110       111       112       113       114 
 ## 0.4539448 0.9197791 0.3422401 0.9197791 0.9197791 0.6021092</code></pre>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" data-line-number="1"><span class="kw">head</span>(Oprob[, <span class="st">&quot;air&quot;</span>] <span class="op">/</span><span class="st"> </span>Oprob[, <span class="st">&quot;car&quot;</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">head</span>(Oprob[, <span class="st">&quot;air&quot;</span>] <span class="op">/</span><span class="st"> </span>Oprob[, <span class="st">&quot;car&quot;</span>])</a></code></pre></div>
 <pre><code>##       109       110       111       112       113       114 
 ## 0.4539448 0.9197791 0.3422401 0.9197791 0.9197791 0.6021092</code></pre>
 <p>which is an illustration of the IIA property. If train time changes, it changes the probabilities of choosing air and car, but not their ratio.</p>
@@ -499,30 +499,30 @@ F(z)=\int_{-\infty}^{z} f(t) dt=e^{-e^{-\frac{z-\mu}{\theta}}},
 \mbox{iv}_i = \ln \sum_{j = 1} ^ J e^{\beta^\top x_{ij}}.
 \]</span></p>
 <p>For this purpose, we use the <code>logsum</code> function, which works on a vector of <code>coefficients</code> and a <code>model.matrix</code>. The basic use of <code>logsum</code> consists on providing as unique argument (called <code>coef</code>) a <code>mlogit</code> object. In this case, the <code>model.matrix</code> and the <code>coef</code> are extracted from the same model.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" data-line-number="1">ivbefore &lt;-<span class="st"> </span><span class="kw">logsum</span>(ml.MC1)</a></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">ivbefore &lt;-<span class="st"> </span><span class="kw">logsum</span>(ml.MC1)</a></code></pre></div>
 <p>To compute the log-sum after train time reduction, we must provide a <code>model.matrix</code> which is not the one corresponding to the fitted model. This can be done using the <code>X</code> argument which is a matrix or an object from which a <code>model.matrix</code> can be extracted. This can also be done by filling the <code>data</code> argument (a <code>data.frame</code> or an object from which a <code>data.frame</code> can be extracted using a <code>model.frame</code> method), and eventually the <code>formula</code> argument (a <code>formula</code> or an object for which the <code>formula</code> method can be applied). If no formula is provided but if <code>data</code> is a <code>mlogit.data</code> object, the formula is extracted from it.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" data-line-number="1">ivafter &lt;-<span class="st"> </span><span class="kw">logsum</span>(ml.MC1, <span class="dt">data =</span> NMC)</a></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">ivafter &lt;-<span class="st"> </span><span class="kw">logsum</span>(ml.MC1, <span class="dt">data =</span> NMC)</a></code></pre></div>
 <p>Surplus variation is then computed as the difference of the log-sums divided by the opposite of the cost coefficient which can be interpreted as the marginal utility of income:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" data-line-number="1">surplus &lt;-<span class="st"> </span><span class="op">-</span><span class="st"> </span>(ivafter <span class="op">-</span><span class="st"> </span>ivbefore) <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(ml.MC1)[<span class="st">&quot;cost&quot;</span>]</a>
-<a class="sourceLine" id="cb26-2" data-line-number="2"><span class="kw">summary</span>(surplus)</a></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1">surplus &lt;-<span class="st"> </span><span class="op">-</span><span class="st"> </span>(ivafter <span class="op">-</span><span class="st"> </span>ivbefore) <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(ml.MC1)[<span class="st">&quot;cost&quot;</span>]</a>
+<a class="sourceLine" id="cb26-2" title="2"><span class="kw">summary</span>(surplus)</a></code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##  0.5852  2.8439  3.8998  4.6971  5.8437 31.3912</code></pre>
 <p>Consumer’s surplus variation range from 0.6 to 31 Canadian $, with a median value of about 4$.</p>
 <p>Marginal effects are computed using the <code>effects</code> method. By default, they are computed at the sample mean, but a <code>data</code> argument can be provided. The variation of the probability and of the covariate can be either absolute or relative. This is indicated with the <code>type</code> argument which is a combination of two <code>a</code> (as absolute) and <code>r</code> (as relative) characters. For example, <code>type = &quot;ar&quot;</code> means that what is measured is an absolute variation of the probability for a relative variation of the covariate.</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" data-line-number="1"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;income&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;ar&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;income&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;ar&quot;</span>)</a></code></pre></div>
 <pre><code>##        car      train        air 
 ## -0.1822177 -0.1509079  0.3331256</code></pre>
 <p>The results indicate that, for a 100% increase of income, the probability of choosing <code>air</code> increases by 33 points of percentage, as the probabilities of choosing <code>car</code> and <code>train</code> decrease by 18 and 15 points of percentage.</p>
 <p>For an alternative specific covariate, a matrix of marginal effects is displayed.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" data-line-number="1"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;cost&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;rr&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;cost&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;rr&quot;</span>)</a></code></pre></div>
 <pre><code>##              car      train        air
 ## car   -0.9131273  0.9376923  0.9376923
 ## train  0.3358005 -1.2505014  0.3358005
 ## air    1.2316679  1.2316679 -3.1409703</code></pre>
 <p>The cell in the <span class="math inline">\(l^{\mbox{th}}\)</span> row and the <span class="math inline">\(c^{\mbox{th}}\)</span> column indicates the change of the probability of choosing alternative <span class="math inline">\(c\)</span> when the cost of alternative <span class="math inline">\(l\)</span> changes. As <code>type = &quot;rr&quot;</code>, elasticities are computed. For example, a 10% change of train cost increases the probabilities of choosing car and air by 3.36%. Note that the relative changes of the probabilities of choosing one of these two modes are equal, which is a consequence of the IIA property.</p>
 <p>Finally, in order to compute travel time valuation, we divide the coefficients of travel times (in minutes) by the coefficient of monetary cost (in $).</p>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" data-line-number="1"><span class="kw">coef</span>(ml.MC1)[<span class="kw">grep</span>(<span class="st">&quot;time&quot;</span>, <span class="kw">names</span>(<span class="kw">coef</span>(ml.MC1)))] <span class="op">/</span></a>
-<a class="sourceLine" id="cb32-2" data-line-number="2"><span class="st">    </span><span class="kw">coef</span>(ml.MC1)[<span class="st">&quot;cost&quot;</span>] <span class="op">*</span><span class="st"> </span><span class="dv">60</span> </a></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw">coef</span>(ml.MC1)[<span class="kw">grep</span>(<span class="st">&quot;time&quot;</span>, <span class="kw">names</span>(<span class="kw">coef</span>(ml.MC1)))] <span class="op">/</span></a>
+<a class="sourceLine" id="cb32-2" title="2"><span class="st">    </span><span class="kw">coef</span>(ml.MC1)[<span class="st">&quot;cost&quot;</span>] <span class="op">*</span><span class="st"> </span><span class="dv">60</span> </a></code></pre></div>
 <pre><code>##   car:time train:time   air:time 
 ##   29.52728   23.09447   36.95360</code></pre>
 <p>The value of travel time ranges from 23 for train to 37 Canadian $ per hour for plane.</p>
@@ -533,21 +533,21 @@ F(z)=\int_{-\infty}^{z} f(t) dt=e^{-e^{-\frac{z-\mu}{\theta}}},
 <p>The focus of the paper is on the effects of the regulatory environment on manager’s behavior. Some firms are deregulated, whereas other are either regulated or public. Rate of returns is applied for regulated firms, which means that they perceive a “fair” rate of return on their investment. Public firms also enjoy significant cost of capital advantages. Therefore, the main hypothesis of the paper is that public and regulated firms will adopt much more capitalistic intensive technologies than deregulated and public ones, which means that the coefficient of capital cost should take a higher negative value for deregulated firms. Capital cost is interacted with the age of the plant (measured as a deviation from the sample mean age), as firms should weight capital costs more heavily for older plants, as they have less time to recover these costs.</p>
 <p>Multinomial logit models are estimated for the three subsamples defined by the regulatory environment. The 15 technologies are not available for every plants, the sample is therefore restricted to available technologies, using the <code>available</code> covariate. Three technology dummies are introduced: <code>post</code> for post-combustion polution control technology, <code>cm</code> for combustion modification technology and <code>lnb</code> for low NOx burners technology.</p>
 <p>A last model is estimated for the whole sample, but the parameters are allowed to be proportional to each other. The scedasticity function is described in the fourth part of the formula, it contains here only one covariate, <code>env</code>. Note also that for the last model, the author introduced a specific capital cost coefficient for deregulated firms.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" data-line-number="1"><span class="kw">data</span>(<span class="st">&quot;NOx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb34-2" data-line-number="2">NOx<span class="op">$</span>kdereg &lt;-<span class="st"> </span><span class="kw">with</span>(NOx, kcost <span class="op">*</span><span class="st"> </span>(env <span class="op">==</span><span class="st"> &quot;deregulated&quot;</span>))</a>
-<a class="sourceLine" id="cb34-3" data-line-number="3">NOxml &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(NOx, <span class="dt">chid.var =</span> <span class="st">&quot;chid&quot;</span>, <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>,</a>
-<a class="sourceLine" id="cb34-4" data-line-number="4"><span class="dt">id.var =</span> <span class="st">&quot;id&quot;</span>)</a>
-<a class="sourceLine" id="cb34-5" data-line-number="5">ml.pub &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>post <span class="op">+</span><span class="st"> </span>cm <span class="op">+</span><span class="st"> </span>lnb <span class="op">+</span><span class="st"> </span>vcost <span class="op">+</span><span class="st"> </span>kcost <span class="op">+</span><span class="st"> </span>kcost<span class="op">:</span>age <span class="op">|</span></a>
-<a class="sourceLine" id="cb34-6" data-line-number="6"><span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;public&quot;</span>, <span class="dt">data =</span> NOxml)</a>
-<a class="sourceLine" id="cb34-7" data-line-number="7">ml.reg &lt;-<span class="st"> </span><span class="kw">update</span>(ml.pub, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;regulated&quot;</span>)</a>
-<a class="sourceLine" id="cb34-8" data-line-number="8">ml.dereg &lt;-<span class="st"> </span><span class="kw">update</span>(ml.pub, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;deregulated&quot;</span>)</a>
-<a class="sourceLine" id="cb34-9" data-line-number="9">ml.pool &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>post <span class="op">+</span><span class="st"> </span>cm <span class="op">+</span><span class="st"> </span>lnb <span class="op">+</span><span class="st"> </span>vcost <span class="op">+</span><span class="st"> </span>kcost <span class="op">+</span><span class="st"> </span>kcost<span class="op">:</span>age <span class="op">+</span></a>
-<a class="sourceLine" id="cb34-10" data-line-number="10">kdereg <span class="op">|</span><span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>env, <span class="dt">subset =</span> available <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> NOxml,</a>
-<a class="sourceLine" id="cb34-11" data-line-number="11"><span class="dt">method =</span> <span class="st">&quot;bhhh&quot;</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;texreg&quot;</span>)</a>
-<a class="sourceLine" id="cb35-2" data-line-number="2"><span class="kw">htmlreg</span>(<span class="kw">list</span>(<span class="dt">Public =</span> ml.pub, <span class="dt">Deregulated =</span> ml.dereg, <span class="dt">Regulated =</span> ml.reg,</a>
-<a class="sourceLine" id="cb35-3" data-line-number="3">             <span class="dt">Pooled =</span> ml.pool), <span class="dt">caption =</span> <span class="st">&quot;Environmental compliance choices.&quot;</span>,</a>
-<a class="sourceLine" id="cb35-4" data-line-number="4">        <span class="dt">omit.coef =</span> <span class="st">&quot;(post)|(cm)|(lnb)&quot;</span>, <span class="dt">float.pos =</span> <span class="st">&quot;hbt&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;tab:nox&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">data</span>(<span class="st">&quot;NOx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb34-2" title="2">NOx<span class="op">$</span>kdereg &lt;-<span class="st"> </span><span class="kw">with</span>(NOx, kcost <span class="op">*</span><span class="st"> </span>(env <span class="op">==</span><span class="st"> &quot;deregulated&quot;</span>))</a>
+<a class="sourceLine" id="cb34-3" title="3">NOxml &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(NOx, <span class="dt">chid.var =</span> <span class="st">&quot;chid&quot;</span>, <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>,</a>
+<a class="sourceLine" id="cb34-4" title="4"><span class="dt">id.var =</span> <span class="st">&quot;id&quot;</span>)</a>
+<a class="sourceLine" id="cb34-5" title="5">ml.pub &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>post <span class="op">+</span><span class="st"> </span>cm <span class="op">+</span><span class="st"> </span>lnb <span class="op">+</span><span class="st"> </span>vcost <span class="op">+</span><span class="st"> </span>kcost <span class="op">+</span><span class="st"> </span>kcost<span class="op">:</span>age <span class="op">|</span></a>
+<a class="sourceLine" id="cb34-6" title="6"><span class="op">-</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;public&quot;</span>, <span class="dt">data =</span> NOxml)</a>
+<a class="sourceLine" id="cb34-7" title="7">ml.reg &lt;-<span class="st"> </span><span class="kw">update</span>(ml.pub, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;regulated&quot;</span>)</a>
+<a class="sourceLine" id="cb34-8" title="8">ml.dereg &lt;-<span class="st"> </span><span class="kw">update</span>(ml.pub, <span class="dt">subset =</span> available <span class="op">&amp;</span><span class="st"> </span>env <span class="op">==</span><span class="st"> &quot;deregulated&quot;</span>)</a>
+<a class="sourceLine" id="cb34-9" title="9">ml.pool &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>post <span class="op">+</span><span class="st"> </span>cm <span class="op">+</span><span class="st"> </span>lnb <span class="op">+</span><span class="st"> </span>vcost <span class="op">+</span><span class="st"> </span>kcost <span class="op">+</span><span class="st"> </span>kcost<span class="op">:</span>age <span class="op">+</span></a>
+<a class="sourceLine" id="cb34-10" title="10">kdereg <span class="op">|</span><span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>env, <span class="dt">subset =</span> available <span class="op">==</span><span class="st"> </span><span class="dv">1</span>, <span class="dt">data =</span> NOxml,</a>
+<a class="sourceLine" id="cb34-11" title="11"><span class="dt">method =</span> <span class="st">&quot;bhhh&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb35-1" title="1"><span class="kw">library</span>(<span class="st">&quot;texreg&quot;</span>)</a>
+<a class="sourceLine" id="cb35-2" title="2"><span class="kw">htmlreg</span>(<span class="kw">list</span>(<span class="dt">Public =</span> ml.pub, <span class="dt">Deregulated =</span> ml.dereg, <span class="dt">Regulated =</span> ml.reg,</a>
+<a class="sourceLine" id="cb35-3" title="3">             <span class="dt">Pooled =</span> ml.pool), <span class="dt">caption =</span> <span class="st">&quot;Environmental compliance choices.&quot;</span>,</a>
+<a class="sourceLine" id="cb35-4" title="4">        <span class="dt">omit.coef =</span> <span class="st">&quot;(post)|(cm)|(lnb)&quot;</span>, <span class="dt">float.pos =</span> <span class="st">&quot;hbt&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;tab:nox&quot;</span>)</a></code></pre></div>
 &lt;!DOCTYPE HTML PUBLIC “-//W3C//DTD HTML 4.01 Transitional//EN” “<a href="http://www.w3.org/TR/html4/loose.dtd" class="uri">http://www.w3.org/TR/html4/loose.dtd</a>”&gt;
 <table cellspacing="0" align="center" style="border: none;">
 <caption align="bottom" style="margin-top:0.3em;">
@@ -803,16 +803,16 @@ Num. obs.
 </tr>
 <tr>
 <td style="padding-right: 12px; border: none;" colspan="6">
-<span style="font-size:0.8em"><sup style="vertical-align: 0px;"><em><strong></sup>p &lt; 0.001; <sup style="vertical-align: 0px;"></strong></sup>p &lt; 0.01; <sup style="vertical-align: 0px;"></em></sup>p &lt; 0.05</span>
+<span style="font-size:0.8em"><sup style="vertical-align: 0px;"><em><strong></sup>p &lt; 0.001, <sup style="vertical-align: 0px;"></strong></sup>p &lt; 0.01, <sup style="vertical-align: 0px;"></em></sup>p &lt; 0.05</span>
 </td>
 </tr>
 </table>
 <p>Results are presented in the preceeding table, using the <code>texreg</code> package <span class="citation">(Leifeld 2013)</span>. Coefficients are very different on the sub-samples defined by the regulatory environment. Note in particular that the capital cost coefficient is positive and insignificant for public and regulated firms, as it is significantly negative for deregulated firms. Errors seems to have significant larger variance for deregulated firms and lower ones for public firms compared to regulated firms. The hypothesis that the coefficients (except the <code>kcost</code> one) are identical up to a multiplicative scalar can be performed using a likelihood ratio test:</p>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" data-line-number="1">stat &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="kw">logLik</span>(ml.dereg) <span class="op">+</span><span class="st"> </span><span class="kw">logLik</span>(ml.reg) <span class="op">+</span></a>
-<a class="sourceLine" id="cb36-2" data-line-number="2"><span class="st">             </span><span class="kw">logLik</span>(ml.pub) <span class="op">-</span><span class="st"> </span><span class="kw">logLik</span>(ml.pool))</a>
-<a class="sourceLine" id="cb36-3" data-line-number="3">stat</a></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">stat &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="kw">logLik</span>(ml.dereg) <span class="op">+</span><span class="st"> </span><span class="kw">logLik</span>(ml.reg) <span class="op">+</span></a>
+<a class="sourceLine" id="cb36-2" title="2"><span class="st">             </span><span class="kw">logLik</span>(ml.pub) <span class="op">-</span><span class="st"> </span><span class="kw">logLik</span>(ml.pool))</a>
+<a class="sourceLine" id="cb36-3" title="3">stat</a></code></pre></div>
 <pre><code>## 'log Lik.' 61.67179 (df=6)</code></pre>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" data-line-number="1"><span class="kw">pchisq</span>(stat, <span class="dt">df =</span> <span class="dv">9</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1"><span class="kw">pchisq</span>(stat, <span class="dt">df =</span> <span class="dv">9</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <pre><code>## 'log Lik.' 6.377284e-10 (df=6)</code></pre>
 <p>The hypothesis is strongly rejected.</p>
 </div>
@@ -844,6 +844,9 @@ Num. obs.
 </ol>
 </div>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

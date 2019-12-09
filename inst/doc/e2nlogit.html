@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="author" content="Kenneth Train and Yves Croissant" />
 
-<meta name="date" content="2019-07-22" />
+<meta name="date" content="2019-12-09" />
 
 <title>Exercise 2: Nested logit model</title>
 
@@ -37,7 +37,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -96,7 +96,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -303,7 +303,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Exercise 2: Nested logit model</h1>
 <h4 class="author">Kenneth Train and Yves Croissant</h4>
-<h4 class="date">2019-07-22</h4>
+<h4 class="date">2019-12-09</h4>
 
 
 
@@ -332,26 +332,26 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol class="example" style="list-style-type: decimal">
 <li>Run a nested logit model on the data for two nests and one log-sum coefficient that applies to both nests. Note that the model is specified to have the cooling alternatives (<code>gcc},</code>ecc}, <code>erc},</code>hpc}) in one nest and the non-cooling alternatives (<code>gc},</code>ec}, `er}) in another nest.</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">data</span>(<span class="st">&quot;HC&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">HC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(HC, <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">8</span>, <span class="dv">10</span><span class="op">:</span><span class="dv">16</span>), <span class="dt">choice =</span> <span class="st">&quot;depvar&quot;</span>, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>)</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">cooling.modes &lt;-<span class="st"> </span><span class="kw">index</span>(HC)<span class="op">$</span>alt <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">'gcc'</span>, <span class="st">'ecc'</span>, <span class="st">'erc'</span>, <span class="st">'hpc'</span>)</a>
-<a class="sourceLine" id="cb1-5" data-line-number="5">room.modes &lt;-<span class="st"> </span><span class="kw">index</span>(HC)<span class="op">$</span>alt <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">'erc'</span>, <span class="st">'er'</span>)</a>
-<a class="sourceLine" id="cb1-6" data-line-number="6"><span class="co"># installation / operating costs for cooling are constants, </span></a>
-<a class="sourceLine" id="cb1-7" data-line-number="7"><span class="co"># only relevant for mixed systems</span></a>
-<a class="sourceLine" id="cb1-8" data-line-number="8">HC<span class="op">$</span>icca[<span class="op">!</span>cooling.modes] &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb1-9" data-line-number="9">HC<span class="op">$</span>occa[<span class="op">!</span>cooling.modes] &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb1-10" data-line-number="10"><span class="co"># create income variables for two sets cooling and rooms</span></a>
-<a class="sourceLine" id="cb1-11" data-line-number="11">HC<span class="op">$</span>inc.cooling &lt;-<span class="st"> </span>HC<span class="op">$</span>inc.room &lt;-<span class="st"> </span><span class="dv">0</span></a>
-<a class="sourceLine" id="cb1-12" data-line-number="12">HC<span class="op">$</span>inc.cooling[cooling.modes] &lt;-<span class="st"> </span>HC<span class="op">$</span>income[cooling.modes]</a>
-<a class="sourceLine" id="cb1-13" data-line-number="13">HC<span class="op">$</span>inc.room[room.modes] &lt;-<span class="st"> </span>HC<span class="op">$</span>income[room.modes]</a>
-<a class="sourceLine" id="cb1-14" data-line-number="14"><span class="co"># create an intercet for cooling modes</span></a>
-<a class="sourceLine" id="cb1-15" data-line-number="15">HC<span class="op">$</span>int.cooling &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cooling.modes)</a>
-<a class="sourceLine" id="cb1-16" data-line-number="16"><span class="co"># estimate the model with only one nest elasticity</span></a>
-<a class="sourceLine" id="cb1-17" data-line-number="17">nl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ich <span class="op">+</span><span class="st"> </span>och <span class="op">+</span>icca <span class="op">+</span><span class="st"> </span>occa <span class="op">+</span><span class="st"> </span>inc.room <span class="op">+</span><span class="st"> </span>inc.cooling <span class="op">+</span><span class="st"> </span>int.cooling <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, HC,</a>
-<a class="sourceLine" id="cb1-18" data-line-number="18">             <span class="dt">nests =</span> <span class="kw">list</span>(<span class="dt">cooling =</span> <span class="kw">c</span>(<span class="st">'gcc'</span>,<span class="st">'ecc'</span>,<span class="st">'erc'</span>,<span class="st">'hpc'</span>), </a>
-<a class="sourceLine" id="cb1-19" data-line-number="19">             <span class="dt">other =</span> <span class="kw">c</span>(<span class="st">'gc'</span>, <span class="st">'ec'</span>, <span class="st">'er'</span>)), <span class="dt">un.nest.el =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb1-20" data-line-number="20"><span class="kw">summary</span>(nl)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;HC&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3">HC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(HC, <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">2</span><span class="op">:</span><span class="dv">8</span>, <span class="dv">10</span><span class="op">:</span><span class="dv">16</span>), <span class="dt">choice =</span> <span class="st">&quot;depvar&quot;</span>, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>)</a>
+<a class="sourceLine" id="cb1-4" title="4">cooling.modes &lt;-<span class="st"> </span><span class="kw">index</span>(HC)<span class="op">$</span>alt <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">'gcc'</span>, <span class="st">'ecc'</span>, <span class="st">'erc'</span>, <span class="st">'hpc'</span>)</a>
+<a class="sourceLine" id="cb1-5" title="5">room.modes &lt;-<span class="st"> </span><span class="kw">index</span>(HC)<span class="op">$</span>alt <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">'erc'</span>, <span class="st">'er'</span>)</a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co"># installation / operating costs for cooling are constants, </span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co"># only relevant for mixed systems</span></a>
+<a class="sourceLine" id="cb1-8" title="8">HC<span class="op">$</span>icca[<span class="op">!</span>cooling.modes] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-9" title="9">HC<span class="op">$</span>occa[<span class="op">!</span>cooling.modes] &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-10" title="10"><span class="co"># create income variables for two sets cooling and rooms</span></a>
+<a class="sourceLine" id="cb1-11" title="11">HC<span class="op">$</span>inc.cooling &lt;-<span class="st"> </span>HC<span class="op">$</span>inc.room &lt;-<span class="st"> </span><span class="dv">0</span></a>
+<a class="sourceLine" id="cb1-12" title="12">HC<span class="op">$</span>inc.cooling[cooling.modes] &lt;-<span class="st"> </span>HC<span class="op">$</span>income[cooling.modes]</a>
+<a class="sourceLine" id="cb1-13" title="13">HC<span class="op">$</span>inc.room[room.modes] &lt;-<span class="st"> </span>HC<span class="op">$</span>income[room.modes]</a>
+<a class="sourceLine" id="cb1-14" title="14"><span class="co"># create an intercet for cooling modes</span></a>
+<a class="sourceLine" id="cb1-15" title="15">HC<span class="op">$</span>int.cooling &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(cooling.modes)</a>
+<a class="sourceLine" id="cb1-16" title="16"><span class="co"># estimate the model with only one nest elasticity</span></a>
+<a class="sourceLine" id="cb1-17" title="17">nl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ich <span class="op">+</span><span class="st"> </span>och <span class="op">+</span>icca <span class="op">+</span><span class="st"> </span>occa <span class="op">+</span><span class="st"> </span>inc.room <span class="op">+</span><span class="st"> </span>inc.cooling <span class="op">+</span><span class="st"> </span>int.cooling <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, HC,</a>
+<a class="sourceLine" id="cb1-18" title="18">             <span class="dt">nests =</span> <span class="kw">list</span>(<span class="dt">cooling =</span> <span class="kw">c</span>(<span class="st">'gcc'</span>,<span class="st">'ecc'</span>,<span class="st">'erc'</span>,<span class="st">'hpc'</span>), </a>
+<a class="sourceLine" id="cb1-19" title="19">             <span class="dt">other =</span> <span class="kw">c</span>(<span class="st">'gc'</span>, <span class="st">'ec'</span>, <span class="st">'er'</span>)), <span class="dt">un.nest.el =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb1-20" title="20"><span class="kw">summary</span>(nl)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ich + och + icca + occa + inc.room + 
@@ -393,7 +393,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <blockquote>
 <p>We can use a t-test of the hypothesis that the log-sum coefficient equal to 1. The t-statistic is :</p>
 </blockquote>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"> (<span class="kw">coef</span>(nl)[<span class="st">'iv'</span>] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">vcov</span>(nl)[<span class="st">'iv'</span>, <span class="st">'iv'</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"> (<span class="kw">coef</span>(nl)[<span class="st">'iv'</span>] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">vcov</span>(nl)[<span class="st">'iv'</span>, <span class="st">'iv'</span>])</a></code></pre></div>
 <pre><code>##        iv 
 ## -2.304171</code></pre>
 <blockquote>
@@ -402,9 +402,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <blockquote>
 <p>We can also use a likelihood ratio test because the multinomial logit is a special case of the nested model.</p>
 </blockquote>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co"># First estimate the multinomial logit model</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">ml &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests =</span> <span class="ot">NULL</span>)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="kw">lrtest</span>(nl, ml)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="co"># First estimate the multinomial logit model</span></a>
+<a class="sourceLine" id="cb5-2" title="2">ml &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests =</span> <span class="ot">NULL</span>)</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="kw">lrtest</span>(nl, ml)</a></code></pre></div>
 <pre><code>## Likelihood ratio test
 ## 
 ## Model 1: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
@@ -422,9 +422,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol start="2" style="list-style-type: decimal">
 <li>Re-estimate the model with the room alternatives in one nest and the central alternatives in another nest. (Note that a heat pump is a central system.)</li>
 </ol>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">nl2 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests =</span> <span class="kw">list</span>(<span class="dt">central =</span> <span class="kw">c</span>(<span class="st">'ec'</span>, <span class="st">'ecc'</span>, <span class="st">'gc'</span>, <span class="st">'gcc'</span>, <span class="st">'hpc'</span>), </a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">                    <span class="dt">room =</span> <span class="kw">c</span>(<span class="st">'er'</span>, <span class="st">'erc'</span>)))</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3"><span class="kw">summary</span>(nl2)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">nl2 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests =</span> <span class="kw">list</span>(<span class="dt">central =</span> <span class="kw">c</span>(<span class="st">'ec'</span>, <span class="st">'ecc'</span>, <span class="st">'gc'</span>, <span class="st">'gcc'</span>, <span class="st">'hpc'</span>), </a>
+<a class="sourceLine" id="cb7-2" title="2">                    <span class="dt">room =</span> <span class="kw">c</span>(<span class="st">'er'</span>, <span class="st">'erc'</span>)))</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">summary</span>(nl2)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ich + och + icca + occa + inc.room + 
@@ -464,10 +464,10 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <li>Is the log-sum coefficient significantly different from 1?</li>
 </ol>
 <p>\begin{answer}[5] The t-statistic is :</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"> (<span class="kw">coef</span>(nl2)[<span class="st">'iv'</span>] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">vcov</span>(nl2)[<span class="st">'iv'</span>, <span class="st">'iv'</span>])</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"> (<span class="kw">coef</span>(nl2)[<span class="st">'iv'</span>] <span class="op">-</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">vcov</span>(nl2)[<span class="st">'iv'</span>, <span class="st">'iv'</span>])</a></code></pre></div>
 <pre><code>##        iv 
 ## 0.5535849</code></pre>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">lrtest</span>(nl2, ml)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">lrtest</span>(nl2, ml)</a></code></pre></div>
 <pre><code>## Likelihood ratio test
 ## 
 ## Model 1: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
@@ -483,9 +483,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol start="3" style="list-style-type: lower-alpha">
 <li>How does the value of the log-likelihood function compare for this model relative to the model in exercise 1, where the cooling alternatives are in one nest and the heating alternatives in the other nest.</li>
 </ol>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">logLik</span>(nl)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">logLik</span>(nl)</a></code></pre></div>
 <pre><code>## 'log Lik.' -178.1247 (df=8)</code></pre>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">logLik</span>(nl2)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">logLik</span>(nl2)</a></code></pre></div>
 <pre><code>## 'log Lik.' -180.0231 (df=8)</code></pre>
 <blockquote>
 <p>The <span class="math inline">\(\ln L\)</span> is worse (more negative.) All in all, this seems like a less appropriate nesting structure.</p>
@@ -493,7 +493,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol start="3" style="list-style-type: decimal">
 <li>Rerun the model that has the cooling alternatives in one nest and the non-cooling alternatives in the other nest (like for exercise 1), with a separate log-sum coefficient for each nest.</li>
 </ol>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1">nl3 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">un.nest.el =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">nl3 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">un.nest.el =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <ol style="list-style-type: lower-alpha">
 <li>Which nest is estimated to have the higher correlation in unobserved factors? Can you think of a real-world reason for this nest to have a higher correlation?</li>
 </ol>
@@ -506,7 +506,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <blockquote>
 <p>We can use a likelihood ratio tests with models <code>nl</code> and <code>nl3</code>.</p>
 </blockquote>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" data-line-number="1"><span class="kw">lrtest</span>(nl, nl3)</a></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">lrtest</span>(nl, nl3)</a></code></pre></div>
 <pre><code>## Likelihood ratio test
 ## 
 ## Model 1: depvar ~ ich + och + icca + occa + inc.room + inc.cooling + int.cooling | 
@@ -522,9 +522,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol start="4" style="list-style-type: decimal">
 <li>Rewrite the code to allow three nests. For simplicity, estimate only one log-sum coefficient which is applied to all three nests. Estimate a model with alternatives <code>gcc</code>, <code>ecc</code> and <code>erc</code> in a nest, <code>hpc</code> in a nest alone, and alternatives <code>gc</code>, <code>ec</code> and <code>er</code> in a nest. Does this model seem better or worse than the model in exercise 1, which puts alternative <code>hpc</code> in the same nest as alternatives <code>gcc</code>, <code>ecc</code> and <code>erc</code>?</li>
 </ol>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" data-line-number="1">nl4 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests=</span><span class="kw">list</span>(<span class="dt">n1 =</span> <span class="kw">c</span>(<span class="st">'gcc'</span>, <span class="st">'ecc'</span>, <span class="st">'erc'</span>), <span class="dt">n2 =</span> <span class="kw">c</span>(<span class="st">'hpc'</span>),</a>
-<a class="sourceLine" id="cb20-2" data-line-number="2">                    <span class="dt">n3 =</span> <span class="kw">c</span>(<span class="st">'gc'</span>, <span class="st">'ec'</span>, <span class="st">'er'</span>)))</a>
-<a class="sourceLine" id="cb20-3" data-line-number="3"><span class="kw">summary</span>(nl4)</a></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">nl4 &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class="dt">nests=</span><span class="kw">list</span>(<span class="dt">n1 =</span> <span class="kw">c</span>(<span class="st">'gcc'</span>, <span class="st">'ecc'</span>, <span class="st">'erc'</span>), <span class="dt">n2 =</span> <span class="kw">c</span>(<span class="st">'hpc'</span>),</a>
+<a class="sourceLine" id="cb20-2" title="2">                    <span class="dt">n3 =</span> <span class="kw">c</span>(<span class="st">'gc'</span>, <span class="st">'ec'</span>, <span class="st">'er'</span>)))</a>
+<a class="sourceLine" id="cb20-3" title="3"><span class="kw">summary</span>(nl4)</a></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ich + och + icca + occa + inc.room + 
@@ -559,6 +559,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>The <span class="math inline">\(\ln L\)</span> for this model is <span class="math inline">\(-180.26\)</span>, which is lower (more negative) than for the model with two nests, which got <span class="math inline">\(-178.12\)</span>.</p>
 </blockquote>
 
+
+
+<!-- code folding -->
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
