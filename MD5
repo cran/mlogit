@@ -1,4 +1,4 @@
-f2aeaed6c4920a0dc94ddeb64b9fb107 *DESCRIPTION
+4a3a16937a18a6a62fd617e30d3fffce *DESCRIPTION
 16fdc4425ca6e49c0f7f0daecc3354ac *NAMESPACE
 331a15cf2e767ce1df97f04d24b4eb0c *NEWS.md
 b3bcee0405aa90a86df634077fe4e2a2 *R/datasets.R
@@ -10,7 +10,7 @@ b3bcee0405aa90a86df634077fe4e2a2 *R/datasets.R
 c98b5cf7fd924d0f52094e9e126cf0b9 *R/mlogit.optim.R
 9213e13a5659b6ec9e669f5b02e7d4e4 *R/rpar.R
 687317d2bf4cc56b45fefba94d14f78e *R/test.R
-d8404857e9c86ab9b5e3fd9933278f37 *build/partial.rdb
+61fff5303c30f9480f2d91fd4e54c86e *build/partial.rdb
 0f78f99fa647ced638567c6b14fa4bdd *build/vignette.rds
 3280b8c66dd8f8f57a27bc59a0cb28e3 *data/Car.rda
 071ba8fa28d5ea223094a5470498570a *data/Catsup.rda
@@ -77,7 +77,7 @@ f7037d13c70daf0cc795fda73599632d *man/NOx.Rd
 815eba9a62556a536e782f0f7534baf8 *man/Train.Rd
 8b3c9821e1f36598ce3ceb510af01467 *man/cor.mlogit.Rd
 90cb5387009c42c113129e5207beadcb *man/distribution.Rd
-e7f814f73496a31dbee6c74206484f91 *man/effects.mlogit.Rd
+0fd1cf2526905b26019c8f0f3095cfe1 *man/effects.mlogit.Rd
 cf14cff172aaf48a81b3836c6fc9ffe8 *man/hmftest.Rd
 a39c73fb79acafe9f09018951235c903 *man/logsum.Rd
 9bf9237e06ee0908abbd9a63e5ba42ea *man/mFormula.Rd
@@ -92,7 +92,7 @@ a39c73fb79acafe9f09018951235c903 *man/logsum.Rd
 c25cc370ec74e8439d475d5770ccb768 *man/vcov.mlogit.Rd
 33f39c56b249391ca988e88f1977e018 *tests/AER.R
 a1d93cb7ddd1ec136a5675adecd80b21 *tests/AER.Rout.save
-be6dbb20b622b6f2a0108625c0efc80b *tests/Examples/mlogit-Ex.Rout.save
+09aad91c7d8aeb4962a10c644a93d045 *tests/Examples/mlogit-Ex.Rout.save
 41baf27376daebbefd261e8e563dae8c *tests/greene.R
 ddb14f508ffe725aa4677bf4860961b6 *tests/greene.Rout.save
 177577c31ff07a9758f4b65d0a4b4f30 *vignettes/c2.formula.data.Rmd

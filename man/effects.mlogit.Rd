@@ -48,8 +48,10 @@ m <- mlogit(mode ~ price | income | catch, data = Fish)
 z <- with(Fish, data.frame(price = tapply(price, index(m)$alt, mean),
                            catch = tapply(catch, index(m)$alt, mean),
                            income = mean(income)))
-# compute the marginal effects (the second one is an elasticity
+# compute the marginal effects (the second one is an elasticity)
+## IGNORE_RDIFF_BEGIN
 effects(m, covariate = "income", data = z)
+## IGNORE_RDIFF_END
 effects(m, covariate = "price", type = "rr", data = z)
 effects(m, covariate = "catch", type = "ar", data = z)
 }
