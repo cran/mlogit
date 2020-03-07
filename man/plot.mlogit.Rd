@@ -5,11 +5,9 @@
 \alias{plot.rpar}
 \title{Plot of the distribution of estimated random parameters}
 \usage{
-\method{plot}{mlogit}(x, par = NULL, norm = NULL, type = c("density",
-  "probability"), ...)
+\method{plot}{mlogit}(x, par = NULL, norm = NULL, type = c("density", "probability"), ...)
 
-\method{plot}{rpar}(x, norm = NULL, type = c("density", "probability"),
-  ...)
+\method{plot}{rpar}(x, norm = NULL, type = c("density", "probability"), ...)
 }
 \arguments{
 \item{x}{a \code{mlogit} or a \code{rpar} object,}

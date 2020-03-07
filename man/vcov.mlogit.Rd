@@ -7,16 +7,25 @@
 \alias{print.summary.vcov.mlogit}
 \title{vcov method for mlogit objects}
 \usage{
-\method{vcov}{mlogit}(object, what = c("coefficient", "errors", "rpar"),
-  subset = c("all", "iv", "sig", "sd", "sp", "chol"), type = c("cov",
-  "cor", "sd"), reflevel = NULL, ...)
+\method{vcov}{mlogit}(
+  object,
+  what = c("coefficient", "errors", "rpar"),
+  subset = c("all", "iv", "sig", "sd", "sp", "chol"),
+  type = c("cov", "cor", "sd"),
+  reflevel = NULL,
+  ...
+)
 
 \method{print}{vcov.mlogit}(x, ...)
 
 \method{summary}{vcov.mlogit}(object, ...)
 
-\method{print}{summary.vcov.mlogit}(x, digits = max(3,
-  getOption("digits") - 2), width = getOption("width"), ...)
+\method{print}{summary.vcov.mlogit}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 }
 \arguments{
 \item{object}{a \code{mlogit} object (and a \code{vcov.mlogit} for the
@@ -29,7 +38,7 @@ errors of the model is returned. Finally, if \code{what} equals \code{rpar},
 the covariance matrix of the random parameters are extracted,}
 
 \item{subset}{the subset of the coefficients that have to be extracted (only
-relevant if \code{what} \code{ = "coefficients"}),}
+relevant if \code{what} \verb{ = "coefficients"}),}
 
 \item{type}{with this argument, the covariance matrix may be returned (the
 default) ; the correlation matrix with the standard deviation on the

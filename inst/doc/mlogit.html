@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -12,196 +13,14 @@
 
 
 
-<title>mlogit.utf8</title>
+<title></title>
 
 
 
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#header {
-text-align: center;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
-
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 
 
@@ -216,10 +35,10 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 
 
-<p>Random utility models is the reference approach in economics when one wants to analyze the choice by a decision maker of one among a set of mutually exclusive alternatives. Since the seminal works of Daniel Mc Fadden <span class="citation">(McFadden 1974, MCFAD:78)</span> who won the Nobel prize in economics “for his development of theory and methods for analyzing discrete choice”, a large amount of theoretical and empirical literature have been developed in this field.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>Random utility models is the reference approach in economics when one wants to analyze the choice by a decision maker of one among a set of mutually exclusive alternatives. Since the seminal works of Daniel Mc Fadden <span class="citation">(McFadden 1974, MCFAD:78)</span> who won the Nobel prize in economics “for his development of theory and methods for analyzing discrete choice”, a large amount of theoretical and empirical literature have been developed in this field.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <p>Among the numerous applications of such models, we can cite the following: <span class="citation">Head and Mayer (2004)</span> investigate the determinants of the choice by Japanese firms of an European region for implementing a new production unit, <span class="citation">Fowlie (2010)</span> analyse the choice of a NO<span class="math inline">\(_x\)</span> emissions reduction technology by electricity production plants, <span class="citation">Kling and Thomson (1996)</span> and <span class="citation">Herriges and Kling (1999)</span> consider how the choice of a fishing mode can be explained by the price and the catch expectency, <span class="citation">Jain, Vilcassim, and Chintagunta (1994)</span> investigate the brand choice for yogurts, <span class="citation">Bhat (1995)</span> analyse transport mode choice for the Montreal-Toronto corridor.</p>
 <p>These models rely on the hypothesis that the decision maker is able to rank the different alternatives by an order of preference represented by a utility function, the chosen alternative being the one which is associated with the highest level of utility. They are called random utility models because part of the utility is unobserved and is modelised as the realisation of a random deviate.</p>
-<p>Different hypothesis on the distribution of this random deviate lead to different flavors of random utility models. Early developments of these models were based on the hypothesis of identically and independent errors following a Gumbel distribution,<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> leading to the multinomial logit model (<strong>MNL</strong>). More general models have since been proposed, either based on less restrictive distribution hypothesis or by introducing individual heterogeneity.</p>
+<p>Different hypothesis on the distribution of this random deviate lead to different flavors of random utility models. Early developments of these models were based on the hypothesis of identically and independent errors following a Gumbel distribution,<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> leading to the multinomial logit model (<strong>MNL</strong>). More general models have since been proposed, either based on less restrictive distribution hypothesis or by introducing individual heterogeneity.</p>
 <p>Maintaining the Gumbel distribution hypothesis but relaxing the iid hypothesis leads to more general logit models (the heteroscedastic and the nested logit models). Relaxing the Gumbel distribution hypothesis and using a normal distribution instead leads to the multinomial probit model which can deal with heteroscedasticity and correlation of the errors.</p>
 <p>Individual heterogeneity can be introduced in the parameters associated with the covariates entering the observable part of the utility or in the variance of the errors. This leads respectively to the mixed effect models (<strong>MXL</strong>) and the scale heterogeneity model (<strong>S-MNL</strong>).</p>
 <p>The first version of <code>mlogit</code> was posted in 2008, it was the first <code>R</code> package allowing the estimation of random utility models. Since then, other package have emerged <span class="citation">(see Sarrias and Daziano 2017, 4 for a survey of revelant R pakages)</span>. <code>mlogit</code> still provides the widests set of estimators for random utility models and, moreover, its syntax has been adopted by other <code>R</code> packages. Those packages provide usefull additions to <code>mlogit</code>:</p>
@@ -237,13 +56,13 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>Bhat, Chandra R. 1995. “A Heteroscedastic Extreme Value Model of Intercity Travel Mode Choice.” <em>Transportation Research Part B: Methodological</em> 29 (6): 471–83. <a href="http://www.sciencedirect.com/science/article/pii/0191261595000156" class="uri">http://www.sciencedirect.com/science/article/pii/0191261595000156</a>.</p>
 </div>
 <div id="ref-FOWL:10">
-<p>Fowlie, Meredith. 2010. “Emissions Trading, Electricity Restructuring, and Investment in Pollution Abatement.” <em>American Economic Review</em> 100 (3): 837–69. <a href="https://doi.org/10.1257/aer.100.3.837" class="uri">https://doi.org/10.1257/aer.100.3.837</a>.</p>
+<p>Fowlie, Meredith. 2010. “Emissions Trading, Electricity Restructuring, and Investment in Pollution Abatement.” <em>American Economic Review</em> 100 (3): 837–69. doi:<a href="https://doi.org/10.1257/aer.100.3.837">10.1257/aer.100.3.837</a>.</p>
 </div>
 <div id="ref-HEAD:MAYE:04">
-<p>Head, Keith, and Thierry Mayer. 2004. “Market Potential and the Location of Japanese Investment in the European Union.” <em>The Review of Economics and Statistics</em> 86 (4): 959–72. <a href="https://doi.org/10.1162/0034653043125257" class="uri">https://doi.org/10.1162/0034653043125257</a>.</p>
+<p>Head, Keith, and Thierry Mayer. 2004. “Market Potential and the Location of Japanese Investment in the European Union.” <em>The Review of Economics and Statistics</em> 86 (4): 959–72. doi:<a href="https://doi.org/10.1162/0034653043125257">10.1162/0034653043125257</a>.</p>
 </div>
 <div id="ref-HERR:KLIN:99">
-<p>Herriges, Joseph A., and Catherine L. Kling. 1999. “Nonlinear Income Effects in Random Utility Models.” <em>The Review of Economics and Statistics</em> 81 (1): 62–72. <a href="https://doi.org/10.1162/003465399767923827" class="uri">https://doi.org/10.1162/003465399767923827</a>.</p>
+<p>Herriges, Joseph A., and Catherine L. Kling. 1999. “Nonlinear Income Effects in Random Utility Models.” <em>The Review of Economics and Statistics</em> 81 (1): 62–72. doi:<a href="https://doi.org/10.1162/003465399767923827">10.1162/003465399767923827</a>.</p>
 </div>
 <div id="ref-DIPA:JAIN:94">
 <p>Jain, Dipak C., Naufel J. Vilcassim, and Pradeep K. Chintagunta. 1994. “A Random-Coefficients Logit Brand-Choice Model Applied to Panel Data.” <em>Journal of Business &amp; Economic Statistics</em> 12 (3). [American Statistical Association, Taylor &amp; Francis, Ltd.]: 317–28.</p>
@@ -255,7 +74,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>McFadden, D. 1974. “The Measurement of Urban Travel Demand.” <em>Journal of Public Economics</em> 3: 303–28.</p>
 </div>
 <div id="ref-SARR:DAZI:17">
-<p>Sarrias, Mauricio, and Ricardo Daziano. 2017. “Multinomial Logit Models with Continuous and Discrete Individual Heterogeneity in R: The Gmnl Package.” <em>Journal of Statistical Software, Articles</em> 79 (2): 1–46. <a href="https://doi.org/10.18637/jss.v079.i02" class="uri">https://doi.org/10.18637/jss.v079.i02</a>.</p>
+<p>Sarrias, Mauricio, and Ricardo Daziano. 2017. “Multinomial Logit Models with Continuous and Discrete Individual Heterogeneity in R: The Gmnl Package.” <em>Journal of Statistical Software, Articles</em> 79 (2): 1–46. doi:<a href="https://doi.org/10.18637/jss.v079.i02">10.18637/jss.v079.i02</a>.</p>
 </div>
 <div id="ref-TRAI:09">
 <p>Train, Kenneth. 2009. <em>Discrete Choice Methods with Simulation</em>. Cambridge University Press. <a href="https://EconPapers.repec.org/RePEc:cup:cbooks:9780521766555" class="uri">https://EconPapers.repec.org/RePEc:cup:cbooks:9780521766555</a>.</p>
@@ -265,8 +84,8 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>For a presentation of this literature, see <span class="citation">Train (2009)</span> ; the theoretical parts of this paper draw heavily on this book.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>This distribution has the distinctive advantage that it leads to a probability which can be written has an integral which has a closed form.<a href="#fnref2" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>For a presentation of this literature, see <span class="citation">Train (2009)</span> ; the theoretical parts of this paper draw heavily on this book.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>This distribution has the distinctive advantage that it leads to a probability which can be written has an integral which has a closed form.<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
 

@@ -8,8 +8,12 @@
 \usage{
 rpar(x, par = NULL, norm = NULL, ...)
 
-\method{print}{rpar}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{rpar}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 
 \method{summary}{rpar}(object, ...)
 }

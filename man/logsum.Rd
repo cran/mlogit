@@ -4,8 +4,14 @@
 \alias{logsum}
 \title{Compute the log-sum or inclusive value/utility}
 \usage{
-logsum(coef, X = NULL, formula = NULL, data = NULL, type = NULL,
-  output = c("chid", "obs"))
+logsum(
+  coef,
+  X = NULL,
+  formula = NULL,
+  data = NULL,
+  type = NULL,
+  output = c("chid", "obs")
+)
 }
 \arguments{
 \item{coef}{a numerical vector or a \code{mlogit} object, from which the

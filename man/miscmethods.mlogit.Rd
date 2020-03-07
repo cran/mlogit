@@ -31,26 +31,41 @@ model.response.mlogit(object, ...)
 
 \method{update}{mlogit}(object, new, ...)
 
-\method{print}{mlogit}(x, digits = max(3, getOption("digits") - 2),
-  width = getOption("width"), ...)
+\method{print}{mlogit}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 
 \method{logLik}{mlogit}(object, ...)
 
 \method{summary}{mlogit}(object, ..., type = c("chol", "cov", "cor"))
 
-\method{print}{summary.mlogit}(x, digits = max(3, getOption("digits") -
-  2), width = getOption("width"), ...)
+\method{print}{summary.mlogit}(
+  x,
+  digits = max(3, getOption("digits") - 2),
+  width = getOption("width"),
+  ...
+)
 
 \method{index}{mlogit}(x, ...)
 
-\method{predict}{mlogit}(object, newdata = NULL, returnData = FALSE,
-  ...)
+\method{predict}{mlogit}(object, newdata = NULL, returnData = FALSE, ...)
 
-\method{fitted}{mlogit}(object, type = c("outcome", "probabilities",
-  "linpred", "parameters"), outcome = NULL, ...)
+\method{fitted}{mlogit}(
+  object,
+  type = c("outcome", "probabilities", "linpred", "parameters"),
+  outcome = NULL,
+  ...
+)
 
-\method{coef}{mlogit}(object, subset = c("all", "iv", "sig", "sd", "sp",
-  "chol"), fixed = FALSE, ...)
+\method{coef}{mlogit}(
+  object,
+  subset = c("all", "iv", "sig", "sd", "sp", "chol"),
+  fixed = FALSE,
+  ...
+)
 
 \method{coef}{summary.mlogit}(object, ...)
 }

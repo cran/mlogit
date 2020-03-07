@@ -15,11 +15,23 @@
 \alias{$.mlogit.data}
 \title{data.frame for logit model}
 \usage{
-mlogit.data(data, choice = NULL, shape = c("long", "wide"),
-  varying = NULL, sep = ".", alt.var = NULL, chid.var = NULL,
-  alt.levels = NULL, id.var = NULL, group.var = NULL,
-  opposite = NULL, drop.index = FALSE, ranked = FALSE,
-  subset = NULL, ...)
+mlogit.data(
+  data,
+  choice = NULL,
+  shape = c("long", "wide"),
+  varying = NULL,
+  sep = ".",
+  alt.var = NULL,
+  chid.var = NULL,
+  alt.levels = NULL,
+  id.var = NULL,
+  group.var = NULL,
+  opposite = NULL,
+  drop.index = FALSE,
+  ranked = FALSE,
+  subset = NULL,
+  ...
+)
 
 \method{print}{mlogit.data}(x, ...)
 

@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -12,7 +13,7 @@
 
 <meta name="author" content="Kenneth Train and Yves Croissant" />
 
-<meta name="date" content="2019-12-09" />
+<meta name="date" content="2020-03-06" />
 
 <title>Exercise 1: Multinomial logit model</title>
 
@@ -20,67 +21,41 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 
 </style>
 <script>
@@ -107,189 +82,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#header {
-text-align: center;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
-
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 
 
@@ -303,7 +96,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 
 <h1 class="title toc-ignore">Exercise 1: Multinomial logit model</h1>
 <h4 class="author">Kenneth Train and Yves Croissant</h4>
-<h4 class="date">2019-12-09</h4>
+<h4 class="date">2020-03-06</h4>
 
 
 
@@ -337,11 +130,11 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol style="list-style-type: lower-alpha">
 <li>Do the estimated coefficients have the expected signs?</li>
 </ol>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;Heating&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" title="3">H &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Heating, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;depvar&quot;</span>, <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">12</span>))</a>
-<a class="sourceLine" id="cb1-4" title="4">m &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ic <span class="op">+</span><span class="st"> </span>oc <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, H)</a>
-<a class="sourceLine" id="cb1-5" title="5"><span class="kw">summary</span>(m)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">data</span>(<span class="st">&quot;Heating&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+H &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Heating, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;depvar&quot;</span>, <span class="dt">varying =</span> <span class="kw">c</span>(<span class="dv">3</span><span class="op">:</span><span class="dv">12</span>))
+m &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ic <span class="op">+</span><span class="st"> </span>oc <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, H)
+<span class="kw">summary</span>(m)</code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ic + oc | 0, data = H, method = &quot;nr&quot;)
@@ -375,7 +168,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <ol start="3" style="list-style-type: lower-alpha">
 <li>How closely do the average probabilities match the shares of customers choosing each alternative?</li>
 </ol>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(m, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(<span class="kw">fitted</span>(m, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</code></pre></div>
 <pre><code>##         ec         er         gc         gr         hp 
 ## 0.10413057 0.05141477 0.51695653 0.24030898 0.08718915</code></pre>
 <blockquote>
@@ -391,7 +184,7 @@ U = \beta_{ic} ic + \beta_{oc} oc
 dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow 
 -\frac{dic}{doc}\mid_{dU=0}=\frac{\beta_{oc}}{\beta_{ic}}
 \]</span></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">coef</span>(m)[<span class="st">&quot;oc&quot;</span>]<span class="op">/</span><span class="kw">coef</span>(m)[<span class="st">&quot;ic&quot;</span>]</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(m)[<span class="st">&quot;oc&quot;</span>]<span class="op">/</span><span class="kw">coef</span>(m)[<span class="st">&quot;ic&quot;</span>]</code></pre></div>
 <pre><code>##        oc 
 ## 0.7349453</code></pre>
 <blockquote>
@@ -415,10 +208,10 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <blockquote>
 <p>To impose this constraint, we create a lifecycle cost that embodies the constraint <span class="math inline">\(lcc=ic+oc/0.12\)</span> and estimate the model with this variable.</p>
 </blockquote>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">H<span class="op">$</span>lcc &lt;-<span class="st"> </span>H<span class="op">$</span>ic <span class="op">+</span><span class="st"> </span>H<span class="op">$</span>oc <span class="op">/</span><span class="st"> </span><span class="fl">0.12</span></a>
-<a class="sourceLine" id="cb7-2" title="2">mlcc &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>lcc <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, H)</a>
-<a class="sourceLine" id="cb7-3" title="3"><span class="kw">library</span>(<span class="st">&quot;lmtest&quot;</span>)</a>
-<a class="sourceLine" id="cb7-4" title="4"><span class="kw">lrtest</span>(m, mlcc)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H<span class="op">$</span>lcc &lt;-<span class="st"> </span>H<span class="op">$</span>ic <span class="op">+</span><span class="st"> </span>H<span class="op">$</span>oc <span class="op">/</span><span class="st"> </span><span class="fl">0.12</span>
+mlcc &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>lcc <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, H)
+<span class="kw">library</span>(<span class="st">&quot;lmtest&quot;</span>)
+<span class="kw">lrtest</span>(m, mlcc)</code></pre></div>
 <pre><code>## Likelihood ratio test
 ## 
 ## Model 1: depvar ~ ic + oc | 0
@@ -428,7 +221,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ## 2   1 -1248.7 -1 306.93  &lt; 2.2e-16 ***
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">qchisq</span>(<span class="fl">0.05</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">qchisq</span>(<span class="fl">0.05</span>, <span class="dt">df =</span> <span class="dv">1</span>, <span class="dt">lower.tail =</span> <span class="ot">FALSE</span>)</code></pre></div>
 <pre><code>## [1] 3.841459</code></pre>
 <blockquote>
 <p>We perform a likelihood ratio test. The <span class="math inline">\(\ln L\)</span> for this constrained model is <span class="math inline">\(-1248.7\)</span>. The <span class="math inline">\(\ln L\)</span> for the unconstrained model is <span class="math inline">\(-1095.2\)</span>. The test statistic is twice the difference in <span class="math inline">\(\ln L\)</span>: <span class="math inline">\(2(1248.7-1095.2)=307\)</span>. This test is for one restriction (ie a restiction on the relation of the coefficient of operating cost to that of installation cost.) We therefore compare <span class="math inline">\(307\)</span> with the critical value of chi-squared with <span class="math inline">\(1\)</span> degree of freedom. This critical value for 95% confidence is <span class="math inline">\(3.8\)</span>. Since the statistic exceeds the critical value, we reject the hypothesis that <span class="math inline">\(r=0.12\)</span>.</p>
@@ -439,8 +232,8 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol style="list-style-type: lower-alpha">
 <li>How well do the estimated probabilities match the shares of customers choosing each alternative?</li>
 </ol>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">mc &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ic <span class="op">+</span><span class="st"> </span>oc, H, <span class="dt">reflevel =</span> <span class="st">'hp'</span>)</a>
-<a class="sourceLine" id="cb11-2" title="2"><span class="kw">summary</span>(mc)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mc &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>ic <span class="op">+</span><span class="st"> </span>oc, H, <span class="dt">reflevel =</span> <span class="st">'hp'</span>)
+<span class="kw">summary</span>(mc)</code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ic + oc, data = H, reflevel = &quot;hp&quot;, 
@@ -469,7 +262,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ## Log-Likelihood: -1008.2
 ## McFadden R^2:  0.013691 
 ## Likelihood ratio test : chisq = 27.99 (p.value = 8.3572e-07)</code></pre>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(mc, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(<span class="kw">fitted</span>(mc, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</code></pre></div>
 <pre><code>##         hp         ec         er         gc         gr 
 ## 0.05555556 0.07111111 0.09333333 0.63666667 0.14333333</code></pre>
 <blockquote>
@@ -478,12 +271,12 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Calculate the <span class="math inline">\(wtp\)</span> and discount rate <span class="math inline">\(r\)</span> that is implied by the estimates. Are these reasonable?</li>
 </ol>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">wtp &lt;-<span class="st"> </span><span class="kw">coef</span>(mc)[<span class="st">&quot;oc&quot;</span>] <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(mc)[<span class="st">&quot;ic&quot;</span>]</a>
-<a class="sourceLine" id="cb15-2" title="2">wtp</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wtp &lt;-<span class="st"> </span><span class="kw">coef</span>(mc)[<span class="st">&quot;oc&quot;</span>] <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(mc)[<span class="st">&quot;ic&quot;</span>]
+wtp</code></pre></div>
 <pre><code>##       oc 
 ## 4.563385</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">r &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>wtp</a>
-<a class="sourceLine" id="cb17-2" title="2">r</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">r &lt;-<span class="st"> </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>wtp
+r</code></pre></div>
 <pre><code>##        oc 
 ## 0.2191356</code></pre>
 <blockquote>
@@ -495,7 +288,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <blockquote>
 <p>We know that when the hp is left out, the constant for alternative <code>gc</code> is <span class="math inline">\(1.71074\)</span> meaning that the average impact of unicluded factors is <span class="math inline">\(1.71074\)</span> higher for alternative <code>gc</code> than for alternative hp. Similarly, the constant for alternative <code>gr</code> is <span class="math inline">\(0.30777\)</span>. If <code>gr</code> were left out instead of <code>hp</code>, then all the constants would be relative to alternative <code>gr</code>. The constant for alternative <code>gc</code> would the be <span class="math inline">\(1.71074-.30777=1.40297\)</span>. That is, the average impact of unincluded factors is <span class="math inline">\(1.40297\)</span> higher for alt <code>gc</code> than alt <code>gr</code>. Similarly for the other alternatives. Note the the constant for alt 5 would be <span class="math inline">\(0-.30777=-.3077\)</span>, since <code>hp</code> is normalized to zero in the model with <code>hp</code> left out.</p>
 </blockquote>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">update</span>(mc, <span class="dt">reflevel =</span> <span class="st">&quot;gr&quot;</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">update</span>(mc, <span class="dt">reflevel =</span> <span class="st">&quot;gr&quot;</span>)</code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ ic + oc, data = H, reflevel = &quot;gr&quot;,     method = &quot;nr&quot;)
@@ -511,8 +304,8 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol style="list-style-type: lower-alpha">
 <li>Enter installation cost divided by income, instead of installation cost. With this specification, the magnitude of the installation cost coefficient is inversely related to income, such that high income households are less concerned with installation costs than lower income households. Does dividing installation cost by income seem to make the model better or worse?</li>
 </ol>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">mi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>oc <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(ic <span class="op">/</span><span class="st"> </span>income), H)</a>
-<a class="sourceLine" id="cb21-2" title="2"><span class="kw">summary</span>(mi)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>oc <span class="op">+</span><span class="st"> </span><span class="kw">I</span>(ic <span class="op">/</span><span class="st"> </span>income), H)
+<span class="kw">summary</span>(mi)</code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = depvar ~ oc + I(ic/income), data = H, method = &quot;nr&quot;)
@@ -546,14 +339,14 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Instead of dividing installation cost by income, enter alternative-specific income effects. What do the estimates imply about the impact of income on the choice of central systems versus room system? Do these income terms enter significantly?</li>
 </ol>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">mi2 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>oc <span class="op">+</span><span class="st"> </span>ic <span class="op">|</span><span class="st"> </span>income, H, <span class="dt">reflevel =</span> <span class="st">&quot;hp&quot;</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mi2 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span class="op">~</span><span class="st"> </span>oc <span class="op">+</span><span class="st"> </span>ic <span class="op">|</span><span class="st"> </span>income, H, <span class="dt">reflevel =</span> <span class="st">&quot;hp&quot;</span>)</code></pre></div>
 <blockquote>
 <p>The model implies that as income rises, the probability of heat pump rises relative to all the others (since income in the heat pump alt is normalized to zero, and the others enter with negative signs such that they are lower than that for heat pumps. Also, as income rises, the probability of gas room drops relative to the other non-heat-pump systems (since it is most negative).</p>
 </blockquote>
 <blockquote>
-<p>Do these income terms enter significantly? No. It seems that income doesn’t really have an effect. Maybe this is because income is for the family that lives in the house, whereas the builder made decision of which system to install.</p>
+<p>Do these income terms enter significantly? No. It seems that income doesn’t really have an effect. Maybe this is because income is for the family that lives in the house, whereas the builder made decision of which system to install.</p>
 </blockquote>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1"><span class="kw">lrtest</span>(mc, mi2)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lrtest</span>(mc, mi2)</code></pre></div>
 <pre><code>## Likelihood ratio test
 ## 
 ## Model 1: depvar ~ ic + oc
@@ -561,7 +354,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ##   #Df  LogLik Df  Chisq Pr(&gt;Chisq)
 ## 1   6 -1008.2                     
 ## 2  10 -1005.9  4 4.6803     0.3217</code></pre>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb26-1" title="1"><span class="kw">waldtest</span>(mc, mi2)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">waldtest</span>(mc, mi2)</code></pre></div>
 <pre><code>## Wald test
 ## 
 ## Model 1: depvar ~ ic + oc
@@ -569,7 +362,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ##   Res.Df Df  Chisq Pr(&gt;Chisq)
 ## 1    894                     
 ## 2    890  4 4.6456     0.3256</code></pre>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb28-1" title="1"><span class="kw">scoretest</span>(mc, mi2)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scoretest</span>(mc, mi2)</code></pre></div>
 <pre><code>## 
 ##  score test
 ## 
@@ -585,14 +378,14 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol start="6" style="list-style-type: decimal">
 <li>We now are going to consider the use of logit model for prediction. Estimate a model with installation costs, operating costs, and alternative specific constants. Calculate the probabilities for each house explicitly. Check to be sure that the mean probabilities are the same as you got in exercise 4.</li>
 </ol>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb30-1" title="1">X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(mc)</a>
-<a class="sourceLine" id="cb30-2" title="2">alt &lt;-<span class="st"> </span><span class="kw">index</span>(H)<span class="op">$</span>alt</a>
-<a class="sourceLine" id="cb30-3" title="3">chid &lt;-<span class="st"> </span><span class="kw">index</span>(H)<span class="op">$</span>chid</a>
-<a class="sourceLine" id="cb30-4" title="4">eXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span><span class="kw">coef</span>(mc)))</a>
-<a class="sourceLine" id="cb30-5" title="5">SeXb &lt;-<span class="st"> </span><span class="kw">tapply</span>(eXb, chid, sum)</a>
-<a class="sourceLine" id="cb30-6" title="6">P &lt;-<span class="st"> </span>eXb <span class="op">/</span><span class="st"> </span>SeXb[chid]</a>
-<a class="sourceLine" id="cb30-7" title="7">P &lt;-<span class="st"> </span><span class="kw">matrix</span>(P, <span class="dt">ncol =</span> <span class="dv">5</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb30-8" title="8"><span class="kw">head</span>(P)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(mc)
+alt &lt;-<span class="st"> </span><span class="kw">index</span>(H)<span class="op">$</span>alt
+chid &lt;-<span class="st"> </span><span class="kw">index</span>(H)<span class="op">$</span>chid
+eXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span><span class="kw">coef</span>(mc)))
+SeXb &lt;-<span class="st"> </span><span class="kw">tapply</span>(eXb, chid, sum)
+P &lt;-<span class="st"> </span>eXb <span class="op">/</span><span class="st"> </span>SeXb[chid]
+P &lt;-<span class="st"> </span><span class="kw">matrix</span>(P, <span class="dt">ncol =</span> <span class="dv">5</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)
+<span class="kw">head</span>(P)</code></pre></div>
 <pre><code>##            [,1]       [,2]      [,3]      [,4]       [,5]
 ## [1,] 0.05107444 0.07035738 0.6329116 0.1877416 0.05791494
 ## [2,] 0.04849337 0.06420595 0.6644519 0.1558322 0.06701658
@@ -600,20 +393,20 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 ## [4,] 0.07264503 0.11879833 0.5657376 0.1879231 0.05489595
 ## [5,] 0.09223575 0.10238514 0.5670663 0.1561227 0.08219005
 ## [6,] 0.09228184 0.10466584 0.6366615 0.1152634 0.05112739</code></pre>
-<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb32-1" title="1"><span class="kw">apply</span>(P, <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(P, <span class="dv">2</span>, mean)</code></pre></div>
 <pre><code>## [1] 0.07111111 0.09333333 0.63666666 0.14333334 0.05555556</code></pre>
 <blockquote>
 <p>This can be computed much more simply using the \Rf{fitted<code>function, with the \Ra{outcome</code>{fitted<code>argument set to \Rv{FALSE</code> so that the probabilities for all the alternatives (and not only the chosen one) is returned.</p>
 </blockquote>
-<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb34-1" title="1"><span class="kw">apply</span>(<span class="kw">fitted</span>(mc, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">apply</span>(<span class="kw">fitted</span>(mc, <span class="dt">outcome =</span> <span class="ot">FALSE</span>), <span class="dv">2</span>, mean)</code></pre></div>
 <pre><code>##         hp         ec         er         gc         gr 
 ## 0.05555556 0.07111111 0.09333333 0.63666667 0.14333333</code></pre>
 <ol start="5" class="example" style="list-style-type: decimal">
 <li>The California Energy Commission (CEC) is considering whether to offer rebates on heat pumps. The CEC wants to predict the effect of the rebates on the heating system choices of customers in California. The rebates will be set at 10% of the installation cost. Using the estimated coefficients from the model in exercise 6, calculate new probabilities and predicted shares using the new installation cost of heat pump. How much do the rebates raise the share of houses with heat pumps?</li>
 </ol>
-<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb36-1" title="1">Hn &lt;-<span class="st"> </span>H</a>
-<a class="sourceLine" id="cb36-2" title="2">Hn[Hn<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;hp&quot;</span>, <span class="st">&quot;ic&quot;</span>] &lt;-<span class="st"> </span><span class="fl">0.9</span> <span class="op">*</span><span class="st"> </span>Hn[Hn<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;hp&quot;</span>, <span class="st">&quot;ic&quot;</span>]</a>
-<a class="sourceLine" id="cb36-3" title="3"><span class="kw">apply</span>(<span class="kw">predict</span>(mc, <span class="dt">newdata =</span> Hn), <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Hn &lt;-<span class="st"> </span>H
+Hn[Hn<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;hp&quot;</span>, <span class="st">&quot;ic&quot;</span>] &lt;-<span class="st"> </span><span class="fl">0.9</span> <span class="op">*</span><span class="st"> </span>Hn[Hn<span class="op">$</span>alt <span class="op">==</span><span class="st"> &quot;hp&quot;</span>, <span class="st">&quot;ic&quot;</span>]
+<span class="kw">apply</span>(<span class="kw">predict</span>(mc, <span class="dt">newdata =</span> Hn), <span class="dv">2</span>, mean)</code></pre></div>
 <pre><code>##         hp         ec         er         gc         gr 
 ## 0.06446230 0.07045486 0.09247026 0.63064443 0.14196814</code></pre>
 <blockquote>
@@ -622,20 +415,20 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <ol start="6" class="example" style="list-style-type: decimal">
 <li>Suppose a new technology is developed that provides more efficient central heating. The new technology costs $200 more than the central electric system. However, it saves 25% of the electricity, such that its operating costs are 75% of the operating costs of <code>ec</code>. We want to predict the potential market penetration of this technology. Note that there are now six alternatives: the original five alternatives plus this new one. Calculate the probability and predict the market share (i.e., the average probability) for all six alternatives, using the model that is estimated on the original five alternatives. (Be sure to use the original installation cost for heat pumps, rather than the reduced cost in exercise 7.) What is the predicted market share for the new technology? From which of the original five systems does the new technology draw the most customers?</li>
 </ol>
-<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb38-1" title="1">X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(mc)</a>
-<a class="sourceLine" id="cb38-2" title="2">Xn &lt;-<span class="st"> </span>X[alt <span class="op">==</span><span class="st"> &quot;ec&quot;</span>,]</a>
-<a class="sourceLine" id="cb38-3" title="3">Xn[, <span class="st">&quot;ic&quot;</span>] &lt;-<span class="st"> </span>Xn[, <span class="st">&quot;ic&quot;</span>] <span class="op">+</span><span class="st"> </span><span class="dv">200</span></a>
-<a class="sourceLine" id="cb38-4" title="4">Xn[, <span class="st">&quot;oc&quot;</span>] &lt;-<span class="st"> </span>Xn[, <span class="st">&quot;oc&quot;</span>] <span class="op">*</span><span class="st"> </span><span class="fl">0.75</span></a>
-<a class="sourceLine" id="cb38-5" title="5">unchid &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">index</span>(H)<span class="op">$</span>chid)</a>
-<a class="sourceLine" id="cb38-6" title="6"><span class="kw">rownames</span>(Xn) &lt;-<span class="st"> </span><span class="kw">paste</span>(unchid, <span class="st">'new'</span>, <span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>)</a>
-<a class="sourceLine" id="cb38-7" title="7">chidb &lt;-<span class="st"> </span><span class="kw">c</span>(chid, unchid)</a>
-<a class="sourceLine" id="cb38-8" title="8">X &lt;-<span class="st"> </span><span class="kw">rbind</span>(X, Xn)</a>
-<a class="sourceLine" id="cb38-9" title="9">X &lt;-<span class="st"> </span>X[<span class="kw">order</span>(chidb), ]</a>
-<a class="sourceLine" id="cb38-10" title="10">eXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span><span class="kw">coef</span>(mc)))</a>
-<a class="sourceLine" id="cb38-11" title="11">SeXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">tapply</span>(eXb, <span class="kw">sort</span>(chidb), sum))</a>
-<a class="sourceLine" id="cb38-12" title="12">P &lt;-<span class="st"> </span>eXb <span class="op">/</span><span class="st"> </span>SeXb[<span class="kw">sort</span>(chidb)]</a>
-<a class="sourceLine" id="cb38-13" title="13">P &lt;-<span class="st"> </span><span class="kw">matrix</span>(P, <span class="dt">ncol =</span> <span class="dv">6</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb38-14" title="14"><span class="kw">apply</span>(P, <span class="dv">2</span>, mean)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">X &lt;-<span class="st"> </span><span class="kw">model.matrix</span>(mc)
+Xn &lt;-<span class="st"> </span>X[alt <span class="op">==</span><span class="st"> &quot;ec&quot;</span>,]
+Xn[, <span class="st">&quot;ic&quot;</span>] &lt;-<span class="st"> </span>Xn[, <span class="st">&quot;ic&quot;</span>] <span class="op">+</span><span class="st"> </span><span class="dv">200</span>
+Xn[, <span class="st">&quot;oc&quot;</span>] &lt;-<span class="st"> </span>Xn[, <span class="st">&quot;oc&quot;</span>] <span class="op">*</span><span class="st"> </span><span class="fl">0.75</span>
+unchid &lt;-<span class="st"> </span><span class="kw">unique</span>(<span class="kw">index</span>(H)<span class="op">$</span>chid)
+<span class="kw">rownames</span>(Xn) &lt;-<span class="st"> </span><span class="kw">paste</span>(unchid, <span class="st">'new'</span>, <span class="dt">sep =</span> <span class="st">&quot;.&quot;</span>)
+chidb &lt;-<span class="st"> </span><span class="kw">c</span>(chid, unchid)
+X &lt;-<span class="st"> </span><span class="kw">rbind</span>(X, Xn)
+X &lt;-<span class="st"> </span>X[<span class="kw">order</span>(chidb), ]
+eXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">exp</span>(X <span class="op">%*%</span><span class="st"> </span><span class="kw">coef</span>(mc)))
+SeXb &lt;-<span class="st"> </span><span class="kw">as.numeric</span>(<span class="kw">tapply</span>(eXb, <span class="kw">sort</span>(chidb), sum))
+P &lt;-<span class="st"> </span>eXb <span class="op">/</span><span class="st"> </span>SeXb[<span class="kw">sort</span>(chidb)]
+P &lt;-<span class="st"> </span><span class="kw">matrix</span>(P, <span class="dt">ncol =</span> <span class="dv">6</span>, <span class="dt">byrow =</span> <span class="ot">TRUE</span>)
+<span class="kw">apply</span>(P, <span class="dv">2</span>, mean)</code></pre></div>
 <pre><code>## [1] 0.06311578 0.08347713 0.57145108 0.12855080 0.04977350
 ## [6] 0.10363170</code></pre>
 <blockquote>

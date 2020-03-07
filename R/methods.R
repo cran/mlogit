@@ -198,7 +198,8 @@ predict.mlogit <- function(object, newdata = NULL, returnData = FALSE, ...){
         choice.name <- attr(model.frame(object), "choice")
         if (nrow(newdata) %% J)
             stop("the number of rows of the data.frame should be a multiple of the number of alternatives")
-        attr(newdata, "index") <- data.frame(chid = rep(1:(nrow(newdata) %/% J ), each = J), alt = rep(lev, J))
+        nchid <- nrow(newdata) %/% J
+        attr(newdata, "index") <- data.frame(chid = factor(rep(1:nchid, each = J)), alt = factor(rep(lev, nchid)))
         attr(newdata, "class") <- c("mlogit.data", "data.frame")
         if (is.null(newdata[['choice.name']])){
             newdata[[choice.name]] <- FALSE
@@ -323,7 +324,9 @@ effects.mlogit <- function(object, covariate = NULL,
         data <- attr(P, "data")
         attr(P, "data") <- NULL
     }
-    else P <- predict(object, data)
+    else{
+       P <- predict(object, data)
+    }
     newdata <- data
     J <- length(P)
     alt.levels <- names(P)

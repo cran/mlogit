@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
 
 <meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
@@ -18,67 +19,41 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
-}
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-    color: #aaaaaa;
-  }
-pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
-div.sourceCode
-  {  }
-@media screen {
-a.sourceLine::before { text-decoration: underline; }
-}
-code span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code span.at { color: #7d9029; } /* Attribute */
-code span.bn { color: #40a070; } /* BaseN */
-code span.bu { } /* BuiltIn */
-code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code span.ch { color: #4070a0; } /* Char */
-code span.cn { color: #880000; } /* Constant */
-code span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code span.dt { color: #902000; } /* DataType */
-code span.dv { color: #40a070; } /* DecVal */
-code span.er { color: #ff0000; font-weight: bold; } /* Error */
-code span.ex { } /* Extension */
-code span.fl { color: #40a070; } /* Float */
-code span.fu { color: #06287e; } /* Function */
-code span.im { } /* Import */
-code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
-code span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code span.op { color: #666666; } /* Operator */
-code span.ot { color: #007020; } /* Other */
-code span.pp { color: #bc7a00; } /* Preprocessor */
-code span.sc { color: #4070a0; } /* SpecialChar */
-code span.ss { color: #bb6688; } /* SpecialString */
-code span.st { color: #4070a0; } /* String */
-code span.va { color: #19177c; } /* Variable */
-code span.vs { color: #4070a0; } /* VerbatimString */
-code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
 
 </style>
 <script>
@@ -105,189 +80,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
-}
-#header {
-text-align: center;
-}
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
-}
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
-}
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
-}
-#TOC ul ul {
-margin-left: -2em;
-}
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
-
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
-</style>
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 
 
@@ -307,7 +100,7 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <div id="data-management" class="section level2">
 <h2>Data management</h2>
 <p><code>mlogit</code> is loaded using:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</code></pre></div>
 <p>It comes with several data sets that we’ll use to illustrate the features of the library. Data sets used for multinomial logit estimation concern some individuals, that make one or a sequential choice of one alternative among a set of mutually exclusive alternatives. The determinants of these choices are covariates that can depend on the alternative and the choice situation, only on the alternative or only on the choice situation.</p>
 <p>To illustrate this typology of the covariates, consider the case of repeated choice of destinations for vacations by families:</p>
 <ul>
@@ -321,9 +114,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p><code>mlogit</code> deals with both format. It provides a <code>mlogit.data</code> function that take as first argument a <code>data.frame</code> and returns a <code>data.frame</code> in “long” format with some supplementary information about the structure of the data.</p>
 <div id="wide-format" class="section level3">
 <h3>Wide format</h3>
-<p><code>Train</code><a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a> is an example of a <em>wide</em> data set:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">data</span>(<span class="st">&quot;Train&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="kw">head</span>(Train, <span class="dv">3</span>)</a></code></pre></div>
+<p><code>Train</code><a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a> is an example of a <em>wide</em> data set:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;Train&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">head</span>(Train, <span class="dv">3</span>)</code></pre></div>
 <pre><code>##   id choiceid choice price_A time_A change_A comfort_A price_B
 ## 1  1        1      A    2400    150        0         1    4000
 ## 2  1        2      A    2400    150        0         1    3200
@@ -335,19 +128,19 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>This data set contains data about a stated preference survey in Netherlands. Each individual has responded to several (up to 16) scenarios. For every scenario, two train trips are proposed to the user, with different combinations of four attributes: <code>price</code> (the price in cents of guilders), <code>time</code> (travel time in minutes), <code>change</code> (the number of changes) and <code>comfort</code> (the class of comfort, 0, 1 or 2, 0 being the most comfortable class).</p>
 <p>This “wide” format is suitable to store choice situation (or individual specific) variables because, in this case, they are stored only once in the data. Otherwise, it is cumbersome for alternative specific variables because there are as many columns for such variables that there are alternatives.</p>
 <p>For such a wide data set, the <code>shape</code> argument of <code>mlogit.data</code> is mandatory, as its default value is <code>&quot;long&quot;</code>. The alternative specific variables are indicated with the <code>varying</code> argument which is a numeric vector that indicates their position in the data frame. This argument is then passed to <code>stats::reshape</code> that coerced the original <code>data.frame</code> in “long” format. Further arguments may be passed to <code>reshape</code>. For example, as the names of the variables are of the form <code>price_A</code>, one must add <code>sep = &quot;_&quot;</code> (the default value being <code>&quot;.&quot;</code>). The <code>choice</code> argument is also mandatory because the response has to be transformed in a logical value in the long format. To take the panel dimension into account, one has to add an argument <code>id.var</code> which is the name of the individual index.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">Tr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Train, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>,</a>
-<a class="sourceLine" id="cb4-2" title="2">                  <span class="dt">varying =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">11</span>, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, <span class="dt">id.var =</span> <span class="st">&quot;id&quot;</span>,</a>
-<a class="sourceLine" id="cb4-3" title="3">                  <span class="dt">opposite =</span> <span class="kw">c</span>(<span class="st">&quot;price&quot;</span>, <span class="st">&quot;comfort&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;change&quot;</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Tr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Train, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>,
+                  <span class="dt">varying =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">11</span>, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>, <span class="dt">id.var =</span> <span class="st">&quot;id&quot;</span>,
+                  <span class="dt">opposite =</span> <span class="kw">c</span>(<span class="st">&quot;price&quot;</span>, <span class="st">&quot;comfort&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;change&quot;</span>))</code></pre></div>
 <p>Note the use of the <code>opposite</code> argument for the 4 covariates: we expect negative coefficients for all of them, taking the opposite of the covariates will lead to expected positive coefficients. We next convert <code>price</code> and <code>time</code> in more meaningful unities, hours and euros (1 guilder was <span class="math inline">\(2.20371\)</span> euros):</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">Tr<span class="op">$</span>price &lt;-<span class="st"> </span>Tr<span class="op">$</span>price <span class="op">/</span><span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="fl">2.20371</span></a>
-<a class="sourceLine" id="cb5-2" title="2">Tr<span class="op">$</span>time &lt;-<span class="st"> </span>Tr<span class="op">$</span>time <span class="op">/</span><span class="st"> </span><span class="dv">60</span></a></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">head</span>(Tr, <span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Tr<span class="op">$</span>price &lt;-<span class="st"> </span>Tr<span class="op">$</span>price <span class="op">/</span><span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="fl">2.20371</span>
+Tr<span class="op">$</span>time &lt;-<span class="st"> </span>Tr<span class="op">$</span>time <span class="op">/</span><span class="st"> </span><span class="dv">60</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(Tr, <span class="dv">3</span>)</code></pre></div>
 <pre><code>##     id choiceid choice alt     price time change comfort chid
 ## 1.A  1        1   TRUE   A -52.88904 -2.5      0      -1    1
 ## 1.B  1        1  FALSE   B -88.14840 -2.5      0      -1    1
 ## 2.A  1        2   TRUE   A -52.88904 -2.5      0      -1    2</code></pre>
 <p>An <code>index</code> attribute is added to the data, which contains the three relevant indexes: <code>chid</code> is the choice situation index, <code>alt</code> the alternative index and <code>id</code> is the individual index. This attribute is a <code>data.frame</code> that can be extracted using the <code>index</code> function.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">head</span>(<span class="kw">index</span>(Tr), <span class="dv">3</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(<span class="kw">index</span>(Tr), <span class="dv">3</span>)</code></pre></div>
 <pre><code>##     chid alt id
 ## 1.A    1   A  1
 ## 1.B    1   B  1
@@ -355,9 +148,9 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 </div>
 <div id="long-format" class="section level3">
 <h3>Long format</h3>
-<p><code>ModeCanada</code>,<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> is an example of a data set in long format. It presents the choice of individuals for a transport mode for the Ontario-Quebec corridor:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</a>
-<a class="sourceLine" id="cb10-2" title="2"><span class="kw">head</span>(ModeCanada)</a></code></pre></div>
+<p><code>ModeCanada</code>,<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a> is an example of a data set in long format. It presents the choice of individuals for a transport mode for the Ontario-Quebec corridor:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
+<span class="kw">head</span>(ModeCanada)</code></pre></div>
 <pre><code>##   case   alt choice dist  cost ivt ovt freq income urban noalt
 ## 1    1 train      0   83 28.25  50  66    4     45     0     2
 ## 2    1   car      1   83 15.77  61   0    0     45     0     2
@@ -370,20 +163,20 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <p>To replicate published results later in the text, we’ll use only a subset of the choice situations, namely those for which the 4 alternatives are available. This can be done using the <code>subset</code> function with the <code>subset</code> argument set to <code>noalt == 4</code> while estimating the model. This can also be done within <code>mlogit.data</code>, using the <code>subset</code> argument.</p>
 <p>The information about the structure of the data can be explicitly indicated using choice situations and alternative indexes (respectively <code>case</code> and <code>alt</code> in this data set) or, in part, guessed by the <code>mlogit.data</code> function. Here, after subsetting, we have 2779 choice situations with 4 alternatives, and the rows are ordered first by choice situation and then by alternative (<code>train</code>, <code>air</code>, <code>bus</code> and <code>car</code> in this order).</p>
 <p>The first way to read correctly this data frame is to ignore completely the two index variables. In this case, the only supplementary argument to provide is the <code>alt.levels</code> argument which is a character vector that contains the name of the alternatives in their order of appearance:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>,</a>
-<a class="sourceLine" id="cb12-2" title="2">                  <span class="dt">alt.levels =</span> <span class="kw">c</span>(<span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>, <span class="st">&quot;bus&quot;</span>, <span class="st">&quot;car&quot;</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>,
+                  <span class="dt">alt.levels =</span> <span class="kw">c</span>(<span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>, <span class="st">&quot;bus&quot;</span>, <span class="st">&quot;car&quot;</span>))</code></pre></div>
 <p>Note that this can only be used if the data set is “balanced”, which means than the same set of alternatives is available for all choice situations. It is also possible to provide an argument <code>alt.var</code> which indicates the name of the variable that contains the alternatives</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada , <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada , <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>)</code></pre></div>
 <p>The name of the variable that contains the information about the choice situations can be indicated using the <code>chid.var</code> argument:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,</a>
-<a class="sourceLine" id="cb14-2" title="2">                  <span class="dt">alt.levels =</span> <span class="kw">c</span>(<span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>, <span class="st">&quot;bus&quot;</span>, <span class="st">&quot;car&quot;</span>))</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,
+                  <span class="dt">alt.levels =</span> <span class="kw">c</span>(<span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>, <span class="st">&quot;bus&quot;</span>, <span class="st">&quot;car&quot;</span>))</code></pre></div>
 <p>Both alternative and choice situation variable can also be provided:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,</a>
-<a class="sourceLine" id="cb15-2" title="2">                  <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,
+                  <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>)</code></pre></div>
 <p>and dropped from the data frame using the <code>drop.index</code> argument:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,</a>
-<a class="sourceLine" id="cb16-2" title="2">                  <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>, <span class="dt">drop.index =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb16-3" title="3"><span class="kw">head</span>(MC)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MC &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">chid.var =</span> <span class="st">&quot;case&quot;</span>,
+                  <span class="dt">alt.var =</span> <span class="st">&quot;alt&quot;</span>, <span class="dt">drop.index =</span> <span class="ot">TRUE</span>)
+<span class="kw">head</span>(MC)</code></pre></div>
 <pre><code>##           choice dist   cost ivt ovt freq income urban noalt
 ## 109.train      0  377  58.25 215  74    4     45     0     4
 ## 109.air        1  377 142.80  56  85    9     45     0     4
@@ -413,30 +206,30 @@ V_{ij}=\alpha_j + \beta x_{ij} + \nu t_j + \gamma_j z_i + \delta_j w_{ij} .
 <p>It is clear from the previous expression that coefficients of choice situation specific variables (the intercept being one of those) should be alternative specific, otherwise they would disappear in the differentiation. Moreover, only differences of these coefficients are relevant and can be identified. For example, with three alternatives 1, 2 and 3, the three coefficients <span class="math inline">\(\gamma_1, \gamma_2, \gamma_3\)</span> associated to a choice situation specific variable cannot be identified, but only two linear combinations of them. Therefore, one has to make a choice of normalization and the simplest one is just to set <span class="math inline">\(\gamma_1 = 0\)</span>.</p>
 <p>Coefficients for alternative and choice situation specific variables may (or may not) be alternative specific. For example, transport time is alternative specific, but 10 mn in public transport may not have the same impact on utility than 10 mn in a car. In this case, alternative specific coefficients are relevant. Monetary cost is also alternative specific, but in this case, one can consider than 1$ is 1$ whatever it is spent for the use of a car or in public transports. In this case, a generic coefficient is relevant.</p>
 <p>The treatment of alternative specific variables don’t differ much from the alternative and choice situation specific variables with a generic coefficient. However, if some of these variables are introduced, the <span class="math inline">\(\nu\)</span> parameter can only be estimated in a model without intercepts to avoid perfect multicolinearity.</p>
-<p>Individual-related heteroscedasticity <span class="citation">(see Swait and Louviere 1993)</span> can be addressed by writing the utility of choosing <span class="math inline">\(j\)</span> for individual <span class="math inline">\(i\)</span>: <span class="math inline">\(U_{ij}=V_{ij} + \sigma_i \epsilon_{ij}\)</span>, where <span class="math inline">\(\epsilon\)</span> has a variance that doesn’t depend on <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> and <span class="math inline">\(\sigma_i^2 = f(v_i)\)</span> is a parametric function of some individual-specific covariates. Note that this specification induce choice situation heteroscedasticity, also denoted scale heterogeneity.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a>. As the overall scale of utility is irrelevant, the utility can also be writen as: <span class="math inline">\(U_{ij}^* = U_{ij} / \sigma_i = V_{ij}/\sigma_i + \epsilon_{ij}\)</span>, i.e., with homoscedastic errors. if <span class="math inline">\(V_{ij}\)</span> is a linear combination of covariates, the associated coefficients are then divided by <span class="math inline">\(\sigma_i\)</span>.</p>
+<p>Individual-related heteroscedasticity <span class="citation">(see Swait and Louviere 1993)</span> can be addressed by writing the utility of choosing <span class="math inline">\(j\)</span> for individual <span class="math inline">\(i\)</span>: <span class="math inline">\(U_{ij}=V_{ij} + \sigma_i \epsilon_{ij}\)</span>, where <span class="math inline">\(\epsilon\)</span> has a variance that doesn’t depend on <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span> and <span class="math inline">\(\sigma_i^2 = f(v_i)\)</span> is a parametric function of some individual-specific covariates. Note that this specification induce choice situation heteroscedasticity, also denoted scale heterogeneity.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. As the overall scale of utility is irrelevant, the utility can also be writen as: <span class="math inline">\(U_{ij}^* = U_{ij} / \sigma_i = V_{ij}/\sigma_i + \epsilon_{ij}\)</span>, i.e., with homoscedastic errors. if <span class="math inline">\(V_{ij}\)</span> is a linear combination of covariates, the associated coefficients are then divided by <span class="math inline">\(\sigma_i\)</span>.</p>
 <p>A logit model with only choice situation specific variables is sometimes called a <em>multinomial logit model</em>, one with only alternative specific variables a <em>conditional logit model</em> and one with both kind of variables a <em>mixed logit model</em>. This is seriously misleading: <em>conditional logit model</em> is also a logit model for longitudinal data in the statistical literature and <em>mixed logit</em> is one of the names of a logit model with random parameters. Therefore, in what follows, we’ll use the name <em>multinomial logit model</em> for the model we’ve just described whatever the nature of the explanatory variables used.</p>
-<p><code>mlogit</code> package provides objects of class <code>mFormula</code> which are built upon <code>Formula</code> objects provided by the <code>Formula</code> package.<a href="#fn4" class="footnote-ref" id="fnref4"><sup>4</sup></a> The <code>Formula</code> package provides richer <code>formula</code>s, which accept multiple responses (a feature not used here) and multiple set of covariates. It has in particular specific <code>model.frame</code> and <code>model.matrix</code> methods which can be used with one or several sets of covariates.</p>
+<p><code>mlogit</code> package provides objects of class <code>mFormula</code> which are built upon <code>Formula</code> objects provided by the <code>Formula</code> package.<a href="#fn4" class="footnoteRef" id="fnref4"><sup>4</sup></a> The <code>Formula</code> package provides richer <code>formula</code>s, which accept multiple responses (a feature not used here) and multiple set of covariates. It has in particular specific <code>model.frame</code> and <code>model.matrix</code> methods which can be used with one or several sets of covariates.</p>
 <p>To illustrate the use of <code>mFormula</code> objects, we use again the <code>ModeCanada</code> data set and consider three sets of covariates that will be indicated in a three-part formula, which refers to the first three items of the four points list at start of this section.</p>
 <ul>
 <li><code>cost</code> (monetary cost) is an alternative specific covariate with a generic coefficient (part 1),</li>
 <li><code>income</code> and <code>urban</code> are choice situation specific covariates (part 2),</li>
 <li><code>ivt</code> (in vehicle travel time) is alternative specific and alternative specific coefficients are expected (part 3).</li>
 </ul>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1">f &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">|</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>urban <span class="op">|</span><span class="st"> </span>ivt)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">|</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>urban <span class="op">|</span><span class="st"> </span>ivt)</code></pre></div>
 <p>Some parts of the formula may be omitted when there is no ambiguity. For example, the following sets of <code>formula</code>s are identical:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">f2 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">|</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>urban)</a>
-<a class="sourceLine" id="cb19-2" title="2">f2 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">|</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>urban <span class="op">|</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">f3 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span><span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb20-2" title="2">f3 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>income)</a></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">f4 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt)</a>
-<a class="sourceLine" id="cb21-2" title="2">f4 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">|</span><span class="st"> </span><span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb21-3" title="3">f4 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">|</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span><span class="dv">0</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f2 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">|</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>urban)
+f2 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">|</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span>urban <span class="op">|</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f3 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>income <span class="op">|</span><span class="st"> </span><span class="dv">0</span>)
+f3 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>income)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f4 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt)
+f4 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">|</span><span class="st"> </span><span class="dv">1</span>)
+f4 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">|</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span><span class="dv">0</span>)</code></pre></div>
 <p>By default, an intercept is added to the model, it can be removed by using <code>+ 0</code> or <code>- 1</code> in the second part.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">f5 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">|</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>ivt)</a>
-<a class="sourceLine" id="cb22-2" title="2">f5 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">|</span><span class="st"> </span>income <span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>ivt)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f5 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">|</span><span class="st"> </span>income <span class="op">+</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>ivt)
+f5 &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">|</span><span class="st"> </span>income <span class="op">-</span><span class="st"> </span><span class="dv">1</span> <span class="op">|</span><span class="st"> </span>ivt)</code></pre></div>
 <p><code>model.frame</code> and <code>model.matrix</code> methods are provided for <code>mFormula</code> objects. The latter is of particular interest, as illustrated in the following example:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">f &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">|</span><span class="st"> </span>income  <span class="op">|</span><span class="st"> </span>ivt)</a>
-<a class="sourceLine" id="cb23-2" title="2"><span class="kw">head</span>(<span class="kw">model.matrix</span>(f, MC), <span class="dv">4</span>)</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">mFormula</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">|</span><span class="st"> </span>income  <span class="op">|</span><span class="st"> </span>ivt)
+<span class="kw">head</span>(<span class="kw">model.matrix</span>(f, MC), <span class="dv">4</span>)</code></pre></div>
 <pre><code>##           air:(intercept) bus:(intercept) car:(intercept)   cost
 ## 109.train               0               0               0  58.25
 ## 109.air                 1               0               0 142.80
@@ -460,13 +253,13 @@ V_{ij}=\alpha_j + \beta x_{ij} + \nu t_j + \gamma_j z_i + \delta_j w_{ij} .
 <p>This in turns define three principles of tests: the <em>Wald test</em>, based only on the unconstrained model, the <em>Lagrange multiplier test</em> (or <em>score test</em>), based only on the constrained model and the <em>likelihood ratio test</em>, based on the comparison of both models.</p>
 <p>Two of these three tests are implemented in the <code>lmtest</code> package <span class="citation">(Zeileis and Hothorn 2002)</span>: <code>waldtest</code> and <code>lrtest</code>. The Wald test is also implemented as <code>linearHypothesis</code> in package <code>car</code> <span class="citation">(Fox and Weisberg 2010)</span>, with a fairly different syntax. We provide special methods of <code>waldtest</code> and <code>lrtest</code> for <code>mlogit</code> objects and we also provide a function for the Lagrange multiplier (or score) test called <code>scoretest</code>.</p>
 <p>We’ll see later that the score test is especially useful for <code>mlogit</code> objects when one is interested in extending the basic multinomial logit model because, in this case, the unconstrained model may be difficult to estimate. For the presentation of further tests, we provide a convenient <code>statpval</code> function which extract the statistic and the p-value from the objects returned by the testing function, which can be either of class <code>anova</code> or <code>htest</code>.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">statpval &lt;-<span class="st"> </span><span class="cf">function</span>(x){</a>
-<a class="sourceLine" id="cb25-2" title="2">    <span class="cf">if</span> (<span class="kw">inherits</span>(x, <span class="st">&quot;anova&quot;</span>)) </a>
-<a class="sourceLine" id="cb25-3" title="3">        result &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(x)[<span class="dv">2</span>, <span class="kw">c</span>(<span class="st">&quot;Chisq&quot;</span>, <span class="st">&quot;Pr(&gt;Chisq)&quot;</span>)]</a>
-<a class="sourceLine" id="cb25-4" title="4">    <span class="cf">if</span> (<span class="kw">inherits</span>(x, <span class="st">&quot;htest&quot;</span>)) result &lt;-<span class="st"> </span><span class="kw">c</span>(x<span class="op">$</span>statistic, x<span class="op">$</span>p.value)</a>
-<a class="sourceLine" id="cb25-5" title="5">    <span class="kw">names</span>(result) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;stat&quot;</span>, <span class="st">&quot;p-value&quot;</span>)</a>
-<a class="sourceLine" id="cb25-6" title="6">    <span class="kw">round</span>(result, <span class="dv">3</span>)</a>
-<a class="sourceLine" id="cb25-7" title="7">}</a></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">statpval &lt;-<span class="st"> </span><span class="cf">function</span>(x){
+    <span class="cf">if</span> (<span class="kw">inherits</span>(x, <span class="st">&quot;anova&quot;</span>)) 
+        result &lt;-<span class="st"> </span><span class="kw">as.matrix</span>(x)[<span class="dv">2</span>, <span class="kw">c</span>(<span class="st">&quot;Chisq&quot;</span>, <span class="st">&quot;Pr(&gt;Chisq)&quot;</span>)]
+    <span class="cf">if</span> (<span class="kw">inherits</span>(x, <span class="st">&quot;htest&quot;</span>)) result &lt;-<span class="st"> </span><span class="kw">c</span>(x<span class="op">$</span>statistic, x<span class="op">$</span>p.value)
+    <span class="kw">names</span>(result) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;stat&quot;</span>, <span class="st">&quot;p-value&quot;</span>)
+    <span class="kw">round</span>(result, <span class="dv">3</span>)
+}</code></pre></div>
 </div>
 <div id="bibliography" class="section level2 unnumbered">
 <h2>Bibliography</h2>
@@ -490,7 +283,7 @@ V_{ij}=\alpha_j + \beta x_{ij} + \nu t_j + \gamma_j z_i + \delta_j w_{ij} .
 <p>Koppelman, Frank S., and Chieh-Hua Wen. 2000. “The Paired Combinatorial Logit Model: Properties, Estimation and Application.” <em>Transportation Research Part B: Methodological</em> 34 (2): 75–89. <a href="http://www.sciencedirect.com/science/article/pii/S0191261599000120" class="uri">http://www.sciencedirect.com/science/article/pii/S0191261599000120</a>.</p>
 </div>
 <div id="ref-MEIJ:ROUW:06">
-<p>Meijer, Erik, and Jan Rouwendal. 2006. “Measuring Welfare Effects in Models with Random Coefficients.” <em>Journal of Applied Econometrics</em> 21 (2): 227–44. <a href="https://doi.org/10.1002/jae.841" class="uri">https://doi.org/10.1002/jae.841</a>.</p>
+<p>Meijer, Erik, and Jan Rouwendal. 2006. “Measuring Welfare Effects in Models with Random Coefficients.” <em>Journal of Applied Econometrics</em> 21 (2): 227–44. doi:<a href="https://doi.org/10.1002/jae.841">10.1002/jae.841</a>.</p>
 </div>
 <div id="ref-SWAI:LOUV:93">
 <p>Swait, J., and J. Louviere. 1993. “The Role of the Scale Parameter in the Estimation and Use of Multinomial Logit Models.” <em>Journal of Marketing Research</em> 30.</p>
@@ -506,10 +299,10 @@ V_{ij}=\alpha_j + \beta x_{ij} + \nu t_j + \gamma_j z_i + \delta_j w_{ij} .
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>Used by <span class="citation">Ben-Akiva, Bolduc, and Bradley (1993)</span> and <span class="citation">Meijer and Rouwendal (2006)</span>.<a href="#fnref1" class="footnote-back">↩</a></p></li>
-<li id="fn2"><p>Used in particular by <span class="citation">(Forinash and Koppleman 1993)</span>, <span class="citation">Bhat (1995)</span>, <span class="citation">Koppelman and Wen (1998)</span> and <span class="citation">Koppelman and Wen (2000)</span>.<a href="#fnref2" class="footnote-back">↩</a></p></li>
-<li id="fn3"><p>This kind of heteroscedasticity shouldn’t be confused with alternative heteroscedasticity (<span class="math inline">\(\sigma^2_j \neq \sigma^2_k\)</span>) which is introduced in the heteroskedastic logit model described in vignette <a href="./c4.relaxiid.html">relaxing the iid hypothesis</a><a href="#fnref3" class="footnote-back">↩</a></p></li>
-<li id="fn4"><p>See <span class="citation">(Zeileis and Croissant 2010)</span> for a description of the <code>Formula</code> package.<a href="#fnref4" class="footnote-back">↩</a></p></li>
+<li id="fn1"><p>Used by <span class="citation">Ben-Akiva, Bolduc, and Bradley (1993)</span> and <span class="citation">Meijer and Rouwendal (2006)</span>.<a href="#fnref1">↩</a></p></li>
+<li id="fn2"><p>Used in particular by <span class="citation">(Forinash and Koppleman 1993)</span>, <span class="citation">Bhat (1995)</span>, <span class="citation">Franck S. Koppelman and Wen (1998)</span> and <span class="citation">Frank S. Koppelman and Wen (2000)</span>.<a href="#fnref2">↩</a></p></li>
+<li id="fn3"><p>This kind of heteroscedasticity shouldn’t be confused with alternative heteroscedasticity (<span class="math inline">\(\sigma^2_j \neq \sigma^2_k\)</span>) which is introduced in the heteroskedastic logit model described in vignette <a href="./c4.relaxiid.html">relaxing the iid hypothesis</a><a href="#fnref3">↩</a></p></li>
+<li id="fn4"><p>See <span class="citation">(Zeileis and Croissant 2010)</span> for a description of the <code>Formula</code> package.<a href="#fnref4">↩</a></p></li>
 </ol>
 </div>
 

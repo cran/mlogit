@@ -1,6 +1,6 @@
 
-R version 3.6.0 (2019-04-26) -- "Planting of a Tree"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -310,4 +310,4 @@ alternative hypothesis: IIA is rejected
 > 
 > proc.time()
    user  system elapsed 
-  1.656   0.065   1.734 
+  1.176   0.073   1.245 

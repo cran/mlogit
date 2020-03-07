@@ -14,8 +14,15 @@ mFormula(object)
 
 is.mFormula(object)
 
-\method{model.frame}{mFormula}(formula, data, ..., lhs = NULL,
-  rhs = NULL, alt.subset = NULL, reflevel = NULL)
+\method{model.frame}{mFormula}(
+  formula,
+  data,
+  ...,
+  lhs = NULL,
+  rhs = NULL,
+  alt.subset = NULL,
+  reflevel = NULL
+)
 
 \method{model.matrix}{mFormula}(object, data, ...)
 }

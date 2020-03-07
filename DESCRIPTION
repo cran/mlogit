@@ -1,6 +1,6 @@
 Package: mlogit
-Version: 1.0-2.1
-Date: 2019-12-09
+Version: 1.0-3
+Date: 2020-03-06
 Title: Multinomial Logit Models
 Authors@R: person("Yves", "Croissant", role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr")
 Depends: R (>= 2.10), Formula, zoo, lmtest
@@ -14,18 +14,11 @@ Encoding: UTF-8
 License: GPL (>= 2)
 URL: https://cran.r-project.org/package=mlogit,
         https://r-forge.r-project.org/projects/mlogit/
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 RdMacros: Rdpack
-Author: Yves Croissant [aut, cre]
-Maintainer: ORPHANED
-Repository: CRAN
-Repository/R-Forge/Project: mlogit
-Repository/R-Forge/Revision: 89
-Repository/R-Forge/DateTimeStamp: 2019-12-09 07:12:15
-Date/Publication: 2020-02-16 12:11:42 UTC
 NeedsCompilation: no
-Packaged: 2020-02-16 11:41:11 UTC; ripley
-X-CRAN-Original-Maintainer: Yves Croissant
-        <yves.croissant@univ-reunion.fr>
-X-CRAN-Comment: Orphaned and corrected on 2020-02-16 as there was no
-        response to repeated requests.
+Packaged: 2020-03-06 04:15:44 UTC; yves
+Author: Yves Croissant [aut, cre]
+Maintainer: Yves Croissant <yves.croissant@univ-reunion.fr>
+Repository: CRAN
+Date/Publication: 2020-03-07 06:00:03 UTC

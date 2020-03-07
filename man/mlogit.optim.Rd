@@ -4,9 +4,18 @@
 \alias{mlogit.optim}
 \title{Non-linear minimization routine}
 \usage{
-mlogit.optim(logLik, start, method = c("bfgs", "nr", "bhhh"),
-  iterlim = 2000, tol = 1e-06, ftol = 1e-08, steptol = 1e-10,
-  print.level = 0, constPar = NULL, ...)
+mlogit.optim(
+  logLik,
+  start,
+  method = c("bfgs", "nr", "bhhh"),
+  iterlim = 2000,
+  tol = 1e-06,
+  ftol = 1e-08,
+  steptol = 1e-10,
+  print.level = 0,
+  constPar = NULL,
+  ...
+)
 }
 \arguments{
 \item{logLik}{the likelihood function to be maximized,}
@@ -41,7 +50,7 @@ a list that contains the followings elements :
 \itemize{
 \item optimum: the value of the function at the optimum, with
 attributes: \code{gradi} a matrix that contains the contribution of each
-individual to the gradient, \code{gradient} the gradient and, if \code{method = 'nr', }hessian` the hessian,
+individual to the gradient, \code{gradient} the gradient and, if \verb{method = 'nr', }hessian` the hessian,
 \item coefficients: the vector of the parameters at the optimum,
 \item est.stat: a list that contains some information about the
 optimization : \code{'nb.iter'} the number of iterations, \code{'eps'} the
