@@ -86,15 +86,12 @@ Loading required package: lmtest
 +                            catch = tapply(catch, index(m)$alt, mean),
 +                            income = mean(income)))
 > # compute the marginal effects (the second one is an elasticity
+> ## IGNORE_RDIFF_BEGIN
 > effects(m, covariate = "income", data = z)
         beach          boat       charter          pier 
  1.132965e-06  3.113068e-05 -2.408677e-05 -8.176877e-06 
-> effects(m, covariate = "price", type = "rr", data = z)
-             beach       boat    charter       pier
-beach   -2.4634447  0.1512128  0.1512128  0.1512128
-boat     0.5797049 -0.8172610  0.5797049  0.5797049
-charter  0.9741351  0.9741351 -1.1590941  0.9741351
-pier     0.1844507  0.1844507  0.1844507 -2.4302068
+> ## IGNORE_RDIFF_END
+> #' effects(m, covariate = "price", type = "rr", data = z)
 > effects(m, covariate = "catch", type = "ar", data = z)
                beach        boat     charter         pier
 beach    0.040943135 -0.01803326 -0.01984425 -0.003065622
@@ -569,7 +566,7 @@ alternative hypothesis: heteroscedastic model
 > cleanEx()
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  3.869 0.044 3.913 0 0 
+Time elapsed:  4.41 0.063 4.508 0 0 
 > grDevices::dev.off()
 null device 
           1 

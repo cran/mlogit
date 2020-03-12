@@ -312,8 +312,10 @@ coef.summary.mlogit <- function(object, ...){
 #'                            catch = tapply(catch, index(m)$alt, mean),
 #'                            income = mean(income)))
 #' # compute the marginal effects (the second one is an elasticity
+#' ## IGNORE_RDIFF_BEGIN
 #' effects(m, covariate = "income", data = z)
-#' effects(m, covariate = "price", type = "rr", data = z)
+#' ## IGNORE_RDIFF_END
+#' #' effects(m, covariate = "price", type = "rr", data = z)
 #' effects(m, covariate = "catch", type = "ar", data = z)
 effects.mlogit <- function(object, covariate = NULL,
                            type = c("aa", "ar", "rr", "ra"),

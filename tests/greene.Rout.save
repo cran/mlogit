@@ -43,4 +43,4 @@ Loading required package: lmtest
 > 
 > proc.time()
    user  system elapsed 
-  0.792   0.032   0.811 
+   0.86    0.06    0.93 

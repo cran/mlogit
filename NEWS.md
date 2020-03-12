@@ -1,4 +1,6 @@
-# mlogit 1.0-3
+# mlogit 1.0-3.1
+
+* a DIGNORE tag in effects' examples
 
 # mlogit 1.0-3
 

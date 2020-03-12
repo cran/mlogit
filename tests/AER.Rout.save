@@ -310,4 +310,4 @@ alternative hypothesis: IIA is rejected
 > 
 > proc.time()
    user  system elapsed 
-  1.176   0.073   1.245 
+  1.422   0.072   1.485 
