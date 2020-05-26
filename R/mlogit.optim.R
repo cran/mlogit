@@ -118,7 +118,7 @@ mlogit.optim <- function(logLik, start,
     i <- 0
     K <- length(param)
     d <- rep(0, K)
-    
+
     # construct a vector of fixed parameters
     fixed <- rep(FALSE, K)
     names(fixed) <- names(start)

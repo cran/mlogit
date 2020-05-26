@@ -5,13 +5,13 @@ options(width = 65)
 ## ----nest1-----------------------------------------------------
 library("mlogit")
 data("HC", package = "mlogit")
-HC <- mlogit.data(HC, varying = c(2:8, 10:16), choice = "depvar", shape = "wide")
-cooling.modes <- index(HC)$alt %in% c('gcc', 'ecc', 'erc', 'hpc')
-room.modes <- index(HC)$alt %in% c('erc', 'er')
+HC <- dfidx(HC, varying = c(2:8, 10:16), choice = "depvar")
+cooling.modes <- idx(HC, 2) %in% c('gcc', 'ecc', 'erc', 'hpc')
+room.modes <- idx(HC, 2) %in% c('erc', 'er')
 # installation / operating costs for cooling are constants, 
 # only relevant for mixed systems
-HC$icca[!cooling.modes] <- 0
-HC$occa[!cooling.modes] <- 0
+HC$icca[! cooling.modes] <- 0
+HC$occa[! cooling.modes] <- 0
 # create income variables for two sets cooling and rooms
 HC$inc.cooling <- HC$inc.room <- 0
 HC$inc.cooling[cooling.modes] <- HC$income[cooling.modes]

@@ -6,7 +6,7 @@
 #' @aliases residuals.mlogit df.residual.mlogit terms.mlogit
 #'     model.matrix.mlogit model.response.mlogit update.mlogit
 #'     print.mlogit logLik.mlogit summary.mlogit print.summary.mlogit
-#'     index.mlogit predict.mlogit fitted.mlogit coef.mlogit
+#'     predict.mlogit fitted.mlogit coef.mlogit
 #'     coef.summary.mlogit
 #' @param x,object an object of class `mlogit`
 #' @param subset an optional vector of coefficients to extract for the
@@ -31,6 +31,7 @@
 #'     returned as an attribute,
 #' @param fixed if `FALSE` (the default), constant coefficients are
 #'     not returned,
+#' @param n,m see [dfidx::idx()]
 #' @param ... further arguments.
 #' 
 #' @rdname miscmethods.mlogit
@@ -64,7 +65,7 @@ terms.mlogit <- function(x, ...){
 #' @rdname miscmethods.mlogit
 #' @export
 model.matrix.mlogit <- function(object, ...){
-    model.matrix(object$formula, object$model)
+    model.matrix(object$model)
 }
 
 #' @rdname miscmethods.mlogit
@@ -134,7 +135,7 @@ summary.mlogit <- function (object, ..., type = c("chol", "cov", "cor")){
         rownames(CoefTable)[grep("chol.", rownames(CoefTable))] <- rownames(sumvcov)
     }
     object$CoefTable <- CoefTable
-    if (has.intercept(object$formula)){
+    if (has.intercept(object)){
         object$lratio <- lratio(object)
         object$mfR2 <- mfR2(object)
     }
@@ -162,7 +163,7 @@ print.summary.mlogit <- function(x, digits = max(3, getOption("digits") - 2),
     printCoefmat(x$CoefTable, digits = digits)
     cat("\n")
     cat(paste("Log-Likelihood: ", signif(x$logLik, digits), "\n", sep = ""))
-    if (has.intercept(x$formula)){
+    if (has.intercept(x)){
         cat("McFadden R^2: ", signif(x$mfR2, digits), "\n")
         cat("Likelihood ratio test : ", names(x$lratio$statistic),
             " = ", signif(x$lratio$statistic, digits),
@@ -177,36 +178,62 @@ print.summary.mlogit <- function(x, digits = max(3, getOption("digits") - 2),
 
 #' @rdname miscmethods.mlogit
 #' @export
-index.mlogit <- function(x, ...){
-    index(model.frame(x))
+idx.mlogit <- function(x, n = NULL, m = NULL){
+    dfidx::idx(model.frame(x), n = n, m = m)
 }
 
-index.matrix <- function(x, ...){
-    attr(x, "index")
+#' @rdname miscmethods.mlogit
+#' @export
+idx_name.mlogit <- function(x, n = NULL, m = NULL){
+    idx_name(model.frame(x), n = n, m = m)
 }
 
 #' @rdname miscmethods.mlogit
 #' @export
 predict.mlogit <- function(object, newdata = NULL, returnData = FALSE, ...){
     # if no newdata is provided, use the mean of the model.frame
-    if (is.null(newdata)) newdata <- mean(model.frame(object))
+    if (is.null(newdata)){
+        newdata <- mean(object$model)
+        #YC2020/03/05 coerce it to a data.frame so that it gets transformed 
+        newdata <- as.data.frame(newdata)
+    }
     # if newdata is not a mlogit.data, it is coerced below
-    if (! inherits(newdata, "mlogit.data")){
-        rownames(newdata) <- NULL
-        lev <- colnames(object$probabilities)
-        J <- length(lev)
-        choice.name <- attr(model.frame(object), "choice")
-        if (nrow(newdata) %% J)
-            stop("the number of rows of the data.frame should be a multiple of the number of alternatives")
-        nchid <- nrow(newdata) %/% J
-        attr(newdata, "index") <- data.frame(chid = factor(rep(1:nchid, each = J)), alt = factor(rep(lev, nchid)))
-        attr(newdata, "class") <- c("mlogit.data", "data.frame")
-        if (is.null(newdata[['choice.name']])){
-            newdata[[choice.name]] <- FALSE
-            newdata[[choice.name]][1] <- TRUE # probit and hev requires that one (arbitrary) choice is TRUE
+    if ((! inherits(newdata, "mlogit.data")) & (! inherits(newdata, "dfidx"))){
+        if (FALSE){
+            rownames(newdata) <- NULL
+            lev <- colnames(object$probabilities)
+            J <- length(lev)
+            choice.name <- attr(model.frame(object), "choice")
+            if (nrow(newdata) %% J)
+                stop("the number of rows of the data.frame should be a multiple of the number of alternatives")
+            attr(newdata, "index") <- data.frame(chid = rep(1:(nrow(newdata) %/% J ), each = J), alt = rep(lev, J))
+            attr(newdata, "class") <- c("mlogit.data", "data.frame")
+            if (is.null(newdata[['choice.name']])){
+                newdata[[choice.name]] <- FALSE
+                newdata[[choice.name]][1] <- TRUE # probit and hev requires that one (arbitrary) choice is TRUE
+            }
+        }
+        else{
+            # New stuff, coerce manually to an dfidx object
+            lev <- colnames(object$probabilities)
+            J <- length(lev)
+            choice.name <- paste(deparse(formula(object)[[2]]))
+            if (nrow(newdata) %% J)
+                stop("the number of rows of the data.frame should be a multiple of the number of alternatives")
+            nbid <- nrow(newdata) %/% J
+            newdata$idx <- data.frame(chid = factor(rep(1:nbid, each = J)), alt = factor(rep(lev, nbid), levels = lev))
+            class(newdata$idx) <- c("idx", "data.frame")
+            attr(newdata$idx, "ids") <- c(1, 2)
+            attr(newdata, "clseries") <- c("xseries_mlogit", "xseries")
+            attr(newdata, "class") <- c("dfidx_mlogit", "dfidx", "data.frame")
+            #YC2020/03/05 this seems incorect, replace 'choice.name' by choice.name
+   #        if (is.null(newdata[['choice.name']])){
+            if (is.null(newdata[[choice.name]])){
+                newdata[[choice.name]] <- FALSE
+                newdata[[choice.name]][1] <- TRUE # probit and hev requires that one (arbitrary) choice is TRUE
+            }
         }
     }
-
     # if the updated model requires the use of mlogit.data, suppress all
     # the relevant arguments
     m <- match(c("choice", "shape", "varying", "sep",
@@ -217,7 +244,6 @@ predict.mlogit <- function(object, newdata = NULL, returnData = FALSE, ...){
     # update the model and get the probabilities
     newobject <- update(object, start = coef(object, fixed = TRUE), data = newdata, iterlim = 0, print.level = 0)
 #    newobject <- update(object, start = coef(object), data = newdata, iterlim = 0, print.level = 0)
-    
     result <- newobject$probabilities
     if (nrow(result) == 1){
         result <- as.numeric(result)
@@ -308,14 +334,14 @@ coef.summary.mlogit <- function(object, ...){
 #' m <- mlogit(mode ~ price | income | catch, data = Fish)
 #' # compute a data.frame containing the mean value of the covariates in
 #' # the sample
-#' z <- with(Fish, data.frame(price = tapply(price, index(m)$alt, mean),
-#'                            catch = tapply(catch, index(m)$alt, mean),
+#' z <- with(Fish, data.frame(price = tapply(price, idx(m, 2), mean),
+#'                            catch = tapply(catch, idx(m, 2), mean),
 #'                            income = mean(income)))
 #' # compute the marginal effects (the second one is an elasticity
 #' ## IGNORE_RDIFF_BEGIN
 #' effects(m, covariate = "income", data = z)
 #' ## IGNORE_RDIFF_END
-#' #' effects(m, covariate = "price", type = "rr", data = z)
+#' effects(m, covariate = "price", type = "rr", data = z)
 #' effects(m, covariate = "catch", type = "ar", data = z)
 effects.mlogit <- function(object, covariate = NULL,
                            type = c("aa", "ar", "rr", "ra"),
@@ -326,9 +352,7 @@ effects.mlogit <- function(object, covariate = NULL,
         data <- attr(P, "data")
         attr(P, "data") <- NULL
     }
-    else{
-       P <- predict(object, data)
-    }
+    else P <- predict(object, data)
     newdata <- data
     J <- length(P)
     alt.levels <- names(P)
@@ -367,7 +391,7 @@ effects.mlogit <- function(object, covariate = NULL,
         if (xVar == "r") me <- me * data[[covariate]]
         names(me) <- alt.levels
     }
-    attr(me, "index") <- NULL
+    if (inherits(me, "xseries")) attr(me, "idx") <- NULL
     unclass(me)
 }
 
@@ -678,7 +702,7 @@ logsum <- function(coef, X = NULL, formula = NULL, data = NULL,
     # model.matrix from the coef object
     if (is.null(X) & (is.null(data))){
         if (inherits(coef, "mlogit")){
-            idx <- index(coef)
+            .idx <- dfidx::idx(coef)
             X <- model.matrix(coef)
         }
         else stop("only one argument is provided, it should be a mlogit object")           
@@ -694,14 +718,14 @@ logsum <- function(coef, X = NULL, formula = NULL, data = NULL,
                 if (! is.null(attr(X, "index"))) idx <- attr(X, "index")
                 else{
                     if (inherits(coef, "mlogit")){
-                        idx <- index(coef)
-                        if (nrow(idx) != nrow(X)) stop("X has no index and its dimension is uncorrect")
+                        .idx <- dfidx::idx(coef)
+                        if (nrow(.idx) != nrow(X)) stop("X has no index and its dimension is uncorrect")
                     }
                     else stop("no index in for the coef and the X argument")
                 }
             }
             if (inherits(X, "mlogit")){
-                idx <- index(X)
+                .idx <- dfidx::idx(X)
                 X <- model.matrix(X)
             }
         }
@@ -714,50 +738,51 @@ logsum <- function(coef, X = NULL, formula = NULL, data = NULL,
                 # if it is an ordinary data.frame, coerce it using the
                 # index extracted from the coef argument
                 if (! is.data.frame(data)) stop("data should be a data.frame")
-                if (! inherits(data, "mlogit.data")){
+                if ((! inherits(data, "mlogit.data")) & (! inherits(data, "dfidx"))){
                     if (is.null(attr(coef, "index")))
                         stop("no index available to compute the model.matrix")
                     else{
-                        idx <- index(coef)
-                        if (nrow(idx) != nrow(data)) stop("uncompatible dimensions")
+                        .idx <- dfidx::idx(coef)
+                        if (nrow(.idx) != nrow(data)) stop("uncompatible dimensions")
                         else{
-                            data <- structure(data, index = idx,
+                            data <- structure(data, index = .idx,
                                               class = c("mlogit.data", "data.frame"))
                         }
                     }
                 }
-                else idx <- index(data)
+                else .idx <- dfidx::idx(data)
 
                 if (! is.null(formula)) X <- model.matrix(formula, data)
                 else{
                     if (inherits(coef, "mlogit")){
                         mf <- update(coef, data = data, estimate = FALSE)
-                        idx <- index(mf)
-                        X <- model.matrix(formula(mf), model.frame(mf))
+                        .idx <- dfidx::idx(mf)
+                        X <- model.matrix(mf)
                     }
                     else stop("no formula provided to compute the model.matrix")
                 }
             }
         }
     }
-
     output <- match.arg(output)
     if (! is.null(type)){
         if (! type %in% c("group", "global"))
             stop("type should be one of 'group' or 'local'")
     }
-    idx$nb <- 1:nrow(idx)
+    .idx$nb <- 1:nrow(.idx)
     coefsubset <- intersect(names(beta), colnames(X))
     X <- X[, coefsubset, drop = FALSE]
-    idx$linpred <- as.numeric(crossprod(t(X[, coefsubset, drop = FALSE]), beta[coefsubset]))
-    
-    if (! is.null(idx$group) & (is.null(type) || type == "group")){
-        iv <- log(with(idx, tapply(exp(linpred), list(chid, group), sum)))
+    .idx$linpred <- as.numeric(crossprod(t(X[, coefsubset, drop = FALSE]), beta[coefsubset]))
+            
+    group_name <- idx_name(.idx, 2, 2)
+    if (! is.null(group_name) & (is.null(type) || type == "group")){
+        iv <- log(tapply(exp(.idx$linpred), list(dfidx::idx(.idx, 1), .idx[[group_name]]), sum))
         if (output == "obs"){
             iv <- data.frame(chid = rep(rownames(iv), each = ncol(iv)),
                              group = rep(colnames(iv), nrow(iv)),
                              iv = as.numeric(t(iv)))
-            iv <- merge(idx, iv)
+            names(iv)[2] <- group_name
+            iv <- merge(.idx, iv)
             iv <- iv[order(iv$nb), "iv"]
         }
     }
@@ -765,10 +790,10 @@ logsum <- function(coef, X = NULL, formula = NULL, data = NULL,
         #iv <- log(with(idx, tapply(exp(linpred), chid, sum))) bug
         # (for unbalanced set of choices) fixed thanks to Malick
         # Hossain
-        iv <- log(with(idx, tapply(exp(linpred), chid, sum, na.rm = TRUE)))
+        iv <- log(tapply(exp(.idx$linpred), dfidx::idx(.idx, 1), sum, na.rm = TRUE))
         if (output == "obs"){
             iv <- data.frame(chid = rownames(iv), iv = as.numeric(iv))
-            iv <- merge(idx, iv)
+            iv <- merge(.idx, iv)
             iv <- iv[order(iv$nb), "iv"]
         }
     }

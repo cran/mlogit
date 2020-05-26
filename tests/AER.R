@@ -1,5 +1,6 @@
 # BankWages.Rd
 
+library("lmtest")
 data("BankWages", package = "AER")
 
 ## exploratory analysis of job ~ education

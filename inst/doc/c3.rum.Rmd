@@ -230,30 +230,29 @@ the expected surplus is simply $\frac{\mbox{E}(U)}{\alpha}$.
 
 Random utility models are fitted using the `mlogit`
 function. Basically, only two arguments are mandatory,
-`formula` and `data`, if a `mlogit.data`
+`formula` and `data`, if an `dfidx`
 object (and not an ordinary `data.frame`) is provided.
 
 ### ModeCanada
 
-We first use the `ModeCanada` data set, which was already coerced
-to a `mlogit.data` object (called `MC`) in the previous
-section. The same model can then be estimated using as `data`
-argument this `mlogit.data` object:
+We first use the `ModeCanada` data set, which was already coerced to a
+`dfidx` object (called `MC`) in the previous section. The same model
+can then be estimated using as `data` argument this `dfidx`
+object:
 
-```{r label = 'multinomial logit with a mlogit.data'}
+```{r label = 'multinomial logit with a dfidx'}
 library("mlogit")
 data("ModeCanada", package = "mlogit")
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.var = "alt", drop.index = TRUE)
+MC <- dfidx(ModeCanada, subset = noalt == 4)
 ml.MC1 <- mlogit(choice ~ cost + freq + ovt | income | ivt, MC)
 ``` 
 
 or a `data.frame`. In this latter case, further arguments that
-will be passed to `mlogit.data` should be indicated:
+will be passed to `dfidx` should be indicated:
 
 ```{r label = 'multinomial logit with an ordinary data.frame'}
 ml.MC1b <- mlogit(choice ~ cost + freq + ovt | income | ivt, ModeCanada,
-subset = noalt == 4, alt.var = "alt", chid.var = "case")
+subset = noalt == 4, idx = c("case", "alt"))
 ``` 
 
 `mlogit` provides two further useful arguments:
@@ -334,8 +333,9 @@ and then using the `predict` method with this new
 
 ```{r label = 'predicting with different data'}
 NMC <- MC
-NMC[index(NMC)$alt == "train", "time"] <- 0.8 *
-NMC[index(NMC)$alt == "train", "time"]
+# YC2020/05/03 should replace everywhere index() by idx()
+NMC[idx(NMC)$alt == "train", "time"] <- 0.8 *
+NMC[idx(NMC)$alt == "train", "time"]
 Oprob <- fitted(ml.MC1, type = "probabilities")
 Nprob <- predict(ml.MC1, newdata = NMC)
 rbind(old = apply(Oprob, 2, mean), new = apply(Nprob, 2, mean))
@@ -381,7 +381,7 @@ done by filling the `data` argument (a `data.frame` or an object from
 which a `data.frame` can be extracted using a `model.frame` method),
 and eventually the `formula` argument (a `formula` or an object for
 which the `formula` method can be applied). If no formula is provided
-but if `data` is a `mlogit.data` object, the formula is extracted from
+but if `data` is a `dfidx` object, the formula is extracted from
 it.
 
 ```{r label = 'computation of the after change logsum'}
@@ -495,12 +495,13 @@ default algorithm failed to converged, we use here `bhhh`.]
 ```{r label = 'estimation of the multinomial logit model for the NOx data'}
 data("NOx", package = "mlogit")
 NOx$kdereg <- with(NOx, kcost * (env == "deregulated"))
-NOxml <- mlogit.data(NOx, chid.var = "chid", alt.var = "alt",
-id.var = "id")
+NOxml <- dfidx(NOx, idx = list(c("chid", "id"), "alt"))
 ml.pub <- mlogit(choice ~ post + cm + lnb + vcost + kcost + kcost:age |
 - 1, subset = available & env == "public", data = NOxml)
 ml.reg <- update(ml.pub, subset = available & env == "regulated")
 ml.dereg <- update(ml.pub, subset = available & env == "deregulated")
+ml.pool <- ml.dereg
+# YC gestion de la quatrième partie
 ml.pool <- mlogit(choice ~ post + cm + lnb + vcost + kcost + kcost:age +
 kdereg | - 1 | 0 | env, subset = available == 1, data = NOxml,
 method = "bhhh")

@@ -60,21 +60,14 @@ between bus and rail?
 ```{r }
 library("mlogit")
 data("Mode", package="mlogit")
-Mo <- mlogit.data(Mode, choice = 'choice', shape = 'wide', 
-                  varying = c(2:9))
-```   
+Mo <- dfidx(Mode, choice = "choice", varying = 2:9)
+```
 
-```{r probit1, echo = FALSE, results = 'hide'}
-strt <- c(1.83086600, -1.28168186,  0.30935104, -0.41344010, -0.04665517,  1, 0.25997237,
-          0.73648694,  1.30789474, -0.79818416,  0.43013035)
-p1 <- mlogit(choice ~ cost + time, Mo, seed = 20, 
-             R = 100, probit = TRUE, start = strt)
-```   
 
-```{r eval = FALSE}
+```{r probit1}
 p1 <- mlogit(choice ~ cost + time, Mo, seed = 20, 
              R = 100, probit = TRUE)
-```   
+```
 
 ```{r }
 summary(p1)
@@ -83,7 +76,7 @@ summary(p1)
 
 ```{r }
 L1 <- matrix(0, 3, 3)
-L1[!upper.tri(L1)] <- c(1, coef(p1)[6:10])
+L1[! upper.tri(L1)] <- c(1, coef(p1)[6:10])
 ``` 
 
 > Multiplying L1 by its transpose gives $\Omega_1$  :
@@ -124,17 +117,11 @@ two estimates, and so you are not estimating the true simulation
 variance very well. But the two estimates will probably give you an
 indication.)
 
-```{r probit2, echo = FALSE, results = 'hide'}
-strt <-  c(1.87149948, -1.28893595,  0.31455318, -0.43068703, -0.04752315,  1, 0.22888163,
-           0.69781113,  1.33071717, -0.56802431,  0.71060138)
-p2 <- mlogit(choice ~ cost + time, Mo, seed = 21, 
-             R = 100, probit = TRUE, start = strt)
-```   
   
-```{r eval = FALSE}
+```{r probit2}
 p2 <- mlogit(choice ~ cost + time, Mo, seed = 21, 
              R = 100, probit = TRUE)
-```   
+```
 
 ```{r }
 coef(p2)
@@ -153,14 +140,14 @@ the actual share of commuters choosing each mode?
 > The actual shares are : 
 
 ```{r }
-actShares <- with(Mo, tapply(choice, alt, mean))
+actShares <- tapply(Mo$choice, Mo$id2, mean)
 ``` 
 
 > The predicted shares are : 
 
 ```{r }
 predShares <- apply(fitted(p1, outcome = FALSE), 2, mean)
-predShares
+rbind(predShares, actShares)
 sum(predShares)
 ``` 
 
@@ -180,7 +167,7 @@ increase in demand? What is the percent change in share for each mode?
 
 ```{r }
 Mo2 <- Mo
-Mo2[Mo2$alt == 'car', 'cost'] <- Mo2[Mo2$alt == 'car', 'cost'] * 2
+Mo2[idx(Mo2, 2) == 'car', 'cost'] <- Mo2[idx(Mo2, 2) == 'car', 'cost'] * 2
 newShares <- apply(predict(p1, newdata = Mo2), 2, mean)
 cbind(original = actShares, new = newShares, 
       change = round((newShares - actShares) / actShares * 100))

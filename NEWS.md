@@ -1,15 +1,15 @@
-# mlogit 1.0-3.1
+# mlogit 1.1-0
 
-* a DIGNORE tag in effects' examples
+* major update, mlogit now depends on dfidx, mlogit.data, mFormula and
+  index are deprecated
 
+* the name of the coefficients is changed, i.e. air:income is now
+  income:air
+  
 # mlogit 1.0-3
 
 * some numerical disperancies were caused by Rout.save files. Some
   IGNORE tags are introduced to fix that.
-
-* the new FALSE default for stringsAsFactors caused an error in the
-  predict method which implied an error in the effects examples. 
-
 
 # mlogit 1.0-2
 

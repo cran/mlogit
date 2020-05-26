@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <meta name="author" content="Kenneth Train and Yves Croissant" />
 
-<meta name="date" content="2020-03-10" />
+<meta name="date" content="2020-05-24" />
 
 <title>Exercise 3: Mixed logit model</title>
 
@@ -82,7 +81,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
 
 
 
@@ -96,7 +95,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Exercise 3: Mixed logit model</h1>
 <h4 class="author">Kenneth Train and Yves Croissant</h4>
-<h4 class="date">2020-03-10</h4>
+<h4 class="date">2020-05-24</h4>
 
 
 
@@ -113,8 +112,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
 <span class="kw">data</span>(<span class="st">&quot;Electricity&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
-Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electricity, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, 
-                      <span class="dt">varying =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">26</span>, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
+Electricity<span class="op">$</span>chid &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Electricity)
+Electr &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Electricity, <span class="dt">idx =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;id&quot;</span>)),
+                <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, <span class="dt">varying =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">26</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>)</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Elec.mxl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>pf <span class="op">+</span><span class="st"> </span>cl <span class="op">+</span><span class="st"> </span>loc <span class="op">+</span><span class="st"> </span>wk <span class="op">+</span><span class="st"> </span>tod <span class="op">+</span><span class="st"> </span>seas <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, Electr, 
               <span class="dt">rpar=</span><span class="kw">c</span>(<span class="dt">pf =</span> <span class="st">'n'</span>, <span class="dt">cl =</span> <span class="st">'n'</span>, <span class="dt">loc =</span> <span class="st">'n'</span>, <span class="dt">wk =</span> <span class="st">'n'</span>, 
                      <span class="dt">tod =</span> <span class="st">'n'</span>, <span class="dt">seas =</span> <span class="st">'n'</span>), 
@@ -127,7 +127,7 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 ##         loc = &quot;n&quot;, wk = &quot;n&quot;, tod = &quot;n&quot;, seas = &quot;n&quot;), R = 100, 
 ##     halton = NA, panel = TRUE)
 ## 
-## Frequencies of alternatives:
+## Frequencies of alternatives:choice
 ##       1       2       3       4 
 ## 0.22702 0.26393 0.23816 0.27089 
 ## 
@@ -181,7 +181,7 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 <pre><code>##        cl 
 ## 0.7065611</code></pre>
 <blockquote>
-<p>The coefficient of length is normally distributed with mean -0.20 and standard deviation 0.35. The share of people with coefficients below zero is the cumulative probability of a standardized normal deviate evaluated at 0.20/0.35=0.57. Looking 0.57 up in a table of the standard normal distribution, we find that the share below 0.57 is 0.72. About seventy percent of the population are estimated to dislike long-term contracts.</p>
+<p>The coefficient of length is normally distributed with mean -0.20 and standard deviation 0.35. The share of people with coefficients below zero is the cumulative probability of a standardized normal deviate evaluated at 0.20 / 0.3 5=0. 57. Looking 0.57 up in a table of the standard normal distribution, we find that the share below 0.57 is 0.72. About seventy percent of the population are estimated to dislike long-term contracts.</p>
 </blockquote>
 <ol start="3" class="example" style="list-style-type: decimal">
 <li>The price coefficient is assumed to be normally distributed in these runs. This assumption means that some people are assumed to have positive price coefficients, since the normal distribution has support on both sides of zero. Using your estimates from exercise 1, determine the share of customers with positive price coefficients. As you can see, this is pretty small share and can probably be ignored. However, in some situations, a normal distribution for the price coefficient will give a fairly large share with the wrong sign. Revise the program to make the price coefficient fixed rather than random. A fixed price coefficient also makes it easier to calculate the distribution of willingness to pay (wtp) for each non-price attribute. If the price coefficient is fixed, the distribtion of wtp for an attribute has the same distribution as the attribute’s coefficient, simply scaled by the price coefficient. However, when the price coefficient is random, the distribution of wtp is the ratio of two distributions, which is harder to work with.</li>
@@ -190,7 +190,7 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 <pre><code>##        pf 
 ## 0.9999952</code></pre>
 <blockquote>
-<p>The price coefficient is distributed normal with mean -0.97 and standard deviation 0.20. The cumulative standard normal distribution evaluated at 0.97/0.20=4.85 is more than 0.999, which means that more than 99.9% of the population are estimated to have negative price coefficients. Essentially no one is estimated to have a positive price coefficient.</p>
+<p>The price coefficient is distributed normal with mean -0.97 and standard deviation 0.20. The cumulative standard normal distribution evaluated at 0.97 / 0.20 = 4.85 is more than 0.999, which means that more than 99.9% of the population are estimated to have negative price coefficients. Essentially no one is estimated to have a positive price coefficient.</p>
 </blockquote>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Elec.mxl2 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>pf <span class="op">+</span><span class="st"> </span>cl <span class="op">+</span><span class="st"> </span>loc <span class="op">+</span><span class="st"> </span>wk <span class="op">+</span><span class="st"> </span>tod <span class="op">+</span><span class="st"> </span>seas <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, Electr, 
                    <span class="dt">rpar =</span> <span class="kw">c</span>(<span class="dt">cl =</span> <span class="st">'n'</span>, <span class="dt">loc =</span> <span class="st">'n'</span>, <span class="dt">wk =</span> <span class="st">'n'</span>, 
@@ -204,12 +204,12 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 ##         wk = &quot;n&quot;, tod = &quot;n&quot;, seas = &quot;n&quot;), R = 100, halton = NA, 
 ##     panel = TRUE)
 ## 
-## Frequencies of alternatives:
+## Frequencies of alternatives:choice
 ##       1       2       3       4 
 ## 0.22702 0.26393 0.23816 0.27089 
 ## 
 ## bfgs method
-## 1 iterations, 0h:0m:3s 
+## 1 iterations, 0h:0m:2s 
 ## g'(-H)^-1g = 4.6E-08 
 ## gradient close to zero 
 ## 
@@ -254,7 +254,7 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 ##         wk = &quot;u&quot;, tod = &quot;n&quot;, seas = &quot;n&quot;), R = 100, halton = NA, 
 ##     panel = TRUE)
 ## 
-## Frequencies of alternatives:
+## Frequencies of alternatives:choice
 ##       1       2       3       4 
 ## 0.22702 0.26393 0.23816 0.27089 
 ## 
@@ -302,7 +302,7 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 ##       Max. 
 ##  3.2957982</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">rpar</span>(Elec.mxl3, <span class="st">'wk'</span>))</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASAAAAEgCAMAAAAjXV6yAAAACVBMVEUAAACt2Ob///9szueeAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAFC0lEQVR4nO2d4XbiIBQGWd//offssWqAS4YYMG6Z+dXovXzJFKNBbdNNdklX78C3oyBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBBwTlD6x+ScIGF3sHyXUliej7l7CCdn0DM/FTeGRUEJ5kdHiAe0GT4F5fmYUUVfVgfhLygasyWoKwFvK6YMHX2qNtr7M0jQfZbeZ/fPHE+Pibzd+tmb58Mg68tn/nOYOq+8fdu3O5+jMT8jKPshRfe9Di37rW6K8n0vVW7Lq2kRSIjuC8f8oKDH2W4jqCzaFVQ1RSZSOdOCPaqk7I35SUG3bBZMFLSz33vnoKsFbfMrCZuzR4r7DgkKDjLve24lHnPPwjlBj9dBKTs937JT4f2+x+Pi/vPtFvSVv/voJL2ZPlspwcn9dXj1feWYexJOzqAvYeJR/A5BE1EQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBAwWFD6b7hK0Njh5qEgQEGAggAFAVcLuvo5qs23CPrzYmzCSRQEKAhQEKAgYJ6g8itZ8dXMuoKyr+W1m5YVVH3RkfJXF9R4hCnoZyv44meRv7agqrN+Ja8gZ1BVl54Nga4yfzlBzz878fy++37+eoL6GhTUm68gyFcQ5CsI8hUE+QqCfAVBvoIgX0GQv56g8trCS42qLiv1Wiwo2y7bO4OCsmzVXkF1WbZor6C6rC3IJddy0d43DoO615Jru3FdQfmSa7NxYUF9DQrqzVcQ5CsI8hUE+QqCfAVBvoIgX0GQryDIX0+Qn3LFup5F6WUFlUuuXqxGZam8YSd/dUF+wiwqS/VNj59dcq1rPUmXda8l10BXmb+cID/lOqZBQb35CoJ8BUG+giBfQZCvIMhXEOQrCPIVBPnrCSr+hb2XGnVd2m54sRqUpXgrzF9bULtTQdCooMd2MZtccs1rm13LCgqWXPfzlxOULbn61vPbDQrqzVcQ5CsI8hUE+QqCfAVBvoIgX0GQryDIX09Qef0O+csJSnlp6x93LCuoWu5QUFCWyht28hUE+QrK73bJtax1BtV1ryXXdt+6gupPubrk+k6DgnrzFQT5CoJ8BUG+giBfQZCvIMhXEOQrCPLXE5RfWriiGNSl1laUv5qgfLmjWvyo8xWkoLpMQVDWFvT+P869jM8KGhHxFaXvN+dLrs1nsTMR31B6ojn/W679U/QLjvozgt5Pu/yoPytoasTlpYObh0dcXjq4eXjE5aWDm4dHXF46uHl4xOWlg5tXQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgImC5oyvsf/e/8HXuXMBrgRG/n+G9+wmZ/0I+tmE0WdORQmt/SOzXqocrRzZ3Dz3iTetaog7v7hp9yKEfOVweGfT/nxPATBB076F9yDpr3qPliQXM+B3L0CeybBR14MPS/Yjny4ubkyyBfSRMKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCAAUBCgIUBCgIUBCgIEBBgIIABQEKAhQEKAhQEKAgQEGAggAFAQoCFAQoCFAQoCBAQYCCgL8FFXZysmK6+AAAAABJRU5ErkJggg==" /><!-- --></p>
 <blockquote>
 <p>The upper bound is 3.13. The estimated price coefficient is -0.88 and so the willingness to pay for a known provided ranges uniformly from -0.05 to 3.55 cents per kWh.</p>
 </blockquote>
@@ -314,9 +314,8 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 <li>Rerun the model with a fixed coefficient for price and lognormal distributions for the coefficients of TOD and seasonal (since their coefficient should be negative for all people.) To do this, you need to reverse the sign of the TOD and seasonal variables, since the lognormal is always positive and you want the these coefficients to be always negative.</li>
 </ol>
 <p>A lognormal is specified as <span class="math inline">\(\exp(b+se)\)</span> where <span class="math inline">\(e\)</span> is a standard normal deviate. The parameters of the lognormal are <span class="math inline">\(b\)</span> and <span class="math inline">\(s\)</span>. The mean of the lognormal is <span class="math inline">\(\exp(b+0.5s^2)\)</span> and the standard deviation is the mean times <span class="math inline">\(\sqrt{(\exp(s^2))-1}\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electricity, <span class="dt">id =</span> <span class="st">&quot;id&quot;</span>, <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, 
-                      <span class="dt">varying =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">26</span>, <span class="dt">shape =</span> <span class="st">&quot;wide&quot;</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>,
-                      <span class="dt">opposite =</span> <span class="kw">c</span>(<span class="st">'tod'</span>, <span class="st">'seas'</span>))</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Electr &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Electricity, <span class="dt">idx =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;id&quot;</span>)), <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>,
+                <span class="dt">varying =</span> <span class="dv">3</span><span class="op">:</span><span class="dv">26</span>, <span class="dt">sep =</span> <span class="st">&quot;&quot;</span>, <span class="dt">opposite =</span> <span class="kw">c</span>(<span class="st">&quot;tod&quot;</span>, <span class="st">&quot;seas&quot;</span>))</code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Elec.mxl4 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>pf <span class="op">+</span><span class="st"> </span>cl <span class="op">+</span><span class="st"> </span>loc <span class="op">+</span><span class="st"> </span>wk <span class="op">+</span><span class="st"> </span>tod <span class="op">+</span><span class="st"> </span>seas <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, Electr, 
               <span class="dt">rpar =</span> <span class="kw">c</span>(<span class="dt">cl =</span> <span class="st">'n'</span>, <span class="dt">loc =</span> <span class="st">'n'</span>, <span class="dt">wk =</span> <span class="st">'u'</span>, <span class="dt">tod =</span> <span class="st">'ln'</span>, <span class="dt">seas =</span> <span class="st">'ln'</span>), 
               <span class="dt">R =</span> <span class="dv">100</span>, <span class="dt">halton =</span> <span class="ot">NA</span>, <span class="dt">panel =</span> <span class="ot">TRUE</span>)</code></pre></div>
@@ -328,12 +327,12 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 ##         wk = &quot;u&quot;, tod = &quot;ln&quot;, seas = &quot;ln&quot;), R = 100, halton = NA, 
 ##     panel = TRUE)
 ## 
-## Frequencies of alternatives:
+## Frequencies of alternatives:choice
 ##       1       2       3       4 
 ## 0.22702 0.26393 0.23816 0.27089 
 ## 
 ## bfgs method
-## 1 iterations, 0h:0m:2s 
+## 1 iterations, 0h:0m:3s 
 ## g'(-H)^-1g = 6.24E-08 
 ## gradient close to zero 
 ## 
@@ -369,16 +368,99 @@ Electr &lt;-<span class="st"> </span><span class="kw">mlogit.data</span>(Electri
 ## tod       Inf
 ## seas      Inf</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(<span class="kw">rpar</span>(Elec.mxl4, <span class="st">'seas'</span>))</code></pre></div>
-<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
 <ol start="6" class="example" style="list-style-type: decimal">
 <li>Rerun the same model as previously, but allowing now the correlation between random parameters. Compute the correlation matrix of the random parameters. Test the hypothesis that the random parameters are uncorrelated.</li>
 </ol>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Elec.mxl5 &lt;-<span class="st"> </span><span class="kw">update</span>(Elec.mxl4, <span class="dt">correlation =</span> <span class="ot">TRUE</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co">#summary(Elec.mxl5)</span>
-<span class="co">#cor.mlogit(Elec.mxl5)</span>
-<span class="co">#lrtest(Elec.mxl5, Elec.mxl4)</span>
-<span class="co">#waldtest(Elec.mxl5, correlation = FALSE)</span>
-<span class="co">#scoretest(Elec.mxl4, correlation = TRUE)</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(Elec.mxl5)</code></pre></div>
+<pre><code>## 
+## Call:
+## mlogit(formula = choice ~ pf + cl + loc + wk + tod + seas | 0, 
+##     data = Electr, start = strt, rpar = c(cl = &quot;n&quot;, loc = &quot;n&quot;, 
+##         wk = &quot;u&quot;, tod = &quot;ln&quot;, seas = &quot;ln&quot;), R = 100, correlation = TRUE, 
+##     halton = NA, panel = TRUE)
+## 
+## Frequencies of alternatives:choice
+##       1       2       3       4 
+## 0.22702 0.26393 0.23816 0.27089 
+## 
+## bfgs method
+## 1 iterations, 0h:0m:3s 
+## g'(-H)^-1g = 3.73E-07 
+## gradient close to zero 
+## 
+## Coefficients :
+##                  Estimate Std. Error  z-value  Pr(&gt;|z|)    
+## pf             -0.9177181  0.0340200 -26.9758 &lt; 2.2e-16 ***
+## cl             -0.2158542  0.0138413 -15.5950 &lt; 2.2e-16 ***
+## loc             2.3925696  0.0869029  27.5315 &lt; 2.2e-16 ***
+## wk              1.7475365  0.0712087  24.5411 &lt; 2.2e-16 ***
+## tod             2.1554746  0.0337206  63.9217 &lt; 2.2e-16 ***
+## seas            2.1695605  0.0334577  64.8448 &lt; 2.2e-16 ***
+## chol.cl:cl      0.3962539  0.0187077  21.1814 &lt; 2.2e-16 ***
+## chol.cl:loc     0.6175136  0.0924281   6.6810 2.373e-11 ***
+## chol.loc:loc   -2.0717172  0.1063246 -19.4848 &lt; 2.2e-16 ***
+## chol.cl:wk      0.1952590  0.0731907   2.6678  0.007635 ** 
+## chol.loc:wk    -1.2366541  0.0866096 -14.2785 &lt; 2.2e-16 ***
+## chol.wk:wk      0.6431944  0.0742354   8.6643 &lt; 2.2e-16 ***
+## chol.cl:tod     0.0019817  0.0104181   0.1902  0.849141    
+## chol.loc:tod    0.0625074  0.0119608   5.2260 1.732e-07 ***
+## chol.wk:tod     0.1606713  0.0138054  11.6383 &lt; 2.2e-16 ***
+## chol.tod:tod    0.3758504  0.0209474  17.9426 &lt; 2.2e-16 ***
+## chol.cl:seas    0.0259973  0.0098344   2.6435  0.008205 ** 
+## chol.loc:seas  -0.0012255  0.0098997  -0.1238  0.901483    
+## chol.wk:seas    0.1413800  0.0128750  10.9810 &lt; 2.2e-16 ***
+## chol.tod:seas   0.0899893  0.0109769   8.1981 2.220e-16 ***
+## chol.seas:seas  0.2112423  0.0141902  14.8865 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Log-Likelihood: -3851.4
+## 
+## random coefficients
+##           Min.    1st Qu.     Median       Mean     3rd Qu.
+## cl        -Inf -0.4831234 -0.2158542 -0.2158542  0.05141502
+## loc       -Inf  0.9344645  2.3925696  2.3925696  3.85067469
+## wk   0.3400072  1.0437718  1.7475365  1.7475365  2.45130110
+## tod  0.0000000  6.5310440  8.6319857  9.4024428 11.40876968
+## seas 0.0000000  7.2924594  8.7544353  9.0816328 10.50950485
+##          Max.
+## cl        Inf
+## loc       Inf
+## wk   3.155066
+## tod       Inf
+## seas      Inf</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor.mlogit</span>(Elec.mxl5)</code></pre></div>
+<pre><code>##               cl         loc         wk          tod       seas
+## cl   1.000000000  0.28564925 0.13872467  0.004792336 0.09596640
+## loc  0.285649252  1.00000000 0.88161832 -0.143495905 0.03174792
+## wk   0.138724672  0.88161832 1.00000000  0.045410056 0.25577355
+## tod  0.004792336 -0.14349591 0.04541006  1.000000000 0.50449234
+## seas 0.095966400  0.03174792 0.25577355  0.504492337 1.00000000</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lrtest</span>(Elec.mxl5, Elec.mxl4)</code></pre></div>
+<pre><code>## Likelihood ratio test
+## 
+## Model 1: choice ~ pf + cl + loc + wk + tod + seas | 0
+## Model 2: choice ~ pf + cl + loc + wk + tod + seas | 0
+##   #Df  LogLik  Df  Chisq Pr(&gt;Chisq)    
+## 1  21 -3851.4                          
+## 2  11 -3976.5 -10 250.18  &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">waldtest</span>(Elec.mxl5, <span class="dt">correlation =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<pre><code>## 
+##  Wald test
+## 
+## data:  uncorrelated random effects
+## chisq = 466.48, df = 10, p-value &lt; 2.2e-16</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">scoretest</span>(Elec.mxl4, <span class="dt">correlation =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<pre><code>## 
+##  score test
+## 
+## data:  correlation = TRUE
+## chisq = 157.35, df = 10, p-value &lt; 2.2e-16
+## alternative hypothesis: uncorrelated random effects</code></pre>
 <blockquote>
 <p>The three tests clearly reject the hypothesis that the random parameters are uncorrelated.</p>
 </blockquote>

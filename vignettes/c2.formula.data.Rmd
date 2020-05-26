@@ -48,7 +48,7 @@ repeated choice of destinations for vacations by families:
 
 The unit of observation is therefore the choice situation, and it is
 also the individual if there is only one choice situation per
-individual observed, which is often the case. 
+individual observed, which is often the case.
 
 Such data have therefore a specific structure that can be
 characterized by three indexes: the alternative, the choice situation
@@ -61,10 +61,10 @@ each choice situation) or a *long* shape (one row for each alternative
 and, therefore, as many rows as there are alternatives for each choice
 situation).
 
-`mlogit` deals with both format. It provides a `mlogit.data` function
-that take as first argument a `data.frame` and returns a `data.frame`
-in "long" format with some supplementary information about the
-structure of the data.
+`mlogit` deals with both format. It depends on the `dfidx` package
+which takes as first argument a `data.frame` and returns a
+`dfidx` object, which is a `data.frame` in "long" format with a
+special data frame column which contains the indexes.
 
 ### Wide format
 
@@ -73,6 +73,7 @@ structure of the data.
 
 ```{r label = 'Train data'}
 data("Train", package = "mlogit")
+Train$choiceid <- 1:nrow(Train)
 head(Train, 3)
 ``` 
 
@@ -90,7 +91,7 @@ only once in the data. Otherwise, it is cumbersome for alternative
 specific variables because there are as many columns for such
 variables that there are alternatives.
 
-For such a wide data set, the `shape` argument of `mlogit.data` is
+For such a wide data set, the `shape` argument of `dfidx` is
 mandatory, as its default value is `"long"`. The alternative specific
 variables are indicated with the `varying` argument which is a numeric
 vector that indicates their position in the data frame. This argument
@@ -103,10 +104,9 @@ has to be transformed in a logical value in the long format.  To take
 the panel dimension into account, one has to add an argument `id.var`
 which is the name of the individual index.
 
-```{r label = 'mlogit.data for Train'}
-Tr <- mlogit.data(Train, shape = "wide", choice = "choice",
-                  varying = 4:11, sep = "_", id.var = "id",
-                  opposite = c("price", "comfort", "time", "change"))
+```{r label = 'dfidx for Train'}
+Tr <- dfidx(Train, shape = "wide", varying = 4:11, sep = "_",
+            idx = list(c("choiceid", "id")), idnames = c(NA, "alt"))
 ``` 
 
 Note the use of the `opposite` argument for the 4 covariates: we
@@ -124,14 +124,13 @@ Tr$time <- Tr$time / 60
 head(Tr, 3)
 ``` 
 
-An `index` attribute is added to the data, which contains the
-three relevant indexes: `chid` is the choice situation index,
-`alt` the alternative index and `id` is the individual
-index. This attribute is a `data.frame` that can be extracted
-using the `index` function.
+An `idx` column is added to the data, which contains the three
+relevant indexes: `choiceid` is the choice situation index, `alt` the
+alternative index and `id` is the individual index. This column can be
+extracted using the `idx` funtion:
 
 ```{r label = 'index of the transformed Train data set'}
-head(index(Tr), 3)
+head(idx(Tr), 3)
 ``` 
 
 ### Long format
@@ -164,15 +163,15 @@ To replicate published results later in the text, we'll use only a
 subset of the choice situations, namely those for which the 4
 alternatives are available. This can be done using the `subset`
 function with the `subset` argument set to `noalt == 4` while
-estimating the model. This can also be done within `mlogit.data`,
-using the `subset` argument.
+estimating the model. This can also be done within `dfidx`, using the
+`subset` argument.
 
 The information about the structure of the data can be explicitly
 indicated using choice situations and alternative indexes
 (respectively `case` and `alt` in this data set) or, in part, guessed
-by the `mlogit.data` function. Here, after subsetting, we have 2779
-choice situations with 4 alternatives, and the rows are ordered first
-by choice situation and then by alternative (`train`, `air`, `bus` and
+by the `dfidx` function. Here, after subsetting, we have 2779 choice
+situations with 4 alternatives, and the rows are ordered first by
+choice situation and then by alternative (`train`, `air`, `bus` and
 `car` in this order).
 
 The first way to read correctly this data frame is to ignore
@@ -181,9 +180,9 @@ supplementary argument to provide is the `alt.levels` argument which
 is a character vector that contains the name of the alternatives in
 their order of appearance:
 
-```{r label = 'applying mlogit.data to Modecanada (1)'}
-MC <- mlogit.data(ModeCanada, subset = noalt == 4,
-                  alt.levels = c("train", "air", "bus", "car"))
+```{r label = 'applying dfidx to Modecanada (1)'}
+MC <- dfidx(ModeCanada, subset = noalt == 4,
+            alt.levels = c("train", "air", "bus", "car"))
 ``` 
 
 Note that this can only be used if the data set is "balanced", which
@@ -192,30 +191,37 @@ situations.  It is also possible to provide an argument `alt.var`
 which indicates the name of the variable that contains the
 alternatives
 
-```{r label = 'applying mlogit.data to Modecanada (2)'}
-MC <- mlogit.data(ModeCanada , subset = noalt == 4, alt.var = "alt")
+```{r label = 'applying dfidx to Modecanada (2)'}
+MC <- dfidx(ModeCanada, subset = noalt == 4, idx = list(NA, "alt"))
 ``` 
 
 The name of the variable that contains the information about the
 choice situations can be indicated using the `chid.var` argument:
 
-```{r label = 'applying mlogit.data to Modecanada (3)'}
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.levels = c("train", "air", "bus", "car"))
+```{r label = 'applying dfidx to Modecanada (3)'}
+MC <- dfidx(ModeCanada, subset = noalt == 4, idx = "case",
+            alt.levels = c("train", "air", "bus", "car"))
 ``` 
 
 Both alternative and choice situation variable can also be provided:
 
-```{r label = 'applying mlogit.data to Modecanada (4)'}
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.var = "alt")
+```{r label = 'applying dfidx to Modecanada (4)'}
+MC <- dfidx(ModeCanada, subset = noalt == 4, idx = c("case", "alt"))
 ``` 
+More simply, as the two indexes are stored in the first two columns of
+the original data frame, the `idx` argument can be unset:
 
-and dropped from the data frame using the `drop.index` argument:
 
-```{r label = 'applying mlogit.data to Modecanada (5)'}
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.var = "alt", drop.index = TRUE)
+```{r label = 'ModeCanada without idx'}
+MC <- dfidx(ModeCanada, subset = noalt == 4)
+```
+
+and the indexes can be kept as stand alone series if the `drop.index`
+argument is set to `FALSE`:
+
+```{r label = 'applying dfidx to Modecanada (5)'}
+MC <- dfidx(ModeCanada, subset = noalt == 4, idx = c("case", "alt"),
+            drop.index = FALSE)
 head(MC)
 ``` 
 
@@ -327,7 +333,8 @@ covariates (part 2),
   alternative specific coefficients  are expected (part 3).
 
 ```{r label = 'a three parts formula'}
-f <- mFormula(choice ~ cost | income + urban | ivt)
+library("Formula")
+f <- Formula(choice ~ cost | income + urban | ivt)
 ``` 
 
 Some parts of the formula may be omitted when there is no
@@ -335,27 +342,27 @@ ambiguity. For example, the following sets of `formula`s are
 identical:
 
 ```{r label = 'ommission of some parts (1)'}
-f2 <- mFormula(choice ~ cost + ivt | income + urban)
-f2 <- mFormula(choice ~ cost + ivt | income + urban | 0)
+f2 <- Formula(choice ~ cost + ivt | income + urban)
+f2 <- Formula(choice ~ cost + ivt | income + urban | 0)
 ``` 
 
 ```{r label = 'ommission of some parts (2)'}
-f3 <- mFormula(choice ~ 0 | income | 0)
-f3 <- mFormula(choice ~ 0 | income)
+f3 <- Formula(choice ~ 0 | income | 0)
+f3 <- Formula(choice ~ 0 | income)
 ``` 
 
 ```{r label = 'ommission of some parts (3)'}
-f4 <- mFormula(choice ~ cost + ivt)
-f4 <- mFormula(choice ~ cost + ivt | 1)
-f4 <- mFormula(choice ~ cost + ivt | 1 | 0)
+f4 <- Formula(choice ~ cost + ivt)
+f4 <- Formula(choice ~ cost + ivt | 1)
+f4 <- Formula(choice ~ cost + ivt | 1 | 0)
 ``` 
 
 By default, an intercept is added to the model, it can be removed by
 using `+ 0` or `- 1` in the second part.
 
 ```{r label = 'removing the intercept'}
-f5 <- mFormula(choice ~ cost | income + 0 | ivt)
-f5 <- mFormula(choice ~ cost | income - 1 | ivt)
+f5 <- Formula(choice ~ cost | income + 0 | ivt)
+f5 <- Formula(choice ~ cost | income - 1 | ivt)
 ``` 
 
 `model.frame` and `model.matrix` methods are provided for `mFormula`
@@ -363,8 +370,9 @@ objects. The latter is of particular interest, as illustrated in the
 following example:
 
 ```{r label = 'model.matrix method for Formula objects'}
-f <- mFormula(choice ~ cost | income  | ivt)
-head(model.matrix(f, MC), 4)
+f <- Formula(choice ~ cost | income  | ivt)
+mf <- model.frame(MC, f)
+head(model.matrix(mf), 4)
 ``` 
 
 The model matrix contains $J-1$ columns for every choice situation specific

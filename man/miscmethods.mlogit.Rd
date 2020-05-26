@@ -12,11 +12,12 @@
 \alias{logLik.mlogit}
 \alias{summary.mlogit}
 \alias{print.summary.mlogit}
-\alias{index.mlogit}
 \alias{predict.mlogit}
 \alias{fitted.mlogit}
 \alias{coef.mlogit}
 \alias{coef.summary.mlogit}
+\alias{idx.mlogit}
+\alias{idx_name.mlogit}
 \title{Methods for mlogit objects}
 \usage{
 \method{residuals}{mlogit}(object, outcome = TRUE, ...)
@@ -49,7 +50,9 @@ model.response.mlogit(object, ...)
   ...
 )
 
-\method{index}{mlogit}(x, ...)
+\method{idx}{mlogit}(x, n = NULL, m = NULL)
+
+\method{idx_name}{mlogit}(x, n = NULL, m = NULL)
 
 \method{predict}{mlogit}(object, newdata = NULL, returnData = FALSE, ...)
 
@@ -93,6 +96,8 @@ parameters should be displayed : \code{"chol"} for the estimated
 parameters (the elements of the Cholesky decomposition matrix),
 \code{"cov"} for the covariance matrix and \code{"cor"} for the
 correlation matrix and the standard deviations,}
+
+\item{n, m}{see \code{\link[dfidx:idx]{dfidx::idx()}}}
 
 \item{newdata}{a \code{data.frame} for the \code{predict} method,}
 

@@ -5,9 +5,10 @@ options(width = 65)
 ## ----label = 'multinomial logit for the Train data'------------
 library("mlogit")
 data("Train", package = "mlogit")
-Tr <- mlogit.data(Train, shape = "wide", choice = "choice",
-                  varying = 4:11, sep = "_", id.var = "id",
-                  opposite = c("price", "comfort", "time", "change"))
+Train$choiceid <- 1:nrow(Train)
+Tr <- dfidx(Train, choice = "choice", varying = 4:11, sep = "_",
+            opposite = c("price", "comfort", "time", "change"),
+            idx = list(c("choiceid", "id")), idnames = c("chid", "alt"))
 Tr$price <- Tr$price / 100 * 2.20371
 Tr$time <- Tr$time / 60
 Train.ml <- mlogit(choice ~ price + time + change + comfort | - 1, Tr)
@@ -80,14 +81,15 @@ lr.corr <- lrtest(Train.mxlc, Train.mxlu)
 lh.corr <- linearHypothesis(Train.mxlc, c("chol.time:change = 0",
 "chol.time:comfort = 0", "chol.change:comfort = 0"))
 wd.corr <- waldtest(Train.mxlc, correlation = FALSE)
+#YC
 sc.corr <- scoretest(Train.mxlu, correlation = TRUE)
 sapply(list(wald = wd.corr, lh = lh.corr, score = sc.corr, lr = lr.corr),
 statpval)
 
 ## ----label = 'multinomial model for RiskyTransport'------------
 data("RiskyTransport", package = "mlogit")
-RT <- mlogit.data(RiskyTransport, shape = "long", choice = "choice", 
-chid.var = "chid", alt.var = "mode", id.var = "id")
+RT <- dfidx(RiskyTransport, choice = "choice", idx = list(c("chid", "id"), "mode"),
+            idnames = c("chid", "alt"))
 ml.rt <- mlogit(choice ~ cost + risk  + seats + noise + crowdness +
 convloc + clientele | 0, data = RT, weights = weight)
 
@@ -118,11 +120,12 @@ mean(indpar$VSL)
 max(indpar$cost)
 max(indpar$VSL)
 
-## ----plotindpar, fig.cap = "The value of a statistical life."----
-library("ggplot2")
-indpar <- merge(unique(subset(as.data.frame(RT),
-                              select = c("id", "african"))),
-                indpar)
-ggplot(indpar) + geom_density(aes(x = VSL, linetype = african)) + 
-    scale_x_continuous(limits = c(200, 1200))
+## ----plotindpar, fig.cap = "The value of a statistical life.", eval = FALSE----
+#  library("ggplot2")
+#  RT$id <- RT$id
+#  indpar <- merge(unique(subset(as.data.frame(RT),
+#                                select = c("id", "african"))),
+#                  indpar)
+#  ggplot(indpar) + geom_density(aes(x = VSL, linetype = african)) +
+#      scale_x_continuous(limits = c(200, 1200))
 

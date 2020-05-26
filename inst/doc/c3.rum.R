@@ -2,16 +2,15 @@
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, widtht = 65)
 options(width = 65)
 
-## ----label = 'multinomial logit with a mlogit.data'------------
+## ----label = 'multinomial logit with a dfidx'------------------
 library("mlogit")
 data("ModeCanada", package = "mlogit")
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.var = "alt", drop.index = TRUE)
+MC <- dfidx(ModeCanada, subset = noalt == 4)
 ml.MC1 <- mlogit(choice ~ cost + freq + ovt | income | ivt, MC)
 
 ## ----label = 'multinomial logit with an ordinary data.frame'----
 ml.MC1b <- mlogit(choice ~ cost + freq + ovt | income | ivt, ModeCanada,
-subset = noalt == 4, alt.var = "alt", chid.var = "case")
+subset = noalt == 4, idx = c("case", "alt"))
 
 ## ----label = 'estimation on a subset of alternatives'----------
 MC$time <- with(MC, ivt + ovt)
@@ -35,8 +34,9 @@ predict(ml.MC1)
 
 ## ----label = 'predicting with different data'------------------
 NMC <- MC
-NMC[index(NMC)$alt == "train", "time"] <- 0.8 *
-NMC[index(NMC)$alt == "train", "time"]
+# YC2020/05/03 should replace everywhere index() by idx()
+NMC[idx(NMC)$alt == "train", "time"] <- 0.8 *
+NMC[idx(NMC)$alt == "train", "time"]
 Oprob <- fitted(ml.MC1, type = "probabilities")
 Nprob <- predict(ml.MC1, newdata = NMC)
 rbind(old = apply(Oprob, 2, mean), new = apply(Nprob, 2, mean))
@@ -68,12 +68,13 @@ coef(ml.MC1)[grep("time", names(coef(ml.MC1)))] /
 ## ----label = 'estimation of the multinomial logit model for the NOx data'----
 data("NOx", package = "mlogit")
 NOx$kdereg <- with(NOx, kcost * (env == "deregulated"))
-NOxml <- mlogit.data(NOx, chid.var = "chid", alt.var = "alt",
-id.var = "id")
+NOxml <- dfidx(NOx, idx = list(c("chid", "id"), "alt"))
 ml.pub <- mlogit(choice ~ post + cm + lnb + vcost + kcost + kcost:age |
 - 1, subset = available & env == "public", data = NOxml)
 ml.reg <- update(ml.pub, subset = available & env == "regulated")
 ml.dereg <- update(ml.pub, subset = available & env == "deregulated")
+ml.pool <- ml.dereg
+# YC gestion de la quatrième partie
 ml.pool <- mlogit(choice ~ post + cm + lnb + vcost + kcost + kcost:age +
 kdereg | - 1 | 0 | env, subset = available == 1, data = NOxml,
 method = "bhhh")

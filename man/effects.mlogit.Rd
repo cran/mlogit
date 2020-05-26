@@ -50,14 +50,14 @@ Fish <- mlogit.data(Fishing, varying = c(2:9), shape = "wide", choice = "mode")
 m <- mlogit(mode ~ price | income | catch, data = Fish)
 # compute a data.frame containing the mean value of the covariates in
 # the sample
-z <- with(Fish, data.frame(price = tapply(price, index(m)$alt, mean),
-                           catch = tapply(catch, index(m)$alt, mean),
+z <- with(Fish, data.frame(price = tapply(price, idx(m, 2), mean),
+                           catch = tapply(catch, idx(m, 2), mean),
                            income = mean(income)))
 # compute the marginal effects (the second one is an elasticity
 ## IGNORE_RDIFF_BEGIN
 effects(m, covariate = "income", data = z)
 ## IGNORE_RDIFF_END
-#' effects(m, covariate = "price", type = "rr", data = z)
+effects(m, covariate = "price", type = "rr", data = z)
 effects(m, covariate = "catch", type = "ar", data = z)
 }
 \seealso{

@@ -55,8 +55,9 @@ halton sequences and taking into account the panel data structure.
 ```{r }
 library("mlogit")
 data("Electricity", package = "mlogit")
-Electr <- mlogit.data(Electricity, id = "id", choice = "choice", 
-                      varying = 3:26, shape = "wide", sep = "")
+Electricity$chid <- 1:nrow(Electricity)
+Electr <- dfidx(Electricity, idx = list(c("chid", "id")),
+                choice = "choice", varying = 3:26, sep = "")
 ``` 
 
 ```{r Elec.mxl, echo = FALSE, results = 'hide'}
@@ -108,7 +109,7 @@ pnorm(- coef(Elec.mxl)['cl'] / coef(Elec.mxl)['sd.cl'])
 > The coefficient of length is normally distributed with mean -0.20 and
 > standard deviation 0.35. The share of people with coefficients below
 > zero is the cumulative probability of a standardized normal deviate
-> evaluated at 0.20/0.35=0.57. Looking 0.57 up in a table of the
+> evaluated at 0.20 / 0.3 5=0. 57. Looking 0.57 up in a table of the
 > standard normal distribution, we find that the share below 0.57 is
 > 0.72. About seventy percent of the population are estimated to dislike
 > long-term contracts.
@@ -137,8 +138,8 @@ pnorm(- coef(Elec.mxl)['pf'] / coef(Elec.mxl)['sd.pf'])
 
 > The price coefficient is distributed normal with mean -0.97 and
 > standard deviation 0.20. The cumulative standard normal distribution
-> evaluated at 0.97/0.20=4.85 is more than 0.999, which means that more
-> than 99.9\% of the population are estimated to have negative price
+> evaluated at 0.97 / 0.20 = 4.85 is more than 0.999, which means that more
+> than 99.9% of the population are estimated to have negative price
 > coefficients. Essentially no one is estimated to have a positive price
 > coefficient.
 
@@ -167,9 +168,8 @@ summary(Elec.mxl2)
 @. You think that everyone must like using a known company rather than
 an unknown one, and yet the normal distribution implies that some
 people dislike using a known company. Revise the program to give the
-coefficient of \va{wk} a uniform distribution 
-between zero and b,where b is estimated 
-(do this with the price coefficient fixed).
+coefficient of \va{wk} a uniform distribution between zero and b,where
+b is estimated (do this with the price coefficient fixed).
 
 ```{r Elec.mxl3, echo = FALSE, results = 'hide'}
 strt <- c(-0.8685207, -0.2103447,  2.0269971,  1.4773713,  8.3994921,  8.4976319, 
@@ -200,9 +200,9 @@ summary(rpar(Elec.mxl3, 'wk'))
 plot(rpar(Elec.mxl3, 'wk'))
 ```
 
-> The upper bound is 3.13. The estimated price coefficient is -0.88 and
-> so the willingness to pay for a known provided ranges uniformly from
-> -0.05 to 3.55 cents per kWh.
+> The upper bound is 3.13. The estimated price coefficient is -0.88
+> and so the willingness to pay for a known provided ranges uniformly
+> from -0.05 to 3.55 cents per kWh.
 
 
  <!-- 5. The file mxlp.g estimates mixed logits with many options for the -->
@@ -238,9 +238,8 @@ mean of the lognormal is $\exp(b+0.5s^2)$ and the standard deviation
 is the mean times $\sqrt{(\exp(s^2))-1}$.
 
 ```{r }
-Electr <- mlogit.data(Electricity, id = "id", choice = "choice", 
-                      varying = 3:26, shape = "wide", sep = "",
-                      opposite = c('tod', 'seas'))
+Electr <- dfidx(Electricity, idx = list(c("chid", "id")), choice = "choice",
+                varying = 3:26, sep = "", opposite = c("tod", "seas"))
 ``` 
 
 ```{r Elec.mxl4, echo = FALSE, results = 'hide'}
@@ -276,7 +275,7 @@ strt <-  c(-0.917703974, -0.215851727,  2.392570989,  1.747531863,  2.155462393,
            -1.236664544,  0.643190285,  0.001982314,  0.062508396,  0.160672338,
            0.375855648,  0.025996362, -0.001225349,  0.141381623,  0.089990150,
            0.211244575)
-#Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE, start = strt)
+Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE, start = strt)
 ``` 
   
 ```{r eval = FALSE}
@@ -284,11 +283,11 @@ Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE)
 ``` 
 
 ```{r }
-#summary(Elec.mxl5)
-#cor.mlogit(Elec.mxl5)
-#lrtest(Elec.mxl5, Elec.mxl4)
-#waldtest(Elec.mxl5, correlation = FALSE)
-#scoretest(Elec.mxl4, correlation = TRUE)
+summary(Elec.mxl5)
+cor.mlogit(Elec.mxl5)
+lrtest(Elec.mxl5, Elec.mxl4)
+waldtest(Elec.mxl5, correlation = FALSE)
+scoretest(Elec.mxl4, correlation = TRUE)
 ``` 
 
 > The three tests clearly reject the hypothesis that the random

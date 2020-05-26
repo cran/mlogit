@@ -17,6 +17,15 @@ Type 'q()' to quit R.
 
 > # BankWages.Rd
 > 
+> library("lmtest")
+Loading required package: zoo
+
+Attaching package: 'zoo'
+
+The following objects are masked from 'package:base':
+
+    as.Date, as.Date.numeric
+
 > data("BankWages", package = "AER")
 > 
 > ## exploratory analysis of job ~ education
@@ -87,16 +96,14 @@ minorityyes  -4.367053  -0.7050288
 > 
 > ## same with mlogit package
 > library("mlogit")
-Loading required package: Formula
-Loading required package: zoo
+Loading required package: dfidx
 
-Attaching package: 'zoo'
+Attaching package: 'dfidx'
 
-The following objects are masked from 'package:base':
+The following object is masked from 'package:stats':
 
-    as.Date, as.Date.numeric
+    filter
 
-Loading required package: lmtest
 > fm_mlogit <- mlogit(job ~ 1 | education + minority, data = BankWages, subset = gender == "male", shape = "wide", choice = "job", reflevel = "custodial")
 > summary(fm_mlogit)
 
@@ -105,7 +112,7 @@ mlogit(formula = job ~ 1 | education + minority, data = BankWages,
     subset = gender == "male", reflevel = "custodial", shape = "wide", 
     choice = "job", method = "nr")
 
-Frequencies of alternatives:
+Frequencies of alternatives:choice
 custodial     admin    manage 
   0.10465   0.60853   0.28682 
 
@@ -116,12 +123,12 @@ successive function values within tolerance limits
 
 Coefficients :
                      Estimate Std. Error z-value  Pr(>|z|)    
-admin:(intercept)   -4.760722   1.172774 -4.0594 4.921e-05 ***
-manage:(intercept) -30.774826   4.478608 -6.8715 6.352e-12 ***
-admin:education      0.553399   0.099041  5.5876 2.303e-08 ***
-manage:education     2.186770   0.294835  7.4169 1.199e-13 ***
-admin:minorityyes   -0.426952   0.502708 -0.8493  0.395712    
-manage:minorityyes  -2.536041   0.934207 -2.7146  0.006635 ** 
+(Intercept):admin   -4.760722   1.172774 -4.0594 4.921e-05 ***
+(Intercept):manage -30.774826   4.478608 -6.8715 6.352e-12 ***
+education:admin      0.553399   0.099041  5.5876 2.303e-08 ***
+education:manage     2.186770   0.294835  7.4169 1.199e-13 ***
+minorityyes:admin   -0.426952   0.502708 -0.8493  0.395712    
+minorityyes:manage  -2.536041   0.934207 -2.7146  0.006635 ** 
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
@@ -155,7 +162,7 @@ Call:
 mlogit(formula = choice ~ gcost + wait + incair, data = TravelMode, 
     reflevel = "car", shape = "long", alt.var = "mode", method = "nr")
 
-Frequencies of alternatives:
+Frequencies of alternatives:choice
     car     air   train     bus 
 0.28095 0.27619 0.30000 0.14286 
 
@@ -166,9 +173,9 @@ successive function values within tolerance limits
 
 Coefficients :
                    Estimate Std. Error z-value  Pr(>|z|)    
-air:(intercept)    5.207433   0.779055  6.6843 2.320e-11 ***
-train:(intercept)  3.869036   0.443127  8.7312 < 2.2e-16 ***
-bus:(intercept)    3.163190   0.450266  7.0252 2.138e-12 ***
+(Intercept):air    5.207433   0.779055  6.6843 2.320e-11 ***
+(Intercept):train  3.869036   0.443127  8.7312 < 2.2e-16 ***
+(Intercept):bus    3.163190   0.450266  7.0252 2.138e-12 ***
 gcost             -0.015501   0.004408 -3.5167  0.000437 ***
 wait              -0.096125   0.010440 -9.2075 < 2.2e-16 ***
 incair             0.013287   0.010262  1.2947  0.195414    
@@ -262,18 +269,18 @@ converged
 + coeftest(gsoep_mnl2)[1:12,]
 + }
                                   Estimate Std. Error   t value     Pr(>|t|)
-Gymnasium:(intercept)          -23.6982768 3.01026604 -7.872486 1.475202e-14
-Realschule:(intercept)          -6.3865987 2.36904833 -2.695850 7.204061e-03
-Gymnasium:meducation             0.6597829 0.08144157  8.101304 2.726719e-15
-Realschule:meducation            0.3004923 0.07910725  3.798543 1.593085e-04
-Gymnasium:memploymentparttime    0.9372401 0.34536576  2.713761 6.830145e-03
-Realschule:memploymentparttime   0.4933644 0.32189760  1.532675 1.258463e-01
-Gymnasium:memploymentnone        1.1007670 0.35842942  3.071084 2.222541e-03
-Realschule:memploymentnone       0.7526490 0.32884523  2.288764 2.241551e-02
-Gymnasium:log(income)            1.6677258 0.28408738  5.870468 6.954975e-09
-Realschule:log(income)           0.3934899 0.22539876  1.745750 8.133056e-02
-Gymnasium:log(size)             -1.5459256 0.48775919 -3.169444 1.599570e-03
-Realschule:log(size)            -1.1921835 0.44641174 -2.670592 7.762668e-03
+(Intercept):Gymnasium          -23.6982768 3.01026604 -7.872486 1.475202e-14
+(Intercept):Realschule          -6.3865987 2.36904833 -2.695850 7.204061e-03
+meducation:Gymnasium             0.6597829 0.08144157  8.101304 2.726719e-15
+meducation:Realschule            0.3004923 0.07910725  3.798543 1.593085e-04
+memploymentparttime:Gymnasium    0.9372401 0.34536576  2.713761 6.830145e-03
+memploymentparttime:Realschule   0.4933644 0.32189760  1.532675 1.258463e-01
+memploymentnone:Gymnasium        1.1007670 0.35842942  3.071084 2.222541e-03
+memploymentnone:Realschule       0.7526490 0.32884523  2.288764 2.241551e-02
+log(income):Gymnasium            1.6677258 0.28408738  5.870468 6.954975e-09
+log(income):Realschule           0.3934899 0.22539876  1.745750 8.133056e-02
+log(size):Gymnasium             -1.5459256 0.48775919 -3.169444 1.599570e-03
+log(size):Realschule            -1.1921835 0.44641174 -2.670592 7.762668e-03
 > 
 > ##################################
 > ## Choice of Brand for Crackers ##
@@ -300,6 +307,38 @@ Realschule:log(size)            -1.1921835 0.44641174 -2.670592 7.762668e-03
 +   alt.subset = c("keebler", "nabisco", "sunshine"))
 + hmftest(crack_mlogit_all, crack_mlogit_res)
 + }
+~~~~~~~
+ first 12 observations out of 13168 
+~~~~~~~
+   id choice      alt disp feat price chid    idx
+1   1  FALSE  keebler    0    0    88    1 1:bler
+2   1   TRUE  nabisco    0    0   120    1 1:isco
+3   1  FALSE  private    0    0    71    1 1:vate
+4   1  FALSE sunshine    0    0    98    1 1:hine
+5   1  FALSE  keebler    0    0   109    2 2:bler
+6   1   TRUE  nabisco    0    0    99    2 2:isco
+7   1  FALSE  private    0    0    71    2 2:vate
+8   1  FALSE sunshine    0    0    99    2 2:hine
+9   1  FALSE  keebler    0    0   109    3 3:bler
+10  1  FALSE  nabisco    0    0   109    3 3:isco
+11  1  FALSE  private    0    0    78    3 3:vate
+12  1   TRUE sunshine    1    0    49    3 3:hine
+
+~~~ indexes ~~~~
+   chid      alt
+1     1  keebler
+2     1  nabisco
+3     1  private
+4     1 sunshine
+5     2  keebler
+6     2  nabisco
+7     2  private
+8     2 sunshine
+9     3  keebler
+10    3  nabisco
+11    3  private
+12    3 sunshine
+indexes:  1, 2 
 
 	Hausman-McFadden test
 
@@ -310,4 +349,4 @@ alternative hypothesis: IIA is rejected
 > 
 > proc.time()
    user  system elapsed 
-  1.422   0.072   1.485 
+  2.148   0.097   2.236 

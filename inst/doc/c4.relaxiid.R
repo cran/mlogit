@@ -5,8 +5,7 @@ options(width = 65)
 ## ----label = 'heteroscedastic model for the ModeCanada data'----
 library("mlogit")
 data("ModeCanada", package = "mlogit")
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.var = "alt", drop.index = TRUE)
+MC <- dfidx(ModeCanada, subset = noalt == 4, idnames = c("chid", "alt"))
 ml.MC <- mlogit(choice ~ freq + cost + ivt + ovt | urban + income, MC, 
 reflevel = 'car', alt.subset = c("car", "train", "air"))
 hl.MC <- mlogit(choice ~ freq + cost + ivt + ovt | urban + income, MC, 
@@ -43,14 +42,14 @@ lr = lr.heter), statpval)
 
 ## ----label = 'loading the JapaneseFDI data set'----------------
 data("JapaneseFDI", package = "mlogit")
-jfdi <- mlogit.data(JapaneseFDI, chid.var = "firm", alt.var = "region",
-group.var = "country")
+jfdi <- dfidx(JapaneseFDI, idx = list("firm", c("region", "country")), idnames = c("chid", "alt"))
 
 ## ----label = 'multinomial logit for JapaneseFDI'---------------
 ml.fdi <- mlogit(choice ~ log(wage) + unemp + elig + log(area) + scrate +
 ctaxrate | 0, data = jfdi)
 
 ## ----label = 'lower model estimation'--------------------------
+jfdi$country <- jfdi$country
 lm.fdi <- mlogit(choice ~ log(wage) + unemp + elig + log(area) | 0,
 data = jfdi, subset = country == choice.c & ! country %in% c("PT", "IE"))
 
@@ -73,13 +72,12 @@ JapaneseFDI.c <- unique(JapaneseFDI.c)
 JapaneseFDI.c$choice.c <- with(JapaneseFDI.c, choice.c == country)
 
 ## ----label = 'estimation of the upper model'-------------------
-jfdi.c <- mlogit.data(JapaneseFDI.c, choice = "choice.c",
-alt.var = "country", chid.var = "firm", shape = "long")
+jfdi.c <- dfidx(JapaneseFDI.c, choice = "choice.c", idnames = c("chid", "alt"))
 um.fdi <- mlogit(choice.c ~ scrate + ctaxrate + iv | 0, data = jfdi.c)
 
 ## ----label = 'upper model with different iv coefficients'------
 um2.fdi <- mlogit(choice.c ~ scrate + ctaxrate | 0 | iv, data = jfdi.c, 
-constPar = c("iv:PT" = 1, "iv:IE" = 1))
+                  constPar = c("iv:PT" = 1, "iv:IE" = 1))
 
 ## ----label = 'nested logit models'-----------------------------
 nl.fdi <- mlogit(choice ~ log(wage) + unemp + elig + log(area) + scrate +
@@ -113,7 +111,7 @@ statpval)
 lr.unest <- lrtest(nl2.fdi, nl.fdi)
 wd.unest <- waldtest(nl2.fdi, un.nest.el = TRUE)
 sc.unest <- scoretest(ml.fdi, nests = TRUE, un.nest.el = FALSE,
-constPar = c('iv:IE' = 1, 'iv:PT' = 1))
+constPar = c('iv:PT' = 1, 'iv:IE' = 1))
 lh.unest <- linearHypothesis(nl2.fdi, c("iv:BE = iv:DE", "iv:BE = iv:ES", 
 "iv:BE = iv:FR", "iv:BE = iv:IT", "iv:BE = iv:NL", "iv:BE = iv:UK"))
 

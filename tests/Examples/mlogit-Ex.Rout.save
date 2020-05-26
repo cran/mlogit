@@ -21,16 +21,14 @@ Type 'q()' to quit R.
 > source(file.path(R.home("share"), "R", "examples-header.R"))
 > options(warn = 1)
 > library('mlogit')
-Loading required package: Formula
-Loading required package: zoo
+Loading required package: dfidx
 
-Attaching package: ‘zoo’
+Attaching package: ‘dfidx’
 
-The following objects are masked from ‘package:base’:
+The following object is masked from ‘package:stats’:
 
-    as.Date, as.Date.numeric
+    filter
 
-Loading required package: lmtest
 > 
 > base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
 > base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
@@ -54,10 +52,10 @@ Loading required package: lmtest
 > ModeCanada <- subset(ModeCanada, alt != "bus")
 > ModeCanada$alt <- ModeCanada$alt[drop = TRUE]
 > KoppWen00 <- mlogit.data(ModeCanada, shape='long', chid.var = 'case',
-+                          alt.var = 'alt', choice='choice',
-+                          drop.index=TRUE)
-> pcl <- mlogit(choice~freq+cost+ivt+ovt, KoppWen00, reflevel='car',
-+               nests='pcl', constPar=c('iv:train.air'))
++                          alt.var = 'alt', choice = 'choice',
++                          drop.index = TRUE)
+> pcl <- mlogit(choice ~ freq + cost + ivt + ovt, KoppWen00, reflevel = 'car',
++               nests = 'pcl', constPar = c('iv:train.air'))
 > 
 > 
 > 
@@ -78,12 +76,19 @@ Loading required package: lmtest
 > 
 > data("Fishing", package = "mlogit")
 > library("zoo")
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
 > Fish <- mlogit.data(Fishing, varying = c(2:9), shape = "wide", choice = "mode")
 > m <- mlogit(mode ~ price | income | catch, data = Fish)
 > # compute a data.frame containing the mean value of the covariates in
 > # the sample
-> z <- with(Fish, data.frame(price = tapply(price, index(m)$alt, mean),
-+                            catch = tapply(catch, index(m)$alt, mean),
+> z <- with(Fish, data.frame(price = tapply(price, idx(m, 2), mean),
++                            catch = tapply(catch, idx(m, 2), mean),
 +                            income = mean(income)))
 > # compute the marginal effects (the second one is an elasticity
 > ## IGNORE_RDIFF_BEGIN
@@ -91,7 +96,12 @@ Loading required package: lmtest
         beach          boat       charter          pier 
  1.132965e-06  3.113068e-05 -2.408677e-05 -8.176877e-06 
 > ## IGNORE_RDIFF_END
-> #' effects(m, covariate = "price", type = "rr", data = z)
+> effects(m, covariate = "price", type = "rr", data = z)
+             beach       boat    charter       pier
+beach   -2.4634447  0.1512128  0.1512128  0.1512128
+boat     0.5797049 -0.8172610  0.5797049  0.5797049
+charter  0.9741351  0.9741351 -1.1590941  0.9741351
+pier     0.1844507  0.1844507  0.1844507 -2.4302068
 > effects(m, covariate = "catch", type = "ar", data = z)
                beach        boat     charter         pier
 beach    0.040943135 -0.01803326 -0.01984425 -0.003065622
@@ -102,6 +112,9 @@ pier    -0.001887074 -0.01354055 -0.01490036  0.030327981
 > 
 > 
 > cleanEx()
+
+detaching ‘package:zoo’
+
 > nameEx("hmftest")
 > ### * hmftest
 > 
@@ -117,25 +130,25 @@ pier    -0.001887074 -0.01354055 -0.01490036  0.030327981
 > 
 > ## from Greene's Econometric Analysis p. 731
 > 
-> data("TravelMode",package="AER")
-> TravelMode <- mlogit.data(TravelMode,choice="choice",shape="long",
-+                           alt.var="mode",chid.var="individual")
+> data("TravelMode", package = "AER")
+> TravelMode <- mlogit.data(TravelMode, choice = "choice", shape = "long",
++                           alt.var = "mode", chid.var = "individual",
++                           drop.index = FALSE)
 > 
 > ## Create a variable of income only for the air mode
 > 
-> TravelMode$avinc <- with(TravelMode,(mode=='air')*income)
+> TravelMode$avinc <- with(TravelMode, (mode == 'air') * income)
 > 
 > ## Estimate the model on all alternatives, with car as the base level
 > ## like in Greene's book.
 > 
-> #x <- mlogit(choice~wait+gcost+avinc,TravelMode,reflevel="car")
-> x <- mlogit(choice~wait+gcost+avinc,TravelMode)
+> x <- mlogit(choice ~ wait + gcost + avinc, TravelMode, reflevel = "car")
 > 
 > ## Estimate the same model for ground modes only (the variable avinc
 > ## must be dropped because it is 0 for every observation
 > 
-> g <- mlogit(choice~wait+gcost,TravelMode,reflevel="car",
-+             alt.subset=c("car","bus","train"))
+> g <- mlogit(choice ~ wait + gcost, TravelMode, reflevel = "car",
++             alt.subset = c("car", "bus", "train"))
 > 
 > ## Compute the test
 > 
@@ -144,70 +157,9 @@ pier    -0.001887074 -0.01354055 -0.01490036  0.030327981
 	Hausman-McFadden test
 
 data:  TravelMode
-chisq = -10.77, df = 4, p-value = 1
+chisq = 33.337, df = 4, p-value = 1.019e-06
 alternative hypothesis: IIA is rejected
 
-> 
-> 
-> 
-> cleanEx()
-> nameEx("mFormula")
-> ### * mFormula
-> 
-> flush(stderr()); flush(stdout())
-> 
-> ### Name: mFormula
-> ### Title: Model formula for logit models
-> ### Aliases: mFormula is.mFormula mFormula.formula model.matrix.mFormula
-> ###   model.frame.mFormula
-> ### Keywords: models
-> 
-> ### ** Examples
-> 
-> 
-> data("Fishing", package = "mlogit")
-> Fish <- mlogit.data(Fishing, varying = c(2:9), shape = "wide", choice =
-+ "mode")
-> 
-> # a formula with to alternative specific variables (price and
-> # catch) and an intercept
-> f1 <- mFormula(mode ~ price + catch)
-> head(model.matrix(f1, Fish), 2)
-        boat:(intercept) charter:(intercept) pier:(intercept)  price  catch
-1.beach                0                   0                0 157.93 0.0678
-1.boat                 1                   0                0 157.93 0.2601
-> 
-> # same, with an individual specific variable (income)
-> f2 <- mFormula(mode ~ price + catch | income)
-> head(model.matrix(f2, Fish), 2)
-        boat:(intercept) charter:(intercept) pier:(intercept)  price  catch
-1.beach                0                   0                0 157.93 0.0678
-1.boat                 1                   0                0 157.93 0.2601
-        boat:income charter:income pier:income
-1.beach       0.000              0           0
-1.boat     7083.332              0           0
-> 
-> # same, without an intercept
-> f3 <- mFormula(mode ~ price + catch | income + 0)
-> head(model.matrix(f3, Fish), 2)
-         price  catch income:boat income:charter income:pier
-1.beach 157.93 0.0678       0.000              0           0
-1.boat  157.93 0.2601    7083.332              0           0
-> 
-> # same as f2, but now, coefficients of catch are alternative
-> # specific
-> f4 <- mFormula(mode ~ price | income | catch)
-> head(model.matrix(f4, Fish), 2)
-        boat:(intercept) charter:(intercept) pier:(intercept)  price
-1.beach                0                   0                0 157.93
-1.boat                 1                   0                0 157.93
-        boat:income charter:income pier:income beach:catch boat:catch
-1.beach       0.000              0           0      0.0678     0.0000
-1.boat     7083.332              0           0      0.0000     0.2601
-        charter:catch pier:catch
-1.beach             0          0
-1.boat              0          0
-> 
 > 
 > 
 > 
@@ -230,7 +182,7 @@ alternative hypothesis: IIA is rejected
 > ## charter
 > 
 > data("Fishing", package = "mlogit")
-> Fish <- mlogit.data(Fishing, varying = c(2:9), shape = "wide", choice = "mode")
+> Fish <- dfidx(Fishing, varying = 2:9, shape = "wide", choice = "mode")
 > 
 > ## a pure "conditional" model
 > summary(mlogit(mode ~ price + catch, data = Fish))
@@ -238,7 +190,7 @@ alternative hypothesis: IIA is rejected
 Call:
 mlogit(formula = mode ~ price + catch, data = Fish, method = "nr")
 
-Frequencies of alternatives:
+Frequencies of alternatives:choice
   beach    boat charter    pier 
 0.11337 0.35364 0.38240 0.15059 
 
@@ -249,9 +201,9 @@ successive function values within tolerance limits
 
 Coefficients :
                       Estimate Std. Error  z-value  Pr(>|z|)    
-boat:(intercept)     0.8713749  0.1140428   7.6408 2.154e-14 ***
-charter:(intercept)  1.4988884  0.1329328  11.2755 < 2.2e-16 ***
-pier:(intercept)     0.3070552  0.1145738   2.6800 0.0073627 ** 
+(Intercept):boat     0.8713749  0.1140428   7.6408 2.154e-14 ***
+(Intercept):charter  1.4988884  0.1329328  11.2755 < 2.2e-16 ***
+(Intercept):pier     0.3070552  0.1145738   2.6800 0.0073627 ** 
 price               -0.0247896  0.0017044 -14.5444 < 2.2e-16 ***
 catch                0.3771689  0.1099707   3.4297 0.0006042 ***
 ---
@@ -267,7 +219,7 @@ Likelihood ratio test : chisq = 533.88 (p.value = < 2.22e-16)
 Call:
 mlogit(formula = mode ~ 0 | income, data = Fish, method = "nr")
 
-Frequencies of alternatives:
+Frequencies of alternatives:choice
   beach    boat charter    pier 
 0.11337 0.35364 0.38240 0.15059 
 
@@ -278,12 +230,12 @@ gradient close to zero
 
 Coefficients :
                        Estimate  Std. Error z-value  Pr(>|z|)    
-boat:(intercept)     7.3892e-01  1.9673e-01  3.7560 0.0001727 ***
-charter:(intercept)  1.3413e+00  1.9452e-01  6.8955 5.367e-12 ***
-pier:(intercept)     8.1415e-01  2.2863e-01  3.5610 0.0003695 ***
-boat:income          9.1906e-05  4.0664e-05  2.2602 0.0238116 *  
-charter:income      -3.1640e-05  4.1846e-05 -0.7561 0.4495908    
-pier:income         -1.4340e-04  5.3288e-05 -2.6911 0.0071223 ** 
+(Intercept):boat     7.3892e-01  1.9673e-01  3.7560 0.0001727 ***
+(Intercept):charter  1.3413e+00  1.9452e-01  6.8955 5.367e-12 ***
+(Intercept):pier     8.1415e-01  2.2863e-01  3.5610 0.0003695 ***
+income:boat          9.1906e-05  4.0664e-05  2.2602 0.0238116 *  
+income:charter      -3.1640e-05  4.1846e-05 -0.7561 0.4495908    
+income:pier         -1.4340e-04  5.3288e-05 -2.6911 0.0071223 ** 
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -292,15 +244,14 @@ McFadden R^2:  0.013736
 Likelihood ratio test : chisq = 41.145 (p.value = 6.0931e-09)
 > 
 > ## which can also be estimated using multinom (package nnet)
-> library("nnet")
-> summary(multinom(mode ~ income, data = Fishing))
+> summary(nnet::multinom(mode ~ income, data = Fishing))
 # weights:  12 (6 variable)
 initial  value 1638.599935 
 iter  10 value 1477.150646
 final  value 1477.150569 
 converged
 Call:
-multinom(formula = mode ~ income, data = Fishing)
+nnet::multinom(formula = mode ~ income, data = Fishing)
 
 Coefficients:
         (Intercept)        income
@@ -318,14 +269,14 @@ Residual Deviance: 2954.301
 AIC: 2966.301 
 > 
 > ## a "mixed" model
-> m <- mlogit(mode ~ price+ catch | income, data = Fish)
+> m <- mlogit(mode ~ price + catch | income, data = Fish)
 > summary(m)
 
 Call:
 mlogit(formula = mode ~ price + catch | income, data = Fish, 
     method = "nr")
 
-Frequencies of alternatives:
+Frequencies of alternatives:choice
   beach    boat charter    pier 
 0.11337 0.35364 0.38240 0.15059 
 
@@ -336,14 +287,14 @@ successive function values within tolerance limits
 
 Coefficients :
                        Estimate  Std. Error  z-value  Pr(>|z|)    
-boat:(intercept)     5.2728e-01  2.2279e-01   2.3667 0.0179485 *  
-charter:(intercept)  1.6944e+00  2.2405e-01   7.5624 3.952e-14 ***
-pier:(intercept)     7.7796e-01  2.2049e-01   3.5283 0.0004183 ***
+(Intercept):boat     5.2728e-01  2.2279e-01   2.3667 0.0179485 *  
+(Intercept):charter  1.6944e+00  2.2405e-01   7.5624 3.952e-14 ***
+(Intercept):pier     7.7796e-01  2.2049e-01   3.5283 0.0004183 ***
 price               -2.5117e-02  1.7317e-03 -14.5042 < 2.2e-16 ***
 catch                3.5778e-01  1.0977e-01   3.2593 0.0011170 ** 
-boat:income          8.9440e-05  5.0067e-05   1.7864 0.0740345 .  
-charter:income      -3.3292e-05  5.0341e-05  -0.6613 0.5084031    
-pier:income         -1.2758e-04  5.0640e-05  -2.5193 0.0117582 *  
+income:boat          8.9440e-05  5.0067e-05   1.7864 0.0740345 .  
+income:charter      -3.3292e-05  5.0341e-05  -0.6613 0.5084031    
+income:pier         -1.2758e-04  5.0640e-05  -2.5193 0.0117582 *  
 ---
 Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
 
@@ -352,10 +303,10 @@ McFadden R^2:  0.18868
 Likelihood ratio test : chisq = 565.17 (p.value = < 2.22e-16)
 > 
 > ## same model with charter as the reference level
-> m <- mlogit(mode ~ price+ catch | income, data = Fish, reflevel = "charter")
+> m <- mlogit(mode ~ price + catch | income, data = Fish, reflevel = "charter")
 > 
 > ## same model with a subset of alternatives : charter, pier, beach
-> m <- mlogit(mode ~ price+ catch | income, data = Fish,
+> m <- mlogit(mode ~ price + catch | income, data = Fish,
 +             alt.subset = c("charter", "pier", "beach"))
 > 
 > ## model on unbalanced data i.e. for some observations, some
@@ -363,43 +314,40 @@ Likelihood ratio test : chisq = 565.17 (p.value = < 2.22e-16)
 > # a data.frame in wide format with two missing prices
 > Fishing2 <- Fishing
 > Fishing2[1, "price.pier"] <- Fishing2[3, "price.beach"] <- NA
-> mlogit(mode~price+catch|income, Fishing2, shape="wide", choice="mode", varying = 2:9)
+> mlogit(mode ~ price + catch | income, Fishing2, shape = "wide", varying = 2:9)
 
 Call:
-mlogit(formula = mode ~ price + catch | income, data = Fishing2,     shape = "wide", choice = "mode", varying = 2:9, method = "nr")
+mlogit(formula = mode ~ price + catch | income, data = Fishing2,     shape = "wide", varying = 2:9, method = "nr")
 
 Coefficients:
-   boat:(intercept)  charter:(intercept)     pier:(intercept)  
+   (Intercept):boat  (Intercept):charter     (Intercept):pier  
          5.2790e-01           1.6948e+00           7.7663e-01  
-              price                catch          boat:income  
+              price                catch          income:boat  
         -2.5110e-02           3.5768e-01           8.9122e-05  
-     charter:income          pier:income  
+     income:charter          income:pier  
         -3.3611e-05          -1.2700e-04  
 
 > 
 > # a data.frame in long format with three missing lines
 > data("TravelMode", package = "AER")
 > Tr2 <- TravelMode[-c(2, 7, 9),]
-> mlogit(choice~wait+gcost|income+size, Tr2, shape = "long",
-+        chid.var = "individual", alt.var="mode", choice = "choice")
+> mlogit(choice ~ wait + gcost | income + size, Tr2)
 
 Call:
-mlogit(formula = choice ~ wait + gcost | income + size, data = Tr2,     shape = "long", chid.var = "individual", alt.var = "mode",     choice = "choice", method = "nr")
+mlogit(formula = choice ~ wait + gcost | income + size, data = Tr2,     method = "nr")
 
 Coefficients:
-train:(intercept)    bus:(intercept)    car:(intercept)               wait  
+(Intercept):train    (Intercept):bus    (Intercept):car               wait  
        -2.3115942         -3.4504941         -7.8913907         -0.1013180  
-            gcost       train:income         bus:income         car:income  
+            gcost       income:train         income:bus         income:car  
        -0.0197064         -0.0589804         -0.0277037         -0.0041153  
-       train:size           bus:size           car:size  
+       size:train           size:bus           size:car  
         1.3289497          1.0090796          1.0392585  
 
 > 
 > ## An heteroscedastic logit model
 > data("TravelMode", package = "AER")
-> hl <- mlogit(choice ~ wait + travel + vcost, TravelMode,
-+              shape = "long", chid.var = "individual", alt.var = "mode",
-+              method = "bfgs", heterosc = TRUE, tol = 10)
+> hl <- mlogit(choice ~ wait + travel + vcost, TravelMode, heterosc = TRUE)
 > 
 > ## A nested logit model
 > TravelMode$avincome <- with(TravelMode, income * (mode == "air"))
@@ -408,25 +356,22 @@ train:(intercept)    bus:(intercept)    car:(intercept)               wait
 > TravelMode$income <- with(TravelMode, income / 10)
 > # Hensher and Greene (2002), table 1 p.8-9 model 5
 > TravelMode$incomeother <- with(TravelMode, ifelse(mode %in% c('air', 'car'), income, 0))
-> nl <- mlogit(choice~gcost+wait+incomeother, TravelMode,
-+              shape='long', alt.var='mode',
-+              nests=list(public=c('train', 'bus'), other=c('car','air')))
+> nl <- mlogit(choice ~ gcost + wait + incomeother, TravelMode,
++              nests = list(public = c('train', 'bus'), other = c('car','air')))
+>              
 > # same with a comon nest elasticity (model 1)
 > nl2 <- update(nl, un.nest.el = TRUE)
 > 
 > ## a probit model
 > ## Not run: 
-> ##D pr <- mlogit(choice ~ wait + travel + vcost, TravelMode,
-> ##D              shape = "long", chid.var = "individual", alt.var = "mode",
-> ##D              probit = TRUE)
+> ##D pr <- mlogit(choice ~ wait + travel + vcost, TravelMode, probit = TRUE)
 > ## End(Not run)
 > 
 > ## a mixed logit model
 > ## Not run: 
-> ##D rpl <- mlogit(mode ~ price+ catch | income, Fishing, varying = 2:9,
-> ##D               shape = 'wide', rpar = c(price= 'n', catch = 'n'),
-> ##D               correlation = TRUE, halton = NA,
-> ##D               R = 10, tol = 10, print.level = 0)
+> ##D rpl <- mlogit(mode ~ price + catch | income, Fishing, varying = 2:9,
+> ##D               rpar = c(price= 'n', catch = 'n'), correlation = TRUE,
+> ##D               alton = NA, R = 50)
 > ##D summary(rpl)
 > ##D rpar(rpl)
 > ##D cor.mlogit(rpl)
@@ -437,79 +382,8 @@ train:(intercept)    bus:(intercept)    car:(intercept)               wait
 > 
 > # a ranked ordered model
 > data("Game", package = "mlogit")
-> g <- mlogit(ch~own|hours, Game, choice='ch', varying = 1:12,
-+             ranked=TRUE, shape="wide", reflevel="PC")
-> 
-> 
-> 
-> cleanEx()
-
-detaching ‘package:nnet’
-
-> nameEx("mlogit.data")
-> ### * mlogit.data
-> 
-> flush(stderr()); flush(stdout())
-> 
-> ### Name: mlogit.data
-> ### Title: data.frame for logit model
-> ### Aliases: mlogit.data [[<-.mlogit.data $<-.mlogit.data print.pseries
-> ###   index mean.mlogit.data formula.mlogit.data print.mlogit.data
-> ###   index.mlogit.data [.mlogit.data [[.mlogit.data $.mlogit.data
-> ### Keywords: attribute
-> 
-> ### ** Examples
-> 
-> # ModeChoice is a long data.frame 
-> 
-> data("TravelMode", package = "AER")
-> TM <- mlogit.data(TravelMode, choice = "choice", shape = "long",
-+                  alt.levels = c("air", "train", "bus", "car"))
-> 
-> # Same but the alt variable called mode is provided
-> 
-> TM <- mlogit.data(TravelMode ,choice = "choice", shape = "long",
-+                   alt.var = "mode")
-> 
-> # Same but the chid variable called individual is provided
-> 
-> TM <- mlogit.data(TravelMode, choice = "choice",
-+                   shape = "long", id.var = "individual",
-+                   alt.levels = c("air", "train", "bus", "car"))
-> 
-> # Same but with two own provided variables
-> 
-> TM <- mlogit.data(TravelMode, choice = "choice", shape = "long",
-+                  id.var = "individual", alt.var = "mode")
-> 
-> #  Same but with two own provided variables which are deleted from the
-> #  data.frame
-> 
-> TM <- mlogit.data(TravelMode, choice = "choice", shape = "long",
-+                  id.var = "individual", alt.var = "mode", drop.index = TRUE)
-> 
-> #  Train is a wide data.frame with columns 'choiceid' is the choice
-> #  index, the alternatives are named "ch1" and "ch2", the opposite of
-> #  the variables is returned
-> 
-> data("Train", package = "mlogit")
-> Train <- mlogit.data(Train, choice = "choice", shape = "wide",
-+                      varying = 4:11, alt.levels = c("A", "B"), sep = "_",
-+                      opposite = c("price", "time", "change", "comfort"))
-> 
-> data("HC", package = "mlogit")
-> HC <- mlogit.data(HC, choice = "depvar", varying=c(2:8, 10:16), shape="wide")
-> 
-> # Game is a data.frame in wide format for which the response is a
-> #  ranking variable
-> 
-> data("Game", package = "mlogit")
-> G <- mlogit.data(Game, shape="wide", varying = 1:12, alt.var = 'platform',
-+                  drop.index = TRUE, choice="ch", ranked =TRUE)
-> 
-> # Game2 contains the same data, but in long format 
-> data("Game2", package = "mlogit")
-> G2 <- mlogit.data(Game2,  shape='long', choice="ch", alt.var = 'platform', ranked = TRUE)
+> g <- mlogit(ch ~ own | hours, Game, varying = 1:12, ranked = TRUE,
++             reflevel = "PC", idnames = c("chid", "alt"))
 > 
 > 
 > 
@@ -522,13 +396,21 @@ detaching ‘package:nnet’
 > ### Name: scoretest
 > ### Title: The three tests for mlogit models
 > ### Aliases: scoretest scoretest.mlogit scoretest.default waldtest.mlogit
-> ###   waldtest lrtest.mlogit lrtest
+> ###   lrtest.mlogit
 > ### Keywords: htest
 > 
 > ### ** Examples
 > 
 > library("mlogit")
 > library("lmtest")
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
 > data("TravelMode", package = "AER")
 > ml <- mlogit(choice ~ wait + travel + vcost, TravelMode,
 +              shape = "long", chid.var = "individual", alt.var = "mode")
@@ -564,9 +446,12 @@ alternative hypothesis: heteroscedastic model
 > ### * <FOOTER>
 > ###
 > cleanEx()
+
+detaching ‘package:lmtest’, ‘package:zoo’
+
 > options(digits = 7L)
 > base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
-Time elapsed:  4.41 0.063 4.508 0 0 
+Time elapsed:  3.296 0.085 3.405 0.001 0.002 
 > grDevices::dev.off()
 null device 
           1 

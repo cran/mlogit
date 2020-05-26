@@ -93,7 +93,6 @@ lnl.nlogit <- function(param, X, y, weights = NULL, gradient = FALSE,
                        hessian = FALSE, opposite = TRUE, initial.value = NULL,
                        direction = rep(0, length(param)), stptol = 1E-01,
                        nests, un.nest.el = FALSE, unscaled = FALSE){
-
     if (un.nest.el){
         lambda <- param[length(param)]
         param <- c(param, rep(lambda, length(nests) - 1))

@@ -7,12 +7,12 @@ library("mlogit")
 
 ## ----label = 'Train data'--------------------------------------
 data("Train", package = "mlogit")
+Train$choiceid <- 1:nrow(Train)
 head(Train, 3)
 
-## ----label = 'mlogit.data for Train'---------------------------
-Tr <- mlogit.data(Train, shape = "wide", choice = "choice",
-                  varying = 4:11, sep = "_", id.var = "id",
-                  opposite = c("price", "comfort", "time", "change"))
+## ----label = 'dfidx for Train'---------------------------------
+Tr <- dfidx(Train, shape = "wide", varying = 4:11, sep = "_",
+            idx = list(c("choiceid", "id")), idnames = c(NA, "alt"))
 
 ## ----label = 'data transformation for Train'-------------------
 Tr$price <- Tr$price / 100 * 2.20371
@@ -22,55 +22,59 @@ Tr$time <- Tr$time / 60
 head(Tr, 3)
 
 ## ----label = 'index of the transformed Train data set'---------
-head(index(Tr), 3)
+head(idx(Tr), 3)
 
 ## ----label = 'loading ModeCanada'------------------------------
 data("ModeCanada", package = "mlogit")
 head(ModeCanada)
 
-## ----label = 'applying mlogit.data to Modecanada (1)'----------
-MC <- mlogit.data(ModeCanada, subset = noalt == 4,
-                  alt.levels = c("train", "air", "bus", "car"))
+## ----label = 'applying dfidx to Modecanada (1)'----------------
+MC <- dfidx(ModeCanada, subset = noalt == 4,
+            alt.levels = c("train", "air", "bus", "car"))
 
-## ----label = 'applying mlogit.data to Modecanada (2)'----------
-MC <- mlogit.data(ModeCanada , subset = noalt == 4, alt.var = "alt")
+## ----label = 'applying dfidx to Modecanada (2)'----------------
+MC <- dfidx(ModeCanada, subset = noalt == 4, idx = list(NA, "alt"))
 
-## ----label = 'applying mlogit.data to Modecanada (3)'----------
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.levels = c("train", "air", "bus", "car"))
+## ----label = 'applying dfidx to Modecanada (3)'----------------
+MC <- dfidx(ModeCanada, subset = noalt == 4, idx = "case",
+            alt.levels = c("train", "air", "bus", "car"))
 
-## ----label = 'applying mlogit.data to Modecanada (4)'----------
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.var = "alt")
+## ----label = 'applying dfidx to Modecanada (4)'----------------
+MC <- dfidx(ModeCanada, subset = noalt == 4, idx = c("case", "alt"))
 
-## ----label = 'applying mlogit.data to Modecanada (5)'----------
-MC <- mlogit.data(ModeCanada, subset = noalt == 4, chid.var = "case",
-                  alt.var = "alt", drop.index = TRUE)
+## ----label = 'ModeCanada without idx'--------------------------
+MC <- dfidx(ModeCanada, subset = noalt == 4)
+
+## ----label = 'applying dfidx to Modecanada (5)'----------------
+MC <- dfidx(ModeCanada, subset = noalt == 4, idx = c("case", "alt"),
+            drop.index = FALSE)
 head(MC)
 
 ## ----label = 'a three parts formula'---------------------------
-f <- mFormula(choice ~ cost | income + urban | ivt)
+library("Formula")
+f <- Formula(choice ~ cost | income + urban | ivt)
 
 ## ----label = 'ommission of some parts (1)'---------------------
-f2 <- mFormula(choice ~ cost + ivt | income + urban)
-f2 <- mFormula(choice ~ cost + ivt | income + urban | 0)
+f2 <- Formula(choice ~ cost + ivt | income + urban)
+f2 <- Formula(choice ~ cost + ivt | income + urban | 0)
 
 ## ----label = 'ommission of some parts (2)'---------------------
-f3 <- mFormula(choice ~ 0 | income | 0)
-f3 <- mFormula(choice ~ 0 | income)
+f3 <- Formula(choice ~ 0 | income | 0)
+f3 <- Formula(choice ~ 0 | income)
 
 ## ----label = 'ommission of some parts (3)'---------------------
-f4 <- mFormula(choice ~ cost + ivt)
-f4 <- mFormula(choice ~ cost + ivt | 1)
-f4 <- mFormula(choice ~ cost + ivt | 1 | 0)
+f4 <- Formula(choice ~ cost + ivt)
+f4 <- Formula(choice ~ cost + ivt | 1)
+f4 <- Formula(choice ~ cost + ivt | 1 | 0)
 
 ## ----label = 'removing the intercept'--------------------------
-f5 <- mFormula(choice ~ cost | income + 0 | ivt)
-f5 <- mFormula(choice ~ cost | income - 1 | ivt)
+f5 <- Formula(choice ~ cost | income + 0 | ivt)
+f5 <- Formula(choice ~ cost | income - 1 | ivt)
 
 ## ----label = 'model.matrix method for Formula objects'---------
-f <- mFormula(choice ~ cost | income  | ivt)
-head(model.matrix(f, MC), 4)
+f <- Formula(choice ~ cost | income  | ivt)
+mf <- model.frame(MC, f)
+head(model.matrix(mf), 4)
 
 ## ----label = 'convenient statpval function'--------------------
 statpval <- function(x){

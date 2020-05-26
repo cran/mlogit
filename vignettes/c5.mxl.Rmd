@@ -153,7 +153,7 @@ distribution:
   of `"ln"` and `"cn"` can also be relevant but, in this case, if only
   negative values are expected, one should consider the distribution
   of the opposite of the random price coefficient. This can easily be
-  done using the `opposite` argument of `mlogit.data`.^[See vignette
+  done using the `opposite` argument of `dfidx`.^[See vignette
   [formula/data](./c2.formula.data.html).],
 - the use of unbounded distributions often leads to implausible
   values of some statistics of the random parameters, especially the
@@ -177,7 +177,7 @@ indicating the random parameters that are assumed to be correlated.
 ### Train
 
 We use the `Train` data set, previously coerced to a
-`mlogit.data` object called `Tr`. We first estimate the
+`dfidx` object called `Tr`. We first estimate the
 multinomial model: both alternatives being virtual train trips, it is
 relevant to use only generic coefficients and to remove the intercept:
 
@@ -185,9 +185,10 @@ relevant to use only generic coefficients and to remove the intercept:
 ```{r label = 'multinomial logit for the Train data'}
 library("mlogit")
 data("Train", package = "mlogit")
-Tr <- mlogit.data(Train, shape = "wide", choice = "choice",
-                  varying = 4:11, sep = "_", id.var = "id",
-                  opposite = c("price", "comfort", "time", "change"))
+Train$choiceid <- 1:nrow(Train)
+Tr <- dfidx(Train, choice = "choice", varying = 4:11, sep = "_",
+            opposite = c("price", "comfort", "time", "change"),
+            idx = list(c("choiceid", "id")), idnames = c("chid", "alt"))
 Tr$price <- Tr$price / 100 * 2.20371
 Tr$time <- Tr$time / 60
 Train.ml <- mlogit(choice ~ price + time + change + comfort | - 1, Tr)
@@ -335,11 +336,11 @@ summary(vcov(Train.mxlc, what = "rpar", type = "cov"))
  are not directly interpretable, further functions are provided to
  analyze the correlation of the coefficients:
 
- ```{r label = 'specific methods for random parameters'}
- cor.mlogit(Train.mxlc)
- cov.mlogit(Train.mxlc)
- stdev(Train.mxlc)
- ``` 
+```{r label = 'specific methods for random parameters'}
+cor.mlogit(Train.mxlc)
+cov.mlogit(Train.mxlc)
+stdev(Train.mxlc)
+``` 
 
 The correlation can be restricted to a subset of random parameters by
 filling the `correlation` argument with a character vector indicating
@@ -391,6 +392,7 @@ lr.corr <- lrtest(Train.mxlc, Train.mxlu)
 lh.corr <- linearHypothesis(Train.mxlc, c("chol.time:change = 0",
 "chol.time:comfort = 0", "chol.change:comfort = 0"))
 wd.corr <- waldtest(Train.mxlc, correlation = FALSE)
+#YC
 sc.corr <- scoretest(Train.mxlu, correlation = TRUE)
 sapply(list(wald = wd.corr, lh = lh.corr, score = sc.corr, lr = lr.corr),
 statpval)
@@ -442,8 +444,8 @@ clientele. We first estimate a multinomial logit model.
 
 ```{r label = 'multinomial model for RiskyTransport'}
 data("RiskyTransport", package = "mlogit")
-RT <- mlogit.data(RiskyTransport, shape = "long", choice = "choice", 
-chid.var = "chid", alt.var = "mode", id.var = "id")
+RT <- dfidx(RiskyTransport, choice = "choice", idx = list(c("chid", "id"), "mode"),
+            idnames = c("chid", "alt"))
 ml.rt <- mlogit(choice ~ cost + risk  + seats + noise + crowdness +
 convloc + clientele | 0, data = RT, weights = weight)
 ``` 
@@ -515,8 +517,9 @@ max(indpar$VSL)
 This is not the case here as (absolute) minimum value of `cost`
 is $-0.003$ which leads to a maximum value of VSL of \$ $3131$.
 
-```{r plotindpar, fig.cap = "The value of a statistical life."}
+```{r plotindpar, fig.cap = "The value of a statistical life.", eval = FALSE}
 library("ggplot2")
+RT$id <- RT$id
 indpar <- merge(unique(subset(as.data.frame(RT),
                               select = c("id", "african"))),
                 indpar)

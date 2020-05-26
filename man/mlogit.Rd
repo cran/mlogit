@@ -116,7 +116,7 @@ optimisation method),
 \item freq: the frequency of choice,
 \item residuals: the residuals,
 \item fitted.values: the fitted values,
-\item formula: the formula (a \code{mFormula} object),
+\item formula: the formula (a \code{Formula} object),
 \item expanded.formula: the formula (a \code{formula} object),
 \item model: the model frame used,
 \item index: the index of the choice and of the alternatives.
@@ -127,7 +127,7 @@ Estimation by maximum likelihood of the multinomial logit model,
 with alternative-specific and/or individual specific variables.
 }
 \details{
-For how to use the formula argument, see \code{\link[=mFormula]{mFormula()}}.
+For how to use the formula argument, see \code{\link[=Formula]{Formula()}}.
 
 The \code{data} argument may be an ordinary \code{data.frame}. In this case,
 some supplementary arguments should be provided and are passed to
@@ -169,7 +169,7 @@ coefficients are estimated.
 ## charter
 
 data("Fishing", package = "mlogit")
-Fish <- mlogit.data(Fishing, varying = c(2:9), shape = "wide", choice = "mode")
+Fish <- dfidx(Fishing, varying = 2:9, shape = "wide", choice = "mode")
 
 ## a pure "conditional" model
 summary(mlogit(mode ~ price + catch, data = Fish))
@@ -178,18 +178,17 @@ summary(mlogit(mode ~ price + catch, data = Fish))
 summary(mlogit(mode ~ 0 | income, data = Fish))
 
 ## which can also be estimated using multinom (package nnet)
-library("nnet")
-summary(multinom(mode ~ income, data = Fishing))
+summary(nnet::multinom(mode ~ income, data = Fishing))
 
 ## a "mixed" model
-m <- mlogit(mode ~ price+ catch | income, data = Fish)
+m <- mlogit(mode ~ price + catch | income, data = Fish)
 summary(m)
 
 ## same model with charter as the reference level
-m <- mlogit(mode ~ price+ catch | income, data = Fish, reflevel = "charter")
+m <- mlogit(mode ~ price + catch | income, data = Fish, reflevel = "charter")
 
 ## same model with a subset of alternatives : charter, pier, beach
-m <- mlogit(mode ~ price+ catch | income, data = Fish,
+m <- mlogit(mode ~ price + catch | income, data = Fish,
             alt.subset = c("charter", "pier", "beach"))
 
 ## model on unbalanced data i.e. for some observations, some
@@ -197,19 +196,16 @@ m <- mlogit(mode ~ price+ catch | income, data = Fish,
 # a data.frame in wide format with two missing prices
 Fishing2 <- Fishing
 Fishing2[1, "price.pier"] <- Fishing2[3, "price.beach"] <- NA
-mlogit(mode~price+catch|income, Fishing2, shape="wide", choice="mode", varying = 2:9)
+mlogit(mode ~ price + catch | income, Fishing2, shape = "wide", varying = 2:9)
 
 # a data.frame in long format with three missing lines
 data("TravelMode", package = "AER")
 Tr2 <- TravelMode[-c(2, 7, 9),]
-mlogit(choice~wait+gcost|income+size, Tr2, shape = "long",
-       chid.var = "individual", alt.var="mode", choice = "choice")
+mlogit(choice ~ wait + gcost | income + size, Tr2)
 
 ## An heteroscedastic logit model
 data("TravelMode", package = "AER")
-hl <- mlogit(choice ~ wait + travel + vcost, TravelMode,
-             shape = "long", chid.var = "individual", alt.var = "mode",
-             method = "bfgs", heterosc = TRUE, tol = 10)
+hl <- mlogit(choice ~ wait + travel + vcost, TravelMode, heterosc = TRUE)
 
 ## A nested logit model
 TravelMode$avincome <- with(TravelMode, income * (mode == "air"))
@@ -218,25 +214,22 @@ TravelMode$timeair <- with(TravelMode, time * I(mode == "air"))
 TravelMode$income <- with(TravelMode, income / 10)
 # Hensher and Greene (2002), table 1 p.8-9 model 5
 TravelMode$incomeother <- with(TravelMode, ifelse(mode \%in\% c('air', 'car'), income, 0))
-nl <- mlogit(choice~gcost+wait+incomeother, TravelMode,
-             shape='long', alt.var='mode',
-             nests=list(public=c('train', 'bus'), other=c('car','air')))
+nl <- mlogit(choice ~ gcost + wait + incomeother, TravelMode,
+             nests = list(public = c('train', 'bus'), other = c('car','air')))
+             
 # same with a comon nest elasticity (model 1)
 nl2 <- update(nl, un.nest.el = TRUE)
 
 ## a probit model
 \dontrun{
-pr <- mlogit(choice ~ wait + travel + vcost, TravelMode,
-             shape = "long", chid.var = "individual", alt.var = "mode",
-             probit = TRUE)
+pr <- mlogit(choice ~ wait + travel + vcost, TravelMode, probit = TRUE)
 }
 
 ## a mixed logit model
 \dontrun{
-rpl <- mlogit(mode ~ price+ catch | income, Fishing, varying = 2:9,
-              shape = 'wide', rpar = c(price= 'n', catch = 'n'),
-              correlation = TRUE, halton = NA,
-              R = 10, tol = 10, print.level = 0)
+rpl <- mlogit(mode ~ price + catch | income, Fishing, varying = 2:9,
+              rpar = c(price= 'n', catch = 'n'), correlation = TRUE,
+              alton = NA, R = 50)
 summary(rpl)
 rpar(rpl)
 cor.mlogit(rpl)
@@ -247,8 +240,8 @@ summary(rpar(rpl, "catch"))
 
 # a ranked ordered model
 data("Game", package = "mlogit")
-g <- mlogit(ch~own|hours, Game, choice='ch', varying = 1:12,
-            ranked=TRUE, shape="wide", reflevel="PC")
+g <- mlogit(ch ~ own | hours, Game, varying = 1:12, ranked = TRUE,
+            reflevel = "PC", idnames = c("chid", "alt"))
 }
 \references{
 \insertRef{MCFA:73}{mlogit}

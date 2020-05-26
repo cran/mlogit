@@ -5,8 +5,9 @@ options(width = 65)
 ## --------------------------------------------------------------
 library("mlogit")
 data("Electricity", package = "mlogit")
-Electr <- mlogit.data(Electricity, id = "id", choice = "choice", 
-                      varying = 3:26, shape = "wide", sep = "")
+Electricity$chid <- 1:nrow(Electricity)
+Electr <- dfidx(Electricity, idx = list(c("chid", "id")),
+                choice = "choice", varying = 3:26, sep = "")
 
 ## ----Elec.mxl, echo = FALSE, results = 'hide'------------------
 strt <- c(-0.9901049, -0.1985715, 2.0572983, 1.5908743, -9.1176130, -9.1946436, 0.2140892, 
@@ -78,9 +79,8 @@ summary(rpar(Elec.mxl3, 'wk'))
 plot(rpar(Elec.mxl3, 'wk'))
 
 ## --------------------------------------------------------------
-Electr <- mlogit.data(Electricity, id = "id", choice = "choice", 
-                      varying = 3:26, shape = "wide", sep = "",
-                      opposite = c('tod', 'seas'))
+Electr <- dfidx(Electricity, idx = list(c("chid", "id")), choice = "choice",
+                varying = 3:26, sep = "", opposite = c("tod", "seas"))
 
 ## ----Elec.mxl4, echo = FALSE, results = 'hide'-----------------
 strt <- c(-0.8689874, -0.2113327,  2.0238880,  1.4791236,  2.1123811,  2.1242071,
@@ -106,15 +106,15 @@ strt <-  c(-0.917703974, -0.215851727,  2.392570989,  1.747531863,  2.155462393,
            -1.236664544,  0.643190285,  0.001982314,  0.062508396,  0.160672338,
            0.375855648,  0.025996362, -0.001225349,  0.141381623,  0.089990150,
            0.211244575)
-#Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE, start = strt)
+Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE, start = strt)
 
 ## ----eval = FALSE----------------------------------------------
 #  Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE)
 
 ## --------------------------------------------------------------
-#summary(Elec.mxl5)
-#cor.mlogit(Elec.mxl5)
-#lrtest(Elec.mxl5, Elec.mxl4)
-#waldtest(Elec.mxl5, correlation = FALSE)
-#scoretest(Elec.mxl4, correlation = TRUE)
+summary(Elec.mxl5)
+cor.mlogit(Elec.mxl5)
+lrtest(Elec.mxl5, Elec.mxl4)
+waldtest(Elec.mxl5, correlation = FALSE)
+scoretest(Elec.mxl4, correlation = TRUE)
 

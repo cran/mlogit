@@ -42,25 +42,25 @@
 #' 
 #' ## from Greene's Econometric Analysis p. 731
 #' 
-#' data("TravelMode",package="AER")
-#' TravelMode <- mlogit.data(TravelMode,choice="choice",shape="long",
-#'                           alt.var="mode",chid.var="individual")
+#' data("TravelMode", package = "AER")
+#' TravelMode <- mlogit.data(TravelMode, choice = "choice", shape = "long",
+#'                           alt.var = "mode", chid.var = "individual",
+#'                           drop.index = FALSE)
 #' 
 #' ## Create a variable of income only for the air mode
 #' 
-#' TravelMode$avinc <- with(TravelMode,(mode=='air')*income)
+#' TravelMode$avinc <- with(TravelMode, (mode == 'air') * income)
 #' 
 #' ## Estimate the model on all alternatives, with car as the base level
 #' ## like in Greene's book.
 #' 
-#' #x <- mlogit(choice~wait+gcost+avinc,TravelMode,reflevel="car")
-#' x <- mlogit(choice~wait+gcost+avinc,TravelMode)
+#' x <- mlogit(choice ~ wait + gcost + avinc, TravelMode, reflevel = "car")
 #' 
 #' ## Estimate the same model for ground modes only (the variable avinc
 #' ## must be dropped because it is 0 for every observation
 #' 
-#' g <- mlogit(choice~wait+gcost,TravelMode,reflevel="car",
-#'             alt.subset=c("car","bus","train"))
+#' g <- mlogit(choice ~ wait + gcost, TravelMode, reflevel = "car",
+#'             alt.subset = c("car", "bus", "train"))
 #' 
 #' ## Compute the test
 #' 
@@ -76,7 +76,7 @@ hmftest.formula <- function(x, alt.subset, ...){
   formula <- x
   x <- mlogit(formula,...)
   x$call$data <- match.call()$data
-  xs <- mlogit(formula, alt.subset=alt.subset, ...)
+  xs <- mlogit(formula, alt.subset = alt.subset, ...)
   hmftest(x,xs)
 }
 
@@ -84,18 +84,18 @@ hmftest.formula <- function(x, alt.subset, ...){
 #' @method hmftest mlogit
 #' @export
 hmftest.mlogit <- function(x, z, ...){
-  if (is.character(z)) xs <- update(x,alt.subset=z)
-  if (class(z)=="mlogit") xs <- z
+  if (is.character(z)) xs <- update(x, alt.subset = z)
+  if (class(z) == "mlogit") xs <- z
   coef.x <- coef(x)
   coef.s <- coef(xs)
   un <- names(coef.x) %in% names(coef.s)
-  diff.coef <- coef.s-coef.x[un]
-  diff.var <- vcov(xs)-vcov(x)[un,un]
-  hmf <- as.numeric(diff.coef%*%solve(diff.var)%*%diff.coef)
+  diff.coef <- coef.s - coef.x[un]
+  diff.var <- vcov(xs) - vcov(x)[un, un]
+  hmf <- as.numeric(diff.coef %*% solve(diff.var) %*% diff.coef)
   names(hmf) <- "chisq"
   df <- sum(un)
   names(df) <- "df"
-  pv <- pchisq(hmf,df=df,lower.tail=FALSE)
+  pv <- pchisq(hmf, df = df, lower.tail = FALSE)
   res <- list(data.name = x$call$data,
               statistic = hmf,
               p.value =pv,
@@ -119,18 +119,18 @@ mfR2 <- function(x){
 ##   llo <- sum(eff*log(eff/n))
 ##   1-ll/llo
   logLik0 <- attr(x$logLik, 'null')
-  1-x$logLik/logLik0
+  1 - x$logLik / logLik0
 }
 
 lratio <- function(object){
   freq <- object$freq
-  llo <- sum(freq*log(prop.table(freq)))
+  llo <- sum(freq * log(prop.table(freq)))
   data.name <- object$call$data
-  stat <- -2*(llo-logLik(object))
+  stat <- - 2 *(llo - logLik(object))
   names(stat) <- "chisq"
-  parameter <- length(coef(object))-length(freq)+1
+  parameter <- length(coef(object)) - length(freq) + 1
   names(parameter) <- "df"
-  pval <- pchisq(stat,df=parameter,lower.tail=FALSE)
+  pval <- pchisq(stat, df = parameter, lower.tail = FALSE)
   lrtest <- list(statistic = stat,
                  data.name = data.name,
                  p.value = pval,
@@ -158,7 +158,7 @@ irrelevant.args.warning <- function(object, args){
 #' @name scoretest
 #' @importFrom lmtest lrtest lrtest.default waldtest waldtest.default
 #' @aliases scoretest scoretest.mlogit scoretest.default
-#'     waldtest.mlogit waldtest lrtest.mlogit lrtest
+#'     waldtest.mlogit lrtest.mlogit
 #' @param object an object of class `mlogit` or a formula,
 #' @param ... two kinds of arguments can be used. If `mlogit`
 #'     arguments are introduced, initial model is updated using these
@@ -277,6 +277,7 @@ scoretest.mlogit <- function(object, ...){
             J <- length(object$rpar)
             K <- ncol(model.matrix(object))
             sd <- coef(object)[grep("sd.", ncoef)]
+            #YC attention à l'ordre
             rd.el <- K + (1:(J * (J + 1) / 2))
             diag.el <- K + cumsum(1:J)
             start.values <- c(start.values[1:K], rep(0, length(rd.el)))
@@ -512,3 +513,10 @@ lrtest.mlogit <- function(object, ...){
     else lrtest.default(object, ...)
 }
 
+#' @importFrom lmtest waldtest
+#' @export
+lmtest::waldtest
+
+#' @importFrom lmtest lrtest
+#' @export
+lmtest::lrtest

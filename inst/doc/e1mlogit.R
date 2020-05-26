@@ -5,7 +5,7 @@ options(width = 65)
 ## --------------------------------------------------------------
 library("mlogit")
 data("Heating", package = "mlogit")
-H <- mlogit.data(Heating, shape = "wide", choice = "depvar", varying = c(3:12))
+H <- dfidx(Heating, choice = "depvar", varying = c(3:12))
 m <- mlogit(depvar ~ ic + oc | 0, H)
 summary(m)
 
@@ -50,8 +50,8 @@ scoretest(mc, mi2)
 
 ## --------------------------------------------------------------
 X <- model.matrix(mc)
-alt <- index(H)$alt
-chid <- index(H)$chid
+alt <- idx(mc, 2)
+chid <- idx(mc, 1)
 eXb <- as.numeric(exp(X %*% coef(mc)))
 SeXb <- tapply(eXb, chid, sum)
 P <- eXb / SeXb[chid]
@@ -64,15 +64,15 @@ apply(fitted(mc, outcome = FALSE), 2, mean)
 
 ## --------------------------------------------------------------
 Hn <- H
-Hn[Hn$alt == "hp", "ic"] <- 0.9 * Hn[Hn$alt == "hp", "ic"]
+Hn[idx(Hn, 2) == "hp", "ic"] <- 0.9 * Hn[idx(Hn, 2) == "hp", "ic"]
 apply(predict(mc, newdata = Hn), 2, mean)
 
 ## --------------------------------------------------------------
 X <- model.matrix(mc)
-Xn <- X[alt == "ec",]
+Xn <- X[idx(mc, 2) == "ec",]
 Xn[, "ic"] <- Xn[, "ic"] + 200
 Xn[, "oc"] <- Xn[, "oc"] * 0.75
-unchid <- unique(index(H)$chid)
+unchid <- unique(idx(mc, 1))
 rownames(Xn) <- paste(unchid, 'new', sep = ".")
 chidb <- c(chid, unchid)
 X <- rbind(X, Xn)

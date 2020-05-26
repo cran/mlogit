@@ -16,16 +16,14 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > library("mlogit")
-Loading required package: Formula
-Loading required package: zoo
+Loading required package: dfidx
 
-Attaching package: 'zoo'
+Attaching package: 'dfidx'
 
-The following objects are masked from 'package:base':
+The following object is masked from 'package:stats':
 
-    as.Date, as.Date.numeric
+    filter
 
-Loading required package: lmtest
 > data("TravelMode", package = "AER")
 > TravelMode$choice2 <- TravelMode$choice == "yes"
 > TravelMode$incair <- with(TravelMode, income * (mode == "air"))
@@ -43,4 +41,4 @@ Loading required package: lmtest
 > 
 > proc.time()
    user  system elapsed 
-   0.86    0.06    0.93 
+  1.222   0.095   1.312 

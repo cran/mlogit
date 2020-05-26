@@ -5,9 +5,7 @@
 \alias{scoretest.mlogit}
 \alias{scoretest.default}
 \alias{waldtest.mlogit}
-\alias{waldtest}
 \alias{lrtest.mlogit}
-\alias{lrtest}
 \title{The three tests for mlogit models}
 \usage{
 scoretest(object, ...)
