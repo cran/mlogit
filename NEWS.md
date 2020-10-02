@@ -1,3 +1,7 @@
+# mlogit 1.1-1
+
+* minir update, the JSS paper is cited and used in the CITATION file
+
 # mlogit 1.1-0
 
 * major update, mlogit now depends on dfidx, mlogit.data, mFormula and

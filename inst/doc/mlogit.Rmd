@@ -1,4 +1,5 @@
 ---
+title: "mlogit"
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 vignette: >

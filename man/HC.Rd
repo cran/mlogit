@@ -4,7 +4,8 @@
 \name{HC}
 \alias{HC}
 \title{Heating and Cooling System Choice in Newly Built Houses in California}
-\format{A dataframe containing :
+\format{
+A dataframe containing :
 \itemize{
 \item depvar: heating system, one of \code{gcc} (gas central heat with
 cooling), \code{ecc} (electric central resistence heat with cooling), \code{erc}
@@ -18,9 +19,10 @@ system,
 \item och.z: operating cost for the heating portion of the system,
 \item occa: operating cost for cooling,
 \item income: annual income of the household.
-}}
+}
+}
 \source{
-\href{http://elsa.berkeley.edu/~train/}{Kenneth Train's home page}.
+\href{https://elsa.berkeley.edu/~train/}{Kenneth Train's home page}.
 }
 \description{
 A sample of 250 Californian households

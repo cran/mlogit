@@ -4,7 +4,8 @@
 \name{Fishing}
 \alias{Fishing}
 \title{Choice of Fishing Mode}
-\format{A dataframe containing :
+\format{
+A dataframe containing :
 \itemize{
 \item mode: recreation mode choice, one of : beach, pier, boat and
 charter,
@@ -17,7 +18,8 @@ charter,
 \item catch.boat: catch rate for private boat mode,
 \item catch.charter: catch rate for charter boat mode,
 \item income: monthly income,
-}}
+}
+}
 \source{
 \insertRef{CAME:TRIV:05}{mlogit}
 }

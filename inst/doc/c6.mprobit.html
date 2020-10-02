@@ -12,7 +12,7 @@
 
 
 
-<title>Multinomial probit</title>
+<title></title>
 
 
 
@@ -91,7 +91,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Multinomial probit</h1>
+<h1 class="title toc-ignore"><ol start="6" style="list-style-type: decimal">
+<li>Multinomial probit</li>
+</ol></h1>
 
 
 
@@ -193,7 +195,7 @@ e^{-\frac{1}{2}\epsilon^l{\Omega^l}^{-1}\epsilon^l}
 \sigma_{13}}{\sigma_{11}+\sigma_{22}-2\sigma_{12}} \\ \end{array}
 \right) 
 \]</span></p>
-<p>Therefore, out the 6 structural parameters of the covariance matrix, only 3 can be identified. Moreover, it’s almost impossible to interpret these parameters.</p>
+<p>Therefore, out the 6 structural parameters of the covariance matrix, only 3 can be identified. Moreover, it's almost impossible to interpret these parameters.</p>
 <p>More generally, with <span class="math inline">\(J\)</span> alternatives, the number of the parameters of the covariance matrix is <span class="math inline">\((J+1)\times J/2\)</span> and the number of identified parameters is <span class="math inline">\(J\times(J-1)/2-1\)</span>.</p>
 </div>
 <div id="simulations" class="section level2">
@@ -276,7 +278,7 @@ l_{(J-1)1}\eta_1+l_{(J-1)2}\eta_2+...+l_{(J-1)(J-1)}\eta_{J-1}
 \end{array}
 \right)
 \]</span></p>
-<p>Let’s now investigate the marginal and conditional probabilities :</p>
+<p>Let's now investigate the marginal and conditional probabilities :</p>
 <ul>
 <li>the first one is simply the marginal probability for a standard normal deviates, therefore we have : <span class="math inline">\(\mbox{P}(\epsilon^l_1&lt;-V_1^l) = \Phi\left(-\frac{V_1^l}{l_{11}}\right)\)</span></li>
 <li>the second one is, for a given value of <span class="math inline">\(\eta_1\)</span> equal to <span class="math inline">\(\Phi\left(-\frac{V^l_2+l_{21}\eta_1}{l_{22}}\right)\)</span>. We then have to compute the mean of this expression for any value of <span class="math inline">\(\eta_1\)</span> lower than <span class="math inline">\(-\frac{V^l_1}{l_{11}}\)</span>. We then have, denoting <span class="math inline">\(\bar{\phi}_1\)</span> the truncated normal density : <span class="math display">\[\mbox{P}(\epsilon^l_2&lt;-V_2^l)=\int_{-\infty}^{-\frac{V^l_1}{l_{11}}}\Phi\left(-\frac{V^l_2+l_{21}\eta_1}{l_{22}}\right)
@@ -323,7 +325,7 @@ Fish &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Fishing, <span 
 ## 0.18356 0.57260 0.24384 
 ## 
 ## bfgs method
-## 14 iterations, 0h:0m:10s 
+## 14 iterations, 0h:0m:11s 
 ## g'(-H)^-1g = 9.77E-07 
 ## gradient close to zero 
 ## 

@@ -4,14 +4,16 @@
 \name{Cracker}
 \alias{Cracker}
 \title{Choice of Brand for Crakers}
-\format{A dataframe containing :
+\format{
+A dataframe containing :
 \itemize{
 \item id: individuals identifiers,
 \item choice: one of sunshine, keebler, nabisco, private,
 \item disp.z: is there a display for brand z?
 \item feat.z: is there a newspaper feature advertisement for brand z?
 \item price.z: price of brand z.
-}}
+}
+}
 \source{
 \href{https://www.amstat.org}{Journal of Business Economics and Statistics web site}.
 }

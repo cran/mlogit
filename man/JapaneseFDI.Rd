@@ -4,7 +4,8 @@
 \name{JapaneseFDI}
 \alias{JapaneseFDI}
 \title{Japanese Foreign Direct Investment in European Regions}
-\format{A dataframe containing :
+\format{
+A dataframe containing :
 \itemize{
 \item firm: the investment id,
 \item country: the country,
@@ -23,7 +24,8 @@
 \item domind: domestic industry count,
 \item japind: japan industry count,
 \item network: network count.
-}}
+}
+}
 \source{
 kindly provided by Thierry Mayer
 }

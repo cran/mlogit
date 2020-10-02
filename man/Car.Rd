@@ -4,7 +4,8 @@
 \name{Car}
 \alias{Car}
 \title{Stated Preferences for Car Choice}
-\format{A dataframe containing :
+\format{
+A dataframe containing :
 \itemize{
 \item choice: choice of a vehicule amoung 6 propositions,
 \item college: college education?,
@@ -21,9 +22,10 @@
 \item spacez: fraction of luggage space in comparable new gas vehicule,
 \item costz: cost per mile of travel (tens of cents) : home recharging for electric vehicule, station refueling otherwise,
 \item stationz: fraction of stations that can refuel/recharge vehicule.
-}}
+}
+}
 \source{
-\href{http://jae.wiley.com/jae/}{Journal of Applied Econometrics data archive}.
+\href{https://wileyonlinelibrary.com/journal/jae/}{Journal of Applied Econometrics data archive}.
 }
 \description{
 a sample of 4654 individuals

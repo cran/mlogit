@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kenneth Train and Yves Croissant" />
 
-<meta name="date" content="2020-05-24" />
+<meta name="date" content="2020-10-02" />
 
 <title>Exercise 1: Multinomial logit model</title>
 
@@ -95,7 +95,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Exercise 1: Multinomial logit model</h1>
 <h4 class="author">Kenneth Train and Yves Croissant</h4>
-<h4 class="date">2020-05-24</h4>
+<h4 class="date">2020-10-02</h4>
 
 
 
@@ -121,7 +121,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li><code>region</code> a factor with levels <code>ncostl</code> (northern coastal region), <code>scostl</code> (southern coastal region), <code>mountn</code> (mountain region), <code>valley</code> (central valley region).</li>
 </ul>
 <p>Note that the attributes of the alternatives, namely, installation cost and operating cost, take a different value for each alternative. Therefore, there are 5 installation costs (one for each of the 5 systems) and 5 operating costs. To estimate the logit model, the researcher needs data on the attributes of all the alternatives, not just the attributes for the chosen alternative. For example, it is not sufficient for the researcher to determine how much was paid for the system that was actually installed (ie., the bill for the installation). The researcher needs to determine how much it would have cost to install each of the systems if they had been installed. The importance of costs in the choice process (i.e., the coefficients of installation and operating costs) is determined through comparison of the costs of the chosen system with the costs of the non-chosen systems.</p>
-<p>For these data, the costs were calculated as the amount the system would cost if it were installed in the house, given the characteristics of the house (such as size), the price of gas and electricity in the house location, and the weather conditions in the area (which determine the necessary capacity of the system and the amount it will be run.) These cost are conditional on the house having central air-conditioning. (That’s why the installation cost of gas central is lower than that for gas room: the central system can use the air-conditioning ducts that have been installed.)</p>
+<p>For these data, the costs were calculated as the amount the system would cost if it were installed in the house, given the characteristics of the house (such as size), the price of gas and electricity in the house location, and the weather conditions in the area (which determine the necessary capacity of the system and the amount it will be run.) These cost are conditional on the house having central air-conditioning. (That's why the installation cost of gas central is lower than that for gas room: the central system can use the air-conditioning ducts that have been installed.)</p>
 <p>In a logit model, each variable takes a different value in each alternative. So, in our case, for example, we want to know the coefficient of installation cost in the logit model of system choice. The variable installation cost in the model actually consists of five variables in the dataset: <code>ic.gc</code>, <code>ic.gr</code>, <code>ic.ec</code>, <code>ic.er</code> and <code>ic.hp</code>, for the installation costs of the five systems. In the current code, there are two variables in the logit model. The first variable is called <code>ic</code> for installation cost. This variable consists of five variables in the dataset: <code>ic.gc</code> in the first alternative, <code>ic.gr</code> in the second alternative, etc.</p>
 <ol start="2" style="list-style-type: decimal">
 <li>Run a model with installation cost and operating cost, without intercepts</li>
@@ -193,7 +193,7 @@ dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
 <p>A $1 reduction in annual operating costs recurs each year. It is unreasonable to think that the decision-maker is only willing to pay only 73 cents as a one-time payment in return for a $1/year stream of saving. This unreasonable implication is another reason (along with the inaccurate average probabilities) to believe this model is not so good. We will find below how the model can be improved.</p>
 </blockquote>
 <ol start="5" style="list-style-type: lower-alpha">
-<li>We can use the estimated <span class="math inline">\(wtp\)</span> to obtain an estimate of the discount rate that is implied by the model of choice of operating system. The present value of the future operating costs is the discounted sum of operating costs over the life of the system: <span class="math inline">\(PV=\sum_{t=1}^L\frac{OC}{(1+r)^t}\)</span> where <span class="math inline">\(r\)</span> is the discount rate and <span class="math inline">\(L\)</span> being the life of the system. As <span class="math inline">\(L\)</span> rises, the <span class="math inline">\(PV\)</span> approaches <span class="math inline">\(OC/r\)</span>. Therefore, for a system with a sufficiently long life (which we will assume these systems have), a one-dollar reduction in <span class="math inline">\(OC\)</span> reduces the present value of future operating costs by <span class="math inline">\((1/r)\)</span>. This means that if the person choosing the system were incurring the installation costs and the operating costs over the life of the system, and rationally traded-off the two at a discount rate of <span class="math inline">\(r\)</span>, the decisionmaker’s <span class="math inline">\(wtp\)</span> for operating cost reductions would be <span class="math inline">\((1/r)\)</span>. Given this, what value of <span class="math inline">\(r\)</span> is implied by the estimated <span class="math inline">\(wtp\)</span> that you calculated in part (c)? Is this reasonable?</li>
+<li>We can use the estimated <span class="math inline">\(wtp\)</span> to obtain an estimate of the discount rate that is implied by the model of choice of operating system. The present value of the future operating costs is the discounted sum of operating costs over the life of the system: <span class="math inline">\(PV=\sum_{t=1}^L\frac{OC}{(1+r)^t}\)</span> where <span class="math inline">\(r\)</span> is the discount rate and <span class="math inline">\(L\)</span> being the life of the system. As <span class="math inline">\(L\)</span> rises, the <span class="math inline">\(PV\)</span> approaches <span class="math inline">\(OC/r\)</span>. Therefore, for a system with a sufficiently long life (which we will assume these systems have), a one-dollar reduction in <span class="math inline">\(OC\)</span> reduces the present value of future operating costs by <span class="math inline">\((1/r)\)</span>. This means that if the person choosing the system were incurring the installation costs and the operating costs over the life of the system, and rationally traded-off the two at a discount rate of <span class="math inline">\(r\)</span>, the decisionmaker's <span class="math inline">\(wtp\)</span> for operating cost reductions would be <span class="math inline">\((1/r)\)</span>. Given this, what value of <span class="math inline">\(r\)</span> is implied by the estimated <span class="math inline">\(wtp\)</span> that you calculated in part (c)? Is this reasonable?</li>
 </ol>
 <blockquote>
 <p><span class="math inline">\(U=a LC\)</span> where <span class="math inline">\(LC\)</span> is lifecycle cost, equal to the sum of installation cost and the present value of operating costs: <span class="math inline">\(LC=IC+(1/r)OC\)</span>. Substituting, we have <span class="math inline">\(U=aIC + (a/r)OC\)</span>.</p>
@@ -279,7 +279,7 @@ r</code></pre></div>
 <pre><code>##        oc 
 ## 0.2191356</code></pre>
 <blockquote>
-<p>The decision-maker is willing to pay $4.56 for a $1 year stream of savings. This implies <span class="math inline">\(r = 0.22\)</span>. The decision-maker applies a 22% discount rate. These results are certainly more reasonable that in the previous model. The decision-maker is still estimated to be valuing saving somewhat less than would seem rational (ie applying a higher discount rate than seems reasonable). However, we need to remember that the decision-maker here is the builder. If home buyers were perfectly informed, then the builder would adopt the buyer’s discount rate. However, the builder would adopt a higher discount rate if home buyers were not perfectly informed about (or believed) the stream of saving.</p>
+<p>The decision-maker is willing to pay $4.56 for a $1 year stream of savings. This implies <span class="math inline">\(r = 0.22\)</span>. The decision-maker applies a 22% discount rate. These results are certainly more reasonable that in the previous model. The decision-maker is still estimated to be valuing saving somewhat less than would seem rational (ie applying a higher discount rate than seems reasonable). However, we need to remember that the decision-maker here is the builder. If home buyers were perfectly informed, then the builder would adopt the buyer's discount rate. However, the builder would adopt a higher discount rate if home buyers were not perfectly informed about (or believed) the stream of saving.</p>
 </blockquote>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>This model contains constants for all alternatives <code>ec</code>-<code>er</code>-<code>gc</code>-<code>gr</code>, with the constant for alternative <code>hp</code> normalized to zero. Suppose you had included constants for alternatives <code>ec</code>-<code>er</code>-<code>gc</code>-<code>hp</code>, with the constant for alternative <code>gr</code> normalized to zero. What would be the estimated coefficient of the constant for alternative <code>gc</code>? Figure this out logically rather than actually estimating the model.</li>
@@ -343,7 +343,7 @@ r</code></pre></div>
 <p>The model implies that as income rises, the probability of heat pump rises relative to all the others (since income in the heat pump alt is normalized to zero, and the others enter with negative signs such that they are lower than that for heat pumps. Also, as income rises, the probability of gas room drops relative to the other non-heat-pump systems (since it is most negative).</p>
 </blockquote>
 <blockquote>
-<p>Do these income terms enter significantly? No. It seems that income doesn’t really have an effect. Maybe this is because income is for the family that lives in the house, whereas the builder made decision of which system to install.</p>
+<p>Do these income terms enter significantly? No. It seems that income doesn't really have an effect. Maybe this is because income is for the family that lives in the house, whereas the builder made decision of which system to install.</p>
 </blockquote>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">lrtest</span>(mc, mi2)</code></pre></div>
 <pre><code>## Likelihood ratio test
@@ -372,7 +372,7 @@ r</code></pre></div>
 <li>Try other models. Determine which model you think is best from these data.</li>
 </ol>
 <blockquote>
-<p>I’m not going to give what I consider my best model: your ideas on what’s best are what matter here.</p>
+<p>I'm not going to give what I consider my best model: your ideas on what's best are what matter here.</p>
 </blockquote>
 <ol start="6" style="list-style-type: decimal">
 <li>We now are going to consider the use of logit model for prediction. Estimate a model with installation costs, operating costs, and alternative specific constants. Calculate the probabilities for each house explicitly. Check to be sure that the mean probabilities are the same as you got in exercise 4.</li>

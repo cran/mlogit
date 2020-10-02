@@ -4,14 +4,16 @@
 \name{Mode}
 \alias{Mode}
 \title{Mode Choice}
-\format{A dataframe containing :
+\format{
+A dataframe containing :
 \itemize{
 \item choice: one of car, carpool, bus or rail,
 \item cost.z: cost of mode z,
 \item time.z: time of mode z.
-}}
+}
+}
 \source{
-\href{http://elsa.berkeley.edu/~train/}{Kenneth Train's home page}.
+\href{https://elsa.berkeley.edu/~train/}{Kenneth Train's home page}.
 }
 \description{
 A sample of 453 individuals for 4 transport modes.

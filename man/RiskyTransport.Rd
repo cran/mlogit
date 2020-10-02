@@ -4,7 +4,8 @@
 \name{RiskyTransport}
 \alias{RiskyTransport}
 \title{Risky Transportation Choices}
-\format{A dataframe containing:
+\format{
+A dataframe containing:
 \itemize{
 \item id: individual id,
 \item choice: 1 for the chosen mode,
@@ -30,9 +31,10 @@
 \code{no} otherwise,
 \item swim: \code{yes} if the traveler knows how to swim, `no,
 otherwise.
-}}
+}
+}
 \source{
-\href{http://aeaweb.org/aer/}{American Economic Association data archive}.
+\href{https://www.aeaweb.org/aer/}{American Economic Association data archive}.
 }
 \description{
 1793 choices by 561 individuals of a transport mode at Freetwon

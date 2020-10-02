@@ -1,0 +1,15 @@
+bibentry(bibtype = "Article",
+  title        = "Estimation of Random Utility  Models in {R}: The {mlogit} Package",
+  author       = person(given = "Yves",
+                        family = "Croissant",
+                        email = "yves.croissant@univ-reunion.fr"),
+  journal      = "Journal of Statistical Software",
+  year         = "2020",
+  volume       = "95",
+  number       = "11",
+  pages        = "1--41",
+  doi          = "10.18637/jss.v095.i11",
+
+  header       = "To cite mlogit in publications use:"
+)
+

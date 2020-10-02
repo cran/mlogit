@@ -13,4 +13,8 @@ infrastructure to deal with random utility models.
 \details{
 For a gentle and comprehensive introduction to the
 package, see the package's vignettes.
+
+\insertRef{CROI:20}{mlogit}
+
+\insertRef{TRAI:09}{mlogit}
 }

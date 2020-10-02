@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kenneth Train and Yves Croissant" />
 
-<meta name="date" content="2020-05-24" />
+<meta name="date" content="2020-10-02" />
 
 <title>Exercise 2: Nested logit model</title>
 
@@ -95,7 +95,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Exercise 2: Nested logit model</h1>
 <h4 class="author">Kenneth Train and Yves Croissant</h4>
-<h4 class="date">2020-05-24</h4>
+<h4 class="date">2020-10-02</h4>
 
 
 
@@ -177,7 +177,7 @@ nl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(depvar <span cla
 <li>The estimated log-sum coefficient is <span class="math inline">\(0.59\)</span>. What does this estimate tell you about the degree of correlation in unobserved factors over alternatives within each nest?</li>
 </ol>
 <blockquote>
-<p>The correlation is approximately <span class="math inline">\(1-0.59=0.41\)</span>. It’s a moderate correlation.</p>
+<p>The correlation is approximately <span class="math inline">\(1-0.59=0.41\)</span>. It's a moderate correlation.</p>
 </blockquote>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Test the hypothesis that the log-sum coefficient is 1.0 (the value that it takes for a standard logit model.) Can the hypothesis that the true model is standard logit be rejected?</li>
@@ -250,7 +250,7 @@ ml &lt;-<span class="st"> </span><span class="kw">update</span>(nl, <span class=
 <li>What does the estimate imply about the substitution patterns across alternatives? Do you think the estimate is plausible?</li>
 </ol>
 <blockquote>
-<p>The log-sum coefficient is over 1. This implies that there is more substitution across nests than within nests. I don’t think this is very reasonable, but people can differ on their concepts of what’s reasonable.</p>
+<p>The log-sum coefficient is over 1. This implies that there is more substitution across nests than within nests. I don't think this is very reasonable, but people can differ on their concepts of what's reasonable.</p>
 </blockquote>
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Is the log-sum coefficient significantly different from 1?</li>

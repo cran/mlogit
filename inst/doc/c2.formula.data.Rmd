@@ -1,5 +1,5 @@
 ---
-title: "Data management, model description and testing"
+title: "2. Data management, model description and testing"
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 vignette: >

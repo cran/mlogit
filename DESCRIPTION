@@ -1,24 +1,25 @@
 Package: mlogit
-Version: 1.1-0
-Date: 2020-05-24
+Version: 1.1-1
+Date: 2020-10-01
 Title: Multinomial Logit Models
 Authors@R: person("Yves", "Croissant", role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr")
 Depends: R (>= 2.10), dfidx
 Imports: Formula, zoo, lmtest, statmod, MASS, Rdpack
 Suggests: knitr, car, nnet, lattice, AER, ggplot2, texreg, rmarkdown
-Description: Maximum Likelihood estimation of random utility discrete
-             choice models, as described in Kenneth Train (2009) Discrete Choice
-             Methods with Simulations <doi:10.1017/CBO9780511805271>.
+Description: Maximum likelihood estimation of random utility discrete
+             choice models. The software is described in Croissant (2020)
+              <doi:10.18637/jss.v095.i11> and the underlying methods in
+              Train (2009) <doi:10.1017/CBO9780511805271>.
 VignetteBuilder: knitr
 Encoding: UTF-8
 License: GPL (>= 2)
 URL: https://cran.r-project.org/package=mlogit,
         https://r-forge.r-project.org/projects/mlogit/
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.1
 RdMacros: Rdpack
 NeedsCompilation: no
-Packaged: 2020-05-24 13:29:03 UTC; yves
+Packaged: 2020-10-02 10:13:24 UTC; yves
 Author: Yves Croissant [aut, cre]
 Maintainer: Yves Croissant <yves.croissant@univ-reunion.fr>
 Repository: CRAN
-Date/Publication: 2020-05-26 09:50:02 UTC
+Date/Publication: 2020-10-02 12:12:05 UTC

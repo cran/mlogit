@@ -1,5 +1,5 @@
 ---
-title: "Miscellaneous models"
+title: "7. Miscellaneous models"
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 vignette: >

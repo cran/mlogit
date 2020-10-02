@@ -4,7 +4,8 @@
 \name{Heating}
 \alias{Heating}
 \title{Heating System Choice in California Houses}
-\format{A dataframe containing:
+\format{
+A dataframe containing:
 \itemize{
 \item idcase: id,
 \item depvar: heating system, one of gc (gas central), gr (gas room), ec
@@ -17,9 +18,10 @@ the 5 heating systems),
 \item income: annual income of the household,
 \item agehed: age of the household head
 \item rooms: numbers of rooms in the house,
-}}
+}
+}
 \source{
-\href{http://elsa.berkeley.edu/~train/}{Kenneth Train's home page}.
+\href{https://elsa.berkeley.edu/~train/}{Kenneth Train's home page}.
 }
 \description{
 A sample of 900 Californian households#'

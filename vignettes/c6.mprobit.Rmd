@@ -1,5 +1,5 @@
 ---
-title: "Multinomial probit"
+title: "6. Multinomial probit"
 output: rmarkdown::html_vignette
 bibliography: ../inst/REFERENCES.bib
 vignette: >

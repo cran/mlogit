@@ -30,7 +30,7 @@
 #' and distribution, which is supplied by the local regulated utility.
 #' 
 #' @source
-#' [Kenneth Train's home page](http://elsa.berkeley.edu/~train/).
+#' [Kenneth Train's home page](https://elsa.berkeley.edu/~train/).
 #' @references
 #' \insertRef{HUBE:TRAI:00}{mlogit}
 #' 
@@ -93,7 +93,7 @@ NULL
 #' - hours: hours per week spent on gaming.,
 #' 
 #' @source
-#' [Journal of Applied Econometrics data archive](http://jae.wiley.com/jae/).
+#' [Journal of Applied Econometrics data archive](https://wileyonlinelibrary.com/journal/jae/).
 #' @references
 #' \insertRef{FOK:PAAP:VAND:12}{mlogit}
 #' @keywords datasets
@@ -121,7 +121,7 @@ NULL
 #' - income: annual income of the household.
 #' 
 #' @source
-#' [Kenneth Train's home page](http://elsa.berkeley.edu/~train/).
+#' [Kenneth Train's home page](https://elsa.berkeley.edu/~train/).
 #' @keywords datasets
 NULL
 
@@ -146,7 +146,7 @@ NULL
 #' - rooms: numbers of rooms in the house,
 #'
 #' @source
-#' [Kenneth Train's home page](http://elsa.berkeley.edu/~train/).
+#' [Kenneth Train's home page](https://elsa.berkeley.edu/~train/).
 #' @keywords datasets
 NULL
 
@@ -195,7 +195,7 @@ NULL
 #' - time.z: time of mode z.
 #' 
 #' @source
-#' [Kenneth Train's home page](http://elsa.berkeley.edu/~train/).
+#' [Kenneth Train's home page](https://elsa.berkeley.edu/~train/).
 #' @keywords datasets
 NULL
 
@@ -269,7 +269,7 @@ NULL
 #' @references
 #' \insertRef{FOWL:10}{mlogit}
 #' @source
-#' [American Economic Association data archive](http://aeaweb.org/aer/).
+#' [American Economic Association data archive](https://www.aeaweb.org/aer/).
 #' @keywords datasets
 NULL
 
@@ -312,7 +312,7 @@ NULL
 #' @references
 #' \insertRef{LEON:MIGU:17}{mlogit} 
 #' @source
-#' [American Economic Association data archive](http://aeaweb.org/aer/).
+#' [American Economic Association data archive](https://www.aeaweb.org/aer/).
 #' @keywords datasets
 NULL
 
@@ -341,7 +341,7 @@ NULL
 #' 2 in decreasing comfort order,
 #' - change_z: number of changes for proposition z (z = 'A', 'B').
 #' @source
-#' [Journal of Applied Econometrics data archive](http://jae.wiley.com/jae/).
+#' [Journal of Applied Econometrics data archive](https://wileyonlinelibrary.com/journal/jae/).
 #' 
 #' @references
 #' \insertRef{BENA:BOLD:BRAD:93}{mlogit}
@@ -385,6 +385,10 @@ NULL
 #' @docType package
 #' @details For a gentle and comprehensive introduction to the
 #'     package, see the package's vignettes.
+#'
+#' \insertRef{CROI:20}{mlogit}
+#' 
+#' \insertRef{TRAI:09}{mlogit}
 NULL
 
 
@@ -434,7 +438,7 @@ NULL
 #' - stationz: fraction of stations that can refuel/recharge vehicule.
 #'
 #' @source
-#' [Journal of Applied Econometrics data archive](http://jae.wiley.com/jae/).
+#' [Journal of Applied Econometrics data archive](https://wileyonlinelibrary.com/journal/jae/).
 #' 
 #' @references
 #' \insertRef{MCFA:TRAI:00}{mlogit}

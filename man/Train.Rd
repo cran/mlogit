@@ -4,7 +4,8 @@
 \name{Train}
 \alias{Train}
 \title{Stated Preferences for Train Traveling}
-\format{A dataframe containing:
+\format{
+A dataframe containing:
 \itemize{
 \item id: individual identifient,
 \item choiceid: choice identifient,
@@ -16,9 +17,10 @@ minutes,
 \item comfort_z: comfort of proposition z (z = 'A', 'B'), 0, 1 or
 2 in decreasing comfort order,
 \item change_z: number of changes for proposition z (z = 'A', 'B').
-}}
+}
+}
 \source{
-\href{http://jae.wiley.com/jae/}{Journal of Applied Econometrics data archive}.
+\href{https://wileyonlinelibrary.com/journal/jae/}{Journal of Applied Econometrics data archive}.
 }
 \description{
 A sample of 235 Dutch individuals facing 2929 choice situations

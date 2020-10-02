@@ -4,7 +4,8 @@
 \name{Electricity}
 \alias{Electricity}
 \title{Stated preference data for the choice of electricity suppliers}
-\format{A dataframe containing :
+\format{
+A dataframe containing :
 \itemize{
 \item choice: the choice of the individual, one of 1, 2, 3, 4,
 \item id: the individual index,
@@ -28,9 +29,10 @@ in the summer, 8 cents per kWh in the winter, and 6 cents per kWh
 in the spring and fall. Like TOD rates, these prices did not vary.
 Note that the price is for the electricity only, not transmission
 and distribution, which is supplied by the local regulated utility.
-}}
+}
+}
 \source{
-\href{http://elsa.berkeley.edu/~train/}{Kenneth Train's home page}.
+\href{https://elsa.berkeley.edu/~train/}{Kenneth Train's home page}.
 }
 \description{
 A sample of 2308 households in the United States

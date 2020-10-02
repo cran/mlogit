@@ -12,7 +12,7 @@
 
 
 
-<title>Logit models relaxing the iid hypothesis</title>
+<title></title>
 
 
 
@@ -91,7 +91,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Logit models relaxing the iid hypothesis</h1>
+<h1 class="title toc-ignore"><ol start="4" style="list-style-type: decimal">
+<li>Logit models relaxing the iid hypothesis</li>
+</ol></h1>
 
 
 
@@ -198,7 +200,7 @@ lh.heter &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(
 <p><span class="citation">Head and Mayer (2004)</span> analyzed the choice of one of the 57 European regions belonging to 9 countries by Japenese firms to implement a new production unit.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;JapaneseFDI&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
 jfdi &lt;-<span class="st"> </span><span class="kw">dfidx</span>(JapaneseFDI, <span class="dt">idx =</span> <span class="kw">list</span>(<span class="st">&quot;firm&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;region&quot;</span>, <span class="st">&quot;country&quot;</span>)), <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</code></pre></div>
-<p>Note that we’ve used an extra argument to <code>dfidx</code> called <code>group.var</code> which indicates the grouping variable, which will be used later to define easily the nests. There are two sets of covariates: the wage rate <code>wage</code>, the unemployment rate <code>unemp</code>, a dummy indicating that the region is eligible to European funds <code>elig</code> and the area <code>area</code> are observed at the regional level and are therefore relevant for the estimation of the lower model, whereas the social cotisation rate <code>scrate</code> and the corporate tax rate <code>ctaxrate</code> are observed at the country level and are therefore suitable for the upper model.</p>
+<p>Note that we've used an extra argument to <code>dfidx</code> called <code>group.var</code> which indicates the grouping variable, which will be used later to define easily the nests. There are two sets of covariates: the wage rate <code>wage</code>, the unemployment rate <code>unemp</code>, a dummy indicating that the region is eligible to European funds <code>elig</code> and the area <code>area</code> are observed at the regional level and are therefore relevant for the estimation of the lower model, whereas the social cotisation rate <code>scrate</code> and the corporate tax rate <code>ctaxrate</code> are observed at the country level and are therefore suitable for the upper model.</p>
 <p>We first estimate a multinomial logit model:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">ml.fdi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(wage) <span class="op">+</span><span class="st"> </span>unemp <span class="op">+</span><span class="st"> </span>elig <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(area) <span class="op">+</span><span class="st"> </span>scrate <span class="op">+</span>
 ctaxrate <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> jfdi)</code></pre></div>
@@ -254,654 +256,780 @@ nl2.fdi &lt;-<span class="st"> </span><span class="kw">update</span>(nl.fdi, <sp
              <span class="st">'Nested logit'</span> =<span class="st"> </span>nl2.fdi),
         <span class="dt">fontsize =</span> <span class="st">&quot;footnotesize&quot;</span>, <span class="dt">float.pos =</span> <span class="st">&quot;hbt&quot;</span>,  <span class="dt">label =</span> <span class="st">&quot;tab:nlogit&quot;</span>,
         <span class="dt">caption =</span> <span class="st">&quot;Choice by Japanese firms of a european region.&quot;</span>)</code></pre></div>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<table cellspacing="0" align="center" style="border: none;">
-<caption align="bottom" style="margin-top:0.3em;">
+<table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;caption-side: bottom;color: #000000;border-top: 2px solid #000000;">
+<caption>
 Choice by Japanese firms of a european region.
 </caption>
+<thead>
 <tr>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b></b>
+<th style="padding-left: 5px;padding-right: 5px;">
+ 
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Mult. logit</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Mult. logit
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Lower model</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Lower model
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Upper model</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Upper model
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Upper model</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Upper model
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Nested logit</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Nested logit
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Nested logit</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Nested logit
 </th>
 </tr>
-<tr>
-<td style="padding-right: 12px; border: none;">
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
 log(wage)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 0.47
 </td>
-<td style="padding-right: 12px; border: none;">
-1.21<sup style="vertical-align: 0px;">*</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+1.21<sup>*</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 0.46
 </td>
-<td style="padding-right: 12px; border: none;">
-0.77<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.77<sup>**</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.25)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.48)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.25)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.25)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 unemp
 </td>
-<td style="padding-right: 12px; border: none;">
--8.90<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-8.90<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
--9.77<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-9.77<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
--7.62<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-7.62<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
--6.95<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-6.95<sup>**</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (1.69)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (2.39)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (1.60)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (2.28)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 elig
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -0.25
 </td>
-<td style="padding-right: 12px; border: none;">
--0.89<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.89<sup>**</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -0.34
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -0.18
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.21)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.33)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.20)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.18)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 log(area)
 </td>
-<td style="padding-right: 12px; border: none;">
-0.31<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.31<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
-0.29<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.29<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.29<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.29<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
-0.15<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.15<sup>**</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.05)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.06)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.05)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.05)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 scrate
 </td>
-<td style="padding-right: 12px; border: none;">
--2.26<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-2.26<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
--2.49<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-2.49<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 0.15
 </td>
-<td style="padding-right: 12px; border: none;">
--2.44<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-2.44<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -0.88
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.38)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.38)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (1.72)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.38)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.86)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 ctaxrate
 </td>
-<td style="padding-right: 12px; border: none;">
--4.82<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-4.82<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
--3.69<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-3.69<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -1.78
 </td>
-<td style="padding-right: 12px; border: none;">
--4.13<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-4.13<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -2.35
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.59)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.60)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (1.32)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.66)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (1.25)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 iv
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.66<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.66<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.85<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.85<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.06)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.08)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 iv:BE
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.72<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.72<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.48<sup style="vertical-align: 0px;">*</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.48<sup>*</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.08)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.19)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 iv:DE
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.72<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.72<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.52<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.52<sup>**</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.08)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.17)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 iv:ES
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.86<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.86<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.77<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.77<sup>***</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.05)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.20)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 iv:FR
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.75<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.75<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.67<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.67<sup>***</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.04)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.09)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 iv:IT
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.62<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.62<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.25<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.25<sup>**</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.05)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.08)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 iv:NL
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.69<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.69<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 0.18
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.06)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.10)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 iv:UK
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.87<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.87<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.86<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.86<sup>***</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.06)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.10)
 </td>
 </tr>
-<tr>
-<td style="border-top: 1px solid black;">
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
 AIC
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 3469.13
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 1738.04
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 1746.58
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 1713.86
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 3467.96
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 3437.01
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 Log Likelihood
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -1728.57
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -865.02
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -870.29
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -845.93
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -1726.98
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -1703.50
 </td>
 </tr>
 <tr>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 Num. obs.
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 452
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 421
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 452
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 452
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 452
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 452
 </td>
 </tr>
+<tr style="border-bottom: 2px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+K
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+57
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+55
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+9
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+9
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+57
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+57
+</td>
+</tr>
+</tbody>
+<tfoot>
 <tr>
-<td style="padding-right: 12px; border: none;" colspan="8">
-<span style="font-size:0.8em"><sup style="vertical-align: 0px;"><em><strong></sup>p &lt; 0.001, <sup style="vertical-align: 0px;"></strong></sup>p &lt; 0.01, <sup style="vertical-align: 0px;"></em></sup>p &lt; 0.05</span>
+<td style="font-size: 0.8em;" colspan="7">
+<sup><em><strong></sup>p &lt; 0.001; <sup></strong></sup>p &lt; 0.01; <sup></em></sup>p &lt; 0.05
 </td>
 </tr>
+</tfoot>
 </table>
 <p>For the nested logit models, two tests are of particular interest:</p>
 <ul>
@@ -940,7 +1068,7 @@ lh.unest &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(
 <h2>Bibliography</h2>
 <div id="refs" class="references">
 <div id="ref-BHAT:95">
-<p>Bhat, Chandra R. 1995. “A Heteroscedastic Extreme Value Model of Intercity Travel Mode Choice.” <em>Transportation Research Part B: Methodological</em> 29 (6): 471–83. <a href="http://www.sciencedirect.com/science/article/pii/0191261595000156" class="uri">http://www.sciencedirect.com/science/article/pii/0191261595000156</a>.</p>
+<p>Bhat, Chandra R. 1995. “A Heteroscedastic Extreme Value Model of Intercity Travel Mode Choice.” <em>Transportation Research Part B: Methodological</em> 29 (6): 471–83. <a href="https://www.sciencedirect.com/science/article/pii/0191261595000156" class="uri">https://www.sciencedirect.com/science/article/pii/0191261595000156</a>.</p>
 </div>
 <div id="ref-DALY:87">
 <p>Daly, A. 1987. “Estimating ‘Tree’ Logit Models.” <em>Transportation Research B</em>, 251–67.</p>
@@ -966,7 +1094,7 @@ lh.unest &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(
 <hr />
 <ol>
 <li id="fn1"><p>A slightly different version of the nested logit model <span class="citation">(Daly 1987)</span> is often used, but is not compatible with the random utility maximization hypothesis. Its difference with the previous expression is that the deterministic parts of the utility for each alternative is not divided by the nest elasticity. The differences between the two versions have been discussed in <span class="citation">Koppelman and Wen (1998)</span>, <span class="citation">Heiss (2002)</span> and <span class="citation">Hensher and Greene (2002)</span>.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>We’ve already encountered this expression in vignette 3. Random utility model and the multinomial logit model.<a href="#fnref2">↩</a></p></li>
+<li id="fn2"><p>We've already encountered this expression in vignette 3. Random utility model and the multinomial logit model.<a href="#fnref2">↩</a></p></li>
 </ol>
 </div>
 

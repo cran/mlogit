@@ -4,7 +4,7 @@ author: Kenneth Train and Yves Croissant
 date: '`r Sys.Date()`'
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Exercise 2: The nested logit model}
+  %\VignetteIndexEntry{Exercise 2: Nested logit model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

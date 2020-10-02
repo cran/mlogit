@@ -12,7 +12,7 @@
 
 
 
-<title>Random utility model and the multinomial logit model</title>
+<title></title>
 
 
 
@@ -91,7 +91,9 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Random utility model and the multinomial logit model</h1>
+<h1 class="title toc-ignore"><ol start="3" style="list-style-type: decimal">
+<li>Random utility model and the multinomial logit model</li>
+</ol></h1>
 
 
 
@@ -180,8 +182,8 @@ F(z)=\int_{-\infty}^{z} f(t) dt=e^{-e^{-\frac{z-\mu}{\theta}}},
 <p>For example, if <span class="math inline">\(x_2\)</span> is transport cost (in $), <span class="math inline">\(x_1\)</span> transport time (in hours), <span class="math inline">\(\beta_1 = 1.5\)</span> and <span class="math inline">\(\beta_2=0.2\)</span>, <span class="math inline">\(\frac{\beta_1}{\beta_2}=30\)</span> is the marginal rate of substitution of time in terms of $ and the value of 30 means that to reduce the travel time of one hour, the individual is willing to pay at most 30$ more. Stated more simply, time value is 30$ per hour.</p>
 </div>
 <div id="consumers-surplus" class="section level3">
-<h3>Consumer’s surplus</h3>
-<p>Consumer’s surplus has a very simple expression for multinomial logit models, which was first derived by <span class="citation">Small and Rosen (1981)</span>. The level of utility attained by an individual is <span class="math inline">\(U_j=V_j+\epsilon_j\)</span>, <span class="math inline">\(j\)</span> being the chosen alternative. The expected utility, from the searcher’s point of view is then: <span class="math inline">\(\mbox{E}(\max_j U_j)\)</span>, where the expectation is taken over the values of all the error terms. Its expression is simply, up to an additive unknown constant, the log of the denominator of the logit probabilities, often called the “log-sum”:</p>
+<h3>Consumer's surplus</h3>
+<p>Consumer's surplus has a very simple expression for multinomial logit models, which was first derived by <span class="citation">Small and Rosen (1981)</span>. The level of utility attained by an individual is <span class="math inline">\(U_j=V_j+\epsilon_j\)</span>, <span class="math inline">\(j\)</span> being the chosen alternative. The expected utility, from the searcher's point of view is then: <span class="math inline">\(\mbox{E}(\max_j U_j)\)</span>, where the expectation is taken over the values of all the error terms. Its expression is simply, up to an additive unknown constant, the log of the denominator of the logit probabilities, often called the &quot;log-sum&quot;:</p>
 <p><span class="math display">\[
 \mbox{E}(U)=\ln \sum_{j=1}^Je^{V_j}+C.
 \]</span></p>
@@ -203,7 +205,7 @@ ml.MC1 &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span
 <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">idx =</span> <span class="kw">c</span>(<span class="st">&quot;case&quot;</span>, <span class="st">&quot;alt&quot;</span>))</code></pre></div>
 <p><code>mlogit</code> provides two further useful arguments:</p>
 <ul>
-<li><code>reflevel</code> indicates which alternative is the “reference” alternative, i.e., the one for which the coefficients of choice situation specific covariates are set to 0,</li>
+<li><code>reflevel</code> indicates which alternative is the &quot;reference&quot; alternative, i.e., the one for which the coefficients of choice situation specific covariates are set to 0,</li>
 <li><code>alt.subset</code> indicates a subset of alternatives on which the estimation has to be performed; in this case, only the lines that correspond to the selected alternatives are used and all the choice situations where not selected alternatives has been chosen are removed.</li>
 </ul>
 <p>We estimate the model on the subset of three alternatives (we exclude <code>bus</code> whose market share is negligible in our sample) and we set <code>car</code> as the reference alternative. Moreover, we use a total transport time variable computed as the sum of the in vehicle and the out of vehicle time variables.</p>
@@ -299,7 +301,7 @@ Nprob &lt;-<span class="st"> </span><span class="kw">predict</span>(ml.MC1, <spa
 <span class="kw">summary</span>(surplus)</code></pre></div>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##  0.5852  2.8439  3.8998  4.6971  5.8437 31.3912</code></pre>
-<p>Consumer’s surplus variation range from 0.6 to 31 Canadian $, with a median value of about 4$.</p>
+<p>Consumer's surplus variation range from 0.6 to 31 Canadian $, with a median value of about 4$.</p>
 <p>Marginal effects are computed using the <code>effects</code> method. By default, they are computed at the sample mean, but a <code>data</code> argument can be provided. The variation of the probability and of the covariate can be either absolute or relative. This is indicated with the <code>type</code> argument which is a combination of two <code>a</code> (as absolute) and <code>r</code> (as relative) characters. For example, <code>type = &quot;ar&quot;</code> means that what is measured is an absolute variation of the probability for a relative variation of the covariate.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">effects</span>(ml.MC1, <span class="dt">covariate =</span> <span class="st">&quot;income&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;ar&quot;</span>)</code></pre></div>
 <pre><code>##        car      train        air 
@@ -322,7 +324,7 @@ Nprob &lt;-<span class="st"> </span><span class="kw">predict</span>(ml.MC1, <spa
 <div id="nox" class="section level3">
 <h3>NOx</h3>
 <p>The second example is a data set used by <span class="citation">Fowlie (2010)</span>, called <code>NOx</code>. She analyzed the effect of an emissions trading program (the NOx budget program which seeks to reduce the emission of nitrogen oxides) on the behavior of producers. More precisely, coal electricity plant managers may adopt one out of fifteen different technologies in order to comply to the emissions defined by the program. Some of them require high investment (the capital cost is <code>kcost</code>) and are very efficient to reduce emissions, some other require much less investment but are less efficient and the operating cost (denoted <code>vcost</code>) is then higher, especially because pollution permits must be purchased to offset emissions exceeding their allocation.</p>
-<p>The focus of the paper is on the effects of the regulatory environment on manager’s behavior. Some firms are deregulated, whereas other are either regulated or public. Rate of returns is applied for regulated firms, which means that they perceive a “fair” rate of return on their investment. Public firms also enjoy significant cost of capital advantages. Therefore, the main hypothesis of the paper is that public and regulated firms will adopt much more capitalistic intensive technologies than deregulated and public ones, which means that the coefficient of capital cost should take a higher negative value for deregulated firms. Capital cost is interacted with the age of the plant (measured as a deviation from the sample mean age), as firms should weight capital costs more heavily for older plants, as they have less time to recover these costs.</p>
+<p>The focus of the paper is on the effects of the regulatory environment on manager's behavior. Some firms are deregulated, whereas other are either regulated or public. Rate of returns is applied for regulated firms, which means that they perceive a &quot;fair&quot; rate of return on their investment. Public firms also enjoy significant cost of capital advantages. Therefore, the main hypothesis of the paper is that public and regulated firms will adopt much more capitalistic intensive technologies than deregulated and public ones, which means that the coefficient of capital cost should take a higher negative value for deregulated firms. Capital cost is interacted with the age of the plant (measured as a deviation from the sample mean age), as firms should weight capital costs more heavily for older plants, as they have less time to recover these costs.</p>
 <p>Multinomial logit models are estimated for the three subsamples defined by the regulatory environment. The 15 technologies are not available for every plants, the sample is therefore restricted to available technologies, using the <code>available</code> covariate. Three technology dummies are introduced: <code>post</code> for post-combustion polution control technology, <code>cm</code> for combustion modification technology and <code>lnb</code> for low NOx burners technology.</p>
 <p>A last model is estimated for the whole sample, but the parameters are allowed to be proportional to each other. The scedasticity function is described in the fourth part of the formula, it contains here only one covariate, <code>env</code>. Note also that for the last model, the author introduced a specific capital cost coefficient for deregulated firms.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a></p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;NOx&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
@@ -341,264 +343,310 @@ kdereg <span class="op">|</span><span class="st"> </span><span class="op">-</spa
 <span class="kw">htmlreg</span>(<span class="kw">list</span>(<span class="dt">Public =</span> ml.pub, <span class="dt">Deregulated =</span> ml.dereg, <span class="dt">Regulated =</span> ml.reg,
              <span class="dt">Pooled =</span> ml.pool), <span class="dt">caption =</span> <span class="st">&quot;Environmental compliance choices.&quot;</span>,
         <span class="dt">omit.coef =</span> <span class="st">&quot;(post)|(cm)|(lnb)&quot;</span>, <span class="dt">float.pos =</span> <span class="st">&quot;hbt&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;tab:nox&quot;</span>)</code></pre></div>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<table cellspacing="0" align="center" style="border: none;">
-<caption align="bottom" style="margin-top:0.3em;">
+<table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;caption-side: bottom;color: #000000;border-top: 2px solid #000000;">
+<caption>
 Environmental compliance choices.
 </caption>
+<thead>
 <tr>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b></b>
+<th style="padding-left: 5px;padding-right: 5px;">
+ 
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Public</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Public
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Deregulated</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Deregulated
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Regulated</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Regulated
 </th>
-<th style="text-align: left; border-top: 2px solid black; border-bottom: 1px solid black; padding-right: 12px;">
-<b>Pooled</b>
+<th style="padding-left: 5px;padding-right: 5px;">
+Pooled
 </th>
 </tr>
-<tr>
-<td style="padding-right: 12px; border: none;">
+</thead>
+<tbody>
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
 vcost
 </td>
-<td style="padding-right: 12px; border: none;">
--1.56<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-1.56<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
--0.19<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.19<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
--0.28<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.28<sup>***</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
--0.31<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.31<sup>***</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.36)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.06)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.06)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.04)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 kcost
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 0.04
 </td>
-<td style="padding-right: 12px; border: none;">
--0.06<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.06<sup>**</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 0.01
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 0.01
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.11)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.02)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.03)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.02)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 kcost:age
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -0.08
 </td>
-<td style="padding-right: 12px; border: none;">
--0.04<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.04<sup>**</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
--0.02<sup style="vertical-align: 0px;">*</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.02<sup>*</sup>
 </td>
-<td style="padding-right: 12px; border: none;">
--0.02<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.02<sup>***</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.04)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.01)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.01)
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.01)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 kdereg
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
--0.07<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.07<sup>***</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.01)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 sig.envderegulated
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
-0.32<sup style="vertical-align: 0px;">**</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+0.32<sup>**</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.12)
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 sig.envpublic
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
--0.33<sup style="vertical-align: 0px;">***</sup>
+<td style="padding-left: 5px;padding-right: 5px;">
+-0.33<sup>***</sup>
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
+ 
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 (0.08)
 </td>
 </tr>
-<tr>
-<td style="border-top: 1px solid black;">
+<tr style="border-top: 1px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
 AIC
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 168.92
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 690.15
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 731.48
 </td>
-<td style="border-top: 1px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 1634.22
 </td>
 </tr>
 <tr>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 Log Likelihood
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -78.46
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -339.07
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -359.74
 </td>
-<td style="padding-right: 12px; border: none;">
+<td style="padding-left: 5px;padding-right: 5px;">
 -808.11
 </td>
 </tr>
 <tr>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 Num. obs.
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 113
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 227
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 292
 </td>
-<td style="border-bottom: 2px solid black;">
+<td style="padding-left: 5px;padding-right: 5px;">
 632
 </td>
 </tr>
-<tr>
-<td style="padding-right: 12px; border: none;" colspan="6">
-<span style="font-size:0.8em"><sup style="vertical-align: 0px;"><em><strong></sup>p &lt; 0.001, <sup style="vertical-align: 0px;"></strong></sup>p &lt; 0.01, <sup style="vertical-align: 0px;"></em></sup>p &lt; 0.05</span>
+<tr style="border-bottom: 2px solid #000000;">
+<td style="padding-left: 5px;padding-right: 5px;">
+K
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+15
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+15
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+15
+</td>
+<td style="padding-left: 5px;padding-right: 5px;">
+15
 </td>
 </tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="font-size: 0.8em;" colspan="5">
+<sup><em><strong></sup>p &lt; 0.001; <sup></strong></sup>p &lt; 0.01; <sup></em></sup>p &lt; 0.05
+</td>
+</tr>
+</tfoot>
 </table>
 <p>Results are presented in the preceeding table, using the <code>texreg</code> package <span class="citation">(Leifeld 2013)</span>. Coefficients are very different on the sub-samples defined by the regulatory environment. Note in particular that the capital cost coefficient is positive and insignificant for public and regulated firms, as it is significantly negative for deregulated firms. Errors seems to have significant larger variance for deregulated firms and lower ones for public firms compared to regulated firms. The hypothesis that the coefficients (except the <code>kcost</code> one) are identical up to a multiplicative scalar can be performed using a likelihood ratio test:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">stat &lt;-<span class="st"> </span><span class="dv">2</span> <span class="op">*</span><span class="st"> </span>(<span class="kw">logLik</span>(ml.dereg) <span class="op">+</span><span class="st"> </span><span class="kw">logLik</span>(ml.reg) <span class="op">+</span>

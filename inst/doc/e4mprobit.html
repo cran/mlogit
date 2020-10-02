@@ -12,7 +12,7 @@
 
 <meta name="author" content="Kenneth Train and Yves Croissant" />
 
-<meta name="date" content="2020-05-24" />
+<meta name="date" content="2020-10-02" />
 
 <title>Exercise 4: Multinomial probit</title>
 
@@ -95,7 +95,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Exercise 4: Multinomial probit</h1>
 <h4 class="author">Kenneth Train and Yves Croissant</h4>
-<h4 class="date">2020-05-24</h4>
+<h4 class="date">2020-10-02</h4>
 
 
 
@@ -135,7 +135,7 @@ Mo &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Mode, <span class
 ## 0.17881 0.48124 0.07064 0.26932 
 ## 
 ## bfgs method
-## 20 iterations, 0h:0m:15s 
+## 20 iterations, 0h:0m:18s 
 ## g'(-H)^-1g = 7.71E-07 
 ## gradient close to zero 
 ## 
@@ -188,7 +188,7 @@ L1[<span class="op">!</span><span class="st"> </span><span class="kw">upper.tri<
 <p>I find it hard to tell anything from the estimated covariance terms.</p>
 </blockquote>
 <blockquote>
-<p>I agree: it is hard – if not impossible – to meaningfully interpret the covariance parameters when all free parameters are estimated. However, the substitutiuon patterns that the estimates imply can be observed by forecasting with the model; we do this in exercise 4 below. Also, when structure is placed on the covariance matrix, the estimates are usually easier to interpret; this is explored in exercise 6.]</p>
+<p>I agree: it is hard -- if not impossible -- to meaningfully interpret the covariance parameters when all free parameters are estimated. However, the substitutiuon patterns that the estimates imply can be observed by forecasting with the model; we do this in exercise 4 below. Also, when structure is placed on the covariance matrix, the estimates are usually easier to interpret; this is explored in exercise 6.]</p>
 </blockquote>
 <ol start="2" class="example" style="list-style-type: decimal">
 <li>Change the seed to 21 and rerun the model. (Even though the seed is just one digit different, the random draws are completely different.) See how much the estimates change. Does there seem to be a relation between the standard error of a parameter and the amount that its estimate changes with the new seed? (Of course, you are only getting two estimates, and so you are not estimating the true simulation variance very well. But the two estimates will probably give you an indication.)</li>
