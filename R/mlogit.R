@@ -331,8 +331,12 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
         }
     }
     # if data is an ordinary dfidx object, add the dfidx_mlogit class
-    if (class(data)[1] == "dfidx") class(data) <- c("dfidx_mlogit", class(data))
-
+    # if data is a data.table object, make it a data.frame object
+    if (class(data)[1] == "dfidx") {
+      class(data) <- c("dfidx_mlogit", class(data))
+    } else if ("data.table" %in% class(data)) {
+      data <- as.data.frame(data) }
+  
     # 3 ######################################################
     # compute the model.frame
     ##########################################################
