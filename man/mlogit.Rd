@@ -32,16 +32,16 @@ mlogit(
 \arguments{
 \item{formula}{a symbolic description of the model to be estimated,}
 
-\item{data}{the data: an \code{mlogit.data} object or an ordinary
-\code{data.frame},}
+\item{data}{the data: an `mlogit.data` object or an ordinary
+`data.frame`,}
 
 \item{subset}{an optional vector specifying a subset of
-observations for \code{mlogit},}
+observations for `mlogit`,}
 
 \item{weights}{an optional vector of weights,}
 
 \item{na.action}{a function which indicates what should happen when
-the data contains \code{NA}s,}
+the data contains `NA`s,}
 
 \item{start}{a vector of starting values,}
 
@@ -56,106 +56,105 @@ coefficients of individual-specific variables are normalized to
 nest, the corresponding vector being the set of alternatives
 that belong to this nest,}
 
-\item{un.nest.el}{a boolean, if \code{TRUE}, the hypothesis of unique
+\item{un.nest.el}{a boolean, if `TRUE`, the hypothesis of unique
 elasticity is imposed for nested logit models,}
 
-\item{unscaled}{a boolean, if \code{TRUE}, the unscaled version of the
+\item{unscaled}{a boolean, if `TRUE`, the unscaled version of the
 nested logit model is estimated,}
 
-\item{heterosc}{a boolean, if \code{TRUE}, the heteroscedastic logit
+\item{heterosc}{a boolean, if `TRUE`, the heteroscedastic logit
 model is estimated,}
 
 \item{rpar}{a named vector whose names are the random parameters
-and values the distribution : \code{'n'} for normal, \code{'l'} for
-log-normal, \code{'t'} for truncated normal, \code{'u' } for uniform,}
+and values the distribution : `'n'` for normal, `'l'` for
+log-normal, `'t'` for truncated normal, `'u' ` for uniform,}
 
-\item{probit}{if \code{TRUE}, a multinomial porbit model is estimated,}
+\item{probit}{if `TRUE`, a multinomial porbit model is estimated,}
 
 \item{R}{the number of function evaluation for the gaussian
-quadrature method used if \code{heterosc = TRUE}, the number of
-draws of pseudo-random numbers if \code{rpar} is not \code{NULL},}
+quadrature method used if `heterosc = TRUE`, the number of
+draws of pseudo-random numbers if `rpar` is not `NULL`,}
 
-\item{correlation}{only relevant if \code{rpar} is not \code{NULL}, if true,
+\item{correlation}{only relevant if `rpar` is not `NULL`, if true,
 the correlation between random parameters is taken into
 account,}
 
-\item{halton}{only relevant if \code{rpar} is not \code{NULL}, if not \code{NULL},
+\item{halton}{only relevant if `rpar` is not `NULL`, if not `NULL`,
 halton sequence is used instead of pseudo-random numbers. If
-\code{halton = NA}, some default values are used for the prime of
+`halton = NA`, some default values are used for the prime of
 the sequence (actually, the primes are used in order) and for
-the number of elements droped. Otherwise, \code{halton} should be a
-list with elements \code{prime} (the primes used) and \code{drop} (the
+the number of elements droped. Otherwise, `halton` should be a
+list with elements `prime` (the primes used) and `drop` (the
 number of elements droped).}
 
-\item{random.nb}{only relevant if \code{rpar} is not \code{NULL}, a
+\item{random.nb}{only relevant if `rpar` is not `NULL`, a
 user-supplied matrix of random,}
 
-\item{panel}{only relevant if \code{rpar} is not \code{NULL} and if the data
-are repeated observations of the same unit ; if \code{TRUE}, the
+\item{panel}{only relevant if `rpar` is not `NULL` and if the data
+are repeated observations of the same unit ; if `TRUE`, the
 mixed-logit model is estimated using panel techniques,}
 
 \item{estimate}{a boolean indicating whether the model should be
-estimated or not: if not, the \code{model.frame} is returned,}
+estimated or not: if not, the `model.frame` is returned,}
 
 \item{seed}{the seed to use for random numbers (for mixed logit and
 probit models),}
 
-\item{...}{further arguments passed to \code{mlogit.data} or
-\code{mlogit.optim}.}
+\item{...}{further arguments passed to `mlogit.data` or
+`mlogit.optim`.}
 }
 \value{
-An object of class \code{"mlogit"}, a list with elements:
-\itemize{
-\item coefficients: the named vector of coefficients,
-\item logLik: the value of the log-likelihood,
-\item hessian: the hessian of the log-likelihood at convergence,
-\item gradient: the gradient of the log-likelihood at convergence,
-\item call: the matched call,
-\item est.stat: some information about the estimation (time used,
+An object of class `"mlogit"`, a list with elements:
+
+- coefficients: the named vector of coefficients,
+- logLik: the value of the log-likelihood,
+- hessian: the hessian of the log-likelihood at convergence,
+- gradient: the gradient of the log-likelihood at convergence,
+- call: the matched call,
+- est.stat: some information about the estimation (time used,
 optimisation method),
-\item freq: the frequency of choice,
-\item residuals: the residuals,
-\item fitted.values: the fitted values,
-\item formula: the formula (a \code{Formula} object),
-\item expanded.formula: the formula (a \code{formula} object),
-\item model: the model frame used,
-\item index: the index of the choice and of the alternatives.
-}
+- freq: the frequency of choice,
+- residuals: the residuals,
+- fitted.values: the fitted values,
+- formula: the formula (a `Formula` object),
+- expanded.formula: the formula (a `formula` object),
+- model: the model frame used,
+- index: the index of the choice and of the alternatives.
 }
 \description{
 Estimation by maximum likelihood of the multinomial logit model,
 with alternative-specific and/or individual specific variables.
 }
 \details{
-For how to use the formula argument, see \code{\link[=Formula]{Formula()}}.
+For how to use the formula argument, see [Formula()].
 
-The \code{data} argument may be an ordinary \code{data.frame}. In this case,
+The `data` argument may be an ordinary `data.frame`. In this case,
 some supplementary arguments should be provided and are passed to
-\code{\link[=mlogit.data]{mlogit.data()}}. Note that it is not necessary to indicate the
+[mlogit.data()]. Note that it is not necessary to indicate the
 choice argument as it is deduced from the formula.
 
-The model is estimated using the \code{\link[=mlogit.optim]{mlogit.optim()}}.
+The model is estimated using the [mlogit.optim()].
 function.
 
 The basic multinomial logit model and three important extentions of
 this model may be estimated.
 
-If \code{heterosc=TRUE}, the heteroscedastic logit model is estimated.
-\code{J - 1} extra coefficients are estimated that represent the scale
-parameter for \code{J - 1} alternatives, the scale parameter for the
+If `heterosc=TRUE`, the heteroscedastic logit model is estimated.
+`J - 1` extra coefficients are estimated that represent the scale
+parameter for `J - 1` alternatives, the scale parameter for the
 reference alternative being normalized to 1. The probabilities
 don't have a closed form, they are estimated using a gaussian
 quadrature method.
 
-If \code{nests} is not \code{NULL}, the nested logit model is estimated.
+If `nests` is not `NULL`, the nested logit model is estimated.
 
-If \code{rpar} is not \code{NULL}, the random parameter model is estimated.
-The probabilities are approximated using simulations with \code{R} draws
-and halton sequences are used if \code{halton} is not
-\code{NULL}. Pseudo-random numbers are drawns from a standard normal and
+If `rpar` is not `NULL`, the random parameter model is estimated.
+The probabilities are approximated using simulations with `R` draws
+and halton sequences are used if `halton` is not
+`NULL`. Pseudo-random numbers are drawns from a standard normal and
 the relevant transformations are performed to obtain numbers drawns
 from a normal, log-normal, censored-normal or uniform
-distribution. If \code{correlation = TRUE}, the correlation between the
+distribution. If `correlation = TRUE`, the correlation between the
 random parameters are taken into account by estimating the
 components of the cholesky decomposition of the covariance
 matrix. With G random parameters, without correlation G standard
@@ -251,10 +250,10 @@ g <- mlogit(ch ~ own | hours, Game, varying = 1:12, ranked = TRUE,
 \insertRef{TRAI:09}{mlogit}
 }
 \seealso{
-\code{\link[=mlogit.data]{mlogit.data()}} to shape the data. \code{\link[nnet:multinom]{nnet::multinom()}} from
-package \code{nnet} performs the estimation of the multinomial logit
-model with individual specific variables. \code{\link[=mlogit.optim]{mlogit.optim()}}
-details about the optimization function.
+[mlogit.data()] to shape the data. [nnet::multinom()] from
+    package `nnet` performs the estimation of the multinomial logit
+    model with individual specific variables. [mlogit.optim()]
+    details about the optimization function.
 }
 \author{
 Yves Croissant

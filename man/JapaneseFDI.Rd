@@ -6,25 +6,24 @@
 \title{Japanese Foreign Direct Investment in European Regions}
 \format{
 A dataframe containing :
-\itemize{
-\item firm: the investment id,
-\item country: the country,
-\item region: the region (nuts1 nomenclature),
-\item choice: a dummy indicating the chosen region ,
-\item choice.c: the chosen country,
-\item wage: wage rate in the region,
-\item unemp: unemployment rate in the region,
-\item elig: is the country eligible to european subsidies,
-\item area: the area of the region,
-\item scrate:  social charge rate (country level),
-\item ctaxrate: corporate tax rate (country level),
-\item gdp: regional gdp,
-\item harris: harris' market potential,
-\item krugman: krugman's market potential,
-\item domind: domestic industry count,
-\item japind: japan industry count,
-\item network: network count.
-}
+
+- firm: the investment id,
+- country: the country,
+- region: the region (nuts1 nomenclature),
+- choice: a dummy indicating the chosen region ,
+- choice.c: the chosen country,
+- wage: wage rate in the region,
+- unemp: unemployment rate in the region,
+- elig: is the country eligible to european subsidies,
+- area: the area of the region,
+- scrate:  social charge rate (country level),
+- ctaxrate: corporate tax rate (country level),
+- gdp: regional gdp,
+- harris: harris' market potential,
+- krugman: krugman's market potential,
+- domind: domestic industry count,
+- japind: japan industry count,
+- network: network count.
 }
 \source{
 kindly provided by Thierry Mayer

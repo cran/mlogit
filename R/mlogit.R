@@ -869,7 +869,7 @@ mlogit.start <- function(formula, data, mf, start = NULL, un.nest.el = FALSE,
             if (is.null(start) || length(start) == K)
                 sup.coef <- c(sup.coef, rep(0.1, 0.5 * Kc * (Kc + 1)))
             names.sup.coef <- c(names.sup.coef,
-                                names.rpar(correlated, prefix = "chol"))
+                                names_rpar(correlated, prefix = "chol"))
         }
         if (is.null(start) || length(start) == K) names(sup.coef) <- names.sup.coef
     }

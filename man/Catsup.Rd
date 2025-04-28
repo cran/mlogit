@@ -6,16 +6,15 @@
 \title{Choice of Brand for Catsup}
 \format{
 A dataframe containing :
-\itemize{
-\item id: individuals identifiers,
-\item choice: one of heinz41, heinz32, heinz28, hunts32,
-\item disp.z: is there a display for brand z ?
-\item feat.z: is there a newspaper feature advertisement for brand z?
-\item price.z: price of brand z.
-}
+
+- id: individuals identifiers,
+- choice: one of heinz41, heinz32, heinz28, hunts32,
+- disp.z: is there a display for brand z ?
+- feat.z: is there a newspaper feature advertisement for brand z?
+- price.z: price of brand z.
 }
 \source{
-\href{https://www.amstat.org}{Journal of Business Economics and Statistics web site}.
+[Journal of Business Economics and Statistics web site](https://www.amstat.org).
 }
 \description{
 a sample of 2798 individuals

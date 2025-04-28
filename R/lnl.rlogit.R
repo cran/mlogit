@@ -1,4 +1,4 @@
-names.rpar <- function(rpar, prefix = NULL, diag = NULL, unique = FALSE){
+names_rpar <- function(rpar, prefix = NULL, diag = NULL, unique = FALSE){
     K <- length(rpar)
     nms <- vector(mode = "character", length = K * (K + 1) / 2)
     pos <- 0
@@ -127,7 +127,7 @@ make.beta <- function(mua, siga, rpar, random.nb, correlation){
     }
     if (Kc){
         random.nbc <- random.nb[, (Ku + 1):(Ku + Kc), drop = FALSE]
-        names.corr.coef <- names.rpar(correlated, prefix = "chol")
+        names.corr.coef <- names_rpar(correlated, prefix = "chol")
         CC <- ltm(siga[(Ku - Ko + 1):length(siga)], to = "ltm")
         sigeta <- random.nbc %*% t(CC)
         colnames(sigeta) <- correlated

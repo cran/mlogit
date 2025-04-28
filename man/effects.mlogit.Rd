@@ -13,14 +13,14 @@
 )
 }
 \arguments{
-\item{object}{a \code{mlogit} object,}
+\item{object}{a `mlogit` object,}
 
 \item{covariate}{the name of the covariate for which the effect should be
 computed,}
 
 \item{type}{the effect is a ratio of two marginal variations of the
 probability and of the covariate ; these variations can be absolute
-\code{"a"} or relative \code{"r"}. This argument is a string that contains
+`"a"` or relative `"r"`. This argument is a string that contains
 two letters, the first refers to the probability, the second to the
 covariate,}
 
@@ -38,7 +38,7 @@ choose any alternative. If the covariate is individual specific, a vector of
 length \eqn{J} is returned.
 }
 \description{
-The \code{effects} method for \code{mlogit} objects computes the marginal
+The `effects` method for `mlogit` objects computes the marginal
 effects of the selected covariate on the probabilities of choosing the
 alternatives
 }
@@ -61,7 +61,7 @@ effects(m, covariate = "price", type = "rr", data = z)
 effects(m, covariate = "catch", type = "ar", data = z)
 }
 \seealso{
-\code{\link[=mlogit]{mlogit()}} for the estimation of multinomial logit
+[mlogit()] for the estimation of multinomial logit
 models.
 }
 \author{

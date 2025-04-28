@@ -20,10 +20,10 @@ Elec.mxl <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
               R = 100, halton = NA, panel = TRUE, start = strt)
 
 ## ----eval = FALSE----------------------------------------------
-#  Elec.mxl <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
-#                rpar=c(pf = 'n', cl = 'n', loc = 'n', wk = 'n',
-#                       tod = 'n', seas = 'n'),
-#                R = 100, halton = NA, panel = TRUE)
+# Elec.mxl <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
+#               rpar=c(pf = 'n', cl = 'n', loc = 'n', wk = 'n',
+#                      tod = 'n', seas = 'n'),
+#               R = 100, halton = NA, panel = TRUE)
 
 ## --------------------------------------------------------------
 summary(Elec.mxl)
@@ -48,10 +48,10 @@ Elec.mxl2 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
                    R = 100, halton = NA,  panel = TRUE, start = strt)
 
 ## ----eval = FALSE----------------------------------------------
-#  Elec.mxl2 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
-#                     rpar = c(cl = 'n', loc = 'n', wk = 'n',
-#                              tod = 'n', seas = 'n'),
-#                     R = 100, halton = NA,  panel = TRUE)
+# Elec.mxl2 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
+#                    rpar = c(cl = 'n', loc = 'n', wk = 'n',
+#                             tod = 'n', seas = 'n'),
+#                    R = 100, halton = NA,  panel = TRUE)
 
 ## --------------------------------------------------------------
 summary(Elec.mxl2)
@@ -67,8 +67,8 @@ Elec.mxl3 <- update(Elec.mxl, rpar = c(cl = 'n', loc = 'n', wk = 'u',
                                        tod = 'n', seas = 'n'), start = strt)
 
 ## ----eval = FALSE----------------------------------------------
-#  Elec.mxl3 <- update(Elec.mxl, rpar = c(cl = 'n', loc = 'n', wk = 'u',
-#                                         tod = 'n', seas = 'n'))
+# Elec.mxl3 <- update(Elec.mxl, rpar = c(cl = 'n', loc = 'n', wk = 'u',
+#                                        tod = 'n', seas = 'n'))
 
 ## --------------------------------------------------------------
 summary(Elec.mxl3)
@@ -90,9 +90,9 @@ Elec.mxl4 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
               R = 100, halton = NA, panel = TRUE, start = strt)
 
 ## ----eval = FALSE----------------------------------------------
-#  Elec.mxl4 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
-#                rpar = c(cl = 'n', loc = 'n', wk = 'u', tod = 'ln', seas = 'ln'),
-#                R = 100, halton = NA, panel = TRUE)
+# Elec.mxl4 <- mlogit(choice ~ pf + cl + loc + wk + tod + seas | 0, Electr,
+#               rpar = c(cl = 'n', loc = 'n', wk = 'u', tod = 'ln', seas = 'ln'),
+#               R = 100, halton = NA, panel = TRUE)
 
 ## --------------------------------------------------------------
 summary(Elec.mxl4)
@@ -109,7 +109,7 @@ strt <-  c(-0.917703974, -0.215851727,  2.392570989,  1.747531863,  2.155462393,
 Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE, start = strt)
 
 ## ----eval = FALSE----------------------------------------------
-#  Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE)
+# Elec.mxl5 <- update(Elec.mxl4, correlation = TRUE)
 
 ## --------------------------------------------------------------
 summary(Elec.mxl5)

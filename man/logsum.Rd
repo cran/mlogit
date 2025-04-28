@@ -14,26 +14,26 @@ logsum(
 )
 }
 \arguments{
-\item{coef}{a numerical vector or a \code{mlogit} object, from which the
-\code{coef} vector is extracted,}
+\item{coef}{a numerical vector or a `mlogit` object, from which the
+`coef` vector is extracted,}
 
-\item{X}{a matrix or a \code{mlogit} object from which the
-\code{model.matrix} is extracted,}
+\item{X}{a matrix or a `mlogit` object from which the
+`model.matrix` is extracted,}
 
-\item{formula}{a formula or a \code{mlogit} object from which the
-\code{formula} is extracted,}
+\item{formula}{a formula or a `mlogit` object from which the
+`formula` is extracted,}
 
-\item{data}{a \code{data.frame} or a \code{mlogit} object from which the
-\code{model.frame} is extracted,}
+\item{data}{a `data.frame` or a `mlogit` object from which the
+`model.frame` is extracted,}
 
-\item{type}{either \code{"group"} or \code{"global"} : if a \code{group}
-argument has been provided in the \code{mlogit.data}, the inclusive values
+\item{type}{either `"group"` or `"global"` : if a `group`
+argument has been provided in the `mlogit.data`, the inclusive values
 are by default computed for every group, otherwise, a unique global
 inclusive value is computed for each choice situation,}
 
-\item{output}{the shape of the results: if \code{"chid"}, the results is a
-vector (if \code{type = "global"}) or a matrix (if \code{type = "region"})
-with row number equal to the number of choice situation, if \code{"obs"} a
+\item{output}{the shape of the results: if `"chid"`, the results is a
+vector (if `type = "global"`) or a matrix (if `type = "region"`)
+with row number equal to the number of choice situation, if `"obs"` a
 vector of length equal to the number of lines of the data in long format is
 returned.}
 }
@@ -41,28 +41,28 @@ returned.}
 either a vector or a matrix.
 }
 \description{
-The \code{logsum} function computes the inclusive value, or inclusive
+The `logsum` function computes the inclusive value, or inclusive
 utility, which is used to compute the surplus and to estimate the two steps
 nested logit model.
 }
 \details{
 The inclusive value, or inclusive utility, or log-sum is the log of the
 denominator of the probabilities of the multinomial logit model. If a
-\code{"group"} variable is provided in the \code{"mlogit.data"} function,
+`"group"` variable is provided in the `"mlogit.data"` function,
 the denominator can either be the one of the multinomial model or those of
 the lower model of the nested logit model.
 
-If only one argument (\code{coef}) is provided, it should a \code{mlogit}
-object and in this case, the \code{coefficients} and the \code{model.matrix}
+If only one argument (`coef`) is provided, it should a `mlogit`
+object and in this case, the `coefficients` and the `model.matrix`
 are extracted from this model.
 
-In order to provide a different \code{model.matrix}, further arguments could
-be used. \code{X} is a \code{matrix} or a \code{mlogit} from which the
-\code{model.matrix} is extracted. The \code{formula}-\code{data} interface
-can also be used to construct the relevant \code{model.matrix}.
+In order to provide a different `model.matrix`, further arguments could
+be used. `X` is a `matrix` or a `mlogit` from which the
+`model.matrix` is extracted. The `formula`-`data` interface
+can also be used to construct the relevant `model.matrix`.
 }
 \seealso{
-\code{\link[=mlogit]{mlogit()}} for the estimation of a multinomial logit
+[mlogit()] for the estimation of a multinomial logit
 model.
 }
 \author{

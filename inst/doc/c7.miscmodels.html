@@ -12,47 +12,120 @@
 
 
 
-<title></title>
+<title>7. Miscellaneous models</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 
 </style>
 <script>
@@ -62,13 +135,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -79,7 +159,188 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -91,9 +352,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore"><ol start="7" style="list-style-type: decimal">
-<li>Miscellaneous models</li>
-</ol></h1>
+<h1 class="title toc-ignore">7. Miscellaneous models</h1>
 
 
 
@@ -123,15 +382,15 @@ P_{lk}= \frac{\left(e^{V_k/\lambda_{lk}} +
     + e^{V_l/\lambda_{lk}}\right)^{\lambda_{lk}}}
 \]</span></p>
 <p>We reproduce the example used by <span class="citation">Koppelman and Wen (2000)</span> on the same subset of the <code>ModeCanada</code> than the one used by <span class="citation">Bhat (1995)</span>. Three modes are considered and there are therefore three nests. The elasticity of the train-air nest is set to one. To estimate this model, one has to set the <code>nests</code> argument to <code>&quot;pcl&quot;</code>. All the nests of two alternatives are then automatically created. The restriction on the nest elasticity for the train-air nest is performed by using the <code>constPar</code> argument.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
-<span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
-busUsers &lt;-<span class="st"> </span><span class="kw">with</span>(ModeCanada, case[choice <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">==</span><span class="st"> 'bus'</span>])
-Bhat &lt;-<span class="st"> </span><span class="kw">subset</span>(ModeCanada, <span class="op">!</span><span class="st"> </span>case <span class="op">%in%</span><span class="st"> </span>busUsers <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">!=</span><span class="st"> 'bus'</span> <span class="op">&amp;</span><span class="st"> </span>noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)
-Bhat<span class="op">$</span>alt &lt;-<span class="st"> </span>Bhat<span class="op">$</span>alt[drop =<span class="st"> </span><span class="ot">TRUE</span>]
-Bhat &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Bhat, <span class="dt">idx =</span> <span class="kw">c</span>(<span class="st">&quot;case&quot;</span>, <span class="st">&quot;alt&quot;</span>), <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))
-pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">+</span><span class="st"> </span>ovt, Bhat, <span class="dt">reflevel =</span> <span class="st">'car'</span>,
-              <span class="dt">nests =</span> <span class="st">'pcl'</span>, <span class="dt">constPar=</span><span class="kw">c</span>(<span class="st">'iv:train.air'</span>))
-<span class="kw">summary</span>(pcl)</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>busUsers &lt;-<span class="st"> </span><span class="kw">with</span>(ModeCanada, case[choice <span class="op">==</span><span class="st"> </span><span class="dv">1</span> <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">==</span><span class="st"> &#39;bus&#39;</span>])</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>Bhat &lt;-<span class="st"> </span><span class="kw">subset</span>(ModeCanada, <span class="op">!</span><span class="st"> </span>case <span class="op">%in%</span><span class="st"> </span>busUsers <span class="op">&amp;</span><span class="st"> </span>alt <span class="op">!=</span><span class="st"> &#39;bus&#39;</span> <span class="op">&amp;</span><span class="st"> </span>noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>Bhat<span class="op">$</span>alt &lt;-<span class="st"> </span>Bhat<span class="op">$</span>alt[drop =<span class="st"> </span><span class="ot">TRUE</span>]</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>Bhat &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Bhat, <span class="dt">idx =</span> <span class="kw">c</span>(<span class="st">&quot;case&quot;</span>, <span class="st">&quot;alt&quot;</span>), <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">+</span><span class="st"> </span>ovt, Bhat, <span class="dt">reflevel =</span> <span class="st">&#39;car&#39;</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>              <span class="dt">nests =</span> <span class="st">&#39;pcl&#39;</span>, <span class="dt">constPar=</span><span class="kw">c</span>(<span class="st">&#39;iv:train.air&#39;</span>))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a><span class="kw">summary</span>(pcl)</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = choice ~ freq + cost + ivt + ovt, data = Bhat, 
@@ -142,8 +401,8 @@ pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span cl
 ## 0.45757 0.16721 0.37523 
 ## 
 ## bfgs method
-## 16 iterations, 0h:0m:1s 
-## g'(-H)^-1g = 2.08E-07 
+## 16 iterations, 0h:0m:0s 
+## g&#39;(-H)^-1g = 2.08E-07 
 ## gradient close to zero 
 ## 
 ## Coefficients :
@@ -157,7 +416,7 @@ pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span cl
 ## iv:car.train       0.42129039  0.08613435   4.8911 1.003e-06 ***
 ## iv:car.air         0.27123320  0.09061319   2.9933   0.00276 ** 
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Log-Likelihood: -1903
 ## McFadden R^2:  0.32927 
@@ -175,9 +434,9 @@ pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span cl
 </ul>
 <p>This model can therefore simply be fitted as a multinomial logit model ; the ranking for one individual amoung J alternatives is writen as <span class="math inline">\(J-1\)</span> choices among <span class="math inline">\(J, J-1, ..., 2\)</span> alternatives.</p>
 <p>The estimation of the rank-ordered logit model is illustrated using the <code>Game</code> data set <span class="citation">(Fok, Paap, and Van Dijk 2012)</span>. Respondents are asked to rank 6 gaming platforms. The covariates are a dummy <code>own</code> which indicates whether a specific platform is curently owned, the age of the respondent (<code>age</code>) and the number of hours spent on gaming per week (<code>hours</code>). The data set is available in wide (<code>game</code>) and long (<code>game2</code>) format. In wide format, the consists on <span class="math inline">\(J\)</span> columns which indicate the ranking of each alternative.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;Game&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
-<span class="kw">data</span>(<span class="st">&quot;Game2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
-<span class="kw">head</span>(Game,<span class="dv">2</span>)</code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;Game&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;Game2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a><span class="kw">head</span>(Game,<span class="dv">2</span>)</span></code></pre></div>
 <pre><code>##   ch.Xbox ch.PlayStation ch.PSPortable ch.GameCube ch.GameBoy
 ## 1       2              1             3           5          6
 ## 2       4              2             3           5          6
@@ -187,7 +446,7 @@ pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span cl
 ##   own.GameBoy own.PC age hours
 ## 1           0      1  33  2.00
 ## 2           0      1  19  3.25</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(Game2, <span class="dv">7</span>)</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">head</span>(Game2, <span class="dv">7</span>)</span></code></pre></div>
 <pre><code>##   age hours    platform ch own chid
 ## 1  33  2.00     GameBoy  6   0    1
 ## 2  33  2.00    GameCube  5   0    1
@@ -196,16 +455,16 @@ pcl &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span cl
 ## 5  33  2.00  PSPortable  3   0    1
 ## 6  33  2.00        Xbox  2   0    1
 ## 7  19  3.25     GameBoy  6   0    2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(Game)</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">nrow</span>(Game)</span></code></pre></div>
 <pre><code>## [1] 91</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(Game2)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">nrow</span>(Game2)</span></code></pre></div>
 <pre><code>## [1] 546</code></pre>
 <p>Note that <code>Game</code> contains 91 rows (there are 91 individuals) and that <code>Game2</code> contains 546 rows (<span class="math inline">\(91\)</span> individuals <span class="math inline">\(times\)</span> 6 alternatives)</p>
 <p>To use <code>dfidx</code>, the <code>ranked</code> argument should <code>TRUE</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">G &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Game, <span class="dt">varying =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>, <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))
-G &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Game2, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>, <span class="dt">idx =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;platform&quot;</span>),
-           <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))
-<span class="kw">head</span>(G)</code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>G &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Game, <span class="dt">varying =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">12</span>, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>, <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>G &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Game2, <span class="dt">choice =</span> <span class="st">&quot;ch&quot;</span>, <span class="dt">ranked =</span> <span class="ot">TRUE</span>, <span class="dt">idx =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;platform&quot;</span>),</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a>           <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true"></a><span class="kw">head</span>(G)</span></code></pre></div>
 <pre><code>## ~~~~~~~
 ##  first 10 observations out of 1820 
 ## ~~~~~~~
@@ -234,11 +493,11 @@ G &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Game2, <span class
 ## 9     2    1          PC
 ## 10    2    1  PSPortable
 ## indexes:  1, 1, 2</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">nrow</span>(G)</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">nrow</span>(G)</span></code></pre></div>
 <pre><code>## [1] 1820</code></pre>
 <p>Note that the choice variable is now a logical variable and that the number of row is now 1820 (91 individuals <span class="math inline">\(\times (6+5+4+3+2)\)</span> alternatives).</p>
 <p>Using <code>PC</code> as the reference level, we can then reproduce the results of the original reference :</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">mlogit</span>(ch <span class="op">~</span><span class="st"> </span>own <span class="op">|</span><span class="st"> </span>hours <span class="op">+</span><span class="st"> </span>age, G, <span class="dt">reflevel =</span> <span class="st">&quot;PC&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">summary</span>(<span class="kw">mlogit</span>(ch <span class="op">~</span><span class="st"> </span>own <span class="op">|</span><span class="st"> </span>hours <span class="op">+</span><span class="st"> </span>age, G, <span class="dt">reflevel =</span> <span class="st">&quot;PC&quot;</span>))</span></code></pre></div>
 <pre><code>## 
 ## Call:
 ## mlogit(formula = ch ~ own | hours + age, data = G, reflevel = &quot;PC&quot;, 
@@ -252,7 +511,7 @@ G &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Game2, <span class
 ## 
 ## nr method
 ## 5 iterations, 0h:0m:0s 
-## g'(-H)^-1g = 6.74E-06 
+## g&#39;(-H)^-1g = 6.74E-06 
 ## successive function values within tolerance limits 
 ## 
 ## Coefficients :
@@ -291,23 +550,23 @@ G &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Game2, <span class
 ## age:PlayStation            
 ## age:Xbox                   
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Log-Likelihood: -516.55
 ## McFadden R^2:  0.36299 
 ## Likelihood ratio test : chisq = 588.7 (p.value = &lt; 2.22e-16)</code></pre>
 </div>
 <div id="bibliography" class="section level2 unnumbered">
-<h2>Bibliography</h2>
-<div id="refs" class="references">
+<h2 class="unnumbered">Bibliography</h2>
+<div id="refs" class="references hanging-indent">
 <div id="ref-BHAT:95">
-<p>Bhat, Chandra R. 1995. “A Heteroscedastic Extreme Value Model of Intercity Travel Mode Choice.” <em>Transportation Research Part B: Methodological</em> 29 (6): 471–83. <a href="https://www.sciencedirect.com/science/article/pii/0191261595000156" class="uri">https://www.sciencedirect.com/science/article/pii/0191261595000156</a>.</p>
+<p>Bhat, Chandra R. 1995. “A Heteroscedastic Extreme Value Model of Intercity Travel Mode Choice.” <em>Transportation Research Part B: Methodological</em> 29 (6): 471–83. <a href="https://doi.org/10.1016/0191-2615(95)00015-6">https://doi.org/10.1016/0191-2615(95)00015-6</a>.</p>
 </div>
 <div id="ref-FOK:PAAP:VAND:12">
-<p>Fok, Dennis, Richard Paap, and Bram Van Dijk. 2012. “A Rank-Ordered Logit Model with Unobserved Heterogeneity in Ranking Capatibilities.” <em>Journal of Applied Econometrics</em> 27 (5): 831–46. doi:<a href="https://doi.org/10.1002/jae.1223">10.1002/jae.1223</a>.</p>
+<p>Fok, Dennis, Richard Paap, and Bram Van Dijk. 2012. “A Rank-Ordered Logit Model with Unobserved Heterogeneity in Ranking Capatibilities.” <em>Journal of Applied Econometrics</em> 27 (5): 831–46. <a href="https://doi.org/10.1002/jae.1223">https://doi.org/10.1002/jae.1223</a>.</p>
 </div>
 <div id="ref-KOPP:WEN:00">
-<p>Koppelman, Frank S., and Chieh-Hua Wen. 2000. “The Paired Combinatorial Logit Model: Properties, Estimation and Application.” <em>Transportation Research Part B: Methodological</em> 34 (2): 75–89. <a href="https://www.sciencedirect.com/science/article/pii/S0191261599000120" class="uri">https://www.sciencedirect.com/science/article/pii/S0191261599000120</a>.</p>
+<p>Koppelman, Frank S., and Chieh-Hua Wen. 2000. “The Paired Combinatorial Logit Model: Properties, Estimation and Application.” <em>Transportation Research Part B: Methodological</em> 34 (2): 75–89. <a href="https://doi.org/10.1016/S0191-2615(99)00012-0">https://doi.org/10.1016/S0191-2615(99)00012-0</a>.</p>
 </div>
 </div>
 </div>

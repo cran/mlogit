@@ -6,26 +6,25 @@
 \title{Technologies to reduce NOx emissions}
 \format{
 A dataframe containing:
-\itemize{
-\item chid: the plant id,
-\item alt: the alternative,
-\item id: the owner id,
-\item choice: the
+
+- chid: the plant id,
+- alt: the alternative,
+- id: the owner id,
+- choice: the
 chosen alternative,
-\item available: a dummy indicating that the alternative is
+- available: a dummy indicating that the alternative is
 available,
-\item env: the regulatory environment, one of \code{'regulated'},
-\code{'deregulated'} and \code{'public'},
-\item post: dummy for post-combustion polution control technology,
-\item cm: dummy for combustion modification technology,
-\item lnb: dummy for low NOx burners technology,
-\item age: age of the plant (in deviation from the mean age).,
-\item vcost: variable cost,
-\item kcost: capital cost.
-}
+- env: the regulatory environment, one of `'regulated'`,
+`'deregulated'` and `'public'`,
+- post: dummy for post-combustion polution control technology,
+- cm: dummy for combustion modification technology,
+- lnb: dummy for low NOx burners technology,
+- age: age of the plant (in deviation from the mean age).,
+- vcost: variable cost,
+- kcost: capital cost.
 }
 \source{
-\href{https://www.aeaweb.org/aer/}{American Economic Association data archive}.
+[American Economic Association data archive](https://www.aeaweb.org/aer/).
 }
 \description{
 A sample of 632 American production units

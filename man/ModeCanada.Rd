@@ -6,18 +6,17 @@
 \title{Mode Choice for the Montreal-Toronto Corridor}
 \format{
 A dataframe containing
-\itemize{
-\item case: the individual index,
-\item alt: the alternative, one of train, car, bus and air,
-\item choice: one if the mode is chosen, zero otherwise,
-\item cost: monetary cost,
-\item ivt: in vehicule time,
-\item ovt: out vehicule time,
-\item frequency: frequency,
-\item income: income,
-\item urban: urban,
-\item noalt: the number of alternatives available.
-}
+
+- case: the individual index,
+- alt: the alternative, one of train, car, bus and air,
+- choice: one if the mode is chosen, zero otherwise,
+- cost: monetary cost,
+- ivt: in vehicule time,
+- ovt: out vehicule time,
+- frequency: frequency,
+- income: income,
+- urban: urban,
+- noalt: the number of alternatives available.
 }
 \source{
 kindly provided by S. Koppelman

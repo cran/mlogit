@@ -1,6 +1,6 @@
 Package: mlogit
-Version: 1.1-1
-Date: 2020-10-01
+Version: 1.1-2
+Date: 2025-04-26
 Title: Multinomial Logit Models
 Authors@R: person("Yves", "Croissant", role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr")
 Depends: R (>= 2.10), dfidx
@@ -13,13 +13,12 @@ Description: Maximum likelihood estimation of random utility discrete
 VignetteBuilder: knitr
 Encoding: UTF-8
 License: GPL (>= 2)
-URL: https://cran.r-project.org/package=mlogit,
-        https://r-forge.r-project.org/projects/mlogit/
-RoxygenNote: 7.1.1
+URL: https://cran.r-project.org/package=mlogit
+RoxygenNote: 7.3.1
 RdMacros: Rdpack
 NeedsCompilation: no
-Packaged: 2020-10-02 10:13:24 UTC; yves
+Packaged: 2025-04-26 11:14:31 UTC; yves
 Author: Yves Croissant [aut, cre]
 Maintainer: Yves Croissant <yves.croissant@univ-reunion.fr>
 Repository: CRAN
-Date/Publication: 2020-10-02 12:12:05 UTC
+Date/Publication: 2025-04-28 10:00:18 UTC

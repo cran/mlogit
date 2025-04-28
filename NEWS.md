@@ -1,3 +1,7 @@
+# mlogit 1.1-2
+
+* roxygenize is re-run, the link tags are suppressed
+
 # mlogit 1.1-1
 
 * minir update, the JSS paper is cited and used in the CITATION file

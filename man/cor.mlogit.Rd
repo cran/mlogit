@@ -10,18 +10,19 @@ cor.mlogit(x)
 cov.mlogit(x)
 }
 \arguments{
-\item{x}{an \code{mlogit} object with random parameters and \code{correlation = TRUE}.}
+\item{x}{an `mlogit` object with random parameters and `correlation
+= TRUE`.}
 }
 \value{
 A numerical matrix which returns either the correlation or
-the covariance matrix of the random parameters.
+    the covariance matrix of the random parameters.
 }
 \description{
 Functions that extract the correlation structure of a mlogit object
 }
 \details{
-These functions are deprecated, use \link[=vcov.mlogit]{vcov}.
-instead.
+These functions are deprecated, use [vcov][vcov.mlogit].
+    instead.
 }
 \author{
 Yves Croissant

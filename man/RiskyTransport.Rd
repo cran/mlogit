@@ -6,35 +6,35 @@
 \title{Risky Transportation Choices}
 \format{
 A dataframe containing:
-\itemize{
-\item id: individual id,
-\item choice: 1 for the chosen mode,
-\item mode: one of \code{Helicopter},\code{WaterTaxi}, \verb{Ferry, and }Hovercraft`,
-\item cost: the generalised cost of the transport mode,
-\item risk: the fatality rate, numbers of death per 100,000 trips,
-\item weight: weights,
-\item seats: ,
-\item noise: ,
-\item crowdness: ,
-\item convloc: ,
-\item clientele: ,
-\item chid: choice situation id,
-\item african: \code{yes} if born in Africa, \code{no} otherwise,
-\item lifeExp: declared life expectancy,
-\item dwage: declared hourly wage,
-\item iwage: imputed hourly wage,
-\item educ: level of education, one of \code{low} and \code{high},
-\item fatalism: self-ranking of the degree of fatalism,
-\item gender: gender, one of \code{female} and \code{male},
-\item age: age,
-\item haveChildren: \code{yes} if the traveler has children,
-\code{no} otherwise,
-\item swim: \code{yes} if the traveler knows how to swim, `no,
+
+- id: individual id,
+- choice: 1 for the chosen mode,
+- mode: one of `Helicopter`,`WaterTaxi`, `Ferry,
+and `Hovercraft`,
+- cost: the generalised cost of the transport mode,
+- risk: the fatality rate, numbers of death per 100,000 trips,
+- weight: weights,
+- seats: ,
+- noise: ,
+- crowdness: ,
+- convloc: ,
+- clientele: ,
+- chid: choice situation id,
+- african: `yes` if born in Africa, `no` otherwise,
+- lifeExp: declared life expectancy,
+- dwage: declared hourly wage,
+- iwage: imputed hourly wage,
+- educ: level of education, one of `low` and `high`,
+- fatalism: self-ranking of the degree of fatalism,
+- gender: gender, one of `female` and `male`,
+- age: age,
+- haveChildren: `yes` if the traveler has children,
+`no` otherwise,
+- swim: `yes` if the traveler knows how to swim, `no,
 otherwise.
 }
-}
 \source{
-\href{https://www.aeaweb.org/aer/}{American Economic Association data archive}.
+[American Economic Association data archive](https://www.aeaweb.org/aer/).
 }
 \description{
 1793 choices by 561 individuals of a transport mode at Freetwon

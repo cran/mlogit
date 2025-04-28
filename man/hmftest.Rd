@@ -13,19 +13,19 @@ hmftest(x, ...)
 \method{hmftest}{mlogit}(x, z, ...)
 }
 \arguments{
-\item{x}{an object of class \code{mlogit} or a formula,}
+\item{x}{an object of class `mlogit` or a formula,}
 
-\item{...}{further arguments passed to \code{mlogit} for the \code{formula}
+\item{...}{further arguments passed to `mlogit` for the `formula`
 method.}
 
 \item{alt.subset}{a subset of alternatives,}
 
-\item{z}{an object of class \code{mlogit} or a subset of alternatives
-for the \code{mlogit} method. This should be the same model as \code{x}
+\item{z}{an object of class `mlogit` or a subset of alternatives
+for the `mlogit` method. This should be the same model as `x`
 estimated on a subset of alternatives,}
 }
 \value{
-an object of class \code{"htest"}.
+an object of class `"htest"`.
 }
 \description{
 Test the IIA hypothesis (independence of irrelevant alternatives)
@@ -43,7 +43,7 @@ only the results obtained from the estimation on a relevant subset
 are consistent. To compute this test, one needs a model estimated
 with all the alternatives and one model estimated on a subset of
 alternatives. This can be done by providing two objects of class
-\code{mlogit}, one object of class \code{mlogit} and a character vector
+`mlogit`, one object of class `mlogit` and a character vector
 indicating the subset of alternatives, or a formula and a subset of
 alternatives.
 }
@@ -77,7 +77,7 @@ hmftest(x,g)
 }
 \references{
 Hausman, J.A. and D. McFadden (1984), A Specification Test for the
-Multinomial Logit Model, \emph{Econometrica}, \strong{52}, pp.1219--1240.
+Multinomial Logit Model, *Econometrica*, **52**, pp.1219--1240.
 }
 \author{
 Yves Croissant

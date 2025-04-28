@@ -19,16 +19,16 @@ scoretest(object, ...)
 \method{lrtest}{mlogit}(object, ...)
 }
 \arguments{
-\item{object}{an object of class \code{mlogit} or a formula,}
+\item{object}{an object of class `mlogit` or a formula,}
 
-\item{...}{two kinds of arguments can be used. If \code{mlogit}
+\item{...}{two kinds of arguments can be used. If `mlogit`
 arguments are introduced, initial model is updated using these
-arguments. If \code{formula} or other \code{mlogit} models are
-introduced, the standard behavior of \code{\link[lmtest:waldtest]{lmtest::waldtest()}} and
-\code{\link[lmtest:lrtest]{lmtest::lrtest()}} is followed.}
+arguments. If `formula` or other `mlogit` models are
+introduced, the standard behavior of [lmtest::waldtest()] and
+[lmtest::lrtest()] is followed.}
 }
 \value{
-an object of class \code{htest}.
+an object of class `htest`.
 }
 \description{
 Three tests for mlogit models: specific methods for the Wald test
@@ -36,19 +36,19 @@ and the likelihood ration test and a new function for the score
 test
 }
 \details{
-The \code{scoretest} function and \code{mlogit} method for
-\code{waldtest} and \code{lrtest} from the \code{lmtest} package provides the
-infrastructure to compute the three tests of hypothesis for
-\code{mlogit} objects.
+The `scoretest` function and `mlogit` method for
+    `waldtest` and `lrtest` from the `lmtest` package provides the
+    infrastructure to compute the three tests of hypothesis for
+    `mlogit` objects.
 
-The first argument must be a \code{mlogit} object. If the second one is a
+The first argument must be a `mlogit` object. If the second one is a
 fitted model or a formula, the behaviour of the three functions is the one
-of the default methods of \code{waldtest} and \code{lrtest}: the two
+of the default methods of `waldtest` and `lrtest`: the two
 models provided should be nested and the hypothesis tested is that the
 constrained model is the `right' model.
 
 If no second model is provided and if the model provided is the
-constrained model, some specific arguments of \code{mlogit} should be
+constrained model, some specific arguments of `mlogit` should be
 provided to descibe how the initial model should be updated. If the
 first model is the unconstrained model, it is tested versus the
 `natural' constrained model; for example, if the model is a

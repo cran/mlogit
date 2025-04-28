@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{the object}
 
-\item{..., lhs, rhs, dot}{see the \code{Formula} method}
+\item{..., lhs, rhs, dot}{see the `Formula` method}
 }
 \description{
 specific stuff compared to the model.matrix.dfidx method which

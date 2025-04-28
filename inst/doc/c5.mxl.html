@@ -12,47 +12,120 @@
 
 
 
-<title></title>
+<title>5. The random parameters (or mixed) logit model</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
 
 
 
-<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
 <style type="text/css" data-origin="pandoc">
-div.sourceCode { overflow-x: auto; }
-table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
-  margin: 0; padding: 0; vertical-align: baseline; border: none; }
-table.sourceCode { width: 100%; line-height: 100%; }
-td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
-td.sourceCode { padding-left: 5px; }
-code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
-code > span.dt { color: #902000; } /* DataType */
-code > span.dv { color: #40a070; } /* DecVal */
-code > span.bn { color: #40a070; } /* BaseN */
-code > span.fl { color: #40a070; } /* Float */
-code > span.ch { color: #4070a0; } /* Char */
-code > span.st { color: #4070a0; } /* String */
-code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
-code > span.ot { color: #007020; } /* Other */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
-code > span.fu { color: #06287e; } /* Function */
-code > span.er { color: #ff0000; font-weight: bold; } /* Error */
-code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-code > span.cn { color: #880000; } /* Constant */
-code > span.sc { color: #4070a0; } /* SpecialChar */
-code > span.vs { color: #4070a0; } /* VerbatimString */
-code > span.ss { color: #bb6688; } /* SpecialString */
-code > span.im { } /* Import */
-code > span.va { color: #19177c; } /* Variable */
-code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
-code > span.op { color: #666666; } /* Operator */
-code > span.bu { } /* BuiltIn */
-code > span.ex { } /* Extension */
-code > span.pp { color: #bc7a00; } /* Preprocessor */
-code > span.at { color: #7d9029; } /* Attribute */
-code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
-code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
-code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
-code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 
 </style>
 <script>
@@ -62,13 +135,20 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
   for (var i = 0; i < sheets.length; i++) {
     if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
     try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    for (var j = 0; j < rules.length; j++) {
+    var j = 0;
+    while (j < rules.length) {
       var rule = rules[j];
       // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
       var style = rule.style.cssText;
       // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
       // replace div.sourceCode by a pre.sourceCode rule
       sheets[i].deleteRule(j);
       sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
@@ -79,7 +159,188 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
 
 
 
@@ -91,9 +352,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore"><ol start="5" style="list-style-type: decimal">
-<li>The random parameters (or mixed) logit model</li>
-</ol></h1>
+<h1 class="title toc-ignore">5. The random parameters (or mixed) logit model</h1>
 
 
 
@@ -103,23 +362,23 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <div id="the-probabilities" class="section level3">
 <h3>The probabilities</h3>
 <p>For the standard logit model, the probability that individual <span class="math inline">\(i\)</span> choose alternative <span class="math inline">\(j\)</span> is: <span class="math display">\[
-P_{il}=\frac{e^{\beta'x_{il}}}{\sum_j e^{\beta'x_{ij}}}.
+P_{il}=\frac{e^{\beta&#39;x_{il}}}{\sum_j e^{\beta&#39;x_{ij}}}.
 \]</span></p>
 <p>Suppose now that the coefficients are individual-specific. The probabilities are then:</p>
 <p><span class="math display">\[
-P_{il}=\frac{e^{\beta_i'x_{il}}}{\sum_j e^{\beta_i'x_{ij}}}.
+P_{il}=\frac{e^{\beta_i&#39;x_{il}}}{\sum_j e^{\beta_i&#39;x_{ij}}}.
 \]</span></p>
 <p>A first approach consists on estimating the parameters for every individual. However, these parameters are identified and can be consistently estimated only if a large number of choice situations per individual is available, which is scarcely the case.</p>
-<p>A more appealing approach consists on considering the <span class="math inline">\(\beta_i\)</span>'s as random draws from a distribution whose parameters are estimated, which leads to the mixed logit model. The probability that individual <span class="math inline">\(i\)</span> will choose alternative <span class="math inline">\(l\)</span>, for a given value of <span class="math inline">\(\beta_i\)</span> is:</p>
+<p>A more appealing approach consists on considering the <span class="math inline">\(\beta_i\)</span>’s as random draws from a distribution whose parameters are estimated, which leads to the mixed logit model. The probability that individual <span class="math inline">\(i\)</span> will choose alternative <span class="math inline">\(l\)</span>, for a given value of <span class="math inline">\(\beta_i\)</span> is:</p>
 <p><span class="math display">\[
-P_{il} \mid \beta_i =\frac{e^{\beta_i'x_{il}}}{\sum_j e^{\beta_i'x_{ij}}}.
+P_{il} \mid \beta_i =\frac{e^{\beta_i&#39;x_{il}}}{\sum_j e^{\beta_i&#39;x_{ij}}}.
 \]</span></p>
 <p>To get the unconditional probability, we have to integrate out this conditional probability, using the density function of <span class="math inline">\(\beta\)</span>. Suppose that <span class="math inline">\(V_{il}=\alpha+\beta_i x_{il}\)</span>, i.e., there is only one individual-specific coefficient and that the density of <span class="math inline">\(\beta_i\)</span> is <span class="math inline">\(f(\beta,\theta)\)</span>, <span class="math inline">\(\theta\)</span> being the vector of the parameters of the distribution of <span class="math inline">\(\beta\)</span>. The unconditional probability is then:</p>
 <p><span class="math display">\[
 P_{il}= \mbox{E}(P_{il} \mid \beta_i) =
 \int_{\beta}(P_{il} \mid \beta)f(\beta,\theta)d\beta
 =
-\int_{\beta}\frac{e^{\beta_i'x_{il}}}{\sum_j e^{\beta_i'x_{ij}}}f(\beta,\theta)d\beta,
+\int_{\beta}\frac{e^{\beta_i&#39;x_{il}}}{\sum_j e^{\beta_i&#39;x_{ij}}}f(\beta,\theta)d\beta,
 \]</span></p>
 <p>which is a one-dimensional integral that can be efficiently estimated by quadrature methods. If <span class="math inline">\(V_{il}=\beta_i^{\top} x_{il}\)</span> where <span class="math inline">\(\beta_i\)</span> is a vector of length <span class="math inline">\(K\)</span> and <span class="math inline">\(f(\beta,\theta)\)</span> is the joint density of the <span class="math inline">\(K\)</span> individual-specific coefficients, the unconditional probability is:</p>
 <p><span class="math display">\[
@@ -133,7 +392,7 @@ P_{il}= \mbox{E}(P_{il} \mid \beta_i) =
 <h3>Individual parameters</h3>
 <p>The expected value of a random coefficient (<span class="math inline">\(\mbox{E}(\beta)\)</span>) is simply estimated by the mean of the <span class="math inline">\(R\)</span> draws on its distribution: <span class="math inline">\(\bar{\beta}=\sum_{r=1}^R \beta_r\)</span>. Individual parameters are obtained by first computing the probabilities of the observed choice of <span class="math inline">\(i\)</span> for every value of <span class="math inline">\(\beta_r\)</span>:</p>
 <p><span class="math display">\[
-P_{ir}=\frac{\sum_j y_{ij} e^{\beta_r^{'}x_{ij}}}{\sum_j e^{\beta_r^{'}x_{ij}}},
+P_{ir}=\frac{\sum_j y_{ij} e^{\beta_r^{&#39;}x_{ij}}}{\sum_j e^{\beta_r^{&#39;}x_{ij}}},
 \]</span></p>
 <p>where <span class="math inline">\(y_{ij}\)</span> is a dummy equal to one if <span class="math inline">\(i\)</span> has chosen alternative <span class="math inline">\(j\)</span>. The expected value of the parameter for an individual is then estimated by using these probabilities to weight the <span class="math inline">\(R\)</span> <span class="math inline">\(\beta\)</span> values:</p>
 <p><span class="math display">\[
@@ -156,7 +415,7 @@ P_{ir}=\frac{\sum_j y_{ij} e^{\beta_r^{'}x_{ij}}}{\sum_j e^{\beta_r^{'}x_{ij}}},
 <p>Several considerations may lead to the choice of a specific distribution:</p>
 <ul>
 <li>if correlated coefficients are required, the natural choice is a (transformed-) normal distribution, <code>&quot;n&quot;</code>, <code>&quot;ln&quot;</code>, <code>&quot;tn&quot;</code> and <code>&quot;cn&quot;</code>,</li>
-<li>it's often the case that one wants to impose that the distribution of a random parameter takes only positive or negative values. For example, the price coefficient should be negative for every individual. In this case, <code>&quot;zbt&quot;</code> and <code>&quot;zbu&quot;</code> can be used. The use of <code>&quot;ln&quot;</code> and <code>&quot;cn&quot;</code> can also be relevant but, in this case, if only negative values are expected, one should consider the distribution of the opposite of the random price coefficient. This can easily be done using the <code>opposite</code> argument of <code>dfidx</code>.<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>,</li>
+<li>it’s often the case that one wants to impose that the distribution of a random parameter takes only positive or negative values. For example, the price coefficient should be negative for every individual. In this case, <code>&quot;zbt&quot;</code> and <code>&quot;zbu&quot;</code> can be used. The use of <code>&quot;ln&quot;</code> and <code>&quot;cn&quot;</code> can also be relevant but, in this case, if only negative values are expected, one should consider the distribution of the opposite of the random price coefficient. This can easily be done using the <code>opposite</code> argument of <code>dfidx</code>.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>,</li>
 <li>the use of unbounded distributions often leads to implausible values of some statistics of the random parameters, especially the mean. This is particularly the case of the log-normal distribution, which has an heavy left tail. In this case, the use of bounded distribution like the uniform and the triangular distributions can be used.</li>
 </ul>
 <p><code>R</code> is the number of draws, <code>halton</code> indicates whether halton draws <span class="citation">(see Train 2009, chap. 9)</span> should be used (<code>NA</code> and <code>NULL</code> indicate respectively that default halton draws are used and that pseudo-random numbers are used), <code>panel</code> is a boolean which indicates if the panel data version of the log-likelihood should be used.</p>
@@ -164,35 +423,35 @@ P_{ir}=\frac{\sum_j y_{ij} e^{\beta_r^{'}x_{ij}}}{\sum_j e^{\beta_r^{'}x_{ij}}},
 <div id="train" class="section level3">
 <h3>Train</h3>
 <p>We use the <code>Train</code> data set, previously coerced to a <code>dfidx</code> object called <code>Tr</code>. We first estimate the multinomial model: both alternatives being virtual train trips, it is relevant to use only generic coefficients and to remove the intercept:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)
-<span class="kw">data</span>(<span class="st">&quot;Train&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
-Train<span class="op">$</span>choiceid &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Train)
-Tr &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Train, <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, <span class="dt">varying =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">11</span>, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>,
-            <span class="dt">opposite =</span> <span class="kw">c</span>(<span class="st">&quot;price&quot;</span>, <span class="st">&quot;comfort&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;change&quot;</span>),
-            <span class="dt">idx =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;choiceid&quot;</span>, <span class="st">&quot;id&quot;</span>)), <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))
-Tr<span class="op">$</span>price &lt;-<span class="st"> </span>Tr<span class="op">$</span>price <span class="op">/</span><span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="fl">2.20371</span>
-Tr<span class="op">$</span>time &lt;-<span class="st"> </span>Tr<span class="op">$</span>time <span class="op">/</span><span class="st"> </span><span class="dv">60</span>
-Train.ml &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>change <span class="op">+</span><span class="st"> </span>comfort <span class="op">|</span><span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="dv">1</span>, Tr)
-<span class="kw">coef</span>(<span class="kw">summary</span>(Train.ml))</code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;Train&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>Train<span class="op">$</span>choiceid &lt;-<span class="st"> </span><span class="dv">1</span><span class="op">:</span><span class="kw">nrow</span>(Train)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>Tr &lt;-<span class="st"> </span><span class="kw">dfidx</span>(Train, <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, <span class="dt">varying =</span> <span class="dv">4</span><span class="op">:</span><span class="dv">11</span>, <span class="dt">sep =</span> <span class="st">&quot;_&quot;</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a>            <span class="dt">opposite =</span> <span class="kw">c</span>(<span class="st">&quot;price&quot;</span>, <span class="st">&quot;comfort&quot;</span>, <span class="st">&quot;time&quot;</span>, <span class="st">&quot;change&quot;</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>            <span class="dt">idx =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;choiceid&quot;</span>, <span class="st">&quot;id&quot;</span>)), <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a>Tr<span class="op">$</span>price &lt;-<span class="st"> </span>Tr<span class="op">$</span>price <span class="op">/</span><span class="st"> </span><span class="dv">100</span> <span class="op">*</span><span class="st"> </span><span class="fl">2.20371</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a>Tr<span class="op">$</span>time &lt;-<span class="st"> </span>Tr<span class="op">$</span>time <span class="op">/</span><span class="st"> </span><span class="dv">60</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true"></a>Train.ml &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>change <span class="op">+</span><span class="st"> </span>comfort <span class="op">|</span><span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="dv">1</span>, Tr)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true"></a><span class="kw">coef</span>(<span class="kw">summary</span>(Train.ml))</span></code></pre></div>
 <pre><code>##           Estimate  Std. Error   z-value     Pr(&gt;|z|)
 ## price   0.06735804 0.003393252 19.850585 0.000000e+00
 ## time    1.72055142 0.160351702 10.729861 0.000000e+00
 ## change  0.32634094 0.059489152  5.485722 4.117843e-08
 ## comfort 0.94572555 0.064945464 14.561842 0.000000e+00</code></pre>
-<p>All the coefficients are highly significant and have the predicted positive sign (remind than an increase in the variable <code>comfort</code> implies using a less comfortable class). The coefficients can't be directly interpreted, but dividing them by the price coefficient, we get monetary values:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(Train.ml)[<span class="op">-</span><span class="st"> </span><span class="dv">1</span>] <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(Train.ml)[<span class="dv">1</span>]</code></pre></div>
+<p>All the coefficients are highly significant and have the predicted positive sign (remind than an increase in the variable <code>comfort</code> implies using a less comfortable class). The coefficients can’t be directly interpreted, but dividing them by the price coefficient, we get monetary values:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">coef</span>(Train.ml)[<span class="op">-</span><span class="st"> </span><span class="dv">1</span>] <span class="op">/</span><span class="st"> </span><span class="kw">coef</span>(Train.ml)[<span class="dv">1</span>]</span></code></pre></div>
 <pre><code>##     time   change  comfort 
 ## 25.54337  4.84487 14.04028</code></pre>
 <p>We obtain the value of 26 euros for an hour of traveling, 5 euros for a change and 14 euros to travel in a more comfortable class. We then estimate a model with three random parameters, <code>time</code>, <code>change</code> and <code>comfort</code>. We first estimate the uncorrelated mixed logit model:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Train.mxlu &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>change <span class="op">+</span><span class="st"> </span>comfort <span class="op">|</span><span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="dv">1</span>, Tr,
-<span class="dt">panel =</span> <span class="ot">TRUE</span>, <span class="dt">rpar =</span> <span class="kw">c</span>(<span class="dt">time =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">change =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">comfort =</span> <span class="st">&quot;n&quot;</span>), <span class="dt">R =</span> <span class="dv">100</span>,
-<span class="dt">correlation =</span> <span class="ot">FALSE</span>, <span class="dt">halton =</span> <span class="ot">NA</span>, <span class="dt">method =</span> <span class="st">&quot;bhhh&quot;</span>)
-<span class="kw">names</span>(<span class="kw">coef</span>(Train.mxlu))</code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a>Train.mxlu &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>price <span class="op">+</span><span class="st"> </span>time <span class="op">+</span><span class="st"> </span>change <span class="op">+</span><span class="st"> </span>comfort <span class="op">|</span><span class="st"> </span><span class="op">-</span><span class="st"> </span><span class="dv">1</span>, Tr,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a><span class="dt">panel =</span> <span class="ot">TRUE</span>, <span class="dt">rpar =</span> <span class="kw">c</span>(<span class="dt">time =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">change =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">comfort =</span> <span class="st">&quot;n&quot;</span>), <span class="dt">R =</span> <span class="dv">100</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="dt">correlation =</span> <span class="ot">FALSE</span>, <span class="dt">halton =</span> <span class="ot">NA</span>, <span class="dt">method =</span> <span class="st">&quot;bhhh&quot;</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="kw">names</span>(<span class="kw">coef</span>(Train.mxlu))</span></code></pre></div>
 <pre><code>## [1] &quot;price&quot;      &quot;time&quot;       &quot;change&quot;     &quot;comfort&quot;   
 ## [5] &quot;sd.time&quot;    &quot;sd.change&quot;  &quot;sd.comfort&quot;</code></pre>
 <p>Compared to the multinomial logit model, there are now three more coefficients which are the standard deviations of the distribution of the three random parameters. The correlated model is obtained by setting the <code>correlation</code> argument to <code>TRUE</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Train.mxlc &lt;-<span class="st"> </span><span class="kw">update</span>(Train.mxlu, <span class="dt">correlation =</span> <span class="ot">TRUE</span>)
-<span class="kw">names</span>(<span class="kw">coef</span>(Train.mxlc))</code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a>Train.mxlc &lt;-<span class="st"> </span><span class="kw">update</span>(Train.mxlu, <span class="dt">correlation =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="kw">names</span>(<span class="kw">coef</span>(Train.mxlc))</span></code></pre></div>
 <pre><code>##  [1] &quot;price&quot;                &quot;time&quot;                
 ##  [3] &quot;change&quot;               &quot;comfort&quot;             
 ##  [5] &quot;chol.time:time&quot;       &quot;chol.time:change&quot;    
@@ -229,38 +488,38 @@ CC^{\top}=
   \end{array}
 \right)
 \]</span></p>
-<p>where <span class="math inline">\(\sigma_i^2\)</span> and <span class="math inline">\(\sigma_{ij}\)</span> are respectively the variance of the random parameter <span class="math inline">\(i\)</span> and the covariance between two random parameters <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. Therefore, the first estimated parameter can be simply interpreted as the standard deviation of the first random parameter, but the five other can't be interpreted easily.</p>
+<p>where <span class="math inline">\(\sigma_i^2\)</span> and <span class="math inline">\(\sigma_{ij}\)</span> are respectively the variance of the random parameter <span class="math inline">\(i\)</span> and the covariance between two random parameters <span class="math inline">\(i\)</span> and <span class="math inline">\(j\)</span>. Therefore, the first estimated parameter can be simply interpreted as the standard deviation of the first random parameter, but the five other can’t be interpreted easily.</p>
 <p>Random parameters may be extracted using the function <code>rpar</code> which take as first argument a <code>mlogit</code> object and as second argument <code>par</code> the parameter(s) to be extracted. This function returns a <code>rpar</code> object and a <code>summary</code> method is provided to describe it:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">marg.ut.time &lt;-<span class="st"> </span><span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>)
-<span class="kw">summary</span>(marg.ut.time)</code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a>marg.ut.time &lt;-<span class="st"> </span><span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a><span class="kw">summary</span>(marg.ut.time)</span></code></pre></div>
 <pre><code>##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
 ##     -Inf 1.283749 4.893752 4.893752 8.503756      Inf</code></pre>
-<p>The estimated random parameter is in the &quot;preference space&quot;, which means that it is the marginal utility of time.</p>
+<p>The estimated random parameter is in the “preference space”, which means that it is the marginal utility of time.</p>
 <p><strong>Note that <code>summary(marg.ut.time)</code> displays the unconditional distribution of the marginal utility of time.</strong></p>
-<p>Parameters in the &quot;willingness to pay&quot; (WTP) space are more easy to interpret. They can be estimated directly (a feature not supported by <code>mlogit</code>) or can be obtained from the marginal utility by dividing it by the coefficient of a covariate expressed in monetary value (a price for example), taken as a non random parameter. The ratio can then be interpreted as a monetary value (or willingness to pay). To obtain the distribution of the random parameters in the WTP space, one can use the <code>norm</code> argument of <code>rpar</code>:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">wtp.time &lt;-<span class="st"> </span><span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>, <span class="dt">norm =</span> <span class="st">&quot;price&quot;</span>)
-<span class="kw">summary</span>(wtp.time)</code></pre></div>
+<p>Parameters in the “willingness to pay” (WTP) space are more easy to interpret. They can be estimated directly (a feature not supported by <code>mlogit</code>) or can be obtained from the marginal utility by dividing it by the coefficient of a covariate expressed in monetary value (a price for example), taken as a non random parameter. The ratio can then be interpreted as a monetary value (or willingness to pay). To obtain the distribution of the random parameters in the WTP space, one can use the <code>norm</code> argument of <code>rpar</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>wtp.time &lt;-<span class="st"> </span><span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>, <span class="dt">norm =</span> <span class="st">&quot;price&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a><span class="kw">summary</span>(wtp.time)</span></code></pre></div>
 <pre><code>##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
 ##      -Inf  8.753119 33.367588 33.367588 57.982056       Inf</code></pre>
 <p>The median value (and the mean value as the distribution is symmetric) of transport time is about 33 euros. Several methods/functions are provided to extract the individual statistics (<code>mean</code>, <code>med</code> and <code>stdev</code> respectively for the mean, the median and the standard deviation):</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(<span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>, <span class="dt">norm =</span> <span class="st">&quot;price&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true"></a><span class="kw">mean</span>(<span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>, <span class="dt">norm =</span> <span class="st">&quot;price&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] 33.36759</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">med</span>(<span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>, <span class="dt">norm =</span> <span class="st">&quot;price&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true"></a><span class="kw">med</span>(<span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>, <span class="dt">norm =</span> <span class="st">&quot;price&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] 33.36759</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stdev</span>(<span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>, <span class="dt">norm =</span> <span class="st">&quot;price&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true"></a><span class="kw">stdev</span>(<span class="kw">rpar</span>(Train.mxlc, <span class="st">&quot;time&quot;</span>, <span class="dt">norm =</span> <span class="st">&quot;price&quot;</span>))</span></code></pre></div>
 <pre><code>## [1] 36.49347</code></pre>
-<p>In case of correlated random parameters, as the estimated parameters can't be directly interpreted, a <code>vcov</code> method for <code>mlogit</code> objects is provided. It has a <code>what</code> argument which default value is <code>coefficient</code>. In this case the usual covariance matrix of the coefficients is return. If <code>what = &quot;rpar&quot;</code>, the covariance matrix of the correlated random parameters is returned if <code>type = &quot;cov&quot;</code> (the default) and the correlation matrix (with standard deviations on the diagonal) is returned if <code>type = &quot;cor&quot;</code>. The object is of class <code>vcov.mlogit</code> and a <code>summary</code> method for this object is provided which computes, using the delta method, the standard errors of the parameters of the covariance or the correlation matrix.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vcov</span>(Train.mxlc, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>)</code></pre></div>
+<p>In case of correlated random parameters, as the estimated parameters can’t be directly interpreted, a <code>vcov</code> method for <code>mlogit</code> objects is provided. It has a <code>what</code> argument which default value is <code>coefficient</code>. In this case the usual covariance matrix of the coefficients is return. If <code>what = &quot;rpar&quot;</code>, the covariance matrix of the correlated random parameters is returned if <code>type = &quot;cov&quot;</code> (the default) and the correlation matrix (with standard deviations on the diagonal) is returned if <code>type = &quot;cor&quot;</code>. The object is of class <code>vcov.mlogit</code> and a <code>summary</code> method for this object is provided which computes, using the delta method, the standard errors of the parameters of the covariance or the correlation matrix.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true"></a><span class="kw">vcov</span>(Train.mxlc, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>)</span></code></pre></div>
 <pre><code>##               time     change  comfort
 ## time    28.6460389 -0.2787999 5.557933
 ## change  -0.2787999  3.1047367 1.232467
 ## comfort  5.5579334  1.2324667 7.895535</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">vcov</span>(Train.mxlc, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;cor&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a><span class="kw">vcov</span>(Train.mxlc, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;cor&quot;</span>)</span></code></pre></div>
 <pre><code>##                time      change   comfort
 ## time     5.35219945 -0.02956296 0.3695645
 ## change  -0.02956296  1.76202630 0.2489270
 ## comfort  0.36956453  0.24892701 2.8098994</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">vcov</span>(Train.mxlc, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;cor&quot;</span>))</code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a><span class="kw">summary</span>(<span class="kw">vcov</span>(Train.mxlc, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;cor&quot;</span>))</span></code></pre></div>
 <pre><code>##                     Estimate Std. Error z-value  Pr(&gt;|z|)    
 ## sd.time             5.352199   0.381135 14.0428 &lt; 2.2e-16 ***
 ## sd.change           1.762026   0.144592 12.1862 &lt; 2.2e-16 ***
@@ -269,8 +528,8 @@ CC^{\top}=
 ## cor.time:comfort    0.369565   0.114068  3.2399  0.001196 ** 
 ## cor.change:comfort  0.248927   0.110321  2.2564  0.024047 *  
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(<span class="kw">vcov</span>(Train.mxlc, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;cov&quot;</span>))</code></pre></div>
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">summary</span>(<span class="kw">vcov</span>(Train.mxlc, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;cov&quot;</span>))</span></code></pre></div>
 <pre><code>##                    Estimate Std. Error z-value  Pr(&gt;|z|)    
 ## var.time           28.64604    4.07982  7.0214 2.197e-12 ***
 ## var.change          3.10474    0.50955  6.0931 1.107e-09 ***
@@ -279,50 +538,50 @@ CC^{\top}=
 ## cov.time:comfort    5.55793    0.89161  6.2336 4.559e-10 ***
 ## cov.change:comfort  1.23247    0.30131  4.0903 4.308e-05 ***
 ## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 <p>In case of correlated random parameters, as the estimated parameters are not directly interpretable, further functions are provided to analyze the correlation of the coefficients:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cor.mlogit</span>(Train.mxlc)</code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a><span class="kw">cor.mlogit</span>(Train.mxlc)</span></code></pre></div>
 <pre><code>##                time      change   comfort
 ## time     1.00000000 -0.02956296 0.3695645
 ## change  -0.02956296  1.00000000 0.2489270
 ## comfort  0.36956453  0.24892701 1.0000000</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">cov.mlogit</span>(Train.mxlc)</code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true"></a><span class="kw">cov.mlogit</span>(Train.mxlc)</span></code></pre></div>
 <pre><code>##               time     change  comfort
 ## time    28.6460389 -0.2787999 5.557933
 ## change  -0.2787999  3.1047367 1.232467
 ## comfort  5.5579334  1.2324667 7.895535</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">stdev</span>(Train.mxlc)</code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a><span class="kw">stdev</span>(Train.mxlc)</span></code></pre></div>
 <pre><code>##     time   change  comfort 
 ## 5.352199 1.762026 2.809899</code></pre>
 <p>The correlation can be restricted to a subset of random parameters by filling the <code>correlation</code> argument with a character vector indicating the corresponding covariates:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Train.mxlc2 &lt;-<span class="st"> </span><span class="kw">update</span>(Train.mxlc, <span class="dt">correlation =</span> <span class="kw">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;comfort&quot;</span>))
-<span class="kw">vcov</span>(Train.mxlc2, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;cor&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true"></a>Train.mxlc2 &lt;-<span class="st"> </span><span class="kw">update</span>(Train.mxlc, <span class="dt">correlation =</span> <span class="kw">c</span>(<span class="st">&quot;time&quot;</span>, <span class="st">&quot;comfort&quot;</span>))</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true"></a><span class="kw">vcov</span>(Train.mxlc2, <span class="dt">what =</span> <span class="st">&quot;rpar&quot;</span>, <span class="dt">type =</span> <span class="st">&quot;cor&quot;</span>)</span></code></pre></div>
 <pre><code>##              time   comfort
 ## time    5.5726158 0.3909467
 ## comfort 0.3909467 3.0631462</code></pre>
 <p>The presence of random coefficients and their correlation can be investigated using any of the three tests. Actually, three nested models can be considered, a model with no random effects, a model with random but uncorrelated effects and a model with random and correlated effects. We first present the three tests of no correlated random effects:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lr.mxc &lt;-<span class="st"> </span><span class="kw">lrtest</span>(Train.mxlc, Train.ml)
-wd.mxc &lt;-<span class="st"> </span><span class="kw">waldtest</span>(Train.mxlc)
-<span class="kw">library</span>(<span class="st">&quot;car&quot;</span>)
-lh.mxc &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(Train.mxlc, <span class="kw">c</span>(<span class="st">&quot;chol.time:time = 0&quot;</span>,
-<span class="st">&quot;chol.time:change =  0&quot;</span>, <span class="st">&quot;chol.time:comfort = 0&quot;</span>, <span class="st">&quot;chol.change:change = 0&quot;</span>,
-<span class="st">&quot;chol.change:comfort = 0&quot;</span>, <span class="st">&quot;chol.comfort:comfort = 0&quot;</span>))
-sc.mxc &lt;-<span class="st"> </span><span class="kw">scoretest</span>(Train.ml, <span class="dt">rpar =</span> <span class="kw">c</span>(<span class="dt">time =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">change =</span> <span class="st">&quot;n&quot;</span>,
-<span class="dt">comfort =</span> <span class="st">&quot;n&quot;</span>), <span class="dt">R =</span> <span class="dv">100</span>, <span class="dt">correlation =</span> <span class="ot">TRUE</span>, <span class="dt">halton =</span> <span class="ot">NA</span>, <span class="dt">panel =</span> <span class="ot">TRUE</span>)
-<span class="kw">sapply</span>(<span class="kw">list</span>(<span class="dt">wald =</span> wd.mxc, <span class="dt">lh =</span> lh.mxc, <span class="dt">score =</span> sc.mxc, <span class="dt">lr =</span> lr.mxc),
-statpval)</code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true"></a>lr.mxc &lt;-<span class="st"> </span><span class="kw">lrtest</span>(Train.mxlc, Train.ml)</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true"></a>wd.mxc &lt;-<span class="st"> </span><span class="kw">waldtest</span>(Train.mxlc)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;car&quot;</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true"></a>lh.mxc &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(Train.mxlc, <span class="kw">c</span>(<span class="st">&quot;chol.time:time = 0&quot;</span>,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true"></a><span class="st">&quot;chol.time:change =  0&quot;</span>, <span class="st">&quot;chol.time:comfort = 0&quot;</span>, <span class="st">&quot;chol.change:change = 0&quot;</span>,</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true"></a><span class="st">&quot;chol.change:comfort = 0&quot;</span>, <span class="st">&quot;chol.comfort:comfort = 0&quot;</span>))</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true"></a>sc.mxc &lt;-<span class="st"> </span><span class="kw">scoretest</span>(Train.ml, <span class="dt">rpar =</span> <span class="kw">c</span>(<span class="dt">time =</span> <span class="st">&quot;n&quot;</span>, <span class="dt">change =</span> <span class="st">&quot;n&quot;</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true"></a><span class="dt">comfort =</span> <span class="st">&quot;n&quot;</span>), <span class="dt">R =</span> <span class="dv">100</span>, <span class="dt">correlation =</span> <span class="ot">TRUE</span>, <span class="dt">halton =</span> <span class="ot">NA</span>, <span class="dt">panel =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true"></a><span class="kw">sapply</span>(<span class="kw">list</span>(<span class="dt">wald =</span> wd.mxc, <span class="dt">lh =</span> lh.mxc, <span class="dt">score =</span> sc.mxc, <span class="dt">lr =</span> lr.mxc),</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true"></a>statpval)</span></code></pre></div>
 <pre><code>##            wald      lh   score      lr
 ## stat    288.287 288.287 208.765 388.057
 ## p-value   0.000   0.000   0.000   0.000</code></pre>
 <p>The hypothesis of no correlated random parameters is strongly rejected. We then present the three tests of no correlation, the existence of random parameters being maintained.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">lr.corr &lt;-<span class="st"> </span><span class="kw">lrtest</span>(Train.mxlc, Train.mxlu)
-lh.corr &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(Train.mxlc, <span class="kw">c</span>(<span class="st">&quot;chol.time:change = 0&quot;</span>,
-<span class="st">&quot;chol.time:comfort = 0&quot;</span>, <span class="st">&quot;chol.change:comfort = 0&quot;</span>))
-wd.corr &lt;-<span class="st"> </span><span class="kw">waldtest</span>(Train.mxlc, <span class="dt">correlation =</span> <span class="ot">FALSE</span>)
-<span class="co">#YC</span>
-sc.corr &lt;-<span class="st"> </span><span class="kw">scoretest</span>(Train.mxlu, <span class="dt">correlation =</span> <span class="ot">TRUE</span>)
-<span class="kw">sapply</span>(<span class="kw">list</span>(<span class="dt">wald =</span> wd.corr, <span class="dt">lh =</span> lh.corr, <span class="dt">score =</span> sc.corr, <span class="dt">lr =</span> lr.corr),
-statpval)</code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true"></a>lr.corr &lt;-<span class="st"> </span><span class="kw">lrtest</span>(Train.mxlc, Train.mxlu)</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true"></a>lh.corr &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(Train.mxlc, <span class="kw">c</span>(<span class="st">&quot;chol.time:change = 0&quot;</span>,</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true"></a><span class="st">&quot;chol.time:comfort = 0&quot;</span>, <span class="st">&quot;chol.change:comfort = 0&quot;</span>))</span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true"></a>wd.corr &lt;-<span class="st"> </span><span class="kw">waldtest</span>(Train.mxlc, <span class="dt">correlation =</span> <span class="ot">FALSE</span>)</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true"></a><span class="co">#YC</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true"></a>sc.corr &lt;-<span class="st"> </span><span class="kw">scoretest</span>(Train.mxlu, <span class="dt">correlation =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true"></a><span class="kw">sapply</span>(<span class="kw">list</span>(<span class="dt">wald =</span> wd.corr, <span class="dt">lh =</span> lh.corr, <span class="dt">score =</span> sc.corr, <span class="dt">lr =</span> lr.corr),</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true"></a>statpval)</span></code></pre></div>
 <pre><code>##            wald      lh  score     lr
 ## stat    103.195 103.195 10.483 42.621
 ## p-value   0.000   0.000  0.015  0.000</code></pre>
@@ -330,7 +589,7 @@ statpval)</code></pre></div>
 </div>
 <div id="riskytransport" class="section level3">
 <h3>RiskyTransport</h3>
-<p>The second example is a study by <span class="citation">León and Miguel (2017)</span> who consider a mode-choice model for transit from Freetown's airport (Sierra-Leone) to downtown. Four alternatives are available: ferry, helicopter, water-taxi and hovercraft. A striking characteristic of their study is that all these alternatives experienced fatal accidents in recent years, so that the fatality risk is non-negligible and differs much from an alternative to another. For example, the probabilities of dying using the water taxi and the helicopter are respectively of 2.55 and 18.41 out of 100,000 passenger-trips. This feature enables the authors to estimate the value of a statistical life. For an individual <span class="math inline">\(i\)</span>, the utility of choosing alternative <span class="math inline">\(j\)</span> is:</p>
+<p>The second example is a study by <span class="citation">León and Miguel (2017)</span> who consider a mode-choice model for transit from Freetown’s airport (Sierra-Leone) to downtown. Four alternatives are available: ferry, helicopter, water-taxi and hovercraft. A striking characteristic of their study is that all these alternatives experienced fatal accidents in recent years, so that the fatality risk is non-negligible and differs much from an alternative to another. For example, the probabilities of dying using the water taxi and the helicopter are respectively of 2.55 and 18.41 out of 100,000 passenger-trips. This feature enables the authors to estimate the value of a statistical life. For an individual <span class="math inline">\(i\)</span>, the utility of choosing alternative <span class="math inline">\(j\)</span> is:</p>
 <p><span class="math display">\[
 U_{ij}=\beta_{il} (1 - p_j) + \beta_{ic} (c_j + w_i t_j)+\epsilon_{ij},
 \]</span></p>
@@ -339,25 +598,25 @@ U_{ij}=\beta_{il} (1 - p_j) + \beta_{ic} (c_j + w_i t_j)+\epsilon_{ij},
 \mbox{VSL}_i = -\frac{\beta_{il}}{\beta_{îc}} = \frac{\Delta
   C_{ij}}{\Delta (1-p_j)}.
 \]</span></p>
-<p>The two covariates of interest are <code>cost</code> (the generalized cost in $PPP) and <code>risk</code> (mortality per 100,000 passenger-trips). The <code>risk</code> variable being purely alternative specific, intercepts for the alternatives cannot therefore be estimated. To avoid endogeneity problems, the authors introduce as covariates marks the individuals gave to 5 attributes of the alternatives: comfort, noise level, crowdedness, convenience and transfer location and the &quot;quality&quot; of the clientele. We first estimate a multinomial logit model.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;RiskyTransport&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)
-RT &lt;-<span class="st"> </span><span class="kw">dfidx</span>(RiskyTransport, <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, <span class="dt">idx =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;id&quot;</span>), <span class="st">&quot;mode&quot;</span>),
-            <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))
-ml.rt &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>risk  <span class="op">+</span><span class="st"> </span>seats <span class="op">+</span><span class="st"> </span>noise <span class="op">+</span><span class="st"> </span>crowdness <span class="op">+</span>
-convloc <span class="op">+</span><span class="st"> </span>clientele <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> RT, <span class="dt">weights =</span> weight)</code></pre></div>
+<p>The two covariates of interest are <code>cost</code> (the generalized cost in $PPP) and <code>risk</code> (mortality per 100,000 passenger-trips). The <code>risk</code> variable being purely alternative specific, intercepts for the alternatives cannot therefore be estimated. To avoid endogeneity problems, the authors introduce as covariates marks the individuals gave to 5 attributes of the alternatives: comfort, noise level, crowdedness, convenience and transfer location and the “quality” of the clientele. We first estimate a multinomial logit model.</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;RiskyTransport&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true"></a>RT &lt;-<span class="st"> </span><span class="kw">dfidx</span>(RiskyTransport, <span class="dt">choice =</span> <span class="st">&quot;choice&quot;</span>, <span class="dt">idx =</span> <span class="kw">list</span>(<span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;id&quot;</span>), <span class="st">&quot;mode&quot;</span>),</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true"></a>            <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true"></a>ml.rt &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>risk  <span class="op">+</span><span class="st"> </span>seats <span class="op">+</span><span class="st"> </span>noise <span class="op">+</span><span class="st"> </span>crowdness <span class="op">+</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true"></a>convloc <span class="op">+</span><span class="st"> </span>clientele <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> RT, <span class="dt">weights =</span> weight)</span></code></pre></div>
 <p>Note the use of the <code>weights</code> argument in order to set weights to the observations, as done in the original study.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">coef</span>(ml.rt)[<span class="kw">c</span>(<span class="st">&quot;risk&quot;</span>, <span class="st">&quot;cost&quot;</span>)]</code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true"></a><span class="kw">coef</span>(ml.rt)[<span class="kw">c</span>(<span class="st">&quot;risk&quot;</span>, <span class="st">&quot;cost&quot;</span>)]</span></code></pre></div>
 <pre><code>##         risk         cost 
 ## -0.093907630 -0.009540895</code></pre>
-<p>The ratio of the coefficients of risk and of cost is <code>r round(coef(ml.rt)['risk'] / coef(ml.rt)['cost'], 2)</code> (hundred of thousands of $), which means that the estimated value of the statistical life is a bit less than one million $. We next consider a mixed logit model. The coefficients of <code>cost</code> and <code>risk</code> are assumed to be random, following a zero-bounded triangular distribution.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mx.rt &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>risk  <span class="op">+</span><span class="st"> </span>seats <span class="op">+</span><span class="st"> </span>noise <span class="op">+</span><span class="st"> </span>crowdness <span class="op">+</span>
-convloc <span class="op">+</span><span class="st"> </span>clientele <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> RT, <span class="dt">weights =</span> weight,
-<span class="dt">rpar =</span> <span class="kw">c</span>(<span class="dt">cost =</span> <span class="st">'zbt'</span>, <span class="dt">risk =</span> <span class="st">'zbt'</span>), <span class="dt">R =</span> <span class="dv">100</span>, <span class="dt">halton =</span> <span class="ot">NA</span>, <span class="dt">panel =</span> <span class="ot">TRUE</span>)</code></pre></div>
+<p>The ratio of the coefficients of risk and of cost is <code>r round(coef(ml.rt)[&#39;risk&#39;] / coef(ml.rt)[&#39;cost&#39;], 2)</code> (hundred of thousands of $), which means that the estimated value of the statistical life is a bit less than one million $. We next consider a mixed logit model. The coefficients of <code>cost</code> and <code>risk</code> are assumed to be random, following a zero-bounded triangular distribution.</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true"></a>mx.rt &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>risk  <span class="op">+</span><span class="st"> </span>seats <span class="op">+</span><span class="st"> </span>noise <span class="op">+</span><span class="st"> </span>crowdness <span class="op">+</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true"></a>convloc <span class="op">+</span><span class="st"> </span>clientele <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> RT, <span class="dt">weights =</span> weight,</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true"></a><span class="dt">rpar =</span> <span class="kw">c</span>(<span class="dt">cost =</span> <span class="st">&#39;zbt&#39;</span>, <span class="dt">risk =</span> <span class="st">&#39;zbt&#39;</span>), <span class="dt">R =</span> <span class="dv">100</span>, <span class="dt">halton =</span> <span class="ot">NA</span>, <span class="dt">panel =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
 <p>The results are presented in the following table:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;texreg&quot;</span>)
-<span class="kw">htmlreg</span>(<span class="kw">list</span>(<span class="st">'Multinomial logit'</span> =<span class="st"> </span>ml.rt, <span class="st">'Mixed logit'</span> =<span class="st"> </span>mx.rt),
-<span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">float.pos =</span> <span class="st">&quot;hbt&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;tab:risktr&quot;</span>, <span class="dt">single.row =</span> <span class="ot">TRUE</span>,
-<span class="dt">caption =</span> <span class="st">&quot;Transportation choices.&quot;</span>)</code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;texreg&quot;</span>)</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true"></a><span class="kw">htmlreg</span>(<span class="kw">list</span>(<span class="st">&#39;Multinomial logit&#39;</span> =<span class="st"> </span>ml.rt, <span class="st">&#39;Mixed logit&#39;</span> =<span class="st"> </span>mx.rt),</span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true"></a><span class="dt">digits =</span> <span class="dv">3</span>, <span class="dt">float.pos =</span> <span class="st">&quot;hbt&quot;</span>, <span class="dt">label =</span> <span class="st">&quot;tab:risktr&quot;</span>, <span class="dt">single.row =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true"></a><span class="dt">caption =</span> <span class="st">&quot;Transportation choices.&quot;</span>)</span></code></pre></div>
 <table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;caption-side: bottom;color: #000000;border-top: 2px solid #000000;">
 <caption>
 Transportation choices.
@@ -501,14 +760,14 @@ K
 <tfoot>
 <tr>
 <td style="font-size: 0.8em;" colspan="3">
-<sup><em><strong></sup>p &lt; 0.001; <sup></strong></sup>p &lt; 0.01; <sup></em></sup>p &lt; 0.05
+<sup>***</sup>p &lt; 0.001; <sup>**</sup>p &lt; 0.01; <sup>*</sup>p &lt; 0.05
 </td>
 </tr>
 </tfoot>
 </table>
 <p>Not that the log-likelihood is much larger for the mixed effect logit. Individual-level parameters can be extracted using the <code>fitted</code> method, with the type argument set to <code>parameters</code>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">indpar &lt;-<span class="st"> </span><span class="kw">fitted</span>(mx.rt, <span class="dt">type =</span> <span class="st">&quot;parameters&quot;</span>)
-<span class="kw">head</span>(indpar)</code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true"></a>indpar &lt;-<span class="st"> </span><span class="kw">fitted</span>(mx.rt, <span class="dt">type =</span> <span class="st">&quot;parameters&quot;</span>)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true"></a><span class="kw">head</span>(indpar)</span></code></pre></div>
 <pre><code>##        id        cost        risk
 ## 1 8020605 -0.02096705 -0.10105817
 ## 2 8260102 -0.01666475 -0.11211057
@@ -516,48 +775,48 @@ K
 ## 4 8260106 -0.01494848 -0.07319789
 ## 5 8260108 -0.01687051 -0.06501337
 ## 6 8260201 -0.02133116 -0.10285434</code></pre>
-<p>We can then compute the VSL for every individual and analyse their distribution, using quantiles and plotting on figure 1 the empirical density of VSL for African and non-African travelers <span class="citation">(as done in León and Miguel 2017 Table 4, p.219 and Figure 5, p.223)</span>.<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">indpar<span class="op">$</span>VSL &lt;-<span class="st"> </span><span class="kw">with</span>(indpar, risk <span class="op">/</span><span class="st"> </span>cost <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)
-<span class="kw">quantile</span>(indpar<span class="op">$</span>VSL, <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</code></pre></div>
+<p>We can then compute the VSL for every individual and analyse their distribution, using quantiles and plotting on figure 1 the empirical density of VSL for African and non-African travelers <span class="citation">(as done in León and Miguel 2017 Table 4, p.219 and Figure 5, p.223)</span>.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a></p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true"></a>indpar<span class="op">$</span>VSL &lt;-<span class="st"> </span><span class="kw">with</span>(indpar, risk <span class="op">/</span><span class="st"> </span>cost <span class="op">*</span><span class="st"> </span><span class="dv">100</span>)</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true"></a><span class="kw">quantile</span>(indpar<span class="op">$</span>VSL, <span class="kw">c</span>(<span class="fl">0.025</span>, <span class="fl">0.975</span>))</span></code></pre></div>
 <pre><code>##      2.5%     97.5% 
 ##  432.4199 1054.3428</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">mean</span>(indpar<span class="op">$</span>VSL)</code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true"></a><span class="kw">mean</span>(indpar<span class="op">$</span>VSL)</span></code></pre></div>
 <pre><code>## [1] 608.94</code></pre>
-<p>Note that computing the VSL as the ratio of two random parameters which can take zero value can lead to extremely high values if the individual parameter for cost is close to 0.<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a></p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(indpar<span class="op">$</span>cost)</code></pre></div>
+<p>Note that computing the VSL as the ratio of two random parameters which can take zero value can lead to extremely high values if the individual parameter for cost is close to 0.<a href="#fn3" class="footnote-ref" id="fnref3"><sup>3</sup></a></p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true"></a><span class="kw">max</span>(indpar<span class="op">$</span>cost)</span></code></pre></div>
 <pre><code>## [1] -0.002924437</code></pre>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">max</span>(indpar<span class="op">$</span>VSL)</code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true"></a><span class="kw">max</span>(indpar<span class="op">$</span>VSL)</span></code></pre></div>
 <pre><code>## [1] 3131.825</code></pre>
 <p>This is not the case here as (absolute) minimum value of <code>cost</code> is <span class="math inline">\(-0.003\)</span> which leads to a maximum value of VSL of $ <span class="math inline">\(3131\)</span>.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)
-RT<span class="op">$</span>id &lt;-<span class="st"> </span>RT<span class="op">$</span>id
-indpar &lt;-<span class="st"> </span><span class="kw">merge</span>(<span class="kw">unique</span>(<span class="kw">subset</span>(<span class="kw">as.data.frame</span>(RT),
-                              <span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;african&quot;</span>))),
-                indpar)
-<span class="kw">ggplot</span>(indpar) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> VSL, <span class="dt">linetype =</span> african)) <span class="op">+</span><span class="st"> </span>
-<span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">200</span>, <span class="dv">1200</span>))</code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;ggplot2&quot;</span>)</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true"></a>RT<span class="op">$</span>id &lt;-<span class="st"> </span>RT<span class="op">$</span>id</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true"></a>indpar &lt;-<span class="st"> </span><span class="kw">merge</span>(<span class="kw">unique</span>(<span class="kw">subset</span>(<span class="kw">as.data.frame</span>(RT),</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true"></a>                              <span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;id&quot;</span>, <span class="st">&quot;african&quot;</span>))),</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true"></a>                indpar)</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true"></a><span class="kw">ggplot</span>(indpar) <span class="op">+</span><span class="st"> </span><span class="kw">geom_density</span>(<span class="kw">aes</span>(<span class="dt">x =</span> VSL, <span class="dt">linetype =</span> african)) <span class="op">+</span><span class="st"> </span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true"></a><span class="st">    </span><span class="kw">scale_x_continuous</span>(<span class="dt">limits =</span> <span class="kw">c</span>(<span class="dv">200</span>, <span class="dv">1200</span>))</span></code></pre></div>
 </div>
 </div>
 <div id="bibliography" class="section level2 unnumbered">
-<h2>Bibliography</h2>
-<div id="refs" class="references">
+<h2 class="unnumbered">Bibliography</h2>
+<div id="refs" class="references hanging-indent">
 <div id="ref-DALY:HESS:TRAI:12">
-<p>Daly, Andrew, Stephane Hess, and Kenneth Train. 2012. “Assuring Finite Moments for Willingness to Pay in Random Coefficient Models.” <em>Transportation</em> 39 (1): 19–31. doi:<a href="https://doi.org/10.1007/s11116-011-9331-3">10.1007/s11116-011-9331-3</a>.</p>
+<p>Daly, Andrew, Stephane Hess, and Kenneth Train. 2012. “Assuring Finite Moments for Willingness to Pay in Random Coefficient Models.” <em>Transportation</em> 39 (1): 19–31. <a href="https://doi.org/10.1007/s11116-011-9331-3">https://doi.org/10.1007/s11116-011-9331-3</a>.</p>
 </div>
 <div id="ref-LEON:MIGU:17">
-<p>León, Gianmarco, and Edward Miguel. 2017. “Risky Transportation Choices and the Value of a Statistical Life.” <em>American Economic Journal: Applied Economics</em> 9 (1): 202–28. doi:<a href="https://doi.org/10.1257/app.20160140">10.1257/app.20160140</a>.</p>
+<p>León, Gianmarco, and Edward Miguel. 2017. “Risky Transportation Choices and the Value of a Statistical Life.” <em>American Economic Journal: Applied Economics</em> 9 (1): 202–28. <a href="https://doi.org/10.1257/app.20160140">https://doi.org/10.1257/app.20160140</a>.</p>
 </div>
 <div id="ref-TRAI:09">
-<p>Train, Kenneth. 2009. <em>Discrete Choice Methods with Simulation</em>. Cambridge University Press. <a href="https://EconPapers.repec.org/RePEc:cup:cbooks:9780521766555" class="uri">https://EconPapers.repec.org/RePEc:cup:cbooks:9780521766555</a>.</p>
+<p>Train, Kenneth. 2009. <em>Discrete Choice Methods with Simulation</em>. Cambridge University Press. <a href="https://doi.org/10.1017/CBO9780511805271">https://doi.org/10.1017/CBO9780511805271</a>.</p>
 </div>
 </div>
 </div>
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>See vignette <a href="./c2.formula.data.html">formula/data</a>.<a href="#fnref1">↩</a></p></li>
-<li id="fn2"><p>Note that individual-specific parameters should be interpreted with caution, as they are consistent estimates of individual parameters only if the number of choice situations for every individual is large <span class="citation">(see Train 2009, 266)</span>.<a href="#fnref2">↩</a></p></li>
-<li id="fn3"><p>See <span class="citation">Daly, Hess, and Train (2012)</span> for a discussion of the specifications of mixed logit models which assure finite moments of the distribution of willingness to pay.<a href="#fnref3">↩</a></p></li>
+<li id="fn1"><p>See vignette <a href="./c2.formula.data.html">formula/data</a>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
+<li id="fn2"><p>Note that individual-specific parameters should be interpreted with caution, as they are consistent estimates of individual parameters only if the number of choice situations for every individual is large <span class="citation">(see Train 2009, 266)</span>.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn3"><p>See <span class="citation">Daly, Hess, and Train (2012)</span> for a discussion of the specifications of mixed logit models which assure finite moments of the distribution of willingness to pay.<a href="#fnref3" class="footnote-back">↩︎</a></p></li>
 </ol>
 </div>
 

@@ -73,43 +73,43 @@ model.response.mlogit(object, ...)
 \method{coef}{summary.mlogit}(object, ...)
 }
 \arguments{
-\item{outcome}{a boolean which indicates, for the \code{fitted} and the
-\code{residuals} methods whether a matrix (for each choice, one
+\item{outcome}{a boolean which indicates, for the `fitted` and the
+`residuals` methods whether a matrix (for each choice, one
 value for each alternative) or a vector (for each choice, only
 a value for the alternative chosen) should be returned,}
 
 \item{...}{further arguments.}
 
-\item{x, object}{an object of class \code{mlogit}}
+\item{x, object}{an object of class `mlogit`}
 
-\item{new}{an updated formula for the \code{update} method,}
+\item{new}{an updated formula for the `update` method,}
 
 \item{digits}{the number of digits,}
 
 \item{width}{the width of the printing,}
 
-\item{type}{one of \code{outcome} (probability of the chosen
-alternative), \code{probabilities} (probabilities for all the
-alternatives), \code{parameters} for individual-level random
+\item{type}{one of `outcome` (probability of the chosen
+alternative), `probabilities` (probabilities for all the
+alternatives), `parameters` for individual-level random
 parameters for the fitted method, how the correlated random
-parameters should be displayed : \code{"chol"} for the estimated
+parameters should be displayed : `"chol"` for the estimated
 parameters (the elements of the Cholesky decomposition matrix),
-\code{"cov"} for the covariance matrix and \code{"cor"} for the
+`"cov"` for the covariance matrix and `"cor"` for the
 correlation matrix and the standard deviations,}
 
-\item{n, m}{see \code{\link[dfidx:idx]{dfidx::idx()}}}
+\item{n, m}{see [dfidx::idx()]}
 
-\item{newdata}{a \code{data.frame} for the \code{predict} method,}
+\item{newdata}{a `data.frame` for the `predict` method,}
 
-\item{returnData}{for the \code{predict} method, if \code{TRUE}, the data is
+\item{returnData}{for the `predict` method, if `TRUE`, the data is
 returned as an attribute,}
 
 \item{subset}{an optional vector of coefficients to extract for the
-\code{coef} method,}
+`coef` method,}
 
-\item{fixed}{if \code{FALSE} (the default), constant coefficients are
+\item{fixed}{if `FALSE` (the default), constant coefficients are
 not returned,}
 }
 \description{
-Miscellaneous methods for \code{mlogit} objects.
+Miscellaneous methods for `mlogit` objects.
 }

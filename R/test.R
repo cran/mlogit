@@ -85,7 +85,7 @@ hmftest.formula <- function(x, alt.subset, ...){
 #' @export
 hmftest.mlogit <- function(x, z, ...){
   if (is.character(z)) xs <- update(x, alt.subset = z)
-  if (class(z) == "mlogit") xs <- z
+  if (inherits(z, "mlogit")) xs <- z
   coef.x <- coef(x)
   coef.s <- coef(xs)
   un <- names(coef.x) %in% names(coef.s)

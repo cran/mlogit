@@ -121,11 +121,11 @@ max(indpar$cost)
 max(indpar$VSL)
 
 ## ----plotindpar, fig.cap = "The value of a statistical life.", eval = FALSE----
-#  library("ggplot2")
-#  RT$id <- RT$id
-#  indpar <- merge(unique(subset(as.data.frame(RT),
-#                                select = c("id", "african"))),
-#                  indpar)
-#  ggplot(indpar) + geom_density(aes(x = VSL, linetype = african)) +
-#      scale_x_continuous(limits = c(200, 1200))
+# library("ggplot2")
+# RT$id <- RT$id
+# indpar <- merge(unique(subset(as.data.frame(RT),
+#                               select = c("id", "african"))),
+#                 indpar)
+# ggplot(indpar) + geom_density(aes(x = VSL, linetype = african)) +
+#     scale_x_continuous(limits = c(200, 1200))
 

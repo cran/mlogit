@@ -66,45 +66,45 @@ drpar(x, ...)
 \method{drpar}{mlogit}(x, par = 1, y = NULL, norm = NULL, ...)
 }
 \arguments{
-\item{x}{a \code{mlogit} or a \code{rpar} object,}
+\item{x}{a `mlogit` or a `rpar` object,}
 
 \item{...}{further arguments.}
 
 \item{norm}{the variable used for normalization if any : for the
-\code{mlogit} method, this should be the name of the parameter, for
-the \code{rpar} method the absolute value of the parameter,}
+`mlogit` method, this should be the name of the parameter, for
+the `rpar` method the absolute value of the parameter,}
 
-\item{par}{the required parameter(s) for the \code{mlogit} methods
+\item{par}{the required parameter(s) for the `mlogit` methods
 (either the name or the position of the parameter(s). If
-\code{NULL}, all the random parameters are used.}
+`NULL`, all the random parameters are used.}
 
 \item{y}{values for which the function has to be evaluated,}
 }
 \value{
-a numeric vector for \code{qrpar}, \code{drpar} and \code{prpar}, a
-numeric vector for \code{mean}, \code{stdev} and \code{med} and a numeric
-matrix for \code{rg}.
+a numeric vector for `qrpar`, `drpar` and `prpar`, a
+    numeric vector for `mean`, `stdev` and `med` and a numeric
+    matrix for `rg`.
 }
 \description{
 Functions used to describe the characteristics of estimated random
 parameters
 }
 \details{
-\code{rpar} objects contain all the relevant information about
-the distribution of random parameters. These functions enables
-to obtain easily descriptive statistics, density, probability
-and quantiles of the distribution.
+`rpar` objects contain all the relevant information about
+    the distribution of random parameters. These functions enables
+    to obtain easily descriptive statistics, density, probability
+    and quantiles of the distribution.
 
-\code{mean}, \code{med}, \code{stdev} and \code{rg} compute respectively the mean, the
+`mean`, `med`, `stdev` and `rg` compute respectively the mean, the
 median, the standard deviation and the range of the random
-parameter. \code{qrpar}, \code{prpar}, \code{drpar} return functions that compute
+parameter. `qrpar`, `prpar`, `drpar` return functions that compute
 the quantiles, the probability and the density of the random
-parameters (note that \code{sd} and \code{range} are not generic function in
-\code{R} and that \code{median} is, but without \code{...}).
+parameters (note that `sd` and `range` are not generic function in
+`R` and that `median` is, but without `...`).
 }
 \seealso{
-\code{\link[=mlogit]{mlogit()}} for the estimation of random parameters logit
-models and \code{\link[=rpar]{rpar()}} for the description of \code{rpar} objects.
+[mlogit()] for the estimation of random parameters logit
+    models and [rpar()] for the description of `rpar` objects.
 }
 \author{
 Yves Croissant

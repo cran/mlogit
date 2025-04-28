@@ -532,7 +532,7 @@ summary.vcov.mlogit <- function(object, ...){
         K <- length(nrpar)
         type <- attr(object, "type")
         diag <- ifelse(type == "cov", "var", "sd")
-        nstruct <- names.rpar(nrpar, prefix = type, diag = diag, unique = TRUE)
+        nstruct <- names_rpar(nrpar, prefix = type, diag = diag, unique = TRUE)
     }
     else{
         coefs <- object

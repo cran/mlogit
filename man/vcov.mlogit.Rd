@@ -28,17 +28,17 @@
 )
 }
 \arguments{
-\item{object}{a \code{mlogit} object (and a \code{vcov.mlogit} for the
+\item{object}{a `mlogit` object (and a `vcov.mlogit` for the
 summary method),}
 
 \item{what}{indicates which covariance matrix has to be extracted : the
-default value is \code{coefficients}, in this case, \code{vcov} behaves as
-usual. If \code{what} equals \code{errors} the covariance matrix of the
-errors of the model is returned. Finally, if \code{what} equals \code{rpar},
+default value is `coefficients`, in this case, `vcov` behaves as
+usual. If `what` equals `errors` the covariance matrix of the
+errors of the model is returned. Finally, if `what` equals `rpar`,
 the covariance matrix of the random parameters are extracted,}
 
 \item{subset}{the subset of the coefficients that have to be extracted (only
-relevant if \code{what} \verb{ = "coefficients"}),}
+relevant if `what` ` = "coefficients"`),}
 
 \item{type}{with this argument, the covariance matrix may be returned (the
 default) ; the correlation matrix with the standard deviation on the
@@ -51,22 +51,22 @@ is indicated,}
 
 \item{...}{further arguments.}
 
-\item{x}{a \code{vcov.mlogit} or a \code{summary.vcov.mlogit} object,}
+\item{x}{a `vcov.mlogit` or a `summary.vcov.mlogit` object,}
 
 \item{digits}{the number of digits,}
 
 \item{width}{the width of the printing,}
 }
 \description{
-The \code{vcov} method for \code{mlogit} objects extract the covariance
+The `vcov` method for `mlogit` objects extract the covariance
 matrix of the coefficients, the errors or the random parameters.
 }
 \details{
-This new interface replaces the \code{cor.mlogit} and \code{cov.mlogit}
+This new interface replaces the `cor.mlogit` and `cov.mlogit`
 functions which are deprecated.
 }
 \seealso{
-\code{\link[=mlogit]{mlogit()}} for the estimation of multinomial logit
+[mlogit()] for the estimation of multinomial logit
 models.
 }
 \author{
