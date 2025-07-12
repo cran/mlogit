@@ -1,6 +1,6 @@
 Package: mlogit
-Version: 1.1-2
-Date: 2025-04-26
+Version: 1.1-3
+Date: 2025-07-11
 Title: Multinomial Logit Models
 Authors@R: person("Yves", "Croissant", role = c("aut", "cre"), email = "yves.croissant@univ-reunion.fr")
 Depends: R (>= 2.10), dfidx
@@ -17,8 +17,8 @@ URL: https://cran.r-project.org/package=mlogit
 RoxygenNote: 7.3.1
 RdMacros: Rdpack
 NeedsCompilation: no
-Packaged: 2025-04-26 11:14:31 UTC; yves
+Packaged: 2025-07-12 04:05:41 UTC; yves
 Author: Yves Croissant [aut, cre]
 Maintainer: Yves Croissant <yves.croissant@univ-reunion.fr>
 Repository: CRAN
-Date/Publication: 2025-04-28 10:00:18 UTC
+Date/Publication: 2025-07-12 05:00:02 UTC

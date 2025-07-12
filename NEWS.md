@@ -1,3 +1,7 @@
+# mlogit 1.1-3
+
+* update of the Rout.save files
+
 # mlogit 1.1-2
 
 * roxygenize is re-run, the link tags are suppressed

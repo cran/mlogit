@@ -411,8 +411,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 ## indexes:  1, 1, 2</code></pre>
 <p>An <code>idx</code> column is added to the data, which contains the three relevant indexes: <code>choiceid</code> is the choice situation index, <code>alt</code> the alternative index and <code>id</code> is the individual index. This column can be extracted using the <code>idx</code> funtion:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">idx</span>(Tr), <span class="dv">3</span>)</span></code></pre></div>
-<pre><code>## ~~~ indexes ~~~~
-##   choiceid id alt
+<pre><code>##   choiceid id alt
 ## 1        1  1   A
 ## 2        1  1   B
 ## 3        2  1   A
