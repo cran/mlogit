@@ -6,21 +6,22 @@
 \title{Heating System Choice in California Houses}
 \format{
 A dataframe containing:
-
-- idcase: id,
-- depvar: heating system, one of gc (gas central), gr (gas room), ec
+\itemize{
+\item idcase: id,
+\item depvar: heating system, one of gc (gas central), gr (gas room), ec
 (electric central), er (electric room), hp (heat pump),
-- ic.z: installation cost for heating system z (defined for the
+\item ic.z: installation cost for heating system z (defined for the
 5 heating systems),
-- oc.z: annual operating cost for heating system z (defined for
+\item oc.z: annual operating cost for heating system z (defined for
 the 5 heating systems),
-- pb.z: ratio oc.z/ic.z ,
-- income: annual income of the household,
-- agehed: age of the household head
-- rooms: numbers of rooms in the house,
+\item pb.z: ratio oc.z/ic.z ,
+\item income: annual income of the household,
+\item agehed: age of the household head
+\item rooms: numbers of rooms in the house,
+}
 }
 \source{
-[Kenneth Train's home page](https://elsa.berkeley.edu/~train/).
+\href{https://eml.berkeley.edu/~train/}{Kenneth Train's home page}.
 }
 \description{
 A sample of 900 Californian households#'

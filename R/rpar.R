@@ -12,7 +12,7 @@
 #' 
 #' @name rpar
 #' @aliases rpar print.rpar summary.rpar
-#' @param x,object a `mlogit` object,
+#' @param x,object a `mlogit` or a `rpar` object,
 #' @param par the name or the index of the parameters to be extracted
 #'     ; if `NULL`, all the parameters are selected,
 #' @param norm the coefficient used for normalization if any,

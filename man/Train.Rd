@@ -6,20 +6,21 @@
 \title{Stated Preferences for Train Traveling}
 \format{
 A dataframe containing:
-
-- id: individual identifient,
-- choiceid: choice identifient,
-- choice: one of 'A' or 'B',
-- price_z: price of proposition z (z = 'A', 'B') in cents of
+\itemize{
+\item id: individual identifient,
+\item choiceid: choice identifient,
+\item choice: one of 'A' or 'B',
+\item price_z: price of proposition z (z = 'A', 'B') in cents of
 guilders,
-- time_z: travel time of proposition z (z = 'A', 'B') in
+\item time_z: travel time of proposition z (z = 'A', 'B') in
 minutes,
-- comfort_z: comfort of proposition z (z = 'A', 'B'), 0, 1 or
+\item comfort_z: comfort of proposition z (z = 'A', 'B'), 0, 1 or
 2 in decreasing comfort order,
-- change_z: number of changes for proposition z (z = 'A', 'B').
+\item change_z: number of changes for proposition z (z = 'A', 'B').
+}
 }
 \source{
-[Journal of Applied Econometrics data archive](https://wileyonlinelibrary.com/journal/jae/).
+\href{https://journaldata.zbw.eu/journals/jae}{Journal of Applied Econometrics data archive}.
 }
 \description{
 A sample of 235 Dutch individuals facing 2929 choice situations

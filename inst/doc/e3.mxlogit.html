@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.655">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kenneth Train and Yves Croissant">
+<meta name="dcterms.date" content="2026-06-01">
+
+<title>Exercise 3: Mixed logit model</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<link href="e3.mxlogit_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet">
+<link href="e3.mxlogit_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="/home/yves/R/x86_64-pc-linux-gnu-library/4.5/quarto/rmarkdown/template/quarto_vignette/resources/vignette.css">
+</head>
+
+<body>
+
+
+<header id="title-block-header">
+<h1 class="title">Exercise 3: Mixed logit model</h1>
+<p class="author">Kenneth Train and Yves Croissant</p>
+
+<p class="date">2026-06-01</p>
+</header>
+
+<div class="cell">
+
+</div>
+<p>A sample of residential electricity customers were asked a series of choice experiments. In each experiment, four hypothetical electricity suppliers were described. The person was asked which of the four suppliers he/she would choose. As many as 12 experiments were presented to each person. Some people stopped before answering all 12. There are 361 people in the sample, and a total of 4308 experiments. In the experiments, the characteristics of each supplier were stated. The price of the supplier was either :</p>
+<ul>
+<li>a fixed price at a stated cents per kWh, with the price varying over suppliers and experiments.</li>
+<li>a time-of-day (TOD) rate under which the price is 11 cents per kWh from 8am to 8pm and 5 cents per kWh from 8pm to 8am. These TOD prices did not vary over suppliers or experiments: whenever the supplier was said to offer TOD, the prices were stated as above.</li>
+<li>a seasonal rate under which the price is 10 cents per kWh in the summer, 8 cents per kWh in the winter, and 6 cents per kWh in the spring and fall. Like TOD rates, these prices did not vary. Note that the price is for the electricity only, not transmission and distribution, which is supplied by the local regulated utility.</li>
+</ul>
+<p>The length of contract that the supplier offered was also stated, in years (such as 1 year or 5 years.) During this contract period, the supplier guaranteed the prices and the buyer would have to pay a penalty if he/she switched to another supplier. The supplier could offer no contract in which case either side could stop the agreement at any time. This is recorded as a contract length of 0.</p>
+<p>Some suppliers were also described as being a local company or a “well-known” company. If the supplier was not local or well-known, then nothing was said about them in this regard.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<ol class="example" type="1">
+<li>Run a mixed logit model without intercepts and a normal distribution for the 6 parameters of the model, using 100 draws, halton sequences and taking into account the panel data structure.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlogit)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Electricity"</span>, <span class="at">package =</span> <span class="st">"mlogit"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Electricity<span class="sc">$</span>chid <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(Electricity)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>Electr <span class="ot">&lt;-</span> <span class="fu">dfidx</span>(Electricity, <span class="at">idx =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"chid"</span>, <span class="st">"id"</span>)),</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>                <span class="at">choice =</span> <span class="st">"choice"</span>, <span class="at">varying =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">26</span>, <span class="at">sep =</span> <span class="st">""</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>Elec.mxl <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice <span class="sc">~</span> pf <span class="sc">+</span> cl <span class="sc">+</span> loc <span class="sc">+</span> wk <span class="sc">+</span> tod <span class="sc">+</span> seas <span class="sc">|</span> <span class="dv">0</span>, Electr, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">rpar=</span><span class="fu">c</span>(<span class="at">pf =</span> <span class="st">'n'</span>, <span class="at">cl =</span> <span class="st">'n'</span>, <span class="at">loc =</span> <span class="st">'n'</span>, <span class="at">wk =</span> <span class="st">'n'</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                     <span class="at">tod =</span> <span class="st">'n'</span>, <span class="at">seas =</span> <span class="st">'n'</span>), </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>              <span class="at">R =</span> <span class="dv">100</span>, <span class="at">halton =</span> <span class="cn">NA</span>, <span class="at">panel =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gaze</span>(Elec.mxl)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>        Estimate Std. Error z-value Pr(&gt;|z|)
+pf      -0.97339    0.03432  -28.36   &lt;2e-16
+cl      -0.20556    0.01332  -15.43   &lt;2e-16
+loc      2.07572    0.08043   25.81   &lt;2e-16
+wk       1.47565    0.06517   22.64   &lt;2e-16
+tod     -9.05254    0.28722  -31.52   &lt;2e-16
+seas    -9.10376    0.28904  -31.50   &lt;2e-16
+sd.pf    0.21994    0.01084   20.29   &lt;2e-16
+sd.cl    0.37830    0.01849   20.46   &lt;2e-16
+sd.loc   1.48297    0.08130   18.24   &lt;2e-16
+sd.wk    1.00006    0.07418   13.48   &lt;2e-16
+sd.tod   2.28948    0.11073   20.68   &lt;2e-16
+sd.seas  1.18087    0.10901   10.83   &lt;2e-16</code></pre>
+</div>
+</div>
+<ol start="2" class="example" type="1">
+<li><ol type="a">
+<li>Using the estimated mean coefficients, determine the amount that a customer with average coefficients for price and length is willing to pay for an extra year of contract length.</li>
+</ol></li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unname</span>(<span class="fu">coef</span>(Elec.mxl)[<span class="st">'cl'</span>] <span class="sc">/</span> <span class="fu">coef</span>(Elec.mxl)[<span class="st">'pf'</span>])</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.2111774</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The mean coefficient of length is -0.20. The consumer with this average coefficient dislikes having a longer contract. So this person is willing to pay to reduce the length of the contract. The mean price coefficient is -0.97. A customer with these coefficients is willing to pay 0.20/0.97=0.21, or one-fifth a cent per kWh extra to have a contract that is one year shorter.</p>
+</blockquote>
+<ol start="2" type="a">
+<li>Determine the share of the population who are estimated to dislike long term contracts (ie have a negative coefficient for the length.) \begin{answer}[5]</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="sc">-</span> <span class="fu">coef</span>(Elec.mxl)[<span class="st">'cl'</span>] <span class="sc">/</span> <span class="fu">coef</span>(Elec.mxl)[<span class="st">'sd.cl'</span>])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">##        cl </span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.7065611</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The coefficient of length is normally distributed with mean -0.20 and standard deviation 0.35. The share of people with coefficients below zero is the cumulative probability of a standardized normal deviate evaluated at 0.20 / 0.3 5=0. 57. Looking 0.57 up in a table of the standard normal distribution, we find that the share below 0.57 is 0.72. About seventy percent of the population are estimated to dislike long-term contracts.</p>
+</blockquote>
+<ol start="3" class="example" type="1">
+<li>The price coefficient is assumed to be normally distributed in these runs. This assumption means that some people are assumed to have positive price coefficients, since the normal distribution has support on both sides of zero. Using your estimates from exercise 1, determine the share of customers with positive price coefficients. As you can see, this is pretty small share and can probably be ignored. However, in some situations, a normal distribution for the price coefficient will give a fairly large share with the wrong sign. Revise the program to make the price coefficient fixed rather than random. A fixed price coefficient also makes it easier to calculate the distribution of willingness to pay (wtp) for each non-price attribute. If the price coefficient is fixed, the distribtion of wtp for an attribute has the same distribution as the attribute’s coefficient, simply scaled by the price coefficient. However, when the price coefficient is random, the distribution of wtp is the ratio of two distributions, which is harder to work with.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pnorm</span>(<span class="sc">-</span> <span class="fu">coef</span>(Elec.mxl)[<span class="st">'pf'</span>] <span class="sc">/</span> <span class="fu">coef</span>(Elec.mxl)[<span class="st">'sd.pf'</span>])</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">##        pf </span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.9999952</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The price coefficient is distributed normal with mean -0.97 and standard deviation 0.20. The cumulative standard normal distribution evaluated at 0.97 / 0.20 = 4.85 is more than 0.999, which means that more than 99.9% of the population are estimated to have negative price coefficients. Essentially no one is estimated to have a positive price coefficient.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>Elec.mxl2 <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice <span class="sc">~</span> pf <span class="sc">+</span> cl <span class="sc">+</span> loc <span class="sc">+</span> wk <span class="sc">+</span> tod <span class="sc">+</span> seas <span class="sc">|</span> <span class="dv">0</span>, Electr, </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">rpar =</span> <span class="fu">c</span>(<span class="at">cl =</span> <span class="st">'n'</span>, <span class="at">loc =</span> <span class="st">'n'</span>, <span class="at">wk =</span> <span class="st">'n'</span>, </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                            <span class="at">tod =</span> <span class="st">'n'</span>, <span class="at">seas =</span> <span class="st">'n'</span>), </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">R =</span> <span class="dv">100</span>, <span class="at">halton =</span> <span class="cn">NA</span>,  <span class="at">panel =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Elec.mxl2)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+mlogit(formula = choice ~ pf + cl + loc + wk + tod + seas | 0, 
+    data = Electr, start = strt, rpar = c(cl = "n", loc = "n", 
+        wk = "n", tod = "n", seas = "n"), R = 100, halton = NA, 
+    panel = TRUE)
+
+Frequencies of alternatives:choice
+      1       2       3       4 
+0.22702 0.26393 0.23816 0.27089 
+
+bfgs method
+1 iterations, 0h:0m:3s 
+g'(-H)^-1g = 4.6E-08 
+gradient close to zero 
+
+Coefficients :
+         Estimate Std. Error z-value  Pr(&gt;|z|)    
+pf      -0.879902   0.032759 -26.860 &lt; 2.2e-16 ***
+cl      -0.217059   0.013673 -15.875 &lt; 2.2e-16 ***
+loc      2.092298   0.081067  25.809 &lt; 2.2e-16 ***
+wk       1.490902   0.065230  22.856 &lt; 2.2e-16 ***
+tod     -8.581835   0.282912 -30.334 &lt; 2.2e-16 ***
+seas    -8.583281   0.280347 -30.617 &lt; 2.2e-16 ***
+sd.cl    0.373477   0.018018  20.728 &lt; 2.2e-16 ***
+sd.loc   1.558857   0.087696  17.776 &lt; 2.2e-16 ***
+sd.wk    1.050810   0.078023  13.468 &lt; 2.2e-16 ***
+sd.tod   2.694660   0.120798  22.307 &lt; 2.2e-16 ***
+sd.seas  1.950728   0.104766  18.620 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-Likelihood: -3961.7
+
+random coefficients
+     Min.     1st Qu.     Median       Mean     3rd Qu. Max.
+cl   -Inf  -0.4689658 -0.2170594 -0.2170594  0.03484691  Inf
+loc  -Inf   1.0408650  2.0922983  2.0922983  3.14373157  Inf
+wk   -Inf   0.7821415  1.4909018  1.4909018  2.19966212  Inf
+tod  -Inf -10.3993553 -8.5818346 -8.5818346 -6.76431383  Inf
+seas -Inf  -9.8990266 -8.5832805 -8.5832805 -7.26753448  Inf</code></pre>
+</div>
+</div>
+<ol start="4" class="example" type="1">
+<li>You think that everyone must like using a known company rather than an unknown one, and yet the normal distribution implies that some people dislike using a known company. Revise the program to give the coefficient of <code>wk</code> a uniform distribution between zero and b,where b is estimated (do this with the price coefficient fixed).</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Elec.mxl3 <span class="ot">&lt;-</span> <span class="fu">update</span>(Elec.mxl, <span class="at">rpar =</span> <span class="fu">c</span>(<span class="at">cl =</span> <span class="st">'n'</span>, <span class="at">loc =</span> <span class="st">'n'</span>, <span class="at">wk =</span> <span class="st">'u'</span>, </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="at">tod =</span> <span class="st">'n'</span>, <span class="at">seas =</span> <span class="st">'n'</span>))</span></code></pre></div>
+</div>
+<blockquote>
+<p>The price coefficient is uniformly distributed with parameters 1.541 and 1.585.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Elec.mxl3)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+mlogit(formula = choice ~ pf + cl + loc + wk + tod + seas | 0, 
+    data = Electr, start = strt, rpar = c(cl = "n", loc = "n", 
+        wk = "u", tod = "n", seas = "n"), R = 100, halton = NA, 
+    panel = TRUE)
+
+Frequencies of alternatives:choice
+      1       2       3       4 
+0.22702 0.26393 0.23816 0.27089 
+
+bfgs method
+1 iterations, 0h:0m:3s 
+g'(-H)^-1g = 1.08E-07 
+gradient close to zero 
+
+Coefficients :
+         Estimate Std. Error z-value  Pr(&gt;|z|)    
+pf      -0.882229   0.032818 -26.883 &lt; 2.2e-16 ***
+cl      -0.217128   0.013776 -15.761 &lt; 2.2e-16 ***
+loc      2.099323   0.081056  25.900 &lt; 2.2e-16 ***
+wk       1.509425   0.065496  23.046 &lt; 2.2e-16 ***
+tod     -8.606979   0.282983 -30.415 &lt; 2.2e-16 ***
+seas    -8.602396   0.280671 -30.649 &lt; 2.2e-16 ***
+sd.cl    0.381070   0.018150  20.996 &lt; 2.2e-16 ***
+sd.loc   1.593852   0.087802  18.153 &lt; 2.2e-16 ***
+sd.wk    1.786373   0.125764  14.204 &lt; 2.2e-16 ***
+sd.tod   2.719073   0.119356  22.781 &lt; 2.2e-16 ***
+sd.seas  1.945381   0.103686  18.762 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-Likelihood: -3956.7
+
+random coefficients
+           Min.     1st Qu.     Median       Mean    3rd Qu.     Max.
+cl         -Inf  -0.4741561 -0.2171285 -0.2171285  0.0398992      Inf
+loc        -Inf   1.0242863  2.0993231  2.0993231  3.1743600      Inf
+wk   -0.2769485   0.6162382  1.5094248  1.5094248  2.4026115 3.295798
+tod        -Inf -10.4409656 -8.6069790 -8.6069790 -6.7729924      Inf
+seas       -Inf  -9.9145353 -8.6023958 -8.6023958 -7.2902563      Inf</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rpar</span>(Elec.mxl3, <span class="st">'wk'</span>)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>uniform distribution with parameters 1.509 (center) and 1.786 (span)</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(<span class="fu">rpar</span>(Elec.mxl3, <span class="st">'wk'</span>))</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>      Min.    1st Qu.     Median       Mean    3rd Qu.       Max. 
+-0.2769485  0.6162382  1.5094248  1.5094248  2.4026115  3.2957982 </code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">rpar</span>(Elec.mxl3, <span class="st">'wk'</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="e3.mxlogit_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+</div>
+</div>
+<blockquote>
+<p>The upper bound is 3.13. The estimated price coefficient is -0.88 and so the willingness to pay for a known provided ranges uniformly from -0.05 to 3.55 cents per kWh.</p>
+</blockquote>
+<p><!-- 5. The file mxlp.g estimates mixed logits with many options for the --> <!-- user. Read the manual so that you understand the options. Run mxlp.g --> <!-- as is. You should get results that are similar to those for exercise --> <!-- 1. They differ because the random draws are taken differently with the --> <!-- two programs. --></p>
+<p><!-- 6. Your runs so far have calculated regular standard errors. Specify --> <!-- the appropriate option in mxlp.g to calculate robust standard errors --> <!-- and rerun it. Compare the robust standard errors to the regular --> <!-- ones. Does the relation between the two sets of standard errors seem --> <!-- reasonable? --></p>
+<p><!-- \begin{answer}[5] --> <!--   The robust standard errors are larger, as expected. Simulation noise --> <!--   causes the non-robust standard errors underestimate the true --> <!--   standard error; this underestimation disappears as the number of --> <!--   draws used in simulation rises. --></p>
+<p><!-- \end{answer} --></p>
+<ol start="5" class="example" type="1">
+<li>Rerun the model with a fixed coefficient for price and lognormal distributions for the coefficients of TOD and seasonal (since their coefficient should be negative for all people.) To do this, you need to reverse the sign of the TOD and seasonal variables, since the lognormal is always positive and you want the these coefficients to be always negative.</li>
+</ol>
+<p>A lognormal is specified as <span class="math inline">\(\exp(b+se)\)</span> where <span class="math inline">\(e\)</span> is a standard normal deviate. The parameters of the lognormal are <span class="math inline">\(b\)</span> and <span class="math inline">\(s\)</span>. The mean of the lognormal is <span class="math inline">\(\exp(b+0.5s^2)\)</span> and the standard deviation is the mean times <span class="math inline">\(\sqrt{(\exp(s^2))-1}\)</span>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>Electr <span class="ot">&lt;-</span> <span class="fu">dfidx</span>(Electricity, <span class="at">idx =</span> <span class="fu">list</span>(<span class="fu">c</span>(<span class="st">"chid"</span>, <span class="st">"id"</span>)),</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">choice =</span> <span class="st">"choice"</span>, <span class="at">varying =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">26</span>,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">sep =</span> <span class="st">""</span>, <span class="at">opposite =</span> <span class="fu">c</span>(<span class="st">"tod"</span>, <span class="st">"seas"</span>))</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Elec.mxl4 <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice <span class="sc">~</span> pf <span class="sc">+</span> cl <span class="sc">+</span> loc <span class="sc">+</span> wk <span class="sc">+</span> tod <span class="sc">+</span> seas <span class="sc">|</span> <span class="dv">0</span>, Electr, </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">rpar =</span> <span class="fu">c</span>(<span class="at">cl =</span> <span class="st">'n'</span>, <span class="at">loc =</span> <span class="st">'n'</span>, <span class="at">wk =</span> <span class="st">'u'</span>, <span class="at">tod =</span> <span class="st">'ln'</span>, <span class="at">seas =</span> <span class="st">'ln'</span>), </span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">R =</span> <span class="dv">100</span>, <span class="at">halton =</span> <span class="cn">NA</span>, <span class="at">panel =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Elec.mxl4)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+mlogit(formula = choice ~ pf + cl + loc + wk + tod + seas | 0, 
+    data = Electr, start = strt, rpar = c(cl = "n", loc = "n", 
+        wk = "u", tod = "ln", seas = "ln"), R = 100, halton = NA, 
+    panel = TRUE)
+
+Frequencies of alternatives:choice
+      1       2       3       4 
+0.22702 0.26393 0.23816 0.27089 
+
+bfgs method
+1 iterations, 0h:0m:3s 
+g'(-H)^-1g = 6.24E-08 
+gradient close to zero 
+
+Coefficients :
+         Estimate Std. Error z-value  Pr(&gt;|z|)    
+pf      -0.868985   0.032350 -26.862 &lt; 2.2e-16 ***
+cl      -0.211334   0.013569 -15.575 &lt; 2.2e-16 ***
+loc      2.023876   0.080102  25.266 &lt; 2.2e-16 ***
+wk       1.479118   0.064957  22.771 &lt; 2.2e-16 ***
+tod      2.112378   0.033769  62.554 &lt; 2.2e-16 ***
+seas     2.124205   0.033342  63.709 &lt; 2.2e-16 ***
+sd.cl    0.373120   0.017710  21.068 &lt; 2.2e-16 ***
+sd.loc   1.548511   0.086400  17.922 &lt; 2.2e-16 ***
+sd.wk    1.521790   0.119993  12.682 &lt; 2.2e-16 ***
+sd.tod   0.367077   0.019997  18.357 &lt; 2.2e-16 ***
+sd.seas  0.275352   0.016875  16.317 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-Likelihood: -3976.5
+
+random coefficients
+           Min.    1st Qu.     Median       Mean     3rd Qu.     Max.
+cl         -Inf -0.4629994 -0.2113338 -0.2113338  0.04033179      Inf
+loc        -Inf  0.9794208  2.0238757  2.0238757  3.06833059      Inf
+wk   -0.0426715  0.7182234  1.4791184  1.4791184  2.24001328 3.000908
+tod   0.0000000  6.4545718  8.2678801  8.8441019 10.59060830      Inf
+seas  0.0000000  6.9482054  8.3662477  8.6894950 10.07369478      Inf</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">rpar</span>(Elec.mxl4, <span class="st">'seas'</span>))</span></code></pre></div>
+<div class="cell-output-display">
+<p><img src="e3.mxlogit_files/figure-html/unnamed-chunk-16-1.png" width="672"></p>
+</div>
+</div>
+<ol start="6" class="example" type="1">
+<li>Rerun the same model as previously, but allowing now the correlation between random parameters. Compute the correlation matrix of the random parameters. Test the hypothesis that the random parameters are uncorrelated.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Elec.mxl5 <span class="ot">&lt;-</span> <span class="fu">update</span>(Elec.mxl4, <span class="at">correlation =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(Elec.mxl5)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+mlogit(formula = choice ~ pf + cl + loc + wk + tod + seas | 0, 
+    data = Electr, start = strt, rpar = c(cl = "n", loc = "n", 
+        wk = "u", tod = "ln", seas = "ln"), R = 100, correlation = TRUE, 
+    halton = NA, panel = TRUE)
+
+Frequencies of alternatives:choice
+      1       2       3       4 
+0.22702 0.26393 0.23816 0.27089 
+
+bfgs method
+1 iterations, 0h:0m:3s 
+g'(-H)^-1g = 3.73E-07 
+gradient close to zero 
+
+Coefficients :
+                 Estimate Std. Error  z-value  Pr(&gt;|z|)    
+pf             -0.9177181  0.0340200 -26.9758 &lt; 2.2e-16 ***
+cl             -0.2158542  0.0138413 -15.5950 &lt; 2.2e-16 ***
+loc             2.3925696  0.0869029  27.5315 &lt; 2.2e-16 ***
+wk              1.7475365  0.0712087  24.5411 &lt; 2.2e-16 ***
+tod             2.1554746  0.0337206  63.9217 &lt; 2.2e-16 ***
+seas            2.1695605  0.0334577  64.8448 &lt; 2.2e-16 ***
+chol.cl:cl      0.3962539  0.0187077  21.1814 &lt; 2.2e-16 ***
+chol.cl:loc     0.6175136  0.0924281   6.6810 2.373e-11 ***
+chol.loc:loc   -2.0717172  0.1063246 -19.4848 &lt; 2.2e-16 ***
+chol.cl:wk      0.1952590  0.0731907   2.6678  0.007635 ** 
+chol.loc:wk    -1.2366541  0.0866096 -14.2785 &lt; 2.2e-16 ***
+chol.wk:wk      0.6431944  0.0742354   8.6643 &lt; 2.2e-16 ***
+chol.cl:tod     0.0019817  0.0104181   0.1902  0.849141    
+chol.loc:tod    0.0625074  0.0119608   5.2260 1.732e-07 ***
+chol.wk:tod     0.1606713  0.0138054  11.6383 &lt; 2.2e-16 ***
+chol.tod:tod    0.3758504  0.0209474  17.9426 &lt; 2.2e-16 ***
+chol.cl:seas    0.0259973  0.0098344   2.6435  0.008205 ** 
+chol.loc:seas  -0.0012255  0.0098997  -0.1238  0.901483    
+chol.wk:seas    0.1413800  0.0128750  10.9810 &lt; 2.2e-16 ***
+chol.tod:seas   0.0899893  0.0109769   8.1981 2.220e-16 ***
+chol.seas:seas  0.2112423  0.0141902  14.8865 &lt; 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Log-Likelihood: -3851.4
+
+random coefficients
+          Min.    1st Qu.     Median       Mean     3rd Qu.     Max.
+cl        -Inf -0.4831234 -0.2158542 -0.2158542  0.05141502      Inf
+loc       -Inf  0.9344645  2.3925696  2.3925696  3.85067469      Inf
+wk   0.3400072  1.0437718  1.7475365  1.7475365  2.45130110 3.155066
+tod  0.0000000  6.5310440  8.6319857  9.4024428 11.40876968      Inf
+seas 0.0000000  7.2924594  8.7544353  9.0816328 10.50950485      Inf</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cor.mlogit</span>(Elec.mxl5)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              cl         loc         wk          tod       seas
+cl   1.000000000  0.28564925 0.13872467  0.004792336 0.09596640
+loc  0.285649252  1.00000000 0.88161832 -0.143495905 0.03174792
+wk   0.138724672  0.88161832 1.00000000  0.045410056 0.25577355
+tod  0.004792336 -0.14349591 0.04541006  1.000000000 0.50449234
+seas 0.095966400  0.03174792 0.25577355  0.504492337 1.00000000</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(Elec.mxl5, Elec.mxl4) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 250.181, df: 10, pval = 0.000</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">waldtest</span>(Elec.mxl5, <span class="at">correlation =</span> <span class="cn">FALSE</span>) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 466.479, df: 10, pval = 0.000</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">scoretest</span>(Elec.mxl4, <span class="at">correlation =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 157.350, df: 10, pval = 0.000</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The three tests clearly reject the hypothesis that the random parameters are uncorrelated.</p>
+</blockquote>
+<div class="cell">
+
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-HUBE:TRAI:00" class="csl-entry" role="doc-biblioentry">
+Huber, Joel, and Kenneth Train. 2000. <span>“On the Similarity of Classical and Bayesian Estimates of Individual Mean Partworths.”</span> <em>Marketing Letters</em> 12: 259–69.
+</div>
+<div id="ref-REVE:TRAI:01" class="csl-entry" role="doc-biblioentry">
+Revelt, David, and Kenneth Train. 2001. <span>“<span class="nocase">Customer-Specific Taste Parameters and Mixed Logit: Households’ Choice of Electricity Supplier</span>.”</span> Econometrics 0012001. University Library of Munich, Germany. <a href="https://ideas.repec.org/p/wpa/wuwpem/0012001.html">https://ideas.repec.org/p/wpa/wuwpem/0012001.html</a>.
+</div>
+</div>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn1" role="doc-endnote"><p>These are the data used in <span class="citation" data-cites="REVE:TRAI:01">Revelt and Train (2001)</span> and <span class="citation" data-cites="HUBE:TRAI:00">Huber and Train (2000)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+
+
+
+
+</body></html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.655">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kenneth Train and Yves Croissant">
+<meta name="dcterms.date" content="2026-06-01">
+
+<title>Exercise 2: Nested logit model</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link href="e2.nlogit_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet">
+<link href="e2.nlogit_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="/home/yves/R/x86_64-pc-linux-gnu-library/4.5/quarto/rmarkdown/template/quarto_vignette/resources/vignette.css">
+</head>
+
+<body>
+
+
+<header id="title-block-header">
+<h1 class="title">Exercise 2: Nested logit model</h1>
+<p class="author">Kenneth Train and Yves Croissant</p>
+
+<p class="date">2026-06-01</p>
+</header>
+
+<div class="cell">
+
+</div>
+<p>The data set <code>HC</code> from <code>mlogit</code> contains data in <code>R</code> format on the choice of heating and central cooling system for 250 single-family, newly built houses in California.</p>
+<p>The alternatives are:</p>
+<ul>
+<li>Gas central heat with cooling <code>gcc</code>,</li>
+<li>Electric central resistence heat with cooling <code>ecc</code>,</li>
+<li>Electric room resistence heat with cooling <code>erc</code>,</li>
+<li>Electric heat pump, which provides cooling also <code>hpc</code>,</li>
+<li>Gas central heat without cooling <code>gc</code>,</li>
+<li>Electric central resistence heat without cooling <code>ec</code>,</li>
+<li>Electric room resistence heat without cooling <code>er</code>.</li>
+</ul>
+<p>Heat pumps necessarily provide both heating and cooling such that heat pump without cooling is not an alternative.</p>
+<p>The variables are:</p>
+<ul>
+<li><code>depvar</code> gives the name of the chosen alternative,</li>
+<li><code>ich.alt</code> are the installation cost for the heating portion of the system,</li>
+<li><code>icca</code> is the installation cost for cooling</li>
+<li><code>och.alt</code> are the operating cost for the heating portion of the system</li>
+<li><code>occa</code> is the operating cost for cooling</li>
+<li><code>income</code> is the annual income of the household</li>
+</ul>
+<p>Note that the full installation cost of alternative <code>gcc</code> is <code>ich.gcc + icca</code>, and similarly for the operating cost and for the other alternatives with cooling.</p>
+<ol class="example" type="1">
+<li>Run a nested logit model on the data for two nests and one log-sum coefficient that applies to both nests. Note that the model is specified to have the cooling alternatives (<code>gcc</code>, <code>ecc</code>, <code>erc</code>, <code>hpc</code>) in one nest and the non-cooling alternatives (<code>gc</code>, <code>ec</code>, <code>er</code>) in another nest.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlogit)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"HC"</span>, <span class="at">package =</span> <span class="st">"mlogit"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>HC <span class="ot">&lt;-</span> <span class="fu">dfidx</span>(HC, <span class="at">varying =</span> <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="dv">8</span>, <span class="dv">10</span><span class="sc">:</span><span class="dv">16</span>), <span class="at">choice =</span> <span class="st">"depvar"</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>cooling.modes <span class="ot">&lt;-</span> <span class="fu">idx</span>(HC, <span class="dv">2</span>) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'gcc'</span>, <span class="st">'ecc'</span>, <span class="st">'erc'</span>, <span class="st">'hpc'</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>room.modes <span class="ot">&lt;-</span> <span class="fu">idx</span>(HC, <span class="dv">2</span>) <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">'erc'</span>, <span class="st">'er'</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># installation / operating costs for cooling are constants, </span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># only relevant for mixed systems</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>HC<span class="sc">$</span>icca[<span class="sc">!</span> cooling.modes] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>HC<span class="sc">$</span>occa[<span class="sc">!</span> cooling.modes] <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># create income variables for two sets cooling and rooms</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>HC<span class="sc">$</span>inc.cooling <span class="ot">&lt;-</span> HC<span class="sc">$</span>inc.room <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>HC<span class="sc">$</span>inc.cooling[cooling.modes] <span class="ot">&lt;-</span> HC<span class="sc">$</span>income[cooling.modes]</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>HC<span class="sc">$</span>inc.room[room.modes] <span class="ot">&lt;-</span> HC<span class="sc">$</span>income[room.modes]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># create an intercet for cooling modes</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>HC<span class="sc">$</span>int.cooling <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(cooling.modes)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># estimate the model with only one nest elasticity</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>nl <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(depvar <span class="sc">~</span> ich <span class="sc">+</span> och <span class="sc">+</span>icca <span class="sc">+</span> occa <span class="sc">+</span> inc.room <span class="sc">+</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                 inc.cooling <span class="sc">+</span> int.cooling <span class="sc">|</span> <span class="dv">0</span>, HC,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>             <span class="at">nests =</span> <span class="fu">list</span>(<span class="at">cooling =</span> <span class="fu">c</span>(<span class="st">'gcc'</span>,<span class="st">'ecc'</span>,<span class="st">'erc'</span>,<span class="st">'hpc'</span>), </span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>             <span class="at">other =</span> <span class="fu">c</span>(<span class="st">'gc'</span>, <span class="st">'ec'</span>, <span class="st">'er'</span>)), <span class="at">un.nest.el =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">gaze</span>(nl)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             Estimate Std. Error z-value Pr(&gt;|z|)
+ich         -0.005549   0.001442  -3.848 0.000119
+och         -0.008579   0.002553  -3.360 0.000779
+icca        -0.002251   0.001444  -1.558 0.119121
+occa        -0.010895   0.012198  -0.893 0.371788
+inc.room    -0.378971   0.099631  -3.804 0.000143
+inc.cooling  0.249575   0.059213   4.215  2.5e-05
+int.cooling -6.000415   5.562423  -1.079 0.280703
+iv           0.585922   0.179708   3.260 0.001112</code></pre>
+</div>
+</div>
+<ol type="a">
+<li>The estimated log-sum coefficient is <span class="math inline">\(0.59\)</span>. What does this estimate tell you about the degree of correlation in unobserved factors over alternatives within each nest?</li>
+</ol>
+<blockquote>
+<p>The correlation is approximately <span class="math inline">\(1-0.59=0.41\)</span>. It’s a moderate correlation.</p>
+</blockquote>
+<ol start="2" type="a">
+<li>Test the hypothesis that the log-sum coefficient is 1.0 (the value that it takes for a standard logit model.) Can the hypothesis that the true model is standard logit be rejected?</li>
+</ol>
+<blockquote>
+<p>We can use a t-test of the hypothesis that the log-sum coefficient equal to 1. The t-statistic is :</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unname</span>( (<span class="fu">coef</span>(nl)[<span class="st">'iv'</span>] <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">vcov</span>(nl)[<span class="st">'iv'</span>, <span class="st">'iv'</span>]))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] -2.304171</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The critical value of t for 95% confidence is 1.96. So we can reject the hypothesis at 95% confidence. We can also use a likelihood ratio test because the multinomial logit is a special case of the nested model.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>ml <span class="ot">&lt;-</span> <span class="fu">update</span>(nl, <span class="at">nests =</span> <span class="cn">NULL</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(nl, ml) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 4.323, df: 1, pval = 0.038</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>Note that the hypothesis is rejected at 95% confidence, but not at 99% confidence.</p>
+</blockquote>
+<ol start="2" type="1">
+<li>Re-estimate the model with the room alternatives in one nest and the central alternatives in another nest. (Note that a heat pump is a central system.)</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>nl2 <span class="ot">&lt;-</span> <span class="fu">update</span>(nl,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">nests =</span> <span class="fu">list</span>(<span class="at">central =</span> <span class="fu">c</span>(<span class="st">'ec'</span>, <span class="st">'ecc'</span>, <span class="st">'gc'</span>, <span class="st">'gcc'</span>, <span class="st">'hpc'</span>), </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">room =</span> <span class="fu">c</span>(<span class="st">'er'</span>, <span class="st">'erc'</span>)))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">gaze</span>(nl2)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              Estimate Std. Error z-value Pr(&gt;|z|)
+ich          -0.011382   0.005422  -2.099   0.0358
+och          -0.018253   0.009323  -1.958   0.0502
+icca         -0.003375   0.002693  -1.253   0.2102
+occa         -0.020633   0.018973  -1.088   0.2768
+inc.room     -0.757216   0.342919  -2.208   0.0272
+inc.cooling   0.416894   0.207418   2.010   0.0444
+int.cooling -13.824875   7.940308  -1.741   0.0817
+iv            1.362007   0.653933   2.083   0.0373</code></pre>
+</div>
+</div>
+<ol type="a">
+<li>What does the estimate imply about the substitution patterns across alternatives? Do you think the estimate is plausible?</li>
+</ol>
+<blockquote>
+<p>The log-sum coefficient is over 1. This implies that there is more substitution across nests than within nests. I don’t think this is very reasonable, but people can differ on their concepts of what’s reasonable.</p>
+</blockquote>
+<ol start="2" type="a">
+<li>Is the log-sum coefficient significantly different from 1?</li>
+</ol>
+<blockquote>
+<p>The t-statistic is:</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">unname</span>((<span class="fu">coef</span>(nl2)[<span class="st">'iv'</span>] <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">vcov</span>(nl2)[<span class="st">'iv'</span>, <span class="st">'iv'</span>]))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.5535849</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(nl2, ml) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 0.527, df: 1, pval = 0.468</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>We cannot reject the hypothesis at standard confidence levels.</p>
+</blockquote>
+<ol start="3" type="a">
+<li>How does the value of the log-likelihood function compare for this model relative to the model in exercise 1, where the cooling alternatives are in one nest and the heating alternatives in the other nest.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">logLik</span>(nl)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">## 'log Lik.' -178.1247 (df=8)</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">logLik</span>(nl2)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 'log Lik.' -180.0231 (df=8)</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The <span class="math inline">\(\ln L\)</span> is worse (more negative.) All in all, this seems like a less appropriate nesting structure.</p>
+</blockquote>
+<ol start="3" type="1">
+<li>Rerun the model that has the cooling alternatives in one nest and the non-cooling alternatives in the other nest (like for exercise 1), with a separate log-sum coefficient for each nest.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>nl3 <span class="ot">&lt;-</span> <span class="fu">update</span>(nl, <span class="at">un.nest.el =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+<ol type="a">
+<li>Which nest is estimated to have the higher correlation in unobserved factors? Can you think of a real-world reason for this nest to have a higher correlation?</li>
+</ol>
+<blockquote>
+<p>The correlation in the cooling nest is around 1-0.60 = 0.4 and that for the non-cooling nest is around 1-0.45 = 0.55. So the correlation is higher in the non-cooling nest. Perhaps more variation in comfort when there is no cooling. This variation in comfort is the same for all the non-cooling alternatives.</p>
+</blockquote>
+<ol start="2" type="a">
+<li>Are the two log-sum coefficients significantly different from each other? That is, can you reject the hypothesis that the model in exercise 1 is the true model?</li>
+</ol>
+<blockquote>
+<p>We can use a likelihood ratio tests with models <code>nl</code> and <code>nl3</code>.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(nl, nl3) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 0.176, df: 1, pval = 0.675</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The restricted model is the one from exercise 1 that has one log-sum coefficient. The unrestricted model is the one we just estimated. The test statistics is 0.6299. The critical value of chi-squared with 1 degree of freedom is 3.8 at the 95% confidence level. We therefore cannot reject the hypothesis that the two nests have the same log-sum coefficient.</p>
+</blockquote>
+<ol start="4" type="1">
+<li>Rewrite the code to allow three nests. For simplicity, estimate only one log-sum coefficient which is applied to all three nests. Estimate a model with alternatives <code>gcc</code>, <code>ecc</code> and <code>erc</code> in a nest, <code>hpc</code> in a nest alone, and alternatives <code>gc</code>, <code>ec</code> and <code>er</code> in a nest. Does this model seem better or worse than the model in exercise 1, which puts alternative <code>hpc</code> in the same nest as alternatives <code>gcc</code>, <code>ecc</code> and <code>erc</code>?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>nl4 <span class="ot">&lt;-</span> <span class="fu">update</span>(nl, <span class="at">nests=</span><span class="fu">list</span>(<span class="at">n1 =</span> <span class="fu">c</span>(<span class="st">'gcc'</span>, <span class="st">'ecc'</span>, <span class="st">'erc'</span>), <span class="at">n2 =</span> <span class="fu">c</span>(<span class="st">'hpc'</span>),</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                    <span class="at">n3 =</span> <span class="fu">c</span>(<span class="st">'gc'</span>, <span class="st">'ec'</span>, <span class="st">'er'</span>)))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">logLik</span>(nl4)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 'log Lik.' -180.2633 (df=8)</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The <span class="math inline">\(\ln L\)</span> for this model is <span class="math inline">\(-180.26\)</span>, which is lower (more negative) than for the model with two nests, which got <span class="math inline">\(-178.12\)</span>.</p>
+</blockquote>
+<div class="cell">
+
+</div>
+
+
+
+
+</body></html>

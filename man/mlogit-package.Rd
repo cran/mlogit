@@ -12,7 +12,7 @@ infrastructure to deal with random utility models.
 }
 \details{
 For a gentle and comprehensive introduction to the
-    package, see the package's vignettes.
+package, see the package's vignettes.
 
 \insertRef{CROI:20}{mlogit}
 
@@ -22,7 +22,6 @@ For a gentle and comprehensive introduction to the
 Useful links:
 \itemize{
   \item \url{https://cran.r-project.org/package=mlogit}
-  \item \url{https://r-forge.r-project.org/projects/mlogit/}
 }
 
 }
@@ -30,3 +29,4 @@ Useful links:
 \strong{Maintainer}: Yves Croissant \email{yves.croissant@univ-reunion.fr}
 
 }
+\keyword{internal}

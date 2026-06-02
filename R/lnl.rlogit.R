@@ -1,4 +1,5 @@
-names_rpar <- function(rpar, prefix = NULL, diag = NULL, unique = FALSE){
+names_rpar <- function(x, prefix = NULL, diag = NULL, unique = FALSE){
+    rpar <- x
     K <- length(rpar)
     nms <- vector(mode = "character", length = K * (K + 1) / 2)
     pos <- 0

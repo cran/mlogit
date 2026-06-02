@@ -6,18 +6,19 @@
 \title{Choice of Fishing Mode}
 \format{
 A dataframe containing :
-
-- mode: recreation mode choice, one of : beach, pier, boat and
+\itemize{
+\item mode: recreation mode choice, one of : beach, pier, boat and
 charter,
-- price.beach: price for beach mode
-- price.pier: price for pier mode,
-- price.boat: price for private boat mode,
-- price.charter: price for charter boat mode,
-- catch.beach: catch rate for beach mode,
-- catch.pier: catch rate for pier mode,
-- catch.boat: catch rate for private boat mode,
-- catch.charter: catch rate for charter boat mode,
-- income: monthly income,
+\item price.beach: price for beach mode
+\item price.pier: price for pier mode,
+\item price.boat: price for private boat mode,
+\item price.charter: price for charter boat mode,
+\item catch.beach: catch rate for beach mode,
+\item catch.pier: catch rate for pier mode,
+\item catch.boat: catch rate for private boat mode,
+\item catch.charter: catch rate for charter boat mode,
+\item income: monthly income,
+}
 }
 \source{
 \insertRef{CAME:TRIV:05}{mlogit}

@@ -1,4 +1,79 @@
-# mlogit 1.1-3
+# mlogit 2.0-0
+
+* the msumarry tables are rendered in markdown
+
+* functions preds and slps are introduced to compute the predictions,
+  the slopes and their standard deviations
+
+* micsr::gaze is now re-exported
+
+* a new param argument is introduced for mlogit; it should be a vector
+  of coefficients and, if not null, the fitted probabilities are
+  returned
+
+* dependence on R (>= 3.5.0)
+
+* there where small differences between the .Rout and .Rout.save
+  files, the later have been updated
+
+* the first vignette is renamed 1. Introduction
+
+* the estimate argument of mlogit is now operational : if FALSE, the
+  model frame is returned
+
+* scoretest.mlogit now unables to test models with different
+  covariates sets
+
+* the formula element of mlogit objects is replaced by a term element
+  FO FIX scoretest.default
+
+* the vcov method is now inherited from micsr
+
+* a value element is added to the result
+
+* the logLik element is now a named numeric (model, saturated and
+  null)
+
+* the numerical hessian is now computed using numDeriv when the
+  analytical hessian is not provided if hessian = TRUE
+
+* a df.residual element is added to the result, the df.residual method
+  is removed
+
+* a bug in residuals.mlogit is fixed, probabilities is used instead of
+  fitted
+
+* mlogit doesn't depends on dfidx anymore, dfidx, idx and idx_name are
+  re-exported
+
+* in logsum, bug fix, the names of the indexes used to be alt and chid
+
+* in the vignette, dfidx now use tibbles instead of ordinary data
+  frames
+
+* LazyData is now TRUE
+
+* the dependence on MASS and zoo is removed
+
+* the index function (methods for the zoo function), already
+  deprecated is now suppressed
+
+* roxygen fixes (names.rpar and print.est.stat are now exported,
+  "_PACKAGE" is added in the man page of the package
+
+* in hmftest, class(z) == "a" replaced by inherits(z, "a")
+
+* fixed web adress for JAE data archive, Train's website and Fox's
+  book
+
+* enhanced vignettes, which now are quarto files
+
+* the description of the values of rpar is fixed in the mlogit man
+  page thanks to Martin Eckhoff Andresen
+
+* bug fixed in mlogit (the to.omit variable could be NULL which
+  caused a bug) thanks to Matt Woeran
+
 
 * update of the Rout.save files
 
@@ -6,9 +81,10 @@
 
 * roxygenize is re-run, the link tags are suppressed
 
+
 # mlogit 1.1-1
 
-* minir update, the JSS paper is cited and used in the CITATION file
+* minor update, the JSS paper is cited and used in the CITATION file
 
 # mlogit 1.1-0
 

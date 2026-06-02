@@ -8,10 +8,8 @@
 \alias{mFormula.default}
 \alias{model.matrix.mFormula}
 \alias{is.mFormula}
-\alias{index.dfidx}
-\alias{index.mlogit}
-\title{Some deprecated functions, especially `mlogit.data`, `index` and
-`mFormula`}
+\title{Some deprecated functions, especially \code{mlogit.data}, \code{index} and
+\code{mFormula}}
 \usage{
 mlogit.data(
   data,
@@ -40,40 +38,36 @@ mFormula(object)
 \method{model.matrix}{mFormula}(object, data, ...)
 
 is.mFormula(object)
-
-\method{index}{dfidx}(x, ...)
-
-\method{index}{mlogit}(x, ...)
 }
 \arguments{
-\item{data}{a `data.frame`,}
+\item{data}{a \code{data.frame},}
 
 \item{choice}{the variable indicating the choice made: it can be
 either a logical vector, a numerical vector with 0 where the
 alternative is not chosen, a factor with level 'yes' when the
 alternative is chosen}
 
-\item{shape}{the shape of the `data.frame`: whether `long` if each
-row is an alternative or `wide` if each row is an observation,}
+\item{shape}{the shape of the \code{data.frame}: whether \code{long} if each
+row is an alternative or \code{wide} if each row is an observation,}
 
 \item{varying}{the indexes of the variables that are alternative
 specific,}
 
 \item{sep}{the seperator of the variable name and the alternative
-name (only relevant for a `wide` `data.frame`),}
+name (only relevant for a \code{wide} \code{data.frame}),}
 
 \item{alt.var}{the name of the variable that contains the
-alternative index (for a `long` `data.frame` only) or the name
+alternative index (for a \code{long} \code{data.frame} only) or the name
 under which the alternative index will be stored (the default
-name is `alt`),}
+name is \code{alt}),}
 
 \item{chid.var}{the name of the variable that contains the choice
 index or the name under which the choice index will be stored,}
 
 \item{alt.levels}{the name of the alternatives: if null, for a
-`wide` data.frame, they are guessed from the variable names and
-the choice variable (both should be the same), for a `long`
-`data.frame`, they are guessed from the `alt.var` argument,}
+\code{wide} data.frame, they are guessed from the variable names and
+the choice variable (both should be the same), for a \code{long}
+\code{data.frame}, they are guessed from the \code{alt.var} argument,}
 
 \item{id.var}{the name of the variable that contains the individual
 index if any,}
@@ -84,7 +78,7 @@ index if any,}
 \item{opposite}{returns the opposite of the specified variables,}
 
 \item{drop.index}{should the index variables be dropped from the
-`data.frame`,}
+\code{data.frame},}
 
 \item{ranked}{a logical value which is true if the response is a
 rank,}
@@ -92,25 +86,25 @@ rank,}
 \item{subset}{a logical expression which defines the subset of
 observations to be selected,}
 
-\item{...}{further arguments passed to `reshape`.}
+\item{...}{further arguments passed to \code{reshape}.}
 
-\item{x, object}{a `formula`, a `dfidx` or a `mlogit` object,}
+\item{object}{a \code{formula}, a \code{dfidx} or a \code{mlogit} object,}
 
-\item{drop}{a boolean, equal to `FALSE` if one wants that a
-`data.frame` is always returned,}
+\item{drop}{a boolean, equal to \code{FALSE} if one wants that a
+\code{data.frame} is always returned,}
 }
 \value{
-`mlogit.data` now returns a `dfidx` object, `mFormula`
-    simply calls [Formula::Formula()] and returns a `Formula`
-    object.
+\code{mlogit.data} now returns a \code{dfidx} object, \code{mFormula}
+simply calls \code{\link[Formula:Formula]{Formula::Formula()}} and returns a \code{Formula}
+object.
 }
 \description{
-`mlogit.data` is deprecated, use [dfidx::dfidx()] instead,
-`mFormula` is replaced by [Formula::Formula()] and [zoo::index()]
-by `idx`.
+\code{mlogit.data} is deprecated, use \code{\link[dfidx:dfidx]{dfidx::dfidx()}} instead,
+\code{mFormula} is replaced by \code{\link[Formula:Formula]{Formula::Formula()}} and \code{\link[zoo:index]{zoo::index()}}
+by \code{idx}.
 }
 \seealso{
-[stats::reshape()]
+\code{\link[stats:reshape]{stats::reshape()}}
 }
 \author{
 Yves Croissant

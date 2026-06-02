@@ -6,22 +6,23 @@
 \title{Heating and Cooling System Choice in Newly Built Houses in California}
 \format{
 A dataframe containing :
-
-- depvar: heating system, one of `gcc` (gas central heat with
-cooling), `ecc` (electric central resistence heat with cooling), `erc`
-(electric room resistence heat with cooling), `hpc` (electric heat
-pump which provides cooling also), `gc` (gas central heat without
-cooling), `ec` (electric central resistence heat without cooling), `er`
+\itemize{
+\item depvar: heating system, one of \code{gcc} (gas central heat with
+cooling), \code{ecc} (electric central resistence heat with cooling), \code{erc}
+(electric room resistence heat with cooling), \code{hpc} (electric heat
+pump which provides cooling also), \code{gc} (gas central heat without
+cooling), \code{ec} (electric central resistence heat without cooling), \code{er}
 (electric room resistence heat without cooling),
-- ich.z: installation cost of the heating portion of the
+\item ich.z: installation cost of the heating portion of the
 system,
-- icca: installation cost for cooling,
-- och.z: operating cost for the heating portion of the system,
-- occa: operating cost for cooling,
-- income: annual income of the household.
+\item icca: installation cost for cooling,
+\item och.z: operating cost for the heating portion of the system,
+\item occa: operating cost for cooling,
+\item income: annual income of the household.
+}
 }
 \source{
-[Kenneth Train's home page](https://elsa.berkeley.edu/~train/).
+\href{https://eml.berkeley.edu/~train/}{Kenneth Train's home page}.
 }
 \description{
 A sample of 250 Californian households

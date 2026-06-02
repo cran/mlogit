@@ -6,15 +6,16 @@
 \title{Choice of Brand for Crakers}
 \format{
 A dataframe containing :
-
-- id: individuals identifiers,
-- choice: one of sunshine, keebler, nabisco, private,
-- disp.z: is there a display for brand z?
-- feat.z: is there a newspaper feature advertisement for brand z?
-- price.z: price of brand z.
+\itemize{
+\item id: individuals identifiers,
+\item choice: one of sunshine, keebler, nabisco, private,
+\item disp.z: is there a display for brand z?
+\item feat.z: is there a newspaper feature advertisement for brand z?
+\item price.z: price of brand z.
+}
 }
 \source{
-[Journal of Business Economics and Statistics web site](https://www.amstat.org).
+\href{https://www.amstat.org}{Journal of Business Economics and Statistics web site}.
 }
 \description{
 a sample of 3292 individualscross-section

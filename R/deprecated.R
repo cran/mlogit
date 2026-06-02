@@ -7,7 +7,7 @@
 #' 
 #' @name mlogit-deprecated
 #' @aliases mlogit.data mFormula
-#' @param x,object a `formula`, a `dfidx` or a `mlogit` object,
+#' @param object a `formula`, a `dfidx` or a `mlogit` object,
 #' @param data a `data.frame`,
 #' @param choice the variable indicating the choice made: it can be
 #'     either a logical vector, a numerical vector with 0 where the
@@ -110,11 +110,11 @@ mlogit.data <- function (data, choice = NULL, shape = c("long", "wide"), varying
  
     # Run dfidx with these values
 
-    data <- dfidx::dfidx(data = data, dfa$idx, drop.index = dfa$drop.index, as.factor = dfa$as.factor,
-                         pkg = "mlogit", fancy.row.names = dfa$fancy.row.names,
-                         idnames = dfa$idnames, shape = dfa$shape,
-                         choice = dfa$choice, varying = dfa$varying,
-                         sep = dfa$sep, opposite = dfa$opposite,
+    data <- dfidx(data = data, dfa$idx, drop.index = dfa$drop.index, as.factor = dfa$as.factor,
+                  pkg = "mlogit", fancy.row.names = dfa$fancy.row.names,
+                  idnames = dfa$idnames, shape = dfa$shape,
+                  choice = dfa$choice, varying = dfa$varying,
+                  sep = dfa$sep, opposite = dfa$opposite,
                   levels = dfa$levels, ranked = dfa$ranked)
     # add mlogit.data for backward compatibility with gmnl
     class(data) <- c(class(data), "mlogit.data")
@@ -157,26 +157,8 @@ model.matrix.mFormula <- function(object, data, ...){
     }   
 }
 
-
 #' @rdname mlogit-deprecated
 #' @export
 is.mFormula <- function(object){
     inherits(object, "mFormula")
-}
-
-
-#' @importFrom zoo index
-#' @export
-zoo::index
-
-#' @rdname mlogit-deprecated
-#' @export
-index.dfidx <- function(x, ...){
-  idx(x, ...)
-}
-
-#' @rdname mlogit-deprecated
-#' @export
-index.mlogit <- function(x, ...){
-  idx(x, ...)
 }

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.655">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Kenneth Train and Yves Croissant">
+<meta name="dcterms.date" content="2026-06-01">
+
+<title>Exercise 1: Multinomial logit model</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link href="e1.mlogit_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet">
+<link href="e1.mlogit_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="/home/yves/R/x86_64-pc-linux-gnu-library/4.5/quarto/rmarkdown/template/quarto_vignette/resources/vignette.css">
+</head>
+
+<body>
+
+
+<header id="title-block-header">
+<h1 class="title">Exercise 1: Multinomial logit model</h1>
+<p class="author">Kenneth Train and Yves Croissant</p>
+
+<p class="date">2026-06-01</p>
+</header>
+
+<div class="cell">
+
+</div>
+<ol class="example" type="1">
+<li>The problem set uses data on choice of heating system in California houses. The data set <code>Heating</code> from the <code>mlogit</code> package contains the data in <code>R</code> format. The observations consist of single-family houses in California that were newly built and had central air-conditioning. The choice is among heating systems. Five types of systems are considered to have been possible:</li>
+</ol>
+<ul>
+<li>gas central (<code>gc</code>),</li>
+<li>gas room (<code>gr</code>),</li>
+<li>electric central (<code>ec</code>),</li>
+<li>electric room (<code>er</code>),</li>
+<li>heat pump (<code>hp</code>).</li>
+</ul>
+<p>There are 900 observations with the following variables:</p>
+<ul>
+<li><code>idcase</code> gives the observation number (1-900),</li>
+<li><code>depvar</code> identifies the chosen alternative (<code>gc</code>, <code>gr</code>, <code>ec</code>, <code>er</code>, <code>hp</code>),</li>
+<li><code>ic.alt</code> is the installation cost for the 5 alternatives,</li>
+<li><code>oc.alt</code> is the annual operating cost for the 5 alternatives,</li>
+<li><code>income</code> is the annual income of the household,</li>
+<li><code>agehed</code> is the age of the household head,</li>
+<li><code>rooms</code> is the number of rooms in the house,</li>
+<li><code>region</code> a factor with levels <code>ncostl</code> (northern coastal region), <code>scostl</code> (southern coastal region), <code>mountn</code> (mountain region), <code>valley</code> (central valley region).</li>
+</ul>
+<p>Note that the attributes of the alternatives, namely, installation cost and operating cost, take a different value for each alternative. Therefore, there are 5 installation costs (one for each of the 5 systems) and 5 operating costs. To estimate the logit model, the researcher needs data on the attributes of all the alternatives, not just the attributes for the chosen alternative. For example, it is not sufficient for the researcher to determine how much was paid for the system that was actually installed (ie., the bill for the installation). The researcher needs to determine how much it would have cost to install each of the systems if they had been installed. The importance of costs in the choice process (i.e., the coefficients of installation and operating costs) is determined through comparison of the costs of the chosen system with the costs of the non-chosen systems.</p>
+<p>For these data, the costs were calculated as the amount the system would cost if it were installed in the house, given the characteristics of the house (such as size), the price of gas and electricity in the house location, and the weather conditions in the area (which determine the necessary capacity of the system and the amount it will be run.) These cost are conditional on the house having central air-conditioning. (That’s why the installation cost of gas central is lower than that for gas room: the central system can use the air-conditioning ducts that have been installed.)</p>
+<p>In a logit model, each variable takes a different value in each alternative. So, in our case, for example, we want to know the coefficient of installation cost in the logit model of system choice. The variable installation cost in the model actually consists of five variables in the dataset: <code>ic.gc</code>, <code>ic.gr</code>, <code>ic.ec</code>, <code>ic.er</code> and <code>ic.hp</code>, for the installation costs of the five systems. In the current code, there are two variables in the logit model. The first variable is called <code>ic</code> for installation cost. This variable consists of five variables in the dataset: <code>ic.gc</code> in the first alternative, <code>ic.gr</code> in the second alternative, etc.</p>
+<ol start="2" type="1">
+<li>Run a model with installation cost and operating cost, without intercepts</li>
+</ol>
+<ol type="a">
+<li>Do the estimated coefficients have the expected signs?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlogit)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(<span class="st">"Heating"</span>, <span class="at">package =</span> <span class="st">"mlogit"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>H <span class="ot">&lt;-</span> <span class="fu">dfidx</span>(Heating, <span class="at">choice =</span> <span class="st">"depvar"</span>, <span class="at">varying =</span> <span class="fu">c</span>(<span class="dv">3</span><span class="sc">:</span><span class="dv">12</span>, <span class="dv">17</span><span class="sc">:</span><span class="dv">21</span>))</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(depvar <span class="sc">~</span> ic <span class="sc">+</span> oc <span class="sc">|</span> <span class="dv">0</span>, H)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gaze</span>(m)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>     Estimate Std. Error z-value Pr(&gt;|z|)
+ic -0.0062319  0.0003528  -17.66   &lt;2e-16
+oc -0.0045801  0.0003222  -14.22   &lt;2e-16</code></pre>
+</div>
+</div>
+<blockquote>
+<p>Yes, they are negative as expected, meaning that as the cost of a system rises (and the costs of the other systems remain the same) the probability of that system being chosen falls.</p>
+</blockquote>
+<ol start="2" type="a">
+<li>Are both coefficients significantly different from zero?</li>
+</ol>
+<blockquote>
+<p>Yes, the t-statistics are greater than 1.96, which is the critical level for 95% confidence level.</p>
+</blockquote>
+<ol start="3" type="a">
+<li>How closely do the average probabilities match the shares of customers choosing each alternative?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(<span class="fu">fitted</span>(m, <span class="at">outcome =</span> <span class="cn">FALSE</span>), <span class="dv">2</span>, mean)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">##         ec         er         gc         gr         hp </span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.10413057 0.05141477 0.51695653 0.24030898 0.08718915</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>Not very well. 63.67% of the sample chose <code>gc</code> (as shown at the top of the summary) and yet the estimated model gives an average probability of only 51.695%. The other alternatives are also fairly poorly predicted. We will find how to fix this problem in one of the models below.</p>
+</blockquote>
+<ol start="4" type="a">
+<li>The ratio of coefficients usually provides economically meaningful information. The willingness to pay (<span class="math inline">\(wtp\)</span>) through higher installation cost for a one-dollar reduction in operating costs is the ratio of the operating cost coefficient to the installation cost coefficient. What is the estimated <span class="math inline">\(wtp\)</span> from this model? Is it reasonable in magnitude?</li>
+</ol>
+<p><span class="math display">\[
+U = \beta_{ic} ic + \beta_{oc} oc
+\]</span></p>
+<p><span class="math display">\[
+dU = \beta_{ic} dic + \beta_{oc} doc = 0 \Rightarrow
+-\frac{dic}{doc}\mid_{dU=0}=\frac{\beta_{oc}}{\beta_{ic}}
+\]</span></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(m)[<span class="st">"oc"</span>]<span class="sc">/</span><span class="fu">coef</span>(m)[<span class="st">"ic"</span>]</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">##        oc </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.7349453</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The model implies that the decision-maker is willing to pay $.73 (ie., 73 cents) in higher installation cost in order to reduce annual operating costs by $1.</p>
+</blockquote>
+<blockquote>
+<p>A $1 reduction in annual operating costs recurs each year. It is unreasonable to think that the decision-maker is only willing to pay only 73 cents as a one-time payment in return for a $1/year stream of saving. This unreasonable implication is another reason (along with the inaccurate average probabilities) to believe this model is not so good. We will find below how the model can be improved.</p>
+</blockquote>
+<ol start="5" type="a">
+<li>We can use the estimated <span class="math inline">\(wtp\)</span> to obtain an estimate of the discount rate that is implied by the model of choice of operating system. The present value of the future operating costs is the discounted sum of operating costs over the life of the system: <span class="math inline">\(PV=\sum_{t=1}^L\frac{OC}{(1+r)^t}\)</span> where <span class="math inline">\(r\)</span> is the discount rate and <span class="math inline">\(L\)</span> being the life of the system. As <span class="math inline">\(L\)</span> rises, the <span class="math inline">\(PV\)</span> approaches <span class="math inline">\(OC/r\)</span>. Therefore, for a system with a sufficiently long life (which we will assume these systems have), a one-dollar reduction in <span class="math inline">\(OC\)</span> reduces the present value of future operating costs by <span class="math inline">\((1/r)\)</span>. This means that if the person choosing the system were incurring the installation costs and the operating costs over the life of the system, and rationally traded-off the two at a discount rate of <span class="math inline">\(r\)</span>, the decisionmaker’s <span class="math inline">\(wtp\)</span> for operating cost reductions would be <span class="math inline">\((1/r)\)</span>. Given this, what value of <span class="math inline">\(r\)</span> is implied by the estimated <span class="math inline">\(wtp\)</span> that you calculated in part (c)? Is this reasonable?</li>
+</ol>
+<blockquote>
+<p><span class="math inline">\(U=a LC\)</span> where <span class="math inline">\(LC\)</span> is lifecycle cost, equal to the sum of installation cost and the present value of operating costs: <span class="math inline">\(LC=IC+(1/r)OC\)</span>. Substituting, we have <span class="math inline">\(U=aIC + (a/r)OC\)</span>.</p>
+</blockquote>
+<blockquote>
+<p>The models estimates <span class="math inline">\(a\)</span> as <span class="math inline">\(-0.00623\)</span> and <span class="math inline">\(a/r\)</span> as <span class="math inline">\(-0.00457\)</span>. So <span class="math inline">\(r =  a/(a/r)=-.000623/.00457 = 1.36\)</span> or 136% discount rate. This is not reasonable, because it is far too high.</p>
+</blockquote>
+<ol start="2" class="example" type="1">
+<li>Estimate a model that imposes the constraint that <span class="math inline">\(r=0.12\)</span> (such that <span class="math inline">\(wtp=8.33\)</span>). Test the hypothesis that <span class="math inline">\(r=0.12\)</span>.</li>
+</ol>
+<blockquote>
+<p>To impose this constraint, we create a lifecycle cost that embodies the constraint <span class="math inline">\(lcc=ic+oc/0.12\)</span> and estimate the model with this variable.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>H<span class="sc">$</span>lcc <span class="ot">&lt;-</span> H<span class="sc">$</span>ic <span class="sc">+</span> H<span class="sc">$</span>oc <span class="sc">/</span> <span class="fl">0.12</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>mlcc <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(depvar <span class="sc">~</span> lcc <span class="sc">|</span> <span class="dv">0</span>, H)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(m, mlcc) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 306.930, df: 1, pval = 0.000</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">qchisq</span>(<span class="fl">0.05</span>, <span class="at">df =</span> <span class="dv">1</span>, <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 3.841459</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>We perform a likelihood ratio test. The <span class="math inline">\(\ln L\)</span> for this constrained model is <span class="math inline">\(-1248.7\)</span>. The <span class="math inline">\(\ln L\)</span> for the unconstrained model is <span class="math inline">\(-1095.2\)</span>. The test statistic is twice the difference in <span class="math inline">\(\ln L\)</span>: <span class="math inline">\(2(1248.7-1095.2)=307\)</span>. This test is for one restriction (ie a restiction on the relation of the coefficient of operating cost to that of installation cost.) We therefore compare <span class="math inline">\(307\)</span> with the critical value of chi-squared with <span class="math inline">\(1\)</span> degree of freedom. This critical value for 95% confidence is <span class="math inline">\(3.8\)</span>. Since the statistic exceeds the critical value, we reject the hypothesis that <span class="math inline">\(r=0.12\)</span>.</p>
+</blockquote>
+<ol start="3" class="example" type="1">
+<li>Add alternative-specific constants to the model. With <span class="math inline">\(J\)</span> alternatives, at most <span class="math inline">\(J-1\)</span> alternative-specific constants can be estimated. The coefficients of <span class="math inline">\(J-1\)</span> constants are interpreted as relative to alternative <span class="math inline">\(J\)</span>th alternative. Normalize the constant for the alternative <code>hp</code> to 0.</li>
+</ol>
+<ol type="a">
+<li>How well do the estimated probabilities match the shares of customers choosing each alternative?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>mc <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(depvar <span class="sc">~</span> ic <span class="sc">+</span> oc, H, <span class="at">reflevel =</span> <span class="st">'hp'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gaze</span>(mc)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                 Estimate Std. Error z-value Pr(&gt;|z|)
+(Intercept):ec  1.6588459  0.4484194   3.699 0.000216
+(Intercept):er  1.8534370  0.3619551   5.121 3.05e-07
+(Intercept):gc  1.7109793  0.2267421   7.546 4.49e-14
+(Intercept):gr  0.3082633  0.2065922   1.492 0.135664
+ic             -0.0015332  0.0006209  -2.469 0.013533
+oc             -0.0069964  0.0015541  -4.502 6.73e-06</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(<span class="fu">fitted</span>(mc, <span class="at">outcome =</span> <span class="cn">FALSE</span>), <span class="dv">2</span>, mean)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="do">##         hp         ec         er         gc         gr </span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.05555556 0.07111111 0.09333333 0.63666667 0.14333333</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>Note that they match exactly: alternative-specific constants in a logit model insure that the average probabilities equal the observed shares.</p>
+</blockquote>
+<ol start="2" type="a">
+<li>Calculate the <span class="math inline">\(wtp\)</span> and discount rate <span class="math inline">\(r\)</span> that is implied by the estimates. Are these reasonable?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>wtp <span class="ot">&lt;-</span> <span class="fu">unname</span>(<span class="fu">coef</span>(mc)[<span class="st">"oc"</span>] <span class="sc">/</span> <span class="fu">coef</span>(mc)[<span class="st">"ic"</span>])</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>wtp</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 4.563385</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">/</span> wtp</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>r</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.2191356</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The decision-maker is willing to pay $4.56 for a $1 year stream of savings. This implies <span class="math inline">\(r = 0.22\)</span>. The decision-maker applies a 22% discount rate. These results are certainly more reasonable that in the previous model. The decision-maker is still estimated to be valuing saving somewhat less than would seem rational (ie applying a higher discount rate than seems reasonable). However, we need to remember that the decision-maker here is the builder. If home buyers were perfectly informed, then the builder would adopt the buyer’s discount rate. However, the builder would adopt a higher discount rate if home buyers were not perfectly informed about (or believed) the stream of saving.</p>
+</blockquote>
+<ol start="3" type="a">
+<li>This model contains constants for all alternatives <code>ec</code>-<code>er</code>-<code>gc</code>-<code>gr</code>, with the constant for alternative <code>hp</code> normalized to zero. Suppose you had included constants for alternatives <code>ec</code>-<code>er</code>-<code>gc</code>-<code>hp</code>, with the constant for alternative <code>gr</code> normalized to zero. What would be the estimated coefficient of the constant for alternative <code>gc</code>? Figure this out logically rather than actually estimating the model.</li>
+</ol>
+<blockquote>
+<p>We know that when the hp is left out, the constant for alternative <code>gc</code> is <span class="math inline">\(1.71074\)</span> meaning that the average impact of unicluded factors is <span class="math inline">\(1.71074\)</span> higher for alternative <code>gc</code> than for alternative hp. Similarly, the constant for alternative <code>gr</code> is <span class="math inline">\(0.30777\)</span>. If <code>gr</code> were left out instead of <code>hp</code>, then all the constants would be relative to alternative <code>gr</code>. The constant for alternative <code>gc</code> would the be <span class="math inline">\(1.71074-.30777=1.40297\)</span>. That is, the average impact of unincluded factors is <span class="math inline">\(1.40297\)</span> higher for alt <code>gc</code> than alt <code>gr</code>. Similarly for the other alternatives. Note the the constant for alt 5 would be <span class="math inline">\(0-.30777=-.3077\)</span>, since <code>hp</code> is normalized to zero in the model with <code>hp</code> left out.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">update</span>(mc, <span class="at">reflevel =</span> <span class="st">"gr"</span>) <span class="sc">|&gt;</span> <span class="fu">coef</span>()</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept):ec (Intercept):er (Intercept):gc (Intercept):hp 
+   1.350582664    1.545173687    1.402716023   -0.308263280 
+            ic             oc 
+  -0.001533153   -0.006996368 </code></pre>
+</div>
+</div>
+<ol start="4" class="example" type="1">
+<li>Now try some models with sociodemographic variables entering.</li>
+</ol>
+<ol type="a">
+<li>Enter installation cost divided by income, instead of installation cost. With this specification, the magnitude of the installation cost coefficient is inversely related to income, such that high income households are less concerned with installation costs than lower income households. Does dividing installation cost by income seem to make the model better or worse?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>mi <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(depvar <span class="sc">~</span> oc <span class="sc">+</span> <span class="fu">I</span>(ic <span class="sc">/</span> income), H)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gaze</span>(mi)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                Estimate Std. Error z-value Pr(&gt;|z|)
+(Intercept):er  0.063993   0.194489   0.329   0.7421
+(Intercept):gc  0.056348   0.465025   0.121   0.9036
+(Intercept):gr -1.465306   0.503385  -2.911   0.0036
+(Intercept):hp -1.870077   0.436425  -4.285 1.83e-05
+oc             -0.007107   0.001552  -4.580 4.66e-06
+I(ic/income)   -0.002766   0.001894  -1.460   0.1443</code></pre>
+</div>
+</div>
+<blockquote>
+<p>The model seems to get worse. The <span class="math inline">\(\ln L\)</span> is lower (more negative) and the coefficient on installation cost becomes insignificant (t-stat below 2).</p>
+</blockquote>
+<ol start="2" type="a">
+<li>Instead of dividing installation cost by income, enter alternative-specific income effects. What do the estimates imply about the impact of income on the choice of central systems versus room system? Do these income terms enter significantly?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>mi2 <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(depvar <span class="sc">~</span> oc <span class="sc">+</span> ic <span class="sc">|</span> income, H, <span class="at">reflevel =</span> <span class="st">"hp"</span>)</span></code></pre></div>
+</div>
+<blockquote>
+<p>The model implies that as income rises, the probability of heat pump rises relative to all the others (since income in the heat pump alt is normalized to zero, and the others enter with negative signs such that they are lower than that for heat pumps. Also, as income rises, the probability of gas room drops relative to the other non-heat-pump systems (since it is most negative).</p>
+</blockquote>
+<blockquote>
+<p>Do these income terms enter significantly? No.&nbsp;It seems that income doesn’t really have an effect. Maybe this is because income is for the family that lives in the house, whereas the builder made decision of which system to install.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(mc, mi2) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 4.680, df: 4, pval = 0.322</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">waldtest</span>(mc, mi2) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 4.646, df: 4, pval = 0.326</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">scoretest</span>(mc, mi2) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 4.676, df: 4, pval = 0.322</span></span></code></pre></div>
+</div>
+<ol start="3" type="a">
+<li>Try other models. Determine which model you think is best from these data.</li>
+</ol>
+<blockquote>
+<p>I’m not going to give what I consider my best model: your ideas on what’s best are what matter here.</p>
+</blockquote>
+<ol start="6" type="1">
+<li>We now are going to consider the use of logit model for prediction. Estimate a model with installation costs, operating costs, and alternative specific constants. Calculate the probabilities for each house explicitly. Check to be sure that the mean probabilities are the same as you got in exercise 4.</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mc)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>alt <span class="ot">&lt;-</span> <span class="fu">idx</span>(mc, <span class="dv">2</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>chid <span class="ot">&lt;-</span> <span class="fu">idx</span>(mc, <span class="dv">1</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>eXb <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">exp</span>(X <span class="sc">%*%</span> <span class="fu">coef</span>(mc)))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>SeXb <span class="ot">&lt;-</span> <span class="fu">tapply</span>(eXb, chid, sum)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> eXb <span class="sc">/</span> SeXb[chid]</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="fu">matrix</span>(P, <span class="at">ncol =</span> <span class="dv">5</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(P)</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>           [,1]       [,2]      [,3]      [,4]       [,5]
+[1,] 0.05107444 0.07035738 0.6329116 0.1877416 0.05791494
+[2,] 0.04849337 0.06420595 0.6644519 0.1558322 0.06701658
+[3,] 0.07440281 0.08716904 0.6387765 0.1439919 0.05565974
+[4,] 0.07264503 0.11879833 0.5657376 0.1879231 0.05489595
+[5,] 0.09223575 0.10238514 0.5670663 0.1561227 0.08219005
+[6,] 0.09228184 0.10466584 0.6366615 0.1152634 0.05112739</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(P, <span class="dv">2</span>, mean)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.07111111 0.09333333 0.63666666 0.14333334 0.05555556</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>This can be computed much more simply using the <code>fitted</code> function, with the <code>outcome</code> argument set to <code>FALSE</code> so that the probabilities for all the alternatives (and not only the chosen one) is returned.</p>
+</blockquote>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(<span class="fu">fitted</span>(mc, <span class="at">outcome =</span> <span class="cn">FALSE</span>), <span class="dv">2</span>, mean)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">##         hp         ec         er         gc         gr </span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.05555556 0.07111111 0.09333333 0.63666667 0.14333333</span></span></code></pre></div>
+</div>
+<ol start="5" class="example" type="1">
+<li>The California Energy Commission (CEC) is considering whether to offer rebates on heat pumps. The CEC wants to predict the effect of the rebates on the heating system choices of customers in California. The rebates will be set at 10% of the installation cost. Using the estimated coefficients from the model in exercise 6, calculate new probabilities and predicted shares using the new installation cost of heat pump. How much do the rebates raise the share of houses with heat pumps?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Hn <span class="ot">&lt;-</span> H</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Hn<span class="sc">$</span>ic[Hn<span class="sc">$</span>id2 <span class="sc">==</span> <span class="st">"hp"</span>] <span class="ot">&lt;-</span> <span class="fl">0.9</span> <span class="sc">*</span> Hn<span class="sc">$</span>ic[Hn<span class="sc">$</span>id2 <span class="sc">==</span> <span class="st">"hp"</span>]</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(<span class="fu">predict</span>(mc, <span class="at">newdata =</span> Hn, <span class="at">shape =</span> <span class="st">"wide"</span>), <span class="dv">2</span>, mean)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="do">##         hp         ec         er         gc         gr </span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 0.06446230 0.07045486 0.09247026 0.63064443 0.14196814</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>We estimate the model with the actual costs. Then we change the costs and calculate probabilities with the new costs. The average probability is the predicted share for an alternative. At the original costs, the heat pump share is <span class="math inline">\(0.0555\)</span> (ie, about 5.5%) This share is predicted to rise to <span class="math inline">\(0.0645\)</span> (about 6.5%) when rebates are given.</p>
+</blockquote>
+<ol start="6" class="example" type="1">
+<li>Suppose a new technology is developed that provides more efficient central heating. The new technology costs $200 more than the central electric system. However, it saves 25% of the electricity, such that its operating costs are 75% of the operating costs of <code>ec</code>. We want to predict the potential market penetration of this technology. Note that there are now six alternatives: the original five alternatives plus this new one. Calculate the probability and predict the market share (i.e., the average probability) for all six alternatives, using the model that is estimated on the original five alternatives. (Be sure to use the original installation cost for heat pumps, rather than the reduced cost in exercise 7.) What is the predicted market share for the new technology? From which of the original five systems does the new technology draw the most customers?</li>
+</ol>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">model.matrix</span>(mc)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Xn <span class="ot">&lt;-</span> X[<span class="fu">idx</span>(mc, <span class="dv">2</span>) <span class="sc">==</span> <span class="st">"ec"</span>,]</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>Xn[, <span class="st">"ic"</span>] <span class="ot">&lt;-</span> Xn[, <span class="st">"ic"</span>] <span class="sc">+</span> <span class="dv">200</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>Xn[, <span class="st">"oc"</span>] <span class="ot">&lt;-</span> Xn[, <span class="st">"oc"</span>] <span class="sc">*</span> <span class="fl">0.75</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>unchid <span class="ot">&lt;-</span> <span class="fu">unique</span>(<span class="fu">idx</span>(mc, <span class="dv">1</span>))</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rownames</span>(Xn) <span class="ot">&lt;-</span> <span class="fu">paste</span>(unchid, <span class="st">'new'</span>, <span class="at">sep =</span> <span class="st">"."</span>)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>chidb <span class="ot">&lt;-</span> <span class="fu">c</span>(chid, unchid)</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rbind</span>(X, Xn)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> X[<span class="fu">order</span>(chidb), ]</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>eXb <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">exp</span>(X <span class="sc">%*%</span> <span class="fu">coef</span>(mc)))</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>SeXb <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(<span class="fu">tapply</span>(eXb, <span class="fu">sort</span>(chidb), sum))</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> eXb <span class="sc">/</span> SeXb[<span class="fu">sort</span>(chidb)]</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>P <span class="ot">&lt;-</span> <span class="fu">matrix</span>(P, <span class="at">ncol =</span> <span class="dv">6</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="fu">apply</span>(P, <span class="dv">2</span>, mean)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 0.06311578 0.08347713 0.57145108 0.12855080 0.04977350 0.10363170</span></span></code></pre></div>
+</div>
+<blockquote>
+<p>The new technology captures a market share of 0.1036. That is, it gets slightly more than ten percent of the market.</p>
+</blockquote>
+<blockquote>
+<p>It draws the same percent (about 10%) from each system. This means that it draws the most in absolute terms from the most popular system, gas central. For example, gas central drops from to <span class="math inline">\(0.637\)</span> to <span class="math inline">\(0.571\)</span>; this is an absolute drop of <span class="math inline">\(0.637-0.571=0.065\)</span> and a percent drop of <span class="math inline">\(0.065/0.637\)</span> about 10%. Of the 10.36% market share that is attained by the new technology, 6.5% of it comes from gas central. The other systems drop by about the same percent, which is less in absolute terms.</p>
+</blockquote>
+<blockquote>
+<p>The same percent drop for all systems is a consequence of the IIA property of logit. To me, this property seems unreasonable in this application. The new technology is a type of electric system. It seems reasonable that it would draw more from other electric systems than from gas systems. Models like nested logit, probit, and mixed logit allow more flexible, and in this case, more realistic substitution patterns.</p>
+</blockquote>
+<div class="cell">
+
+</div>
+
+
+
+
+</body></html>

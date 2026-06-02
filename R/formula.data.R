@@ -153,6 +153,7 @@ model.matrix.dfidx_mlogit <- function(object, ..., lhs = NULL, rhs = 1, dot = "s
     
     for (i in seq_len(length(intnames))) cnamesX <- gsub(intnames[i], .altlevels[i], cnamesX)
     colnames(X) <- cnamesX
+    class(X) <- c("dfidx_matrix", class(X))
     X
 }
 

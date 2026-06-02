@@ -1,72 +1,24 @@
 <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
-<html>
+<meta charset="utf-8">
+<meta name="generator" content="quarto-0.9.655">
 
-<head>
-
-<meta charset="utf-8" />
-<meta name="generator" content="pandoc" />
-<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
-
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
 <title>4. Logit models relaxing the iid hypothesis</title>
-
-<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
-// be compatible with the behavior of Pandoc < 2.8).
-document.addEventListener('DOMContentLoaded', function(e) {
-  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
-  var i, h, a;
-  for (i = 0; i < hs.length; i++) {
-    h = hs[i];
-    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
-    a = h.attributes;
-    while (a.length > 0) h.removeAttribute(a[0].name);
-  }
-});
-</script>
-<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
-// v0.0.1
-// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
-
-document.addEventListener('DOMContentLoaded', function() {
-  const codeList = document.getElementsByClassName("sourceCode");
-  for (var i = 0; i < codeList.length; i++) {
-    var linkList = codeList[i].getElementsByTagName('a');
-    for (var j = 0; j < linkList.length; j++) {
-      if (linkList[j].innerHTML === "") {
-        linkList[j].setAttribute('aria-hidden', 'true');
-      }
-    }
-  }
-});
-</script>
-
-<style type="text/css">
-  code{white-space: pre-wrap;}
-  span.smallcaps{font-variant: small-caps;}
-  span.underline{text-decoration: underline;}
-  div.column{display: inline-block; vertical-align: top; width: 50%;}
-  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-  ul.task-list{list-style: none;}
-    </style>
-
-
-
-<style type="text/css">
-  code {
-    white-space: pre;
-  }
-  .sourceCode {
-    overflow: visible;
-  }
-</style>
-<style type="text/css" data-origin="pandoc">
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
 pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
@@ -126,240 +78,63 @@ code span.st { color: #4070a0; } /* String */
 code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
-
-</style>
-<script>
-// apply pandoc div.sourceCode style to pre.sourceCode instead
-(function() {
-  var sheets = document.styleSheets;
-  for (var i = 0; i < sheets.length; i++) {
-    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
-    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
-    var j = 0;
-    while (j < rules.length) {
-      var rule = rules[j];
-      // check if there is a div.sourceCode rule
-      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
-        j++;
-        continue;
-      }
-      var style = rule.style.cssText;
-      // check if color or background-color is set
-      if (rule.style.color === '' && rule.style.backgroundColor === '') {
-        j++;
-        continue;
-      }
-      // replace div.sourceCode by a pre.sourceCode rule
-      sheets[i].deleteRule(j);
-      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
-    }
-  }
-})();
-</script>
-
-
-
-
-<style type="text/css">body {
-background-color: #fff;
-margin: 1em auto;
-max-width: 700px;
-overflow: visible;
-padding-left: 2em;
-padding-right: 2em;
-font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-font-size: 14px;
-line-height: 1.35;
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
 }
-#TOC {
-clear: both;
-margin: 0 0 10px 10px;
-padding: 4px;
-width: 400px;
-border: 1px solid #CCCCCC;
-border-radius: 5px;
-background-color: #f6f6f6;
-font-size: 13px;
-line-height: 1.3;
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
 }
-#TOC .toctitle {
-font-weight: bold;
-font-size: 15px;
-margin-left: 5px;
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
 }
-#TOC ul {
-padding-left: 40px;
-margin-left: -1.5em;
-margin-top: 5px;
-margin-bottom: 5px;
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
 }
-#TOC ul ul {
-margin-left: -2em;
+div.csl-indent {
+  margin-left: 2em;
 }
-#TOC li {
-line-height: 16px;
-}
-table {
-margin: 1em auto;
-border-width: 1px;
-border-color: #DDDDDD;
-border-style: outset;
-border-collapse: collapse;
-}
-table th {
-border-width: 2px;
-padding: 5px;
-border-style: inset;
-}
-table td {
-border-width: 1px;
-border-style: inset;
-line-height: 18px;
-padding: 5px 5px;
-}
-table, table th, table td {
-border-left-style: none;
-border-right-style: none;
-}
-table thead, table tr.even {
-background-color: #f7f7f7;
-}
-p {
-margin: 0.5em 0;
-}
-blockquote {
-background-color: #f6f6f6;
-padding: 0.25em 0.75em;
-}
-hr {
-border-style: solid;
-border: none;
-border-top: 1px solid #777;
-margin: 28px 0;
-}
-dl {
-margin-left: 0;
-}
-dl dd {
-margin-bottom: 13px;
-margin-left: 13px;
-}
-dl dt {
-font-weight: bold;
-}
-ul {
-margin-top: 0;
-}
-ul li {
-list-style: circle outside;
-}
-ul ul {
-margin-bottom: 0;
-}
-pre, code {
-background-color: #f7f7f7;
-border-radius: 3px;
-color: #333;
-white-space: pre-wrap; 
-}
-pre {
-border-radius: 3px;
-margin: 5px 0px 10px 0px;
-padding: 10px;
-}
-pre:not([class]) {
-background-color: #f7f7f7;
-}
-code {
-font-family: Consolas, Monaco, 'Courier New', monospace;
-font-size: 85%;
-}
-p > code, li > code {
-padding: 2px 0px;
-}
-div.figure {
-text-align: center;
-}
-img {
-background-color: #FFFFFF;
-padding: 2px;
-border: 1px solid #DDDDDD;
-border-radius: 3px;
-border: 1px solid #CCCCCC;
-margin: 0 5px;
-}
-h1 {
-margin-top: 0;
-font-size: 35px;
-line-height: 40px;
-}
-h2 {
-border-bottom: 4px solid #f7f7f7;
-padding-top: 10px;
-padding-bottom: 2px;
-font-size: 145%;
-}
-h3 {
-border-bottom: 2px solid #f7f7f7;
-padding-top: 10px;
-font-size: 120%;
-}
-h4 {
-border-bottom: 1px solid #f7f7f7;
-margin-left: 8px;
-font-size: 105%;
-}
-h5, h6 {
-border-bottom: 1px solid #ccc;
-font-size: 105%;
-}
-a {
-color: #0033dd;
-text-decoration: none;
-}
-a:hover {
-color: #6666ff; }
-a:visited {
-color: #800080; }
-a:visited:hover {
-color: #BB00BB; }
-a[href^="http:"] {
-text-decoration: underline; }
-a[href^="https:"] {
-text-decoration: underline; }
-
-code > span.kw { color: #555; font-weight: bold; } 
-code > span.dt { color: #902000; } 
-code > span.dv { color: #40a070; } 
-code > span.bn { color: #d14; } 
-code > span.fl { color: #d14; } 
-code > span.ch { color: #d14; } 
-code > span.st { color: #d14; } 
-code > span.co { color: #888888; font-style: italic; } 
-code > span.ot { color: #007020; } 
-code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; } 
-code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
+<link href="c4.relaxiid_files/libs/quarto-html/quarto-html.min.css" rel="stylesheet">
+<link href="c4.relaxiid_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
+<link rel="stylesheet" href="/home/yves/R/x86_64-pc-linux-gnu-library/4.5/quarto/rmarkdown/template/quarto_vignette/resources/vignette.css">
 </head>
 
 <body>
 
 
+<header id="title-block-header">
+<h1 class="title">4. Logit models relaxing the iid hypothesis</h1>
 
+</header>
+<nav id="TOC" role="doc-toc">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#the-heteroskedastic-logit-model" id="toc-the-heteroskedastic-logit-model">The heteroskedastic logit model</a></li>
+  <li><a href="#the-nested-logit-model" id="toc-the-nested-logit-model">The nested logit model</a></li>
+  <li><a href="#applications" id="toc-applications">Applications</a>
+  <ul>
+  <li><a href="#modecanada" id="toc-modecanada">ModeCanada</a></li>
+  <li><a href="#japanesefdi" id="toc-japanesefdi">JapaneseFDI</a></li>
+  </ul></li>
+  <li><a href="#bibliography" id="toc-bibliography">Bibliography</a></li>
+  </ul>
+</nav>
+<div class="cell">
 
-<h1 class="title toc-ignore">4. Logit models relaxing the iid hypothesis</h1>
-
-
-
+</div>
 <p>In the previous section, we assumed that the error terms were iid (identically and independently distributed), i.e., uncorrelated and homoscedastic. Extensions of the basic multinomial logit model have been proposed by relaxing one of these two hypothesis while maintaining the hypothesis of a Gumbel distribution.</p>
-<div id="the-heteroskedastic-logit-model" class="section level2">
-<h2>The heteroskedastic logit model</h2>
-<p>The heteroskedastic logit model was proposed by <span class="citation">Bhat (1995)</span>. The probability that <span class="math inline">\(U_l&gt;U_j\)</span> is:</p>
+<h2 id="the-heteroskedastic-logit-model">The heteroskedastic logit model</h2>
+<p>The heteroskedastic logit model was proposed by <span class="citation" data-cites="BHAT:95">Bhat (1995)</span>. The probability that <span class="math inline">\(U_l&gt;U_j\)</span> is:</p>
 <p><span class="math display">\[
 P(\epsilon_j&lt;V_l-V_j+\epsilon_l)=e^{-e^{-\frac{(V_l-V_j+\epsilon_l)}{\theta_j}}},
 \]</span></p>
@@ -373,15 +148,13 @@ P(\epsilon_j&lt;V_l-V_j+\epsilon_l)=e^{-e^{-\frac{(V_l-V_j+\epsilon_l)}{\theta_j
   P_l&amp;=&amp;\displaystyle\int_{-\infty}^{+\infty} \prod_{j\neq l}
   \left(e^{-e^{-\frac{(V_l-V_j+t)}{\theta_j}}}\right)\frac{1}{\theta_l}e^{-\frac{t}{\theta_l}}e^{-e^{-\frac{t}{\theta_l}}}
   dt\\
- &amp;=&amp; \displaystyle \int_{0}^{+\infty}\left(e^{-\sum_{j \neq
+&amp;=&amp; \displaystyle \int_{0}^{+\infty}\left(e^{-\sum_{j \neq
       l}e^{-\frac{V_l-V_j-\theta_l \ln t}{\theta_j}}}\right)e^{-t}dt.
      \end{array}
 \end{equation*}\]</span></p>
 <p>There is no closed form for this integral, but it can be efficiently computed using a Gauss quadrature method, and more precisely the Gauss-Laguerre quadrature method.</p>
-</div>
-<div id="the-nested-logit-model" class="section level2">
-<h2>The nested logit model</h2>
-<p>The nested logit model was first proposed by <span class="citation">(McFadden 1978)</span>. It is a generalization of the multinomial logit model that is based on the idea that some alternatives may be joined in several groups (called nests). The error terms may then present some correlation in the same nest, whereas error terms of different nests are still uncorrelated.</p>
+<h2 id="the-nested-logit-model">The nested logit model</h2>
+<p>The nested logit model was first proposed by <span class="citation" data-cites="MCFAD:78">(McFadden 1978)</span>. It is a generalization of the multinomial logit model that is based on the idea that some alternatives may be joined in several groups (called nests). The error terms may then present some correlation in the same nest, whereas error terms of different nests are still uncorrelated.</p>
 <p>Denoting <span class="math inline">\(m=1... M\)</span> the nests and <span class="math inline">\(B_m\)</span> the set of alternatives belonging to nest <span class="math inline">\(m\)</span>, the cumulative distribution of the errors is:</p>
 <p><span class="math display">\[
 \mbox{exp}\left(-\sum_{m=1}^M \left( \sum_{j \in B_m}
@@ -393,7 +166,7 @@ P_j = \frac{e^{V_j/\lambda_l}\left(\sum_{k \in B_l}
     e^{V_k/\lambda_l}\right)^{\lambda_l-1}} {\sum_{m=1}^M\left(\sum_{k
       \in B_m} e^{V_k/\lambda_m}\right)^{\lambda_m}},
 \]</span></p>
-<p>and that this model is a random utility model if all the <span class="math inline">\(\lambda\)</span> parameters are in the <span class="math inline">\(0-1\)</span> interval.<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a></p>
+<p>and that this model is a random utility model if all the <span class="math inline">\(\lambda\)</span> parameters are in the <span class="math inline">\(0-1\)</span> interval.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
 <p>Let us now write the deterministic part of the utility of alternative <span class="math inline">\(j\)</span> as the sum of two terms: the first one (<span class="math inline">\(Z_j\)</span>) being specific to the alternative and the second one (<span class="math inline">\(W_l\)</span>) to the nest it belongs to:</p>
 <p><span class="math display">\[V_j=Z_j+W_l.\]</span></p>
 <p>We can then rewrite the probabilities as follow:</p>
@@ -405,972 +178,230 @@ P_j&amp;=&amp;\frac{e^{(Z_j+W_l)/\lambda_l}}{\sum_{k \in B_l}
 {\sum_{m=1}^M\left(\sum_{k \in B_m}
     e^{(Z_k+W_m)/\lambda_m}\right)^{\lambda_m}}\\
 &amp;=&amp;\frac{e^{Z_j/\lambda_l}}{\sum_{k \in B_l}
-    e^{Z_k/\lambda_l}}\times 
+    e^{Z_k/\lambda_l}}\times
 \frac{\left(e^{W_l/\lambda_l}\sum_{k \in B_l} e^{Z_k/\lambda_l}\right)^{\lambda_l}}
 {\sum_{m=1}^M\left(e^{W_m/\lambda_m}\sum_{k
       \in B_m} e^{Z_k/\lambda_m}\right)^{\lambda_m}}.
 \end{array}
 \]</span></p>
-<p>Then denote <span class="math inline">\(I_l=\ln \sum_{k \in B_l} e^{Z_k/\lambda_l}\)</span> which is often called the log-sum, the inclusive value or the inclusive utility.<a href="#fn2" class="footnote-ref" id="fnref2"><sup>2</sup></a> We then can write the probability of choosing alternative <span class="math inline">\(j\)</span> as:</p>
+<p>Then denote <span class="math inline">\(I_l=\ln \sum_{k \in B_l} e^{Z_k/\lambda_l}\)</span> which is often called the log-sum, the inclusive value or the inclusive utility.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> We then can write the probability of choosing alternative <span class="math inline">\(j\)</span> as:</p>
 <p><span class="math display">\[
 P_j=\frac{e^{Z_j/\lambda_l}}{\sum_{k \in B_l}
-    e^{Z_k/\lambda_l}}\times 
+    e^{Z_k/\lambda_l}}\times
 \frac{e^{W_l+\lambda_l I_l}}{\sum_{m=1}^Me^{W_m+\lambda_m I_m}}.
 \]</span></p>
 <p>The first term <span class="math inline">\(\mbox{P}_{j\mid l}\)</span> is the conditional probability of choosing alternative <span class="math inline">\(j\)</span> if nest <span class="math inline">\(l\)</span> is chosen. It is often referred as the <em>lower model</em>. The second term <span class="math inline">\(\mbox{P}_l\)</span> is the marginal probability of choosing nest <span class="math inline">\(l\)</span> and is referred as the <em>upper model</em>. <span class="math inline">\(W_l+\lambda_l I_l\)</span> can be interpreted as the expected utility of choosing the best alternative in <span class="math inline">\(l\)</span>, <span class="math inline">\(W_l\)</span> being the expected utility of choosing an alternative in this nest (whatever this alternative is) and <span class="math inline">\(\lambda_l I_l\)</span> being the expected extra utility gained by being able to choose the best alternative in the nest. The inclusive values link the two models. It is then straightforward to show that IIA applies within nests, but not for two alternatives in different nests.</p>
 <p>A consistent but inefficient way of estimating the nested logit model is to estimate separately its two components. The coefficients of the lower model are first estimated, which enables the computation of the inclusive values <span class="math inline">\(I_l\)</span>. The coefficients of the upper model are then estimated, using <span class="math inline">\(I_l\)</span> as covariates. Maximizing directly the likelihood function of the nested model leads to a more efficient estimator.</p>
+<h2 id="applications">Applications</h2>
+<h3 id="modecanada">ModeCanada</h3>
+<p><span class="citation" data-cites="BHAT:95">Bhat (1995)</span> estimated the heteroscedastic logit model on the <code>ModeCanada</code> data set. Using <code>mlogit</code>, the heteroscedastic logit model is obtained by setting the <code>heterosc</code> argument to <code>TRUE</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mlogit)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>MC <span class="ot">&lt;-</span> <span class="fu">dfidx</span>(ModeCanada, <span class="at">subset =</span> noalt <span class="sc">==</span> <span class="dv">4</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>ml.MC <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice <span class="sc">~</span> freq <span class="sc">+</span> cost <span class="sc">+</span> ivt <span class="sc">+</span> ovt <span class="sc">|</span> urban <span class="sc">+</span> income, MC, </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">reflevel =</span> <span class="st">'car'</span>, <span class="at">alt.subset =</span> <span class="fu">c</span>(<span class="st">"car"</span>, <span class="st">"train"</span>, <span class="st">"air"</span>))</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>hl.MC <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice <span class="sc">~</span> freq <span class="sc">+</span> cost <span class="sc">+</span> ivt <span class="sc">+</span> ovt <span class="sc">|</span> urban <span class="sc">+</span> income, MC, </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                <span class="at">reflevel =</span> <span class="st">'car'</span>, <span class="at">alt.subset =</span> <span class="fu">c</span>(<span class="st">"car"</span>, <span class="st">"train"</span>, <span class="st">"air"</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">heterosc =</span> <span class="cn">TRUE</span>, <span class="at">hessian =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">coef</span>(<span class="fu">summary</span>(hl.MC))[<span class="dv">11</span><span class="sc">:</span><span class="dv">12</span>, ]</span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>          Estimate Std. Error   z-value     Pr(&gt;|z|)
+sp.train 1.2371829  0.1104610 11.200182 0.000000e+00
+sp.air   0.5403239  0.1118353  4.831425 1.355592e-06</code></pre>
 </div>
-<div id="applications" class="section level2">
-<h2>Applications</h2>
-<div id="modecanada" class="section level3">
-<h3>ModeCanada</h3>
-<p><span class="citation">Bhat (1995)</span> estimated the heteroscedastic logit model on the <code>ModeCanada</code> data set. Using <code>mlogit</code>, the heteroscedastic logit model is obtained by setting the <code>heterosc</code> argument to <code>TRUE</code>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;mlogit&quot;</span>)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;ModeCanada&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true"></a>MC &lt;-<span class="st"> </span><span class="kw">dfidx</span>(ModeCanada, <span class="dt">subset =</span> noalt <span class="op">==</span><span class="st"> </span><span class="dv">4</span>, <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true"></a>ml.MC &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">+</span><span class="st"> </span>ovt <span class="op">|</span><span class="st"> </span>urban <span class="op">+</span><span class="st"> </span>income, MC, </span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true"></a><span class="dt">reflevel =</span> <span class="st">&#39;car&#39;</span>, <span class="dt">alt.subset =</span> <span class="kw">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>))</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true"></a>hl.MC &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span>freq <span class="op">+</span><span class="st"> </span>cost <span class="op">+</span><span class="st"> </span>ivt <span class="op">+</span><span class="st"> </span>ovt <span class="op">|</span><span class="st"> </span>urban <span class="op">+</span><span class="st"> </span>income, MC, </span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true"></a><span class="dt">reflevel =</span> <span class="st">&#39;car&#39;</span>, <span class="dt">alt.subset =</span> <span class="kw">c</span>(<span class="st">&quot;car&quot;</span>, <span class="st">&quot;train&quot;</span>, <span class="st">&quot;air&quot;</span>), <span class="dt">heterosc =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true"></a><span class="kw">coef</span>(<span class="kw">summary</span>(hl.MC))[<span class="dv">11</span><span class="op">:</span><span class="dv">12</span>, ]</span></code></pre></div>
-<pre><code>##           Estimate Std. Error   z-value     Pr(&gt;|z|)
-## sp.train 1.2371829  0.1104610 11.200182 0.000000e+00
-## sp.air   0.5403239  0.1118353  4.831425 1.355592e-06</code></pre>
-<p>The variance of the error terms of train and air are respectively higher and lower than the variance of the error term of car (set to 1). Note that the z-values and p-values of the output are not particularly meaningful, as the hypothesis that the coefficient is zero (and not one) is tested. The homoscedasticity hypothesis can be tested using any of the three tests. A particular convenient syntax is provided in this case. For the likelihood ratio and the wald test, one can use only the fitted heteroscedastic model as argument. In this case, it is guessed that the hypothesis that the user wants to test is the homoscedasticity hypothesis.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a>lr.heter &lt;-<span class="st"> </span><span class="kw">lrtest</span>(hl.MC, ml.MC)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a>wd.heter &lt;-<span class="st"> </span><span class="kw">waldtest</span>(hl.MC, <span class="dt">heterosc =</span> <span class="ot">FALSE</span>)</span></code></pre></div>
+</div>
+<p>The variance of the error terms of <code>train</code> and <code>air</code> are respectively higher and lower than the variance of the error term of <code>car</code> (set to 1). Note that the z-values and p-values of the output are not particularly meaningful, as the hypothesis that the coefficient is zero (and not one) is tested. The homoscedasticity hypothesis can be tested using any of the three tests. A particular convenient syntax is provided in this case. For the likelihood ratio and the wald test, one can use only the fitted heteroscedastic model as argument. In this case, it is guessed that the hypothesis that the user wants to test is the homoscedasticity hypothesis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(hl.MC, ml.MC)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">waldtest</span>(hl.MC, <span class="at">heterosc =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
 <p>or, more simply:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">lrtest</span>(hl.MC)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a><span class="kw">waldtest</span>(hl.MC)</span></code></pre></div>
-<p>The Wald test can also be computed using the <code>linearHypothesis</code> function from the <code>car</code> package:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;car&quot;</span>)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a>lh.heter &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(hl.MC, <span class="kw">c</span>(<span class="st">&#39;sp.air = 1&#39;</span>, <span class="st">&#39;sp.train = 1&#39;</span>))</span></code></pre></div>
-<p>For the score test, we provide the constrained model as argument, which is the standard multinomial logit model and the supplementary argument which defines the unconstrained model, which is in this case <code>heterosc = TRUE</code>.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a>sc.heter &lt;-<span class="st"> </span><span class="kw">scoretest</span>(ml.MC, <span class="dt">heterosc =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true"></a><span class="kw">sapply</span>(<span class="kw">list</span>(<span class="dt">wald =</span> wd.heter, <span class="dt">lh =</span> lh.heter, <span class="dt">score =</span> sc.heter,</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true"></a><span class="dt">lr =</span> lr.heter), statpval)</span></code></pre></div>
-<pre><code>##           wald     lh score    lr
-## stat    25.196 25.196 9.488 6.888
-## p-value  0.000  0.000 0.009 0.032</code></pre>
-<p>The homoscedasticity hypothesis is strongly rejected using the Wald test, but only at the 1 and 5% level for, respectively, the score and the likelihood ratio tests.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(hl.MC) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 6.888, df: 2, pval = 0.032</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">waldtest</span>(hl.MC) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 25.196, df: 2, pval = 0.000</span></span></code></pre></div>
 </div>
-<div id="japanesefdi" class="section level3">
-<h3>JapaneseFDI</h3>
-<p><span class="citation">Head and Mayer (2004)</span> analyzed the choice of one of the 57 European regions belonging to 9 countries by Japenese firms to implement a new production unit.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;JapaneseFDI&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;mlogit&quot;</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true"></a>jfdi &lt;-<span class="st"> </span><span class="kw">dfidx</span>(JapaneseFDI, <span class="dt">idx =</span> <span class="kw">list</span>(<span class="st">&quot;firm&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;region&quot;</span>, <span class="st">&quot;country&quot;</span>)), <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</span></code></pre></div>
-<p>Note that we’ve used an extra argument to <code>dfidx</code> called <code>group.var</code> which indicates the grouping variable, which will be used later to define easily the nests. There are two sets of covariates: the wage rate <code>wage</code>, the unemployment rate <code>unemp</code>, a dummy indicating that the region is eligible to European funds <code>elig</code> and the area <code>area</code> are observed at the regional level and are therefore relevant for the estimation of the lower model, whereas the social cotisation rate <code>scrate</code> and the corporate tax rate <code>ctaxrate</code> are observed at the country level and are therefore suitable for the upper model.</p>
+<p>The Wald test can also be computed using the <code>lht</code> function from the <code>car</code> package:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">lht</span>(hl.MC, <span class="fu">c</span>(<span class="st">'sp.air = 1'</span>, <span class="st">'sp.train = 1'</span>)) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 25.196, df: 2, pval = 0.000</span></span></code></pre></div>
+</div>
+<p>For the score test, we provide the constrained model as argument, which is the standard multinomial logit model and the supplementary argument which defines the unconstrained model, which is in this case <code>heterosc = TRUE</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scoretest</span>(ml.MC, <span class="at">heterosc =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 9.488, df: 2, pval = 0.009</span></span></code></pre></div>
+</div>
+<p>The homoscedasticity hypothesis is strongly rejected using the Wald test, but only at the 1 and 5% level for, respectively, the score and the likelihood ratio tests.</p>
+<h3 id="japanesefdi">JapaneseFDI</h3>
+<p><span class="citation" data-cites="HEAD:MAYE:04">Head and Mayer (2004)</span> analyzed the choice of one of the 57 European regions belonging to 9 countries by Japenese firms to implement a new production unit.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>jfdi <span class="ot">&lt;-</span> <span class="fu">dfidx</span>(JapaneseFDI, <span class="at">idx =</span> <span class="fu">c</span>(<span class="st">"firm"</span>, <span class="at">country =</span> <span class="st">"region"</span>),</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">drop.index =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+</div>
+<p>There are two sets of covariates: the wage rate <code>wage</code>, the unemployment rate <code>unemp</code>, a dummy indicating that the region is eligible to European funds <code>elig</code> and the area <code>area</code> are observed at the regional level and are therefore relevant for the estimation of the lower model, whereas the social cotisation rate <code>scrate</code> and the corporate tax rate <code>ctaxrate</code> are observed at the country level and are therefore suitable for the upper model.</p>
 <p>We first estimate a multinomial logit model:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true"></a>ml.fdi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(wage) <span class="op">+</span><span class="st"> </span>unemp <span class="op">+</span><span class="st"> </span>elig <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(area) <span class="op">+</span><span class="st"> </span>scrate <span class="op">+</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true"></a>ctaxrate <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> jfdi)</span></code></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ml.fdi <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice <span class="sc">~</span> <span class="fu">log</span>(wage) <span class="sc">+</span> unemp <span class="sc">+</span> elig <span class="sc">+</span> <span class="fu">log</span>(area) <span class="sc">+</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                     scrate <span class="sc">+</span> ctaxrate <span class="sc">|</span> <span class="dv">0</span>, <span class="at">data =</span> jfdi)</span></code></pre></div>
+</div>
 <p>Note that, as the covariates are only alternative specific, the intercepts are not identified and therefore have been removed. We next estimate the lower model, which analyses the choice of a region within a given country. Therefore, for each choice situation, we estimate the choice of a region on the subset of regions of the country which has been chosen. Moreover, observations concerning Portugal and Ireland are removed as these two countries are mono-region.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true"></a>jfdi<span class="op">$</span>country &lt;-<span class="st"> </span>jfdi<span class="op">$</span>country</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true"></a>lm.fdi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(wage) <span class="op">+</span><span class="st"> </span>unemp <span class="op">+</span><span class="st"> </span>elig <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(area) <span class="op">|</span><span class="st"> </span><span class="dv">0</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true"></a><span class="dt">data =</span> jfdi, <span class="dt">subset =</span> country <span class="op">==</span><span class="st"> </span>choice.c <span class="op">&amp;</span><span class="st"> </span><span class="op">!</span><span class="st"> </span>country <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;PT&quot;</span>, <span class="st">&quot;IE&quot;</span>))</span></code></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>lm.fdi <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice <span class="sc">~</span> <span class="fu">log</span>(wage) <span class="sc">+</span> unemp <span class="sc">+</span> elig <span class="sc">+</span> <span class="fu">log</span>(area) <span class="sc">|</span> <span class="dv">0</span>,</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> jfdi,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">subset =</span> country <span class="sc">==</span> choice.c <span class="sc">&amp;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                     <span class="sc">!</span> country <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"PT"</span>, <span class="st">"IE"</span>))</span></code></pre></div>
+</div>
 <p>We next use the fitted lower model in order to compute the inclusive value, at the country level:</p>
 <p><span class="math display">\[
 \mbox{iv}_{ig} = \ln \sum_{j \in B_g} e^{\beta^\top x_{ij}},
 \]</span></p>
-<p>where <span class="math inline">\(B_g\)</span> is the set of regions for country <span class="math inline">\(g\)</span>. When a grouping variable is provided in the <code>dfidx</code> function, inclusive values are by default computed for every group <span class="math inline">\(g\)</span> (global inclusive values are obtained by setting the <code>type</code> argument to <code>&quot;global&quot;</code>). By default, <code>output</code> is set to <code>&quot;chid&quot;</code> and the results is a vector (if <code>type = &quot;global&quot;</code>) or a matrix (if <code>type = &quot;region&quot;</code>) with row number equal to the number of choice situations. If <code>output</code> is set to <code>&quot;obs&quot;</code>, a vector of length equal to the number of lines of the data in long format is returned. The following code indicates different ways to use the <code>logsum</code> function:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true"></a>lmformula &lt;-<span class="st"> </span><span class="kw">formula</span>(lm.fdi)</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">logsum</span>(ml.fdi, <span class="dt">data =</span> jfdi, <span class="dt">formula =</span> lmformula, <span class="dt">type =</span> <span class="st">&quot;group&quot;</span>), <span class="dv">2</span>)</span></code></pre></div>
-<pre><code>##         BE       DE       ES       FR       IE       IT       NL
-## 3 3.595818 5.415838 3.593702 5.153709 1.933707 5.051387 4.077845
-## 4 4.113243 5.765190 4.445012 5.383095 1.960462 5.687569 4.490379
-##         PT       UK
-## 3 2.702028 4.900622
-## 4 3.200124 5.378561</code></pre>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">logsum</span>(ml.fdi, <span class="dt">data =</span> jfdi, <span class="dt">formula =</span> lmformula, <span class="dt">type =</span> <span class="st">&quot;global&quot;</span>))</span></code></pre></div>
-<pre><code>##        3        4        5        7        8        9 
-## 6.736116 7.182139 7.121855 7.084245 7.133368 7.133368</code></pre>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">logsum</span>(ml.fdi, <span class="dt">data =</span> jfdi, <span class="dt">formula =</span> lmformula, <span class="dt">output =</span> <span class="st">&quot;obs&quot;</span>))</span></code></pre></div>
-<pre><code>## [1] 3.595818 3.595818 3.595818 3.595818 5.415838 5.415838</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true"></a><span class="kw">head</span>(<span class="kw">logsum</span>(ml.fdi, <span class="dt">data =</span> jfdi, <span class="dt">formula =</span> lmformula, <span class="dt">type =</span> <span class="st">&quot;global&quot;</span>,</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true"></a><span class="dt">output =</span> <span class="st">&quot;obs&quot;</span>))</span></code></pre></div>
-<pre><code>## [1] 6.736116 6.736116 6.736116 6.736116 6.736116 6.736116</code></pre>
-<p>To add the inclusive values in the original <code>data.frame</code>, we use <code>output = &quot;obs&quot;</code> and the <code>type</code> argument can be omitted as its default value is <code>&quot;group&quot;</code>:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true"></a>JapaneseFDI<span class="op">$</span>iv &lt;-<span class="st"> </span><span class="kw">logsum</span>(lm.fdi, <span class="dt">data =</span> jfdi, <span class="dt">formula =</span> lmformula,</span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true"></a><span class="dt">output =</span> <span class="st">&quot;obs&quot;</span>)</span></code></pre></div>
+<p>where <span class="math inline">\(B_g\)</span> is the set of regions for country <span class="math inline">\(g\)</span>. When a grouping variable is provided in the <code>dfidx</code> function, inclusive values are by default computed for every group <span class="math inline">\(g\)</span> (global inclusive values are obtained by setting the <code>type</code> argument to <code>"global"</code>). By default, <code>output</code> is set to <code>"chid"</code> and the results is a vector (if <code>type = "global"</code>) or a matrix (if <code>type = "region"</code>) with row number equal to the number of choice situations. If <code>output</code> is set to <code>"obs"</code>, a vector of length equal to the number of lines of the data in long format is returned. The following code indicates different ways to use the <code>logsum</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>lmformula <span class="ot">&lt;-</span> <span class="fu">formula</span>(lm.fdi)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">logsum</span>(ml.fdi, <span class="at">data =</span> jfdi, <span class="at">formula =</span> lmformula, <span class="at">type =</span> <span class="st">"group"</span>), <span class="dv">2</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="do">##         BE       DE       ES       FR       IE       IT       NL       PT</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 3.595818 5.415838 3.593702 5.153709 1.933707 5.051387 4.077845 2.702028</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 4.113243 5.765190 4.445012 5.383095 1.960462 5.687569 4.490379 3.200124</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="do">##         UK</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="do">## 3 4.900622</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="do">## 4 5.378561</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">logsum</span>(ml.fdi, <span class="at">data =</span> jfdi, <span class="at">formula =</span> lmformula, <span class="at">type =</span> <span class="st">"global"</span>))</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="do">##        3        4        5        7        8        9 </span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">## 6.736116 7.182139 7.121855 7.084245 7.133368 7.133368</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">logsum</span>(ml.fdi, <span class="at">data =</span> jfdi, <span class="at">formula =</span> lmformula, <span class="at">output =</span> <span class="st">"obs"</span>))</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 3.595818 3.595818 3.595818 3.595818 5.415838 5.415838</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">logsum</span>(ml.fdi, <span class="at">data =</span> jfdi, <span class="at">formula =</span> lmformula, <span class="at">type =</span> <span class="st">"global"</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>            <span class="at">output =</span> <span class="st">"obs"</span>))</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="do">## [1] 6.736116 6.736116 6.736116 6.736116 6.736116 6.736116</span></span></code></pre></div>
+</div>
+<p>To add the inclusive values in the original <code>data.frame</code>, we use <code>output = "obs"</code> and the <code>type</code> argument can be omitted as its default value is <code>"group"</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>JapaneseFDI<span class="sc">$</span>iv <span class="ot">&lt;-</span> <span class="fu">logsum</span>(lm.fdi, <span class="at">data =</span> jfdi, <span class="at">formula =</span> lmformula,</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">output =</span> <span class="st">"obs"</span>)</span></code></pre></div>
+</div>
 <p>We next select the relevant variables for the estimation of the upper model, select unique lines in order to keep only one observation for every choice situation / country combination and finally we coerce the response (<code>choice.c</code>) to a logical for the chosen country.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true"></a>JapaneseFDI.c &lt;-<span class="st"> </span><span class="kw">subset</span>(JapaneseFDI, </span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true"></a><span class="dt">select =</span> <span class="kw">c</span>(<span class="st">&quot;firm&quot;</span>, <span class="st">&quot;country&quot;</span>, <span class="st">&quot;choice.c&quot;</span>, <span class="st">&quot;scrate&quot;</span>, <span class="st">&quot;ctaxrate&quot;</span>, <span class="st">&quot;iv&quot;</span>))</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true"></a>JapaneseFDI.c &lt;-<span class="st"> </span><span class="kw">unique</span>(JapaneseFDI.c)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true"></a>JapaneseFDI.c<span class="op">$</span>choice.c &lt;-<span class="st"> </span><span class="kw">with</span>(JapaneseFDI.c, choice.c <span class="op">==</span><span class="st"> </span>country)</span></code></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>JapaneseFDI.c <span class="ot">&lt;-</span> <span class="fu">subset</span>(JapaneseFDI,</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                        <span class="at">select =</span> <span class="fu">c</span>(<span class="st">"firm"</span>, <span class="st">"country"</span>, <span class="st">"choice.c"</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="st">"scrate"</span>, <span class="st">"ctaxrate"</span>, <span class="st">"iv"</span>))</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>JapaneseFDI.c <span class="ot">&lt;-</span> <span class="fu">unique</span>(JapaneseFDI.c)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>JapaneseFDI.c<span class="sc">$</span>choice.c <span class="ot">&lt;-</span> <span class="fu">with</span>(JapaneseFDI.c, choice.c <span class="sc">==</span> country)</span></code></pre></div>
+</div>
 <p>Finally, we estimate the upper model, using the previously computed inclusive value as a covariate.</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true"></a>jfdi.c &lt;-<span class="st"> </span><span class="kw">dfidx</span>(JapaneseFDI.c, <span class="dt">choice =</span> <span class="st">&quot;choice.c&quot;</span>, <span class="dt">idnames =</span> <span class="kw">c</span>(<span class="st">&quot;chid&quot;</span>, <span class="st">&quot;alt&quot;</span>))</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true"></a>um.fdi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice.c <span class="op">~</span><span class="st"> </span>scrate <span class="op">+</span><span class="st"> </span>ctaxrate <span class="op">+</span><span class="st"> </span>iv <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> jfdi.c)</span></code></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>jfdi.c <span class="ot">&lt;-</span> <span class="fu">dfidx</span>(JapaneseFDI.c, <span class="at">choice =</span> <span class="st">"choice.c"</span>,</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">idnames =</span> <span class="fu">c</span>(<span class="st">"chid"</span>, <span class="st">"alt"</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>um.fdi <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice.c <span class="sc">~</span> scrate <span class="sc">+</span> ctaxrate <span class="sc">+</span> iv <span class="sc">|</span> <span class="dv">0</span>, <span class="at">data =</span> jfdi.c)</span></code></pre></div>
+</div>
 <p>If one wants to obtain different <code>iv</code> coefficients for different countries, the <code>iv</code> covariate should be introduced in the 3th part of the formula and the coefficients for the two mono-region countries (Ireland and Portugal) should be set to 1, using the <code>constPar</code> argument.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true"></a>um2.fdi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice.c <span class="op">~</span><span class="st"> </span>scrate <span class="op">+</span><span class="st"> </span>ctaxrate <span class="op">|</span><span class="st"> </span><span class="dv">0</span> <span class="op">|</span><span class="st"> </span>iv, <span class="dt">data =</span> jfdi.c, </span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true"></a>                  <span class="dt">constPar =</span> <span class="kw">c</span>(<span class="st">&quot;iv:PT&quot;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&quot;iv:IE&quot;</span> =<span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>um2.fdi <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice.c <span class="sc">~</span> scrate <span class="sc">+</span> ctaxrate <span class="sc">|</span> <span class="dv">0</span> <span class="sc">|</span> iv, <span class="at">data =</span> jfdi.c, </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">constPar =</span> <span class="fu">c</span>(<span class="st">"iv:PT"</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">"iv:IE"</span> <span class="ot">=</span> <span class="dv">1</span>))</span></code></pre></div>
+</div>
 <p>We next estimate the full-information maximum likelihood nested model. It is obtained by adding a <code>nests</code> argument to the <code>mlogit</code> function. This should be a named list of alternatives (here regions), the names being the nests (here the countries). More simply, if a group variable has been indicated while using <code>dfidx</code>, <code>nests</code> can be a boolean.</p>
 <p>Two flavors of nested models can be estimated, using the <code>un.nest.el</code> argument which is a boolean. If <code>TRUE</code>, one imposes that the coefficient associated with the inclusive utility is the same for every nest, which means that the degree of correlation inside each nest is the same. If <code>FALSE</code>, a different coefficient is estimated for every nest.</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true"></a>nl.fdi &lt;-<span class="st"> </span><span class="kw">mlogit</span>(choice <span class="op">~</span><span class="st"> </span><span class="kw">log</span>(wage) <span class="op">+</span><span class="st"> </span>unemp <span class="op">+</span><span class="st"> </span>elig <span class="op">+</span><span class="st"> </span><span class="kw">log</span>(area) <span class="op">+</span><span class="st"> </span>scrate <span class="op">+</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true"></a>ctaxrate <span class="op">|</span><span class="st"> </span><span class="dv">0</span>, <span class="dt">data =</span> jfdi, <span class="dt">nests =</span> <span class="ot">TRUE</span>, <span class="dt">un.nest.el =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true"></a>nl2.fdi &lt;-<span class="st"> </span><span class="kw">update</span>(nl.fdi, <span class="dt">un.nest.el =</span> <span class="ot">FALSE</span>, <span class="dt">constPar =</span> <span class="kw">c</span>(<span class="st">&#39;iv:PT&#39;</span> =<span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true"></a><span class="st">&#39;iv:IE&#39;</span> =<span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
-<p>The results of the fitted models are presented in the following table:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true"></a><span class="kw">library</span>(<span class="st">&quot;texreg&quot;</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true"></a><span class="kw">htmlreg</span>(<span class="kw">list</span>(<span class="st">&#39;Mult. logit&#39;</span> =<span class="st"> </span>ml.fdi, <span class="st">&#39;Lower model&#39;</span> =<span class="st"> </span>lm.fdi,</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true"></a>             <span class="st">&#39;Upper model&#39;</span> =<span class="st"> </span>um.fdi, <span class="st">&#39;Upper model&#39;</span> =<span class="st"> </span>um2.fdi, <span class="st">&#39;Nested logit&#39;</span> =<span class="st"> </span>nl.fdi,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true"></a>             <span class="st">&#39;Nested logit&#39;</span> =<span class="st"> </span>nl2.fdi),</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true"></a>        <span class="dt">fontsize =</span> <span class="st">&quot;footnotesize&quot;</span>, <span class="dt">float.pos =</span> <span class="st">&quot;hbt&quot;</span>,  <span class="dt">label =</span> <span class="st">&quot;tab:nlogit&quot;</span>,</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true"></a>        <span class="dt">caption =</span> <span class="st">&quot;Choice by Japanese firms of a european region.&quot;</span>)</span></code></pre></div>
-<table class="texreg" style="margin: 10px auto;border-collapse: collapse;border-spacing: 0px;caption-side: bottom;color: #000000;border-top: 2px solid #000000;">
-<caption>
-Choice by Japanese firms of a european region.
-</caption>
-<thead>
-<tr>
-<th style="padding-left: 5px;padding-right: 5px;">
- 
-</th>
-<th style="padding-left: 5px;padding-right: 5px;">
-Mult. logit
-</th>
-<th style="padding-left: 5px;padding-right: 5px;">
-Lower model
-</th>
-<th style="padding-left: 5px;padding-right: 5px;">
-Upper model
-</th>
-<th style="padding-left: 5px;padding-right: 5px;">
-Upper model
-</th>
-<th style="padding-left: 5px;padding-right: 5px;">
-Nested logit
-</th>
-<th style="padding-left: 5px;padding-right: 5px;">
-Nested logit
-</th>
-</tr>
-</thead>
-<tbody>
-<tr style="border-top: 1px solid #000000;">
-<td style="padding-left: 5px;padding-right: 5px;">
-log(wage)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.47
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-1.21<sup>*</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.46
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.77<sup>**</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.25)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.48)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.25)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.25)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-unemp
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--8.90<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--9.77<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--7.62<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--6.95<sup>**</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(1.69)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(2.39)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(1.60)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(2.28)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-elig
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--0.25
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--0.89<sup>**</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--0.34
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--0.18
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.21)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.33)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.20)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.18)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-log(area)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.31<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.29<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.29<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.15<sup>**</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.05)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.06)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.05)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.05)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-scrate
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--2.26<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--2.49<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.15
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--2.44<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--0.88
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.38)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.38)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(1.72)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.38)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.86)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-ctaxrate
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--4.82<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--3.69<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--1.78
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--4.13<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--2.35
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.59)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.60)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(1.32)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.66)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(1.25)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-iv
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.66<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.85<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.06)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.08)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-iv:BE
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.72<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.48<sup>*</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.08)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.19)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-iv:DE
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.72<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.52<sup>**</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.08)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.17)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-iv:ES
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.86<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.77<sup>***</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.05)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.20)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-iv:FR
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.75<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.67<sup>***</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.04)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.09)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-iv:IT
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.62<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.25<sup>**</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.05)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.08)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-iv:NL
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.69<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.18
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.06)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.10)
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-iv:UK
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.87<sup>***</sup>
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-0.86<sup>***</sup>
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.06)
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
- 
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-(0.10)
-</td>
-</tr>
-<tr style="border-top: 1px solid #000000;">
-<td style="padding-left: 5px;padding-right: 5px;">
-AIC
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-3469.13
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-1738.04
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-1746.58
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-1713.86
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-3467.96
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-3437.01
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-Log Likelihood
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--1728.57
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--865.02
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--870.29
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--845.93
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--1726.98
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
--1703.50
-</td>
-</tr>
-<tr>
-<td style="padding-left: 5px;padding-right: 5px;">
-Num. obs.
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-452
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-421
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-452
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-452
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-452
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-452
-</td>
-</tr>
-<tr style="border-bottom: 2px solid #000000;">
-<td style="padding-left: 5px;padding-right: 5px;">
-K
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-57
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-55
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-9
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-9
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-57
-</td>
-<td style="padding-left: 5px;padding-right: 5px;">
-57
-</td>
-</tr>
-</tbody>
-<tfoot>
-<tr>
-<td style="font-size: 0.8em;" colspan="7">
-<sup>***</sup>p &lt; 0.001; <sup>**</sup>p &lt; 0.01; <sup>*</sup>p &lt; 0.05
-</td>
-</tr>
-</tfoot>
-</table>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>nl.fdi <span class="ot">&lt;-</span> <span class="fu">mlogit</span>(choice <span class="sc">~</span> <span class="fu">log</span>(wage) <span class="sc">+</span> unemp <span class="sc">+</span> elig <span class="sc">+</span> <span class="fu">log</span>(area) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                     scrate <span class="sc">+</span> ctaxrate <span class="sc">|</span> <span class="dv">0</span>, <span class="at">data =</span> jfdi,</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">nests =</span> <span class="cn">TRUE</span>, <span class="at">un.nest.el =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>nl2.fdi <span class="ot">&lt;-</span> <span class="fu">update</span>(nl.fdi, <span class="at">un.nest.el =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">constPar =</span> <span class="fu">c</span>(<span class="st">'iv:PT'</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">'iv:IE'</span> <span class="ot">=</span> <span class="dv">1</span>))</span></code></pre></div>
+</div>
+<!-- The results of the fitted models are presented in @tbl-nlogit. -->
+<p>Results are presented below:</p>
+<div class="cell">
+<div class="cell-output cell-output-stdout">
+<pre><code>          Mult. logit Upper model Upper model Nested logit Nested logit
+log(wage)       0.466           -           -        0.461        0.766
+unemp          -8.896           -           -       -7.619       -6.953
+elig           -0.254           -           -       -0.341       -0.185
+log(area)       0.311           -           -        0.287        0.146
+scrate         -2.256      -2.485       0.154       -2.438       -0.875
+ctaxrate       -4.817      -3.686      -1.784       -4.134       -2.351
+iv                  -       0.665           -        0.846            -
+iv:BE               -           -       0.722            -        0.485
+iv:DE               -           -       0.716            -        0.523
+iv:ES               -           -       0.858            -        0.766
+iv:FR               -           -       0.747            -        0.672
+iv:IT               -           -       0.617            -        0.254
+iv:NL               -           -       0.688            -        0.176
+iv:UK               -           -       0.866            -        0.857</code></pre>
+</div>
+</div>
 <p>For the nested logit models, two tests are of particular interest:</p>
 <ul>
 <li>the test of no nests, which means that all the nest elasticities are equal to 1,</li>
-<li>the test of unique nest elasticities, which means that all the nest elasticities are equal to each other.</li>
+<li>the test of unique nest elasticities, which means that all the nest elasticities are equal to each other. y.paras For the test of no nests, the nested model is provided as the unique argument for the <code>lrtest</code> and the <code>waldtest</code> function. For the <code>scoretest</code>, the constrained model (i.e., the multinomial logit model) is provided as the first argument and the second argument is <code>nests</code>, which describes the nesting structure that one wants to test.</li>
 </ul>
-<p>For the test of no nests, the nested model is provided as the unique argument for the <code>lrtest</code> and the <code>waldtest</code> function. For the <code>scoretest</code>, the constrained model (i.e., the multinomial logit model) is provided as the first argument and the second argument is <code>nests</code>, which describes the nesting structure that one wants to test.</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true"></a>lr.nest &lt;-<span class="st"> </span><span class="kw">lrtest</span>(nl2.fdi)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true"></a>wd.nest &lt;-<span class="st"> </span><span class="kw">waldtest</span>(nl2.fdi)</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true"></a>sc.nest &lt;-<span class="st"> </span><span class="kw">scoretest</span>(ml.fdi, <span class="dt">nests =</span> <span class="ot">TRUE</span>, <span class="dt">constPar =</span> <span class="kw">c</span>(<span class="st">&#39;iv:PT&#39;</span> =<span class="st"> </span><span class="dv">1</span>,</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true"></a><span class="st">&#39;iv:IE&#39;</span> =<span class="st"> </span><span class="dv">1</span>))</span></code></pre></div>
-<p>The Wald test can also be performed using the <code>linearHypothesis</code> function:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true"></a>lh.nest &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(nl2.fdi, <span class="kw">c</span>(<span class="st">&quot;iv:BE = 1&quot;</span>, <span class="st">&quot;iv:DE = 1&quot;</span>,</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true"></a><span class="st">&quot;iv:ES = 1&quot;</span>, <span class="st">&quot;iv:FR = 1&quot;</span>, <span class="st">&quot;iv:IT = 1&quot;</span>, <span class="st">&quot;iv:NL = 1&quot;</span>, <span class="st">&quot;iv:UK = 1&quot;</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true"></a><span class="kw">sapply</span>(<span class="kw">list</span>(<span class="dt">wald =</span> wd.nest, <span class="dt">lh =</span> lh.nest, <span class="dt">score =</span> sc.nest, <span class="dt">lr =</span> lr.nest),</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true"></a>statpval)</span></code></pre></div>
-<pre><code>##            wald      lh score     lr
-## stat    208.407 208.407 60.28 50.122
-## p-value   0.000   0.000  0.00  0.000</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(nl2.fdi) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 50.122, df: 9, pval = 0.000</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">waldtest</span>(nl2.fdi) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 208.407, df: 7, pval = 0.000</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="fu">scoretest</span>(ml.fdi, <span class="at">nests =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">constPar =</span> <span class="fu">c</span>(<span class="st">'iv:PT'</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">'iv:IE'</span> <span class="ot">=</span> <span class="dv">1</span>))  <span class="sc">|&gt;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gaze</span>()</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 60.280, df: 7, pval = 0.000</span></span></code></pre></div>
+</div>
+<p>The Wald test can also be performed using the <code>lht</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">lht</span>(nl2.fdi, <span class="fu">c</span>(<span class="st">"iv:BE = 1"</span>, <span class="st">"iv:DE = 1"</span>, <span class="st">"iv:ES = 1"</span>, <span class="st">"iv:FR = 1"</span>,</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"iv:IT = 1"</span>, <span class="st">"iv:NL = 1"</span>, <span class="st">"iv:UK = 1"</span>)) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 208.407, df: 7, pval = 0.000</span></span></code></pre></div>
+</div>
 <p>The three tests reject the null hypothesis of no correlation. We next test the hypothesis that all the nest elasticities are equal.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true"></a>lr.unest &lt;-<span class="st"> </span><span class="kw">lrtest</span>(nl2.fdi, nl.fdi)</span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true"></a>wd.unest &lt;-<span class="st"> </span><span class="kw">waldtest</span>(nl2.fdi, <span class="dt">un.nest.el =</span> <span class="ot">TRUE</span>)</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true"></a>sc.unest &lt;-<span class="st"> </span><span class="kw">scoretest</span>(ml.fdi, <span class="dt">nests =</span> <span class="ot">TRUE</span>, <span class="dt">un.nest.el =</span> <span class="ot">FALSE</span>,</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true"></a><span class="dt">constPar =</span> <span class="kw">c</span>(<span class="st">&#39;iv:PT&#39;</span> =<span class="st"> </span><span class="dv">1</span>, <span class="st">&#39;iv:IE&#39;</span> =<span class="st"> </span><span class="dv">1</span>))</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true"></a>lh.unest &lt;-<span class="st"> </span><span class="kw">linearHypothesis</span>(nl2.fdi, <span class="kw">c</span>(<span class="st">&quot;iv:BE = iv:DE&quot;</span>, <span class="st">&quot;iv:BE = iv:ES&quot;</span>, </span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true"></a><span class="st">&quot;iv:BE = iv:FR&quot;</span>, <span class="st">&quot;iv:BE = iv:IT&quot;</span>, <span class="st">&quot;iv:BE = iv:NL&quot;</span>, <span class="st">&quot;iv:BE = iv:UK&quot;</span>))</span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true"></a><span class="kw">sapply</span>(<span class="kw">list</span>(<span class="dt">wald =</span> wd.unest, <span class="dt">lh =</span> lh.unest, <span class="dt">score =</span> sc.unest,</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true"></a><span class="dt">lr =</span> lr.unest), statpval)</span></code></pre></div>
-<pre><code>##           wald     lh score     lr
-## stat    73.535 73.535 60.28 46.954
-## p-value  0.000  0.000  0.00  0.000</code></pre>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lrtest</span>(nl2.fdi, nl.fdi) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 46.954, df: 8, pval = 0.000</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">waldtest</span>(nl2.fdi, <span class="at">un.nest.el =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 73.535, df: 6, pval = 0.000</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">scoretest</span>(ml.fdi, <span class="at">nests =</span> <span class="cn">TRUE</span>, <span class="at">un.nest.el =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>          <span class="at">constPar =</span> <span class="fu">c</span>(<span class="st">'iv:PT'</span> <span class="ot">=</span> <span class="dv">1</span>, <span class="st">'iv:IE'</span> <span class="ot">=</span> <span class="dv">1</span>)) <span class="sc">|&gt;</span> <span class="fu">gaze</span>()</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="do">## chisq = 60.280, df: 7, pval = 0.000</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>car<span class="sc">::</span><span class="fu">lht</span>(nl2.fdi, <span class="fu">c</span>(<span class="st">"iv:BE = iv:DE"</span>, <span class="st">"iv:BE = iv:ES"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"iv:BE = iv:FR"</span>, <span class="st">"iv:BE = iv:IT"</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"iv:BE = iv:NL"</span>, <span class="st">"iv:BE = iv:UK"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">gaze</span>()</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="do">## Chisq = 73.535, df: 6, pval = 0.000</span></span></code></pre></div>
+</div>
 <p>Once again, the three tests strongly reject the hypothesis.</p>
+<h2 id="bibliography">Bibliography</h2>
+<div class="cell">
+
+</div>
+<div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-BHAT:95" class="csl-entry" role="doc-biblioentry">
+Bhat, Chandra R. 1995. <span>“A Heteroscedastic Extreme Value Model of Intercity Travel Mode Choice.”</span> <em>Transportation Research Part B: Methodological</em> 29 (6): 471–83. <a href="https://doi.org/10.1016/0191-2615(95)00015-6">https://doi.org/10.1016/0191-2615(95)00015-6</a>.
+</div>
+<div id="ref-DALY:87" class="csl-entry" role="doc-biblioentry">
+Daly, A. 1987. <span>“Estimating <span>‘Tree’</span> Logit Models.”</span> <em>Transportation Research B</em>, 251–67.
+</div>
+<div id="ref-HEAD:MAYE:04" class="csl-entry" role="doc-biblioentry">
+Head, Keith, and Thierry Mayer. 2004. <span>“Market Potential and the Location of Japanese Investment in the European Union.”</span> <em>The Review of Economics and Statistics</em> 86 (4): 959–72. <a href="https://doi.org/10.1162/0034653043125257">https://doi.org/10.1162/0034653043125257</a>.
+</div>
+<div id="ref-HEIS:02" class="csl-entry" role="doc-biblioentry">
+Heiss, Florian. 2002. <span>“Structural Choice Analysis with Nested Logit Models.”</span> <em>The Stata Journal</em> 2 (3): 227–52.
+</div>
+<div id="ref-HENS:GREEN:02" class="csl-entry" role="doc-biblioentry">
+Hensher, David A., and William H. Greene. 2002. <span>“Specification and Estimation of the Nested Logit Model: Alternative Normalisations.”</span> <em>Transportation Research Part B</em> 36: 1–17.
+</div>
+<div id="ref-KOPP:WEN:98" class="csl-entry" role="doc-biblioentry">
+Koppelman, Franck S., and Chieh-Hua Wen. 1998. <span>“Alternative Nested Logit Models: Structure, Properties and Estimation.”</span> <em>Transportation Research B</em> 32 (5): 289–98.
+</div>
+<div id="ref-MCFAD:78" class="csl-entry" role="doc-biblioentry">
+McFadden, D. 1978. <span>“Spatial Interaction Theory and Planning Models.”</span> In <em>Modeling the Choice of Residential Location</em>, edited by A. Karlqvist, 75–96. North-Holland, Amsterdam.
 </div>
 </div>
-<div id="bibliography" class="section level2 unnumbered">
-<h2 class="unnumbered">Bibliography</h2>
-<div id="refs" class="references hanging-indent">
-<div id="ref-BHAT:95">
-<p>Bhat, Chandra R. 1995. “A Heteroscedastic Extreme Value Model of Intercity Travel Mode Choice.” <em>Transportation Research Part B: Methodological</em> 29 (6): 471–83. <a href="https://doi.org/10.1016/0191-2615(95)00015-6">https://doi.org/10.1016/0191-2615(95)00015-6</a>.</p>
-</div>
-<div id="ref-DALY:87">
-<p>Daly, A. 1987. “Estimating ‘Tree’ Logit Models.” <em>Transportation Research B</em>, 251–67.</p>
-</div>
-<div id="ref-HEAD:MAYE:04">
-<p>Head, Keith, and Thierry Mayer. 2004. “Market Potential and the Location of Japanese Investment in the European Union.” <em>The Review of Economics and Statistics</em> 86 (4): 959–72. <a href="https://doi.org/10.1162/0034653043125257">https://doi.org/10.1162/0034653043125257</a>.</p>
-</div>
-<div id="ref-HEIS:02">
-<p>Heiss, Florian. 2002. “Structural Choice Analysis with Nested Logit Models.” <em>The Stata Journal</em> 2 (3): 227–52.</p>
-</div>
-<div id="ref-HENS:GREEN:02">
-<p>Hensher, David A., and William H. Greene. 2002. “Specification and Estimation of the Nested Logit Model: Alternative Normalisations.” <em>Transportation Research Part B</em> 36: 1–17.</p>
-</div>
-<div id="ref-KOPP:WEN:98">
-<p>Koppelman, Franck S., and Chieh-Hua Wen. 1998. “Alternative Nested Logit Models: Structure, Properties and Estimation.” <em>Transportation Research B</em> 32 (5): 289–98.</p>
-</div>
-<div id="ref-MCFAD:78">
-<p>McFadden, D. 1978. “Spatial Interaction Theory and Planning Models.” In <em>Modeling the Choice of Residential Location</em>, edited by A. Karlqvist, 75–96. North-Holland, Amsterdam.</p>
-</div>
-</div>
-</div>
-<div class="footnotes">
-<hr />
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr>
 <ol>
-<li id="fn1"><p>A slightly different version of the nested logit model <span class="citation">(Daly 1987)</span> is often used, but is not compatible with the random utility maximization hypothesis. Its difference with the previous expression is that the deterministic parts of the utility for each alternative is not divided by the nest elasticity. The differences between the two versions have been discussed in <span class="citation">Koppelman and Wen (1998)</span>, <span class="citation">Heiss (2002)</span> and <span class="citation">Hensher and Greene (2002)</span>.<a href="#fnref1" class="footnote-back">↩︎</a></p></li>
-<li id="fn2"><p>We’ve already encountered this expression in vignette 3. Random utility model and the multinomial logit model.<a href="#fnref2" class="footnote-back">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>A slightly different version of the nested logit model <span class="citation" data-cites="DALY:87">(Daly 1987)</span> is often used, but is not compatible with the random utility maximization hypothesis. Its difference with the previous expression is that the deterministic parts of the utility for each alternative is not divided by the nest elasticity. The differences between the two versions have been discussed in <span class="citation" data-cites="KOPP:WEN:98">Koppelman and Wen (1998)</span>, <span class="citation" data-cites="HEIS:02">Heiss (2002)</span> and <span class="citation" data-cites="HENS:GREEN:02">Hensher and Greene (2002)</span>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>We’ve already encountered this expression in vignette 3. Random utility model and the multinomial logit model.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</div>
+</section>
 
 
 
-<!-- code folding -->
 
-
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script>
-
-</body>
-</html>
+</body></html>

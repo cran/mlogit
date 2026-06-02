@@ -1,3 +1,19 @@
+#' @importFrom dfidx dfidx
+#' @export
+dfidx::dfidx
+
+#' @importFrom micsr gaze
+#' @export
+micsr::gaze
+
+#' @importFrom dfidx idx
+#' @export
+dfidx::idx
+
+#' @importFrom dfidx idx_name
+#' @export
+dfidx::idx_name
+
 #' Multinomial logit model
 #' 
 #' Estimation by maximum likelihood of the multinomial logit model,
@@ -6,18 +22,16 @@
 #' @name mlogit
 #' @aliases mlogit
 #' @import Formula
-#' @import dfidx
+#' @importFrom dfidx unfold_idx
 #' @importFrom stats as.formula coef dlnorm dnorm formula logLik
 #' @importFrom stats model.frame model.matrix model.response
 #' @importFrom stats na.omit pchisq plnorm pnorm predict
 #' @importFrom stats printCoefmat punif qlnorm qnorm qunif
 #' @importFrom stats relevel reshape residuals rnorm runif
 #' @importFrom stats terms update vcov dunif effects
-#' @importFrom statmod gauss.quad
-#' @importFrom MASS ginv
-#' @importFrom zoo index
+#' @importFrom micsr gauss_laguerre
 #' @param formula a symbolic description of the model to be estimated,
-#' @param data the data: an `mlogit.data` object or an ordinary
+#' @param data the data: a `dfidx` object or an ordinary
 #'     `data.frame`,
 #' @param subset an optional vector specifying a subset of
 #'     observations for `mlogit`,
@@ -40,9 +54,11 @@
 #' @param heterosc a boolean, if `TRUE`, the heteroscedastic logit
 #'     model is estimated,
 #' @param rpar a named vector whose names are the random parameters
-#'     and values the distribution : `'n'` for normal, `'l'` for
-#'     log-normal, `'t'` for truncated normal, `'u' ` for uniform,
-#' @param probit if `TRUE`, a multinomial porbit model is estimated,
+#'     and values the distribution : `'n'` for normal, `'ln'` for
+#'     log-normal, `'tn'` for truncated normal, `cn` for censored
+#'     normal, `'u' ` for uniform, `t` for triangular, `zbu` for
+#'     zero-bounded uniform and `zbt` for zero-bounded triangular,
+#' @param probit if `TRUE`, a multinomial probit model is estimated,
 #' @param R the number of function evaluation for the gaussian
 #'     quadrature method used if `heterosc = TRUE`, the number of
 #'     draws of pseudo-random numbers if `rpar` is not `NULL`,
@@ -65,14 +81,18 @@
 #'     estimated or not: if not, the `model.frame` is returned,
 #' @param seed the seed to use for random numbers (for mixed logit and
 #'     probit models),
-#' @param ... further arguments passed to `mlogit.data` or
+#' @param hessian a boolean, wheter or not to compute the hessian: the
+#'     default is false
+#' @param param a vector of coefficients for which the prediction
+#'     should be performed
+#' @param ... further arguments passed to `dfidx` or
 #'     `mlogit.optim`.
 #' 
 #' @details For how to use the formula argument, see [Formula()].
 #' 
 #' The `data` argument may be an ordinary `data.frame`. In this case,
 #' some supplementary arguments should be provided and are passed to
-#' [mlogit.data()]. Note that it is not necessary to indicate the
+#' [dfidx::dfidx()]. Note that it is not necessary to indicate the
 #' choice argument as it is deduced from the formula.
 #' 
 #' The model is estimated using the [mlogit.optim()].
@@ -122,7 +142,7 @@
 #' 
 #' @export
 #' @author Yves Croissant
-#' @seealso [mlogit.data()] to shape the data. [nnet::multinom()] from
+#' @seealso [nnet::multinom()] from
 #'     package `nnet` performs the estimation of the multinomial logit
 #'     model with individual specific variables. [mlogit.optim()]
 #'     details about the optimization function.
@@ -202,7 +222,7 @@
 #' \dontrun{
 #' rpl <- mlogit(mode ~ price + catch | income, Fishing, varying = 2:9,
 #'               rpar = c(price= 'n', catch = 'n'), correlation = TRUE,
-#'               alton = NA, R = 50)
+#'               halton = NA, R = 50)
 #' summary(rpl)
 #' rpar(rpl)
 #' cor.mlogit(rpl)
@@ -220,7 +240,8 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
                    nests = NULL, un.nest.el = FALSE, unscaled = FALSE,
                    heterosc = FALSE, rpar = NULL, probit = FALSE,
                    R = 40, correlation = FALSE, halton = NULL, random.nb = NULL,
-                   panel = FALSE, estimate = TRUE, seed = 10, ...){
+                   panel = FALSE, estimate = TRUE, seed = 10, hessian = NULL,
+                   param = NULL, ...){
     callT <- match.call(expand.dots = TRUE)
     formula <- callT$formula <- Formula(formula)
     nframe <- length(sys.calls())
@@ -239,7 +260,9 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     heterosc.logit <- mt['heterosc']
     mixed.logit <- mt["mixed"]
     if (multinom.logit) callT$method <- 'nr'
-
+    if (! is.null(hessian)) comp_hessian <- hessian
+    else comp_hessian <- multinom.logit#! (probit | mixed.logit)
+    
     # 1 ######################################################
     # Subset the data.frame if necessary
     ##########################################################
@@ -249,7 +272,6 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     # ordinary df or a dfidx ; if the data argument is an ordinary
     # data.frame, call dfidx without the subset argument
 
-
     if ("subset" %in% names(mldata)){
         sub_call <- mldata
         m <- match(c("data", "subset"), names(sub_call), 0)
@@ -258,9 +280,11 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
         sub_call[[1]] <- as.name("subset")
         data <- eval(sub_call, parent.frame())
     }
+
     # 2 ################################################################
     # Run dfidx (or mlogit.data for backward compatibility) if necessary
     ####################################################################
+    
     # check if any of the mlogit.data argument is present
     
     common_args <- c("data", "drop.index", "shape",
@@ -282,11 +306,11 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     if ((to_dfidx | to_mlogit.data | to_common) & ! is_data.frame)
         stop("data is already a dfidx object")
 
-    # if dfidx and mlogit arguments are mixed, the stop
+    # if dfidx and mlogit arguments are mixed, then stop
     if (to_dfidx & to_mlogit.data)
         stop("some specificic arguments of mlogit.data and dfidx are introduced")
 
-    # it data is an ordinary data.frame, run dfidx or mlogit.data
+    # if data is an ordinary data.frame, run dfidx or mlogit.data
 
     if (is_data.frame){
         if (to_mlogit.data){
@@ -320,23 +344,26 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
                 # Replace the relevant values by those indicated in mlogit
                 dfa[names(mldata)[-1]] <- as.list(mldata)[- 1]
                 # Run dfidx with these values
-                data <- dfidx::dfidx(data = data, dfa$idx, drop.index = dfa$drop.index,
-                                     as.factor = dfa$as.factor,
-                                     pkg = dfa$pkg, fancy.row.names = dfa$fancy.row.names,
-                                     idnames = dfa$idnames, shape = dfa$shape,
-                                     choice = dfa$choice, varying = dfa$varying,
-                                     sep = dfa$sep, opposite = dfa$opposite,
-                                     levels = dfa$levels, ranked = dfa$ranked)
+                data <- dfidx(data = data, dfa$idx, drop.index = dfa$drop.index,
+                              as.factor = dfa$as.factor,
+                              pkg = dfa$pkg, fancy.row.names = dfa$fancy.row.names,
+                              idnames = dfa$idnames, shape = dfa$shape,
+                              choice = dfa$choice, varying = dfa$varying,
+                              sep = dfa$sep, opposite = dfa$opposite,
+                              levels = dfa$levels, ranked = dfa$ranked)
             }
         }
     }
     # if data is an ordinary dfidx object, add the dfidx_mlogit class
-    if (class(data)[1] == "dfidx") class(data) <- c("dfidx_mlogit", class(data))
+#    if (class(data)[1] == "dfidx") class(data) <- c("dfidx_mlogit", class(data))
+    if (! inherits(data, "dfidx_mlogit")) class(data) <- c("dfidx_mlogit", class(data))
 
+    
     # 3 ######################################################
     # compute the model.frame
     ##########################################################
 
+    attr(data, "clseries") <- c("xseries_mlogit", "xseries")
     mf <- callT
     mf$data <- data
     m <- match(c("formula", "data", "subset", "na.action",
@@ -347,17 +374,21 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     # data, then formula
     mf$formula <- data
     mf$data <- formula
+    # why specifying the method ?    mf[[1L]] <- as.name("model.frame.dfidx")
     mf[[1L]] <- as.name("model.frame")
     # mlogit needs balanced data
     mf$balanced <- TRUE
-    mf <- eval(mf, parent.frame())
-
+    mf <- eval(mf, parent.frame())  
+    .terms <- attr(mf, "terms")
+    if (! estimate) return(mf)
+    
     # 4 ###########################################################
     # get the dimensions of the model
     ###############################################################
-    .idx <- dfidx::idx(mf)
-    alt <- dfidx::idx(mf, 2)
-    chid <- dfidx::idx(mf, 1)
+
+    .idx <- idx(mf)
+    alt <- idx(mf, 2)
+    chid <- idx(mf, 1)
     alt.lev <- levels(alt[drop = TRUE])
     # model.frame_dfidx returns an alt.ordering attribute which
     # contains the levels of the second index in their initial order,
@@ -368,6 +399,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     altnoNA <- factor(altnoNA, levels = alt.lev, labels = alt.lev)
     J <- length(alt.lev)
     N <- length(unique(chid))
+
     # 5 ###########################################################
     # extract the elements of the model
     ###############################################################
@@ -384,7 +416,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     # extract the individual index if it is relevant
     if (panel){
         if (! mixed.logit) stop("panel is only relevant for mixed logit models")
-        id <- dfidx::idx(mf, 1, 2)
+        id <- idx(mf, 1, 2)
         if (is.null(id)) stop("no individual index")
         # construct a data.frame with all the unique chids and the corresponding id
         #YC ????
@@ -409,19 +441,20 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
         # by model.frame
         Xs <- na.omit(Xs)
         to.omit <- attr(Xs, "na.action")
-        Xs <- Xs[! duplicated(chid[- to.omit]), - 1, drop = FALSE]
-        # incompréhensible !!!!!!
+        if (is.null(to.omit)) Xs <- Xs[! duplicated(chid), - 1, drop = FALSE]
+        else Xs <- Xs[! duplicated(chid[- to.omit]), - 1, drop = FALSE]
+        # incompréhensible !!!!!! bug fix Matt Woeran 2020/09/02
         formula <- Formula(formula(formula, rhs = 1:3))
 #        formula <- mFormula(formula(as.Formula(formula), rhs = 1:3))
     }
     else Xs <- NULL
     attr(mf, "formula") <- formula
     X <- model.matrix(mf, rhs = 1:3)
+
     formula <- cformula
     K <- ncol(X)
-    df.residual <- N - K
+    .df.residual <- N - K
     colnamesX <- colnames(X)
-
     # extract the response and coerce it to a logical
     y <- as.logical(model.response(mf))
     # choice is a vector of length N containing the alternative chosen
@@ -471,7 +504,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
 
     if (nested.logit){
         if (is.logical(nests) && nests){
-            group_var <- dfidx::idx(mf, 2, 2)
+            group_var <- idx(mf, 2, 2)
             if (is.null(group_var)) stop("no grouping variable")
             else{
                 nests <- unique(data.frame(alt = as.character(alt),
@@ -487,24 +520,27 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
             names(nests) <- names.nests
         }
     }
-
+        
+    
     # 6 ######################################################
     # compute the starting values
     ##########################################################
 
+    if (is.null(param)){
+    
     start <- mlogit.start(formula = formula, data = data, mf = mf, start = start,
                           un.nest.el = un.nest.el, nests = nests, heterosc = heterosc,
                           rpar = rpar, probit = probit, correlation = correlation,
                           alt.subset = alt.subset, reflevel = reflevel)
     names.sup.coef <- attr(start, "names.sup.coef")
 
+    }
     # 7 ###################################################################
     # Estimate the model using mlogit.optim and passing the correct arguments
     #######################################################################
 
     # construct the call for mlogit.optim
     opt <- callT
-
     # if constPar is numeric, insert the relevant value in the start
     # vector and transform the constPar vector to character
     if (! is.null(opt$constPar)){
@@ -522,7 +558,7 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     if (probit) if (is.null(opt$constPar)) opt$constPar <- names.sup.coef[1]
 
     # include the automatically computed starting values
-    opt$start <- start
+    if (is.null(param)) opt$start <- start
 
     # select the argument of mlogit that should be passed to
     # mlogit.optim
@@ -556,7 +592,9 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     if (probit)
         opt[c('logLik', 'X', 'y')] <- list(as.name('lnl.mprobit'), as.name('DX'), as.name('yv'))
     if (heterosc.logit){
-        rn <- gauss.quad(R, kind = "laguerre")
+#        rn <- gaussian_quad(R, kind = "laguerre")
+        rn <- gauss_laguerre(R)
+#        names(rn) <- c("nodes", "weights")
         opt[c('logLik', 'rn')] <- list(as.name('lnl.hlogit'), as.name('rn'))
     }
     if (nested.logit)
@@ -564,17 +602,31 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
             list(as.name('lnl.nlogit'), as.name('nests'),
                  as.name('un.nest.el'), as.name('unscaled'))
 
+
+    if (! is.null(param)){
+        opt$param <- param
+        opt[[1]] <- opt$logLik
+        opt[c("method", "logLik", "start")] <- NULL
+        return(attr(eval(opt), "probabilities"))
+    }
+
     x <- eval(opt, sys.frame(which = nframe))
+    
+    # Construct a logLik function with only one argument
+    lnl.args <- unique(Reduce("c",
+                              lapply(list(lnl.mprobit, lnl.slogit, lnl.wlogit,
+                                          lnl.rlogit, lnl.hlogit, lnl.nlogit),
+                                     function(x) names(formals(x)))))
+    m <- match(c(lnl.args, "logLik"), names(opt), 0L)
+    opt <- opt[c(1L, m)]
+    opt[[1]] <- opt$logLik
+    opt$logLik <- NULL
     
     # compute the probabilities for all the alternatives for
     # heteroscedastic and the probit model
     if (probit | heterosc){
-        opt$logLik <- opt$iterlim <- opt$method <- opt$print.level <- opt$tol <- opt$constPar <- NULL
-        names(opt)[[2]] <- 'param'
-        opt[[2]] <- x$coefficients
+        opt$param <- x$coefficients
         opt$gradient <- FALSE
-        opt[[1]] <- as.name('lnl.hlogit')
-        if (probit) opt[[1]] <- as.name('lnl.mprobit') else opt[[1]] <- as.name('lnl.hlogit')
         probabilities <- c()
         for (k in 1:J){
             if (probit){
@@ -617,24 +669,62 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     #YC n/N already defined
     n <- sum(freq)
     x$est.stat$elaps.time <- proc.time() - start.time
-    logLik <- structure( - as.numeric(x$optimum),
-                        df = length(x$coefficients),
-                        null = sum(freq * log(freq / N)),
-                        class = "logLik"
-                        )
+    ## logLik <- structure( - as.numeric(x$optimum),
+    ##                     df = length(x$coefficients),
+    ##                     null = sum(freq * log(freq / N)),
+    ##                     class = "logLik"
+    ##                     )
+    logLik <- c(model = - as.numeric(x$optimum),
+                saturated = 0,
+                null = sum(freq * log(freq / N)))
+
+
+    
     if (mixed.logit) rpar <- make.rpar(rpar, correlation, x$coefficients, NULL) else rpar <- NULL
 #    if (! nested.logit) nests <- NULL
-
+    
+    opt[["param"]] <- as.name("param")
+    ## names(opt)[which(names(opt) == "param")] <- ""
+    ## opt$gradient <- TRUE
+    ## fun <- function(param) as.numeric(eval(opt))
+    ## fun2 <- function(param) attr(eval(opt), "gradient")
+    ## print(fun2(x$coefficients))
+    ## print(numDeriv::jacobian(fun2, x$coefficients))
+    ## print(numDeriv::hessian(fun, x$coefficients))
+    ## print(attr(x$optimum, "hessian"))
+    ## print(x$optimum)
+    
     # if no hessian is returned, use the BHHH approximation
-    if (is.null(attr(x$optimum, 'hessian'))) hessian <- - crossprod(attr(x$optimum, 'gradi'))
-    else hessian <- - attr(x$optimum, 'hessian')
+    if (is.null(attr(x$optimum, 'hessian'))){
+        if (comp_hessian){
+            opt[["param"]] <- as.name("param")
+            opt$gradient <- TRUE
+            names(opt)[which(names(opt) == "param")] <- ""
+        ## fun <- function(param) as.numeric(eval(opt))
+            fun_grad <- function(param) attr(eval(opt), "gradient")
+        ## otime <- proc.time()
+            hessian <- - numDeriv::jacobian(fun_grad, x$coefficients)
+            rownames(hessian) <- colnames(hessian) <- names(x$coefficients)
+        ## print(proc.time() - otime)
+        ## print(hessian)
+        ## otime <- proc.time()
+        ## hessian <- - numDeriv::hessian(fun, x$coefficients)
+        ## print(hessian)
+        ## print(proc.time() - otime)
+        }
+        else hessian <- NULL
+    } else hessian <- - attr(x$optimum, 'hessian')
+
     fitted <- attr(x$optimum, "fitted")
     probabilities <- attr(x$optimum, "probabilities")
     linpred <- attr(x$optimum, "linpred")
-    resid <- Reduce("cbind", yl) - fitted
+    value <- log(fitted)
+
+    resid <- Reduce("cbind", yl) - probabilities
     attr(x$coefficients, "fixed") <- attr(x$optimum, "fixed")
     attr(x$coefficients, "sup") <- names.sup.coef
     gradient <- - attr(x$optimum, "gradi")
+
     if (mixed.logit) indpar <- attr(x$optimum, "indpar") else indpar <- NULL
     
     # Compute the covariance matrix of the errors
@@ -689,17 +779,25 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
     }
     if (wlogit) Omega <- NA
 
+    # add the npar element
+    npar <- structure(c(covariates = K,
+                        vcov = length(x$coefficients) - K),
+                      default = c("covariates", "vcov"))
+    
     mf$probabilities <- as.numeric(t(probabilities))
     if (! is.null(linpred)) mf$linpred <- as.numeric(t(linpred))
     result <- structure(
         list(
             coefficients  = x$coefficients,
             logLik        = logLik,
+            value         = value,
             gradient      = gradient,
             hessian       = hessian,
             est.stat      = x$est.stat,
+            npar          = npar,
             fitted.values = fitted,
             probabilities = probabilities,
+            df.residual   = nrow(resid) - length(x$coefficients),
             linpred       = linpred,
             indpar        = indpar,
             residuals     = resid,
@@ -709,9 +807,14 @@ mlogit <- function(formula, data, subset, weights, na.action, start = NULL,
             model         = mf,
             freq          = freq,
             formula       = formula,
+            terms         = .terms,
+            est_method    = "ml",
             call          = callT),
-        class = 'mlogit'
-    ) 
+# NEWCOEF        
+        class = c("mlogit", "micsr")
+#        class = c("mlogit", "micsr", "lm")
+#        class = "mlogit"
+        ) 
     result
 }
 
@@ -760,12 +863,12 @@ mlogit.start <- function(formula, data, mf, start = NULL, un.nest.el = FALSE,
     heterosc.logit <- mt['heterosc']
     mixed.logit <- mt['mixed']
 
-    alt <- dfidx::idx(mf, 2)
+    alt <- idx(mf, 2)
     
     # extract the X and eventually Xs matrix
     if (length(formula)[2] == 4){
         sformula <- formula(as.Formula(formula), rhs = 4)
-        Xs <- model.matrix(sformula, as.data.frame(mf))[! duplicated(dfidx::idx(mf, 1)), - 1]
+        Xs <- model.matrix(sformula, as.data.frame(mf))[! duplicated(idx(mf, 1)), - 1]
 #        Xs <- model.matrix(sformula, mf)[! duplicated(index(mf)$chid), - 1]
 #        formula <- mFormula(formula(as.Formula(formula), rhs = 1:3))
         formula <- Formula(formula(formula, rhs = 1:3))
@@ -783,12 +886,12 @@ mlogit.start <- function(formula, data, mf, start = NULL, un.nest.el = FALSE,
     names.sup.coef <- character(0)
     if (nested.logit){
         if (is.logical(nests) && nests){
-            if (is.null(dfidx::idx(mf, 2, 2))){
+            if (is.null(idx(mf, 2, 2))){
                 stop("no grouping variable")
             }
             else{
-                nests <- unique(data.frame(alt = as.character(dfidx::idx(mf, 2)),
-                                           group = dfidx::idx(mf, 2, 2)))
+                nests <- unique(data.frame(alt = as.character(idx(mf, 2)),
+                                           group = idx(mf, 2, 2)))
                 nests <- split(nests$alt, nests$group)
             }
         }
@@ -831,8 +934,8 @@ mlogit.start <- function(formula, data, mf, start = NULL, un.nest.el = FALSE,
                            paste(unique(unknowndist), collapse = ", "))
             stop(udstr)
         }        
-        names.rpar <- names(rpar)
-        names.rpar.sig <- names.rpar[! rpar %in% c("zbu", "zbt")]
+        names.rpar <- names_rpar(rpar)
+#        names.rpar.sig <- names.rpar[! rpar %in% c("zbu", "zbt")]
         names.fixed <- colnamesX[! colnamesX %in% names.rpar]
         # the names of the correlated and uncorrelated random
         # parameters in the order of the X matrix
@@ -872,7 +975,7 @@ mlogit.start <- function(formula, data, mf, start = NULL, un.nest.el = FALSE,
                                 names_rpar(correlated, prefix = "chol"))
         }
         if (is.null(start) || length(start) == K) names(sup.coef) <- names.sup.coef
-    }
+    } 
     if (probit){
         names.sup.coef <- c()
         for (i in 2:J){
